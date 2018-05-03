@@ -93,7 +93,7 @@ public class MemberController {
 	@RequestMapping("/createClusterRoleBinding")
 	Object createClusterRoleBinding(HttpServletRequest httpServletRequest, @RequestBody V1ClusterRoleBinding data) throws IOException, ApiException{
 		RtnVO vo = new RtnVO();
-		vo.setData(memberSvc.createClusterRoleBinding(data));
+		memberSvc.createClusterRoleBinding(data);
 		return vo;
 	}
 	

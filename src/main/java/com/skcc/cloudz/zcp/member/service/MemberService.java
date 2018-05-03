@@ -87,7 +87,7 @@ public class MemberService {
 		return serviceAccountList;
 	}
 	
-	public List<String> createClusterRoleBinding(V1ClusterRoleBinding data) throws IOException, ApiException{
+	public void createClusterRoleBinding(V1ClusterRoleBinding data) throws IOException, ApiException{
 		V1ObjectMeta metadata = new V1ObjectMeta();
 		V1ClusterRoleBinding v = new V1ClusterRoleBinding();
 		List<V1Subject> subjects = new ArrayList();
@@ -131,14 +131,7 @@ public class MemberService {
 //				//"			]" + 
 //				"		}";
 		
-		List<LinkedTreeMap> c = KubeDao.createClusterRoleBinding(v);
-		List<String> serviceAccountList = new ArrayList();
-//		for(LinkedTreeMap data : c) {
-//			LinkedTreeMap account =(LinkedTreeMap) data.values().toArray()[0];
-//			String serviceAccount = (String)account.get("name");
-//			serviceAccountList.add(serviceAccount);
-//					
-//		}
-		return serviceAccountList;
+		List<LinkedTreeMap> c = KubeDao.createClusterRoleBinding(data);
+		
 	}
 }
