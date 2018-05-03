@@ -72,15 +72,15 @@ public class MemberController {
 //		return vo;
 //	}
 	
-	@RequestMapping("/clusterRole")
-	Object clusterRole(HttpServletRequest httpServletRequest) throws IOException, ApiException, ParseException{
+	@RequestMapping("/clusterRoleList")
+	Object clusterRoleList(HttpServletRequest httpServletRequest) throws IOException, ApiException, ParseException{
 		RtnVO vo = new RtnVO();
 		vo.setData(memberSvc.clusterRoleList());
 		return vo;
 	}
 	
-	@RequestMapping("/clusterRoleBinding")
-	Object clusterRoleBinding(HttpServletRequest httpServletRequest) throws IOException, ApiException{
+	@RequestMapping("/clusterRoleBindingList")
+	Object clusterRoleBindingList(HttpServletRequest httpServletRequest) throws IOException, ApiException{
 		RtnVO vo = new RtnVO();
 		vo.setData(memberSvc.clusterRoleBindingList());
 		return vo;
