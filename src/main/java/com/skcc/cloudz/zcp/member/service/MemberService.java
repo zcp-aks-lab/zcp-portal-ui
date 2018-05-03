@@ -16,8 +16,7 @@ import com.skcc.cloudz.zcp.member.vo.MemberVO;
 
 import io.kubernetes.client.ApiException;
 import io.kubernetes.client.models.V1ClusterRoleBinding;
-import io.kubernetes.client.models.V1ClusterRoleBindingList;
-import io.kubernetes.client.models.V1ListMeta;
+import io.kubernetes.client.models.V1ObjectMeta;
 import io.kubernetes.client.models.V1RoleRef;
 import io.kubernetes.client.models.V1Subject;
 
@@ -88,53 +87,51 @@ public class MemberService {
 		return serviceAccountList;
 	}
 	
-	public List<String> createClusterRoleBinding(String jsonData) throws IOException, ApiException{
-		V1ClusterRoleBindingList clusterrolebinding = new V1ClusterRoleBindingList();
-		V1ListMeta metadata = new V1ListMeta();
-		List<V1ClusterRoleBinding> bindingList = new ArrayList();
+	public List<String> createClusterRoleBinding(V1ClusterRoleBinding data) throws IOException, ApiException{
+		V1ObjectMeta metadata = new V1ObjectMeta();
 		V1ClusterRoleBinding v = new V1ClusterRoleBinding();
 		List<V1Subject> subjects = new ArrayList();
 		V1RoleRef roleRef = new V1RoleRef();
 		V1Subject subject = new V1Subject();
-		subject.setApiGroup("ServiceAccount");
-		subject.setName("zcp-cluster-admin-kilsoo75");
-		subject.setNamespace("bk-service");
-		roleRef.setApiGroup("rbac.authorization.k8s.io");
-		roleRef.setKind("ClusterRole");
-		roleRef.setName("view");
+		
+		//example
+//		subject.setKind("ServiceAccount");
+//		subject.setName("zcp-cluster-admin-kilsoo75");
+//		subject.setNamespace("bk-service");
+//		roleRef.setApiGroup("rbac.authorization.k8s.io");
+//		roleRef.setKind("ClusterRole");
+//		roleRef.setName("view");
+//		metadata.setName("zcp-adminTest1");
+//		v.setApiVersion("rbac.authorization.k8s.io/v1");
+//		v.setKind("ClusterRoleBinding");
+		
 		subjects.add(subject);
 		v.setSubjects(subjects);
 		v.setRoleRef(roleRef);
-		bindingList.add(v);
-		clusterrolebinding.setApiVersion("rbac.authorization.k8s.io/v1");
-		clusterrolebinding.setKind("ClusterRoleBinding");
-		clusterrolebinding.setItems(bindingList);
-		jsonData="{\r\n" + 
-				"			\"apiVersion\": \"rbac.authorization.k8s.io/v1\",\r\n" + 
-				"			\"kind\": \"ClusterRoleBinding\",\r\n" + 
-				"			\"metadata\": {\r\n" + 
-				"				\"creationTimestamp\": \"2018-03-29T15:08:53Z\",\r\n" + 
-				"				\"name\": \"zcp-admin\",\r\n" + 
-				"				\"namespace\": \"\",\r\n" + 
-				"				\"resourceVersion\": \"7449484\",\r\n" + 
-				"				\"selfLink\": \"/apis/rbac.authorization.k8s.io/v1/clusterrolebindings/zcp-admin\",\r\n" + 
-				"				\"uid\": \"18192276-3363-11e8-8e38-0699d760d333\"\r\n" + 
-				"			},\r\n" + 
-				"			\"roleRef\": {\r\n" + 
-				"				\"apiGroup\": \"rbac.authorization.k8s.io\",\r\n" + 
-				"				\"kind\": \"ClusterRole\",\r\n" + 
-				"				\"name\": \"view\"\r\n" + 
-				"			},\r\n" + 
-				"			\"subjects\": [\r\n" + 
-				"				{\r\n" + 
-				"					\"kind\": \"ServiceAccount\",\r\n" + 
-				"					\"name\": \"zcp-cluster-admin-kilsoo75\",\r\n" + 
-				"					\"namespace\": \"bk-service\"\r\n" + 
-				"				}\r\n" + 
-				"			]\r\n" + 
-				"		}".replaceAll("\\t", "").replaceAll("\\r\\n", "");
+		v.setMetadata(metadata);
 		
-		List<LinkedTreeMap> c = (List<LinkedTreeMap>)KubeDao.createClusterRoleBinding(jsonData).values();
+		
+//		jsonData="{" + 
+//				"			\"apiVersion\": \"rbac.authorization.k8s.io/v1\"," + 
+//				"			\"kind\": \"ClusterRoleBinding\"," + 
+//				"			\"metadata\": {" + 
+//				"				\"name\": \"zcp-adminTest\"," + 
+//				"			}," + 
+//				"			\"roleRef\": {" + 
+//				"				\"apiGroup\": \"rbac.authorization.k8s.io\"," + 
+//				"				\"kind\": \"ClusterRole\"," + 
+//				"				\"name\": \"view\"" + 
+//				"			}," + 
+//				"			\"subjects\": " +//[" + 
+//				"				{" + 
+//				"					\"kind\": \"ServiceAccount\"," + 
+//				"					\"name\": \"zcp-cluster-admin-kilsoo75\"," + 
+//				"					\"namespace\": \"bk-service\"" + 
+//				"				}" + 
+//				//"			]" + 
+//				"		}";
+		
+		List<LinkedTreeMap> c = KubeDao.createClusterRoleBinding(v);
 		List<String> serviceAccountList = new ArrayList();
 //		for(LinkedTreeMap data : c) {
 //			LinkedTreeMap account =(LinkedTreeMap) data.values().toArray()[0];

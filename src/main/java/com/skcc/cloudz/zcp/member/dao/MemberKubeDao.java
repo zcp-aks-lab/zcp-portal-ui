@@ -1,6 +1,7 @@
 package com.skcc.cloudz.zcp.member.dao;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -182,13 +183,13 @@ public class MemberKubeDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public LinkedTreeMap createClusterRoleBinding(String jsonClusterrolebinding) throws ApiException{
-		return (LinkedTreeMap) api.ctlData(() ->{
+	public List<LinkedTreeMap> createClusterRoleBinding(Object jsonClusterrolebinding) throws ApiException{
+		return (List<LinkedTreeMap>) api.ctlData(() ->{
 			ApiResponse<V1ClusterRoleBindingList> data = (ApiResponse<V1ClusterRoleBindingList>) api.postApiCall(
 					"/apis/rbac.authorization.k8s.io/v1/clusterrolebindings"
 					,jsonClusterrolebinding, null, null, null);
 			Object map = (Object)data.getData();
-			LinkedTreeMap mapData = (LinkedTreeMap)map;
+			List<LinkedTreeMap> mapData = (List<LinkedTreeMap>)map;
 			return mapData;
 		});
 	}

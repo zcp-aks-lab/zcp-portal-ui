@@ -1,5 +1,7 @@
 package com.skcc.cloudz.zcp.common.exception;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 import java.io.IOException;
 import java.util.Properties;
 
@@ -7,12 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.common.vo.RtnVO;
+
+import io.kubernetes.client.ApiException;
 
 @ControllerAdvice
 public class ExceptionController {
@@ -29,7 +32,19 @@ public class ExceptionController {
 	@ResponseBody
 	public Object exceptionResolver(HttpServletRequest req, Exception e) { 
 		RtnVO vo = new RtnVO();
-		LOG.debug("UnKnown Error...",e);
+		LOG.debug("UnKnown Error...{}",e);
+		vo.setCode("500");//코드 수정 예정
+		return vo; 
+	}
+    
+    @ExceptionHandler(ApiException.class)
+	@ResponseBody
+	public Object exceptionResolver(HttpServletRequest req, ApiException e) { 
+		RtnVO vo = new RtnVO();
+		LOG.debug(e.getResponseHeaders().toString());
+		LOG.debug(e.getResponseBody());
+		LOG.debug(e.getMessage());
+		LOG.debug("",e);
 		vo.setCode("500");//코드 수정 예정
 		return vo; 
 	}

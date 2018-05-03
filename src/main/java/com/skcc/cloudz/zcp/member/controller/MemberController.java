@@ -1,8 +1,6 @@
 package com.skcc.cloudz.zcp.member.controller;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,13 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skcc.cloudz.zcp.common.vo.RtnVO;
 import com.skcc.cloudz.zcp.member.service.MemberService;
 import com.skcc.cloudz.zcp.member.vo.MemberVO;
 
 import io.kubernetes.client.ApiException;
+import io.kubernetes.client.models.V1ClusterRoleBinding;
 
 @Configuration
 @RestController
@@ -94,9 +91,9 @@ public class MemberController {
 	}
 	
 	@RequestMapping("/createClusterRoleBinding")
-	Object createClusterRoleBinding(HttpServletRequest httpServletRequest, String jsonData) throws IOException, ApiException{
+	Object createClusterRoleBinding(HttpServletRequest httpServletRequest, @RequestBody V1ClusterRoleBinding data) throws IOException, ApiException{
 		RtnVO vo = new RtnVO();
-		vo.setData(memberSvc.createClusterRoleBinding(jsonData));
+		vo.setData(memberSvc.createClusterRoleBinding(data));
 		return vo;
 	}
 	
