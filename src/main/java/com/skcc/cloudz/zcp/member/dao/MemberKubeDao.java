@@ -19,7 +19,10 @@ import io.kubernetes.client.ProtoClient.ObjectOrStatus;
 import io.kubernetes.client.apis.CoreV1Api;
 import io.kubernetes.client.models.V1ClusterRoleBindingList;
 import io.kubernetes.client.models.V1ClusterRoleList;
+import io.kubernetes.client.models.V1DeleteOptions;
+import io.kubernetes.client.models.V1RoleList;
 import io.kubernetes.client.models.V1ServiceAccountList;
+import io.kubernetes.client.proto.Meta.Status;
 import io.kubernetes.client.proto.V1.ServiceAccount;
 import io.kubernetes.client.proto.V1.ServiceAccountList;
 import io.kubernetes.client.proto.V1Rbac.RoleBinding;
@@ -191,6 +194,50 @@ public class MemberKubeDao {
 			Object map = (Object)data.getData();
 			List<LinkedTreeMap> mapData = (List<LinkedTreeMap>)map;
 			return mapData;
+		});
+	}
+	
+	@SuppressWarnings("unchecked")
+	public LinkedTreeMap deleteClusterRoleBinding(String name, Object deleteOptions) throws ApiException{
+		return (LinkedTreeMap) api.ctlData(() ->{
+			ApiResponse<Status> data = (ApiResponse<Status>) api.deleteApiCall(
+					"/apis/rbac.authorization.k8s.io/v1/clusterrolebindings/"+name
+					, (V1DeleteOptions)deleteOptions, null, null, null, null, null, null);
+			Object map = (Object)data.getData();
+			return map;
+		});
+	}
+	
+	@SuppressWarnings("unchecked")
+	public LinkedTreeMap createClusterRole(Object role) throws ApiException{
+		return (LinkedTreeMap) api.ctlData(() ->{
+			ApiResponse<V1ClusterRoleList> data = (ApiResponse<V1ClusterRoleList>) api.postApiCall(
+					"/apis/rbac.authorization.k8s.io/v1/clusterroles"
+					,role, null, null, null);
+			Object map = (Object)data.getData();
+			return map;
+		});
+	}
+	
+	@SuppressWarnings("unchecked")
+	public LinkedTreeMap createRole(String namespace, Object role) throws ApiException{
+		return (LinkedTreeMap) api.ctlData(() ->{
+			ApiResponse<V1RoleList> data = (ApiResponse<V1RoleList>) api.postApiCall(
+					"/apis/rbac.authorization.k8s.io/v1/namespaces/"+namespace+"/roles"
+					,role, null, null, null);
+			Object map = (Object)data.getData();
+			return map;
+		});
+	}
+	
+	@SuppressWarnings("unchecked")
+	public LinkedTreeMap deleteRole(String namespace, String name, Object deleteOptions) throws ApiException{
+		return (LinkedTreeMap) api.ctlData(() ->{
+			ApiResponse<Status> data = (ApiResponse<Status>) api.deleteApiCall(
+					"/apis/rbac.authorization.k8s.io/v1/namespaces/"+ namespace + "/roles/" +name
+					, (V1DeleteOptions)deleteOptions, null, null, null, null, null, null);
+			Object map = (Object)data.getData();
+			return map;
 		});
 	}
 	

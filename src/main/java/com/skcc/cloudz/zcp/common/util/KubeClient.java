@@ -18,6 +18,7 @@ import io.kubernetes.client.Pair;
 import io.kubernetes.client.ProgressRequestBody;
 import io.kubernetes.client.ProgressResponseBody;
 import io.kubernetes.client.apis.CoreV1Api;
+import io.kubernetes.client.models.V1DeleteOptions;
 import io.kubernetes.client.models.V1Endpoints;
 import io.kubernetes.client.util.Config;
 
@@ -145,5 +146,65 @@ public class KubeClient<T> extends CoreV1Api{
         return apiClient.execute(call, localVarReturnType);
         
     }
+	
+	public ApiResponse<T> deleteApiCall(
+			String localVarPath
+			, Object deleteOptions
+			, String pretty
+			, Integer gracePeriodSeconds
+			, Boolean orphanDependents
+			, String propagationPolicy
+			, final ProgressResponseBody.ProgressListener progressListener
+			, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = deleteOptions;
+        
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        if (pretty != null)
+        localVarQueryParams.addAll(apiClient.parameterToPair("pretty", pretty));
+        if (gracePeriodSeconds != null)
+        localVarQueryParams.addAll(apiClient.parameterToPair("gracePeriodSeconds", gracePeriodSeconds));
+        if (orphanDependents != null)
+        localVarQueryParams.addAll(apiClient.parameterToPair("orphanDependents", orphanDependents));
+        if (propagationPolicy != null)
+        localVarQueryParams.addAll(apiClient.parameterToPair("propagationPolicy", propagationPolicy));
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json", "application/yaml", "application/vnd.kubernetes.protobuf"
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+            "*/*"
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                    .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] { "BearerToken" };
+        Call call =  apiClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+        
+        Type localVarReturnType = new TypeToken<T>(){}.getType();
+        return apiClient.execute(call, localVarReturnType);
+
+    }
+	
+	
 
 }

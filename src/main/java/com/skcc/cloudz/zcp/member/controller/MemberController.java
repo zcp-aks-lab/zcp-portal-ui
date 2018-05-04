@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.skcc.cloudz.zcp.common.vo.RtnVO;
 import com.skcc.cloudz.zcp.member.service.MemberService;
+import com.skcc.cloudz.zcp.member.vo.KubeDeleteOptionsVO;
 import com.skcc.cloudz.zcp.member.vo.MemberVO;
+import com.skcc.cloudz.zcp.member.vo.RoleVO;
 
 import io.kubernetes.client.ApiException;
 import io.kubernetes.client.models.V1ClusterRoleBinding;
@@ -94,6 +96,29 @@ public class MemberController {
 	Object createClusterRoleBinding(HttpServletRequest httpServletRequest, @RequestBody V1ClusterRoleBinding data) throws IOException, ApiException{
 		RtnVO vo = new RtnVO();
 		memberSvc.createClusterRoleBinding(data);
+		return vo;
+	}
+	
+	// not yet implememnt
+	@RequestMapping("/deleteClusterRoleBinding")
+	Object deleteClusterRoleBinding(HttpServletRequest httpServletRequest, @RequestBody KubeDeleteOptionsVO data) throws IOException, ApiException{
+		RtnVO vo = new RtnVO();
+		memberSvc.deleteClusterRoleBinding(data);
+		return vo;
+	}
+	
+	@RequestMapping("/createRole")
+	Object createRole(HttpServletRequest httpServletRequest, @RequestBody RoleVO data) throws IOException, ApiException{
+		RtnVO vo = new RtnVO();
+		memberSvc.createRole(data);
+		return vo;
+	}
+	
+	// not yet implememnt
+	@RequestMapping("/deleteRole")
+	Object deleteRole(HttpServletRequest httpServletRequest, @RequestBody KubeDeleteOptionsVO data) throws IOException, ApiException{
+		RtnVO vo = new RtnVO();
+		memberSvc.deleteRole(data);
 		return vo;
 	}
 	

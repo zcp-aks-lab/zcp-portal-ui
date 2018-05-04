@@ -2,7 +2,6 @@ package com.skcc.cloudz.zcp.member.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.json.simple.parser.ParseException;
@@ -12,13 +11,17 @@ import org.springframework.stereotype.Service;
 import com.google.gson.internal.LinkedTreeMap;
 import com.skcc.cloudz.zcp.member.dao.MemberKeycloakDao;
 import com.skcc.cloudz.zcp.member.dao.MemberKubeDao;
+import com.skcc.cloudz.zcp.member.vo.KubeDeleteOptionsVO;
 import com.skcc.cloudz.zcp.member.vo.MemberVO;
+import com.skcc.cloudz.zcp.member.vo.RoleVO;
 
 import io.kubernetes.client.ApiException;
+import io.kubernetes.client.models.V1ClusterRole;
 import io.kubernetes.client.models.V1ClusterRoleBinding;
 import io.kubernetes.client.models.V1ObjectMeta;
 import io.kubernetes.client.models.V1RoleRef;
 import io.kubernetes.client.models.V1Subject;
+import io.kubernetes.client.proto.Meta.Status;
 
 @Service
 public class MemberService {
@@ -133,5 +136,21 @@ public class MemberService {
 		
 		List<LinkedTreeMap> c = KubeDao.createClusterRoleBinding(data);
 		
+	}
+	
+	public void deleteClusterRoleBinding(KubeDeleteOptionsVO data) throws IOException, ApiException{
+		LinkedTreeMap status = KubeDao.deleteClusterRoleBinding(data.getName(), data);
+	}
+	
+	public void createClusterRole(V1ClusterRole data) throws IOException, ApiException{
+		LinkedTreeMap c = KubeDao.createClusterRole(data);
+	}
+	
+	public void createRole(RoleVO data) throws IOException, ApiException{
+		LinkedTreeMap c = KubeDao.createRole(data.getNamespace(), data);
+	}
+	
+	public void deleteRole(KubeDeleteOptionsVO data) throws IOException, ApiException{
+		LinkedTreeMap status = KubeDao.deleteRole(data.getNamespace(), data.getName(), data);
 	}
 }
