@@ -14,6 +14,7 @@ import com.skcc.cloudz.zcp.member.dao.MemberKubeDao;
 import com.skcc.cloudz.zcp.member.vo.KubeDeleteOptionsVO;
 import com.skcc.cloudz.zcp.member.vo.MemberVO;
 import com.skcc.cloudz.zcp.member.vo.RoleVO;
+import com.skcc.cloudz.zcp.member.vo.ServiceAccountVO;
 
 import io.kubernetes.client.ApiException;
 import io.kubernetes.client.models.V1ClusterRole;
@@ -21,7 +22,6 @@ import io.kubernetes.client.models.V1ClusterRoleBinding;
 import io.kubernetes.client.models.V1ObjectMeta;
 import io.kubernetes.client.models.V1RoleRef;
 import io.kubernetes.client.models.V1Subject;
-import io.kubernetes.client.proto.Meta.Status;
 
 @Service
 public class MemberService {
@@ -78,17 +78,22 @@ public class MemberService {
 		return KubeDao.clusterRoleBindingList();
 	}
 	
-	public List<String> serviceAccountList() throws IOException, ApiException{
-		List<LinkedTreeMap> c = (List<LinkedTreeMap>)KubeDao.serviceAccountList("zcp-demo").values().toArray()[3];
-		List<String> serviceAccountList = new ArrayList();
-		for(LinkedTreeMap data : c) {
-			LinkedTreeMap account =(LinkedTreeMap) data.values().toArray()[0];
-			String serviceAccount = (String)account.get("name");
-			serviceAccountList.add(serviceAccount);
-					
-		}
-		return serviceAccountList;
+//	public List<String> serviceAccountList() throws IOException, ApiException{
+//		List<LinkedTreeMap> c = (List<LinkedTreeMap>)KubeDao.serviceAccountList("zcp-demo").values().toArray()[3];
+//		List<String> serviceAccountList = new ArrayList();
+//		for(LinkedTreeMap data : c) {
+//			LinkedTreeMap account =(LinkedTreeMap) data.values().toArray()[0];
+//			String serviceAccount = (String)account.get("name");
+//			serviceAccountList.add(serviceAccount);
+//					
+//		}
+//		return serviceAccountList;
+//	}
+	
+	public void createServiceAccount(ServiceAccountVO data) throws IOException, ApiException{
+		LinkedTreeMap c = KubeDao.createServiceAccount(data.getNamespace(), data);
 	}
+	
 	
 	public void createClusterRoleBinding(V1ClusterRoleBinding data) throws IOException, ApiException{
 		V1ObjectMeta metadata = new V1ObjectMeta();
