@@ -18,6 +18,7 @@ import com.skcc.cloudz.zcp.member.service.MemberService;
 import com.skcc.cloudz.zcp.member.vo.KubeDeleteOptionsVO;
 import com.skcc.cloudz.zcp.member.vo.MemberVO;
 import com.skcc.cloudz.zcp.member.vo.RoleVO;
+import com.skcc.cloudz.zcp.member.vo.ServiceAccountVO;
 
 import io.kubernetes.client.ApiException;
 import io.kubernetes.client.models.V1ClusterRoleBinding;
@@ -71,6 +72,13 @@ public class MemberController {
 //		return vo;
 //	}
 	
+	@RequestMapping("/createServiceAccount")
+	Object createServiceAccount(HttpServletRequest httpServletRequest, @RequestBody ServiceAccountVO data) throws IOException, ApiException, ParseException{
+		RtnVO vo = new RtnVO();
+		memberSvc.createServiceAccount(data);
+		return vo;
+	}
+	
 	@RequestMapping("/clusterRoleList")
 	Object clusterRoleList(HttpServletRequest httpServletRequest) throws IOException, ApiException, ParseException{
 		RtnVO vo = new RtnVO();
@@ -85,12 +93,12 @@ public class MemberController {
 		return vo;
 	}
 	
-	@RequestMapping("/serviceAccount")
-	Object serviceAccount(HttpServletRequest httpServletRequest) throws IOException, ApiException{
-		RtnVO vo = new RtnVO();
-		vo.setData(memberSvc.serviceAccountList());
-		return vo;
-	}
+//	@RequestMapping("/serviceAccount")
+//	Object serviceAccount(HttpServletRequest httpServletRequest) throws IOException, ApiException{
+//		RtnVO vo = new RtnVO();
+//		vo.setData(memberSvc.serviceAccountList());
+//		return vo;
+//	}
 	
 	@RequestMapping("/createClusterRoleBinding")
 	Object createClusterRoleBinding(HttpServletRequest httpServletRequest, @RequestBody V1ClusterRoleBinding data) throws IOException, ApiException{

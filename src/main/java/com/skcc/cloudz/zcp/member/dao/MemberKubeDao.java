@@ -8,23 +8,19 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.skcc.cloudz.zcp.common.util.KubeClient;
+import com.skcc.cloudz.zcp.member.vo.ServiceAccountVO;
 
 import ch.qos.logback.classic.Logger;
 import io.kubernetes.client.ApiClient;
 import io.kubernetes.client.ApiException;
 import io.kubernetes.client.ApiResponse;
 import io.kubernetes.client.Configuration;
-import io.kubernetes.client.ProtoClient;
-import io.kubernetes.client.ProtoClient.ObjectOrStatus;
-import io.kubernetes.client.apis.CoreV1Api;
 import io.kubernetes.client.models.V1ClusterRoleBindingList;
 import io.kubernetes.client.models.V1ClusterRoleList;
 import io.kubernetes.client.models.V1DeleteOptions;
 import io.kubernetes.client.models.V1RoleList;
 import io.kubernetes.client.models.V1ServiceAccountList;
 import io.kubernetes.client.proto.Meta.Status;
-import io.kubernetes.client.proto.V1.ServiceAccount;
-import io.kubernetes.client.proto.V1.ServiceAccountList;
 import io.kubernetes.client.proto.V1Rbac.RoleBinding;
 import io.kubernetes.client.util.Config;
 
@@ -124,17 +120,28 @@ public class MemberKubeDao {
 //	    return rolebinding;
 //	}
 	
-	public ServiceAccount serviceAccount() throws IOException, ApiException{
-	    ProtoClient pc = new ProtoClient(client);
-	    CoreV1Api api = new CoreV1Api();
-	    
-	    ObjectOrStatus<ServiceAccountList > list = pc.list(ServiceAccountList.newBuilder(), "/apis/rbac.authorization.k8s.io/v1/clusterrolebindings");
-	    ServiceAccount account = null;
-	    if (list.object.getItemsCount() > 0) {
-	    	account = list.object.getItems(0);
-	    }
-	    
-	    return account;
+//	public ServiceAccount serviceAccount() throws IOException, ApiException{
+//	    ProtoClient pc = new ProtoClient(client);
+//	    CoreV1Api api = new CoreV1Api();
+//	    
+//	    ObjectOrStatus<ServiceAccountList > list = pc.list(ServiceAccountList.newBuilder(), "/apis/rbac.authorization.k8s.io/v1/clusterrolebindings");
+//	    ServiceAccount account = null;
+//	    if (list.object.getItemsCount() > 0) {
+//	    	account = list.object.getItems(0);
+//	    }
+//	    
+//	    return account;
+//	}
+	
+	public LinkedTreeMap createServiceAccount(String namespace, ServiceAccountVO serviceAccount) throws IOException, ApiException{
+		return (LinkedTreeMap) api.ctlData(() ->{
+			ApiResponse<V1ServiceAccountList> data = (ApiResponse<V1ServiceAccountList>) api.postApiCall(
+					"/api/v1/namespaces/"+namespace+"/serviceaccounts"
+					,serviceAccount, null, null, null);
+			Object map = (Object)data.getData();
+			LinkedTreeMap mapData = (LinkedTreeMap)map;
+			return mapData;
+		});
 	}
 	
 	@SuppressWarnings("unchecked")
