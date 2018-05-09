@@ -79,6 +79,13 @@ public class MemberController {
 		return vo;
 	}
 	
+	@RequestMapping("/deleteServiceAccount")
+	Object deleteServiceAccount(HttpServletRequest httpServletRequest, @RequestBody ServiceAccountVO data) throws IOException, ApiException, ParseException{
+		RtnVO vo = new RtnVO();
+		memberSvc.createServiceAccount(data);
+		return vo;
+	}
+	
 	@RequestMapping("/clusterRoleList")
 	Object clusterRoleList(HttpServletRequest httpServletRequest) throws IOException, ApiException, ParseException{
 		RtnVO vo = new RtnVO();
@@ -87,9 +94,9 @@ public class MemberController {
 	}
 	
 	@RequestMapping("/clusterRoleBindingList")
-	Object clusterRoleBindingList(HttpServletRequest httpServletRequest) throws IOException, ApiException{
+	Object getClusterRoleBinding(HttpServletRequest httpServletRequest) throws IOException, ApiException{
 		RtnVO vo = new RtnVO();
-		vo.setData(memberSvc.clusterRoleBindingList());
+		vo.setData(memberSvc.getClusterRoleBinding("admin"));
 		return vo;
 	}
 	
@@ -107,7 +114,6 @@ public class MemberController {
 		return vo;
 	}
 	
-	// not yet implememnt
 	@RequestMapping("/deleteClusterRoleBinding")
 	Object deleteClusterRoleBinding(HttpServletRequest httpServletRequest, @RequestBody KubeDeleteOptionsVO data) throws IOException, ApiException{
 		RtnVO vo = new RtnVO();
@@ -122,7 +128,6 @@ public class MemberController {
 		return vo;
 	}
 	
-	// not yet implememnt
 	@RequestMapping("/deleteRole")
 	Object deleteRole(HttpServletRequest httpServletRequest, @RequestBody KubeDeleteOptionsVO data) throws IOException, ApiException{
 		RtnVO vo = new RtnVO();
