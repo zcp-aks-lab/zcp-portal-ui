@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.internal.LinkedTreeMap;
@@ -31,6 +32,9 @@ public class MemberService {
 	
 	@Autowired
 	MemberKubeDao KubeDao;
+	
+	@Value("${kube.cluster.role.binding.prefix}")
+	String roleBindingPrefix;
 	
 	public Object getUserList() {
 		return keycloakDao.getUserList();
@@ -74,8 +78,25 @@ public class MemberService {
 		
 	}
 	
-	public LinkedTreeMap clusterRoleBindingList() throws ApiException{
-		return KubeDao.clusterRoleBindingList();
+	/**
+	 * 사용자 이름에 따른 clusterrolebinding 값
+	 * @param username
+	 * @return
+	 * @throws ApiException
+	 */
+	public LinkedTreeMap getClusterRoleBinding(String username) throws ApiException{
+		
+		LinkedTreeMap map = (LinkedTreeMap) KubeDao.clusterRoleBindingList();
+		List<LinkedTreeMap> items= (List<LinkedTreeMap>)map.values().toArray()[3];
+		
+		for(LinkedTreeMap m : items) {
+			String name = ((LinkedTreeMap)m.get("metadata")).get("name").toString();
+			String clusterRoleBinding  = roleBindingPrefix + username;
+			if(clusterRoleBinding.equals(name))
+				return m;
+		}
+		return null;
+		
 	}
 	
 //	public List<String> serviceAccountList() throws IOException, ApiException{

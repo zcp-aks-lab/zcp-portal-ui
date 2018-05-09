@@ -19,9 +19,9 @@ import io.kubernetes.client.models.V1ClusterRoleBindingList;
 import io.kubernetes.client.models.V1ClusterRoleList;
 import io.kubernetes.client.models.V1DeleteOptions;
 import io.kubernetes.client.models.V1RoleList;
+import io.kubernetes.client.models.V1ServiceAccount;
 import io.kubernetes.client.models.V1ServiceAccountList;
 import io.kubernetes.client.proto.Meta.Status;
-import io.kubernetes.client.proto.V1Rbac.RoleBinding;
 import io.kubernetes.client.util.Config;
 
 @Component
@@ -133,16 +133,16 @@ public class MemberKubeDao {
 //	    return account;
 //	}
 	
-	public LinkedTreeMap createServiceAccount(String namespace, ServiceAccountVO serviceAccount) throws IOException, ApiException{
-		return (LinkedTreeMap) api.ctlData(() ->{
-			ApiResponse<V1ServiceAccountList> data = (ApiResponse<V1ServiceAccountList>) api.postApiCall(
-					"/api/v1/namespaces/"+namespace+"/serviceaccounts"
-					,serviceAccount, null, null, null);
-			Object map = (Object)data.getData();
-			LinkedTreeMap mapData = (LinkedTreeMap)map;
-			return mapData;
-		});
-	}
+//	public LinkedTreeMap createServiceAccount(String namespace, ServiceAccountVO serviceAccount) throws IOException, ApiException{
+//		return (LinkedTreeMap) api.ctlData(() ->{
+//			ApiResponse<V1ServiceAccountList> data = (ApiResponse<V1ServiceAccountList>) api.postApiCall(
+//					"/api/v1/namespaces/"+namespace+"/serviceaccounts"
+//					,serviceAccount, null, null, null);
+//			Object map = (Object)data.getData();
+//			LinkedTreeMap mapData = (LinkedTreeMap)map;
+//			return mapData;
+//		});
+//	}
 	
 	@SuppressWarnings("unchecked")
 	public LinkedTreeMap clusterRoleList() throws ApiException{
@@ -169,11 +169,23 @@ public class MemberKubeDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public LinkedTreeMap createRoleBindingList(RoleBinding namespace) throws ApiException{
+	public LinkedTreeMap createServiceAccount(String namespace, Object serviceAccount) throws ApiException{
 		return (LinkedTreeMap) api.ctlData(() ->{
-			ApiResponse<V1ServiceAccountList> data = (ApiResponse<V1ServiceAccountList>) api.apiCall(
+			ApiResponse<V1ServiceAccount> data = (ApiResponse<V1ServiceAccount>) api.postApiCall(
 					"/api/v1/namespaces/"+namespace+"/serviceaccounts"
-					,null, null, null, null, null, null, null, null, null, null, null);
+					,serviceAccount, null, null, null);
+			Object map = (Object)data.getData();
+			LinkedTreeMap mapData = (LinkedTreeMap)map;
+			return mapData;
+		});
+	}
+	
+	@SuppressWarnings("unchecked")
+	public LinkedTreeMap deleteServiceAccount(String namespace, String name, Object serviceAccount) throws ApiException{
+		return (LinkedTreeMap) api.ctlData(() ->{
+			ApiResponse<V1ServiceAccount> data = (ApiResponse<V1ServiceAccount>) api.deleteApiCall(
+					"/api/v1/namespaces/"+namespace+"/serviceaccounts"
+					, serviceAccount, null, null, null, null, null, null);
 			Object map = (Object)data.getData();
 			LinkedTreeMap mapData = (LinkedTreeMap)map;
 			return mapData;
