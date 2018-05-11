@@ -1,6 +1,7 @@
 package com.skcc.cloudz.zcp.member.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.skcc.cloudz.zcp.common.util.ValidUtil;
 import com.skcc.cloudz.zcp.common.vo.RtnVO;
 import com.skcc.cloudz.zcp.member.service.MemberService;
 import com.skcc.cloudz.zcp.member.vo.KubeDeleteOptionsVO;
@@ -39,6 +41,64 @@ public class MemberController {
 		vo.setData(memberSvc.getUserList());
 		return vo;
 	}
+	
+	
+	/**
+	 * @param httpServletRequest
+	 * @param map
+	 * @return
+	 * @throws IOException
+	 * @throws ApiException
+	 * 사용자 로그인시에 인증시 필요
+	 */
+	@RequestMapping("/getClusterRoleBinding")
+	Object getClusterRoleBinding(HttpServletRequest httpServletRequest, @RequestBody HashMap<String, String> map) throws IOException, ApiException{
+		RtnVO vo = new RtnVO();
+		//vo.setData(memberSvc.getClusterRoleBinding("admin"));// test code//admin
+		String msg = ValidUtil.required(map,  "username");
+		if(msg != null) {
+			vo.setMsg(msg);
+			vo.setCode("500");
+		}
+		else {
+			vo.setData(memberSvc.getClusterRoleBinding(map.get("username")));
+		}
+		return vo;
+	}
+	
+	
+	/**
+	 * @param httpServletRequest
+	 * @param map
+	 * @return
+	 * @throws IOException
+	 * @throws ApiException
+	 * 최초 사용자 등록후 kubernetes 접근 토큰
+	 */
+	@RequestMapping("/getServiceAccountToken")
+	Object getServiceAccountToken(HttpServletRequest httpServletRequest, @RequestBody HashMap<String, String> map) throws IOException, ApiException{
+		RtnVO vo = new RtnVO();
+		//vo.setData(memberSvc.getServiceAccountToken("kube-system", "tiller"));// test code
+		String msg = ValidUtil.required(map,  "username", "namespace");
+		if(msg != null) {
+			vo.setMsg(msg);
+			vo.setCode("500");
+		}
+		else {
+			vo.setData(memberSvc.getServiceAccountToken(map.get("namespace"), map.get("username")));	
+		}
+		
+		return vo;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@RequestMapping("/modifyUser")
 	Object modifyUser(HttpServletRequest httpServletRequest, @RequestBody MemberVO memberVO){
@@ -93,19 +153,6 @@ public class MemberController {
 		return vo;
 	}
 	
-	@RequestMapping("/clusterRoleBindingList")
-	Object getClusterRoleBinding(HttpServletRequest httpServletRequest) throws IOException, ApiException{
-		RtnVO vo = new RtnVO();
-		vo.setData(memberSvc.getClusterRoleBinding("admin"));// test code
-		return vo;
-	}
-	
-	@RequestMapping("/getServiceAccountToken")
-	Object getServiceAccountToken(HttpServletRequest httpServletRequest) throws IOException, ApiException{
-		RtnVO vo = new RtnVO();
-		vo.setData(memberSvc.getServiceAccountToken("kube-system", "tiller"));// test code
-		return vo;
-	}
 	
 	@RequestMapping("/createClusterRoleBinding")
 	Object createClusterRoleBinding(HttpServletRequest httpServletRequest, @RequestBody V1ClusterRoleBinding data) throws IOException, ApiException{
