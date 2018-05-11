@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.skcc.cloudz.zcp.common.util.KubeClient;
-import com.skcc.cloudz.zcp.member.vo.ServiceAccountVO;
 
 import ch.qos.logback.classic.Logger;
 import io.kubernetes.client.ApiClient;
@@ -19,6 +18,7 @@ import io.kubernetes.client.models.V1ClusterRoleBindingList;
 import io.kubernetes.client.models.V1ClusterRoleList;
 import io.kubernetes.client.models.V1DeleteOptions;
 import io.kubernetes.client.models.V1RoleList;
+import io.kubernetes.client.models.V1Secret;
 import io.kubernetes.client.models.V1ServiceAccount;
 import io.kubernetes.client.models.V1ServiceAccountList;
 import io.kubernetes.client.proto.Meta.Status;
@@ -205,6 +205,18 @@ public class MemberKubeDao {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public LinkedTreeMap getServiceAccount(String namespace, String name) throws ApiException{
+		return (LinkedTreeMap) api.ctlData(() ->{
+			ApiResponse<V1ServiceAccountList> data = (ApiResponse<V1ServiceAccountList>) api.apiCall(
+					"/api/v1/namespaces/"+namespace+"/serviceaccounts/" + name
+					,null, null, null, null, null, null, null, null, null, null, null);
+			Object map = (Object)data.getData();
+			LinkedTreeMap mapData = (LinkedTreeMap)map;
+			return mapData;
+		});
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<LinkedTreeMap> createClusterRoleBinding(Object jsonClusterrolebinding) throws ApiException{
 		return (List<LinkedTreeMap>) api.ctlData(() ->{
 			ApiResponse<V1ClusterRoleBindingList> data = (ApiResponse<V1ClusterRoleBindingList>) api.postApiCall(
@@ -259,6 +271,20 @@ public class MemberKubeDao {
 			return map;
 		});
 	}
+	
+	@SuppressWarnings("unchecked")
+	public LinkedTreeMap getSecret(String namespace, String secretName ) throws ApiException{
+		return (LinkedTreeMap) api.ctlData(() ->{
+			ApiResponse<V1Secret> data = (ApiResponse<V1Secret>) api.apiCall(
+					"/api/v1/namespaces/"+namespace+"/secrets/" + secretName
+					,null, null, null, null, null, null, null, null, null, null, null);
+			Object map = (Object)data.getData();
+			LinkedTreeMap mapData = (LinkedTreeMap)map;
+			return mapData;
+		});
+	}
+	
+	
 	
 		
 }

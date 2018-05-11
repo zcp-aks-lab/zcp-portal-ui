@@ -79,7 +79,7 @@ public class MemberService {
 	}
 	
 	/**
-	 * 사용자 이름에 따른 clusterrolebinding 값
+	 * 사용자 이름에 따른 clusterrolebinding 값(네임스페이스 정보를 포함한다)
 	 * @param username
 	 * @return
 	 * @throws ApiException
@@ -99,17 +99,41 @@ public class MemberService {
 		
 	}
 	
-//	public List<String> serviceAccountList() throws IOException, ApiException{
-//		List<LinkedTreeMap> c = (List<LinkedTreeMap>)KubeDao.serviceAccountList("zcp-demo").values().toArray()[3];
-//		List<String> serviceAccountList = new ArrayList();
-//		for(LinkedTreeMap data : c) {
-//			LinkedTreeMap account =(LinkedTreeMap) data.values().toArray()[0];
-//			String serviceAccount = (String)account.get("name");
-//			serviceAccountList.add(serviceAccount);
-//					
-//		}
-//		return serviceAccountList;
-//	}
+	public LinkedTreeMap serviceAccountList(String namesapce, String username) throws IOException, ApiException{
+		LinkedTreeMap map = KubeDao.serviceAccountList(namesapce);
+		List<LinkedTreeMap> c = (List<LinkedTreeMap>)map.values().toArray()[3];
+		List<String> serviceAccountList = new ArrayList();
+		for(LinkedTreeMap data : c) {
+			LinkedTreeMap metadata =(LinkedTreeMap)data.get("metadata");
+			if(metadata.get("name").equals(roleBindingPrefix + username)){
+				return map;
+			}
+			
+					
+		}
+		return null;
+	}
+	
+	
+	public LinkedTreeMap getServiceAccount(String namespace, String username) throws IOException, ApiException{
+		return KubeDao.getServiceAccount(namespace, username);
+	}
+	
+	
+	public String getServiceAccountToken(String namespace, String username) throws IOException, ApiException{
+		List<LinkedTreeMap> secrets =(List<LinkedTreeMap>) KubeDao.getServiceAccount(namespace, username).get("secrets");
+		for(LinkedTreeMap secret : secrets) {
+			String secretName = secret.get("name").toString();
+			LinkedTreeMap secretList = (LinkedTreeMap) KubeDao.getSecret(namespace, secretName).get("data");
+			
+			return secretList.get("token").toString();
+		}
+		return null;
+	}
+
+	
+	
+	
 	
 	public void createServiceAccount(ServiceAccountVO data) throws IOException, ApiException{
 		LinkedTreeMap c = KubeDao.createServiceAccount(data.getNamespace(), data);

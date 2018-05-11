@@ -96,16 +96,16 @@ public class MemberController {
 	@RequestMapping("/clusterRoleBindingList")
 	Object getClusterRoleBinding(HttpServletRequest httpServletRequest) throws IOException, ApiException{
 		RtnVO vo = new RtnVO();
-		vo.setData(memberSvc.getClusterRoleBinding("admin"));
+		vo.setData(memberSvc.getClusterRoleBinding("admin"));// test code
 		return vo;
 	}
 	
-//	@RequestMapping("/serviceAccount")
-//	Object serviceAccount(HttpServletRequest httpServletRequest) throws IOException, ApiException{
-//		RtnVO vo = new RtnVO();
-//		vo.setData(memberSvc.serviceAccountList());
-//		return vo;
-//	}
+	@RequestMapping("/getServiceAccountToken")
+	Object getServiceAccountToken(HttpServletRequest httpServletRequest) throws IOException, ApiException{
+		RtnVO vo = new RtnVO();
+		vo.setData(memberSvc.getServiceAccountToken("kube-system", "tiller"));// test code
+		return vo;
+	}
 	
 	@RequestMapping("/createClusterRoleBinding")
 	Object createClusterRoleBinding(HttpServletRequest httpServletRequest, @RequestBody V1ClusterRoleBinding data) throws IOException, ApiException{
