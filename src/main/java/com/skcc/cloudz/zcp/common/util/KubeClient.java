@@ -37,7 +37,7 @@ public class KubeClient<T> extends CoreV1Api{
 	
 		
 	//@Override
-	public ApiResponse<T> apiCall(
+	public ApiResponse<T> getApiCall(
 			//Class clazz
 			String localVarPath
 			, String _continue

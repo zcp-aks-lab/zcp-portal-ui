@@ -2,9 +2,13 @@ package com.skcc.cloudz.zcp.member.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import org.json.simple.parser.ParseException;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,7 @@ import com.skcc.cloudz.zcp.member.vo.MemberVO;
 import com.skcc.cloudz.zcp.member.vo.RoleVO;
 import com.skcc.cloudz.zcp.member.vo.ServiceAccountVO;
 
+import ch.qos.logback.classic.Logger;
 import io.kubernetes.client.ApiException;
 import io.kubernetes.client.models.V1ClusterRole;
 import io.kubernetes.client.models.V1ClusterRoleBinding;
@@ -27,6 +32,8 @@ import io.kubernetes.client.models.V1Subject;
 @Service
 public class MemberService {
 
+	private final Logger LOG = (Logger) LoggerFactory.getLogger(MemberService.class);
+	
 	@Autowired
 	MemberKeycloakDao keycloakDao;
 	
@@ -64,19 +71,30 @@ public class MemberService {
 //		return KubeDao.serviceAccount();
 //	}
 	
-	public List<String> clusterRoleList() throws ApiException, ParseException{
-		List<LinkedTreeMap> c = (List<LinkedTreeMap>) KubeDao.clusterRoleList().values().toArray()[3];
-		List<String> clusterRole = new ArrayList();
-		for(LinkedTreeMap data : c) {
-			LinkedTreeMap cluster =(LinkedTreeMap) data.values().toArray()[0];
-			String clusterName = (String)cluster.get("name");
-			clusterRole.add(clusterName);
-					
-		}
+	/**
+	 * @return
+	 * @throws ApiException
+	 * @throws ParseException
+	 * 
+	 * 사용자 로그인시 namespace 정보와 clusterbinding 정보를 가져옴
+	 * 
+	 */
+	public Map getUserInfo(String username) throws ApiException, ParseException{
+		LinkedTreeMap clusterrolebinding =  getClusterRoleBinding(username);
+		String namespace = ((List<LinkedTreeMap>)clusterrolebinding.get("subjects")).get(0).get("namespace").toString();
+		LinkedTreeMap mapNamespace = (LinkedTreeMap) KubeDao.namespaceList(namespace);
+		
+		HashMap data = new HashMap();
+		data.put("clusterrolebinding", clusterrolebinding);
+		data.put("namespace", mapNamespace);
         
-        return clusterRole;
+        return data;
 		
 	}
+	
+//	private String getNamespace(LinkedTreeMap clusterrolebinding) {
+//		return ((List<LinkedTreeMap>)clusterrolebinding.get("subjects")).get(0).get("namespace").toString();
+//	}
 	
 	/**
 	 * 사용자 이름에 따른 clusterrolebinding 값(네임스페이스 정보를 포함한다)
@@ -84,18 +102,28 @@ public class MemberService {
 	 * @return
 	 * @throws ApiException
 	 */
-	public LinkedTreeMap getClusterRoleBinding(String username) throws ApiException{
+	private LinkedTreeMap getClusterRoleBinding(String username) throws ApiException{
 		
 		LinkedTreeMap map = (LinkedTreeMap) KubeDao.clusterRoleBindingList();
-		List<LinkedTreeMap> items= (List<LinkedTreeMap>)map.values().toArray()[3];
+		List<LinkedTreeMap> items= (List<LinkedTreeMap>)map.get("items");
+		Stream<LinkedTreeMap> serviceAccount = items.stream().filter((srvAcc) -> { 
+			List<LinkedTreeMap> subjects = (List<LinkedTreeMap>) ((LinkedTreeMap)srvAcc).get("subjects");
+			if(subjects != null) {
+				Stream s = subjects.stream().filter((subject) -> {
+					LOG.debug("kind={} , name={}", subject.get("kind"), subject.get("name"));
+					return subject.get("kind").toString().equals("ServiceAccount") 
+							&& subject.get("name").toString().equals(roleBindingPrefix+ username);
+				});
+				if(s != null)
+					return s.count()>0;
+				else return false;
+			}
+			return false;
+		});
+		//LOG.debug("count=" + serviceAccount.count());
+		//Stream<LinkedTreeMap> serviceAcountUser = serviceAcount.filter((data) ->{return data.equals(roleBindingPrefix+ username);});
 		
-		for(LinkedTreeMap m : items) {
-			String name = ((LinkedTreeMap)m.get("metadata")).get("name").toString();
-			String clusterRoleBinding  = roleBindingPrefix + username;
-			if(clusterRoleBinding.equals(name))
-				return m;
-		}
-		return null;
+		return serviceAccount.findAny().get();
 		
 	}
 	
@@ -203,4 +231,5 @@ public class MemberService {
 	public void deleteRole(KubeDeleteOptionsVO data) throws IOException, ApiException{
 		LinkedTreeMap status = KubeDao.deleteRole(data.getNamespace(), data.getName(), data);
 	}
+	
 }

@@ -50,9 +50,10 @@ public class MemberController {
 	 * @throws IOException
 	 * @throws ApiException
 	 * 사용자 로그인시에 인증시 필요
+	 * @throws ParseException 
 	 */
-	@RequestMapping("/getClusterRoleBinding")
-	Object getClusterRoleBinding(HttpServletRequest httpServletRequest, @RequestBody HashMap<String, String> map) throws IOException, ApiException{
+	@RequestMapping("/getUserInfoWithLogin")
+	Object getUserInfoWithLogin(HttpServletRequest httpServletRequest, @RequestBody HashMap<String, String> map) throws IOException, ApiException, ParseException{
 		RtnVO vo = new RtnVO();
 		//vo.setData(memberSvc.getClusterRoleBinding("admin"));// test code//admin
 		String msg = ValidUtil.required(map,  "username");
@@ -61,7 +62,7 @@ public class MemberController {
 			vo.setCode("500");
 		}
 		else {
-			vo.setData(memberSvc.getClusterRoleBinding(map.get("username")));
+			vo.setData(memberSvc.getUserInfo(map.get("username")));
 		}
 		return vo;
 	}
@@ -146,12 +147,12 @@ public class MemberController {
 		return vo;
 	}
 	
-	@RequestMapping("/clusterRoleList")
-	Object clusterRoleList(HttpServletRequest httpServletRequest) throws IOException, ApiException, ParseException{
-		RtnVO vo = new RtnVO();
-		vo.setData(memberSvc.clusterRoleList());
-		return vo;
-	}
+//	@RequestMapping("/clusterRoleList")
+//	Object clusterRoleList(HttpServletRequest httpServletRequest) throws IOException, ApiException, ParseException{
+//		RtnVO vo = new RtnVO();
+//		vo.setData(memberSvc.clusterRoleList());
+//		return vo;
+//	}
 	
 	
 	@RequestMapping("/createClusterRoleBinding")

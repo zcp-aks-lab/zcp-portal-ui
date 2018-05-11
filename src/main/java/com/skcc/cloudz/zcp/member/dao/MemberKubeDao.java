@@ -17,6 +17,7 @@ import io.kubernetes.client.Configuration;
 import io.kubernetes.client.models.V1ClusterRoleBindingList;
 import io.kubernetes.client.models.V1ClusterRoleList;
 import io.kubernetes.client.models.V1DeleteOptions;
+import io.kubernetes.client.models.V1NamespaceList;
 import io.kubernetes.client.models.V1RoleList;
 import io.kubernetes.client.models.V1Secret;
 import io.kubernetes.client.models.V1ServiceAccount;
@@ -27,7 +28,7 @@ import io.kubernetes.client.util.Config;
 @Component
 public class MemberKubeDao {
 
-	private static final Logger LOG = (Logger) LoggerFactory.getLogger(MemberKubeDao.class);    
+	private final Logger LOG = (Logger) LoggerFactory.getLogger(MemberKubeDao.class);    
 	   
 	ApiClient client;// = Configuration.getDefaultApiClient();
 	KubeClient<?> api; // = new KubeClient(this.client);
@@ -39,21 +40,10 @@ public class MemberKubeDao {
 	}
 
 	
-//	public LinkedTreeMap createServiceAccount(String namespace, ServiceAccountVO serviceAccount) throws IOException, ApiException{
-//		return (LinkedTreeMap) api.ctlData(() ->{
-//			ApiResponse<V1ServiceAccountList> data = (ApiResponse<V1ServiceAccountList>) api.postApiCall(
-//					"/api/v1/namespaces/"+namespace+"/serviceaccounts"
-//					,serviceAccount, null, null, null);
-//			Object map = (Object)data.getData();
-//			LinkedTreeMap mapData = (LinkedTreeMap)map;
-//			return mapData;
-//		});
-//	}
-	
 	@SuppressWarnings("unchecked")
 	public LinkedTreeMap clusterRoleList() throws ApiException{
 		return (LinkedTreeMap) api.ctlData(() ->{
-				ApiResponse<V1ClusterRoleList> data = (ApiResponse<V1ClusterRoleList>) api.apiCall(
+				ApiResponse<V1ClusterRoleList> data = (ApiResponse<V1ClusterRoleList>) api.getApiCall(
 						"/apis/rbac.authorization.k8s.io/v1/clusterroles" 
 						,null, null, null, null, null, null, null, null, null, null, null);
 				Object map = (Object)data.getData();
@@ -65,7 +55,7 @@ public class MemberKubeDao {
 	@SuppressWarnings("unchecked")
 	public LinkedTreeMap clusterRoleBindingList() throws ApiException{
 		return (LinkedTreeMap) api.ctlData(() ->{
-			ApiResponse<V1ClusterRoleBindingList> data = (ApiResponse<V1ClusterRoleBindingList>) api.apiCall(
+			ApiResponse<V1ClusterRoleBindingList> data = (ApiResponse<V1ClusterRoleBindingList>) api.getApiCall(
 					"/apis/rbac.authorization.k8s.io/v1/clusterrolebindings" 
 					,null, null, null, null, null, null, null, null, null, null, null);
 			Object map = (Object)data.getData();
@@ -101,7 +91,7 @@ public class MemberKubeDao {
 	@SuppressWarnings("unchecked")
 	public LinkedTreeMap serviceAccountList(String namespace) throws ApiException{
 		return (LinkedTreeMap) api.ctlData(() ->{
-			ApiResponse<V1ServiceAccountList> data = (ApiResponse<V1ServiceAccountList>) api.apiCall(
+			ApiResponse<V1ServiceAccountList> data = (ApiResponse<V1ServiceAccountList>) api.getApiCall(
 					"/api/v1/namespaces/"+namespace+"/serviceaccounts"
 					,null, null, null, null, null, null, null, null, null, null, null);
 			Object map = (Object)data.getData();
@@ -113,7 +103,7 @@ public class MemberKubeDao {
 	@SuppressWarnings("unchecked")
 	public LinkedTreeMap getServiceAccount(String namespace, String name) throws ApiException{
 		return (LinkedTreeMap) api.ctlData(() ->{
-			ApiResponse<V1ServiceAccountList> data = (ApiResponse<V1ServiceAccountList>) api.apiCall(
+			ApiResponse<V1ServiceAccountList> data = (ApiResponse<V1ServiceAccountList>) api.getApiCall(
 					"/api/v1/namespaces/"+namespace+"/serviceaccounts/" + name
 					,null, null, null, null, null, null, null, null, null, null, null);
 			Object map = (Object)data.getData();
@@ -181,7 +171,7 @@ public class MemberKubeDao {
 	@SuppressWarnings("unchecked")
 	public LinkedTreeMap getSecret(String namespace, String secretName ) throws ApiException{
 		return (LinkedTreeMap) api.ctlData(() ->{
-			ApiResponse<V1Secret> data = (ApiResponse<V1Secret>) api.apiCall(
+			ApiResponse<V1Secret> data = (ApiResponse<V1Secret>) api.getApiCall(
 					"/api/v1/namespaces/"+namespace+"/secrets/" + secretName
 					,null, null, null, null, null, null, null, null, null, null, null);
 			Object map = (Object)data.getData();
@@ -190,7 +180,17 @@ public class MemberKubeDao {
 		});
 	}
 	
-	
+	@SuppressWarnings("unchecked")
+	public LinkedTreeMap namespaceList(String namespace) throws ApiException{
+		return (LinkedTreeMap) api.ctlData(() ->{
+			ApiResponse<V1NamespaceList> data = (ApiResponse<V1NamespaceList>) api.getApiCall(
+					"/api/v1/namespaces/{name}".replace("{name}", namespace)
+					,null, null, null, null, null, null, null, null, null, null, null);
+			Object map = (Object)data.getData();
+			LinkedTreeMap mapData = (LinkedTreeMap)map;
+			return mapData;
+		});
+	}
 	
 		
 }
