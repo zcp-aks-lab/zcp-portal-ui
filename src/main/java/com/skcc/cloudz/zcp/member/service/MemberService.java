@@ -97,12 +97,12 @@ public class MemberService {
 //	}
 	
 	/**
-	 * 사용자 이름에 따른 clusterrolebinding 값(네임스페이스 정보를 포함한다)
+	 * 사용자 이름에 따른 clusterrolebinding 값
 	 * @param username
 	 * @return
 	 * @throws ApiException
 	 */
-	private LinkedTreeMap getClusterRoleBinding(String username) throws ApiException{
+	public LinkedTreeMap getClusterRoleBinding(String username) throws ApiException{
 		
 		LinkedTreeMap map = (LinkedTreeMap) KubeDao.clusterRoleBindingList();
 		List<LinkedTreeMap> items= (List<LinkedTreeMap>)map.get("items");
@@ -120,12 +120,24 @@ public class MemberService {
 			}
 			return false;
 		});
-		//LOG.debug("count=" + serviceAccount.count());
-		//Stream<LinkedTreeMap> serviceAcountUser = serviceAcount.filter((data) ->{return data.equals(roleBindingPrefix+ username);});
 		
 		return serviceAccount.findAny().get();
 		
 	}
+	
+	
+	/**
+	 * @return
+	 * @throws ApiException
+	 * @throws ParseException
+	 * 
+	 * 네임 스페이스 정보
+	 * 
+	 */
+	public LinkedTreeMap getNamespace(String namespace) throws ApiException, ParseException{
+		return (LinkedTreeMap) KubeDao.namespaceList(namespace);
+	}
+	
 	
 	public LinkedTreeMap serviceAccountList(String namesapce, String username) throws IOException, ApiException{
 		LinkedTreeMap map = KubeDao.serviceAccountList(namesapce);
