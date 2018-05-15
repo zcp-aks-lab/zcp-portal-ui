@@ -1,0 +1,32 @@
+{"properties": [
+  {
+    "name": "props.app-name",
+    "type": "java.lang.String",
+    "description": "A description for 'props.app-name'"
+  },
+  {
+    "name": "props.keycloak.zcp.client-id",
+    "type": "java.lang.String",
+    "description": "A description for 'props.keycloak.zcp.client-id'"
+  },
+  {
+    "name": "props.keycloak.zcp.client-secret",
+    "type": "java.lang.String",
+    "description": "A description for 'props.keycloak.zcp.client-secret'"
+  },
+  {
+    "name": "props.keycloak.zcp.access-token-uri",
+    "type": "java.lang.String",
+    "description": "A description for 'props.keycloak.zcp.access-token-uri'"
+  },
+  {
+    "name": "props.keycloak.zcp.user-authorization-uri",
+    "type": "java.lang.String",
+    "description": "A description for 'props.keycloak.zcp.user-authorization-uri'"
+  },
+  {
+    "name": "props.keycloak.zcp.redirect-uri",
+    "type": "java.lang.String",
+    "description": "A description for 'props.keycloak.zcp.redirect-uri'"
+  }
+]}

@@ -1,0 +1,104 @@
+server:
+  port: 8181
+  tomcat:
+    uri-encoding: UTF-8
+  session:
+    timeout: 18000
+  error:
+    whitelabel:
+      enabled: false
+      
+spring:
+  application:
+    name: zcp-portal
+  output:
+    ansi:
+      enabled: always
+  profiles:
+    active: local
+#  resources:
+#    chain:
+#      enabled: true
+  http:
+    encoding:
+      charset: UTF-8 # the encoding of HTTP requests/responses
+      enabled: true # enable http encoding support
+      force: true # force the configured encoding
+
+---
+# local
+spring:
+  profiles: local
+
+logging:
+  level:
+    root: DEBUG 
+    org.apache: DEBUG   
+  config: classpath:config/logback-spring.xml
+  file : local
+  path : data/logs
+
+props:
+  appName: zcp-portal-local
+  keycloak:
+    zcp:
+      clientId: account
+      clientSecret: 963728d3-83dd-4986-a42f-cdaffc0e055a
+      accessTokenUri: http://localhost:8080/auth/realms/zcp/protocol/openid-connect/token
+      userAuthorizationUri: http://localhost:8080/auth/realms/zcp/protocol/openid-connect/auth
+      redirectUri: ${HOME_URL:http://localhost:8181}/k8s-login
+  
+---
+# dev
+spring:
+  profiles: dev
+
+logging:
+  level:
+    root: DEBUG 
+    org.apache: DEBUG   
+  config: classpath:config/logback-spring.xml
+  file : local
+  path : data/logs
+
+props:
+  appName: zcp-portal-dev
+  keycloak:
+    zcp:
+      clientId: account
+      clientSecret: b5331158-1530-4be2-b9d8-0f976640cfdb
+      accessTokenUri: http://keycloak.cberry.xyz/auth/realms/zcp/protocol/openid-connect/token
+      userAuthorizationUri: http://keycloak.cberry.xyz/auth/realms/zcp/protocol/openid-connect/auth
+      redirectUri: ${HOME_URL:http://localhost:8181}/k8s-login
+      
+---
+# stg
+spring:
+  profiles: stg
+
+logging:
+  level:
+    root: INFO 
+    org.apache: INFO   
+  config: classpath:config/logback-spring.xml
+  file : local
+  path : data/logs
+
+props:
+  appName: zcp-portal-stg
+  
+---
+# prod
+spring:
+  profiles: prod
+
+logging:
+  level:
+    root: ERROR 
+    org.apache: INFO   
+  config: classpath:config/logback-spring.xml
+  file : local
+  path : data/logs
+
+props:
+  appName: zcp-portal-prod
