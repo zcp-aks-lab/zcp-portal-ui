@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-default">
+    <head>
+        <title>메인</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        
+    </head>
+    <body>
+        <th:block layout:fragment="content">
+            로그인 유저 : <span th:text="${#authentication.principal.username}">the_username</span> 
+            
+            <br /><div sec:authorize="isAuthenticated()"><span sec:authentication="principal"></span></div><br />
+            
+            message :  <span th:text="#{msg.label.menu}"></span>
+             
+            
+        </th:block>
+    </body>
+</html>

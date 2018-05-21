@@ -1,14 +1,13 @@
 package com.skcc.cloudz.zcp.controller;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 
@@ -24,19 +23,15 @@ public class MainController {
     @Autowired
     private SecurityService securityService;
     
-    @RequestMapping(value = {"/main", "/"}, method = RequestMethod.GET)
-    @ResponseBody
-    public Map<String, Object> main() {
+    @GetMapping(value = {"/main", "/"}, consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+    public String main(final Principal principal, Model model) {
         if (log.isDebugEnabled()) {
-            log.debug("appName : {}", appName);
+            log.debug("Principal : {}", principal);
         }
         
-        Map<String, Object> resultMap = new HashMap<String, Object>();
+        model.addAttribute("sUser", securityService.getUserDetails());
         
-        resultMap.put("resultMsg", "SUCCESS");
-        resultMap.put("resultData", securityService.getUserDetails());
-        
-        return resultMap;
+        return "content/main";
     }
 
 }

@@ -9,6 +9,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
+import com.skcc.cloudz.zcp.common.domain.vo.CommonVo;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,8 +20,8 @@ import lombok.Setter;
  *
  */
 @Getter @Setter @NoArgsConstructor
-public class OpenIdConnectUserDetailsVo implements UserDetails {
-    private static final long serialVersionUID = 1L;
+public class OpenIdConnectUserDetailsVo extends CommonVo implements UserDetails {
+    private static final long serialVersionUID = -899359145312156965L;
     
     private String userId;
     private String email;

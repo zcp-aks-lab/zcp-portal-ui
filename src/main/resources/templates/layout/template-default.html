@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" 
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" 
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8" />
+
+    <meta name="_csrf" th:content="${_csrf} ? ${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf} ? ${_csrf.headerName}"/>
+    
+    <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE">ZCP Portal</title>
+
+    <!-- common static resources-->
+    <th:block th:include="common/head/resources :: head"></th:block>
+
+    <!-- common javascript -->
+    <th:block th:include="common/head/script :: head"></th:block>
+    
+</head>
+
+<body>
+    <!-- Layout Content -->
+    <th:block layout:fragment="content">
+        
+    </th:block>
+
+    <th:block layout:fragment="content-script"></th:block>
+    
+</body>
+
+</html>

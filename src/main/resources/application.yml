@@ -3,7 +3,7 @@ server:
   tomcat:
     uri-encoding: UTF-8
   session:
-    timeout: 18000
+    timeout: 300
   error:
     whitelabel:
       enabled: false
@@ -11,14 +11,26 @@ server:
 spring:
   application:
     name: zcp-portal
+    index: 1
   output:
     ansi:
       enabled: always
   profiles:
     active: local
-#  resources:
-#    chain:
-#      enabled: true
+  resources:
+    chain:
+      enabled: true
+  thymeleaf:
+    cache: false
+    enabled: true
+    encoding: UTF-8
+    mode: HTML5
+    template-resolver-order: 2
+  messages:
+    encoding: UTF-8
+    cache-seconds: 5
+    fallback-to-system-locale: false
+    basename: i18n/messages
   http:
     encoding:
       charset: UTF-8 # the encoding of HTTP requests/responses
@@ -32,7 +44,7 @@ spring:
 
 logging:
   level:
-    root: DEBUG 
+    root: INFO 
     org.apache: DEBUG   
   config: classpath:config/logback-spring.xml
   file : local

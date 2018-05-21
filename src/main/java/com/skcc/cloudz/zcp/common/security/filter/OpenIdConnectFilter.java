@@ -68,8 +68,14 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
             
             @SuppressWarnings("unchecked")
             final Map<String, String> authInfo = new ObjectMapper().readValue(tokenDecoded.getClaims(), Map.class);
+            
+            /* TODO: get cluster role binding by username */
+            
+            /* TODO: get namespace by username */
+            
 
             final OpenIdConnectUserDetailsVo user = new OpenIdConnectUserDetailsVo(authInfo, accessToken);
+            log.debug("=======> user : {}", user.toString());
             return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         } catch (final InvalidTokenException e) {
             throw new BadCredentialsException("Could not obtain user details from token", e);
