@@ -44,7 +44,7 @@ spring:
 
 logging:
   level:
-    root: INFO 
+    root: DEBUG 
     org.apache: DEBUG   
   config: classpath:config/logback-spring.xml
   file : local

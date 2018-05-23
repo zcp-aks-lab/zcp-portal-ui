@@ -24,7 +24,7 @@ public class MainController {
     private SecurityService securityService;
     
     @GetMapping(value = {"/main", "/"}, consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
-    public String main(final Principal principal, Model model) {
+    public String main(final Principal principal, Model model) throws Exception {
         if (log.isDebugEnabled()) {
             log.debug("Principal : {}", principal);
         }
