@@ -1,10 +1,35 @@
 <!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html lang="ko"
+    xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    
 <head>
-    <!-- commmon include css -->
-       
-    <!-- commmon include js -->
+
+    <!-- alopexui_theme default -->
+    <link rel="stylesheet" href="css/alopex/alopex-ui-default.css" data-th-href="@{/static/css/alopex/alopex-ui-default.css}" />
+    <!-- end alopexui_theme -->
+    
+    <!-- alopexui_basic -->
+    <link rel="stylesheet" href="css/alopex/alopex-ext.css" data-th-href="@{/static/css/alopex/alopex-ext.css}" />
+    
+    <script src="js/lib/jquery/jquery-1.12.4.js" data-th-src="@{/static/js/lib/jquery/jquery-1.12.4.js}"></script>
+    <script src="js/lib/alopex/alopex-ui.min.js" data-th-src="@{/static/js/lib/alopex/alopex-ui.min.js}"></script>
+    <script src="js/lib/alopex/alopex-ext.min.js" data-th-src="@{/static/js/lib/alopex/alopex-ext.min.js}"></script>
+    <script src="js/lib/alopex/alopex-ext-setup.js" data-th-src="@{/static/js/lib/alopex/alopex-ext-setup.js}"></script>
+    
+    <link rel="stylesheet" href="css/alopex/alopex-grid.css" data-th-href="@{/static/css/alopex/alopex-grid.css}" />
+    <script src="js/lib/alopex/alopex-grid.min.js" data-th-src="@{/static/js/lib/alopex/alopex-grid.min.js}"></script>
+    <script src="js/lib/alopex/alopex-grid-excel.min.js" data-th-src="@{/static/js/lib/alopex/alopex-grid-excel.min.js}"></script>
+    <!-- end alopexui_basic -->
+    
+    <link rel="stylesheet" href="css/cloudzcp-grid.css" data-th-href="@{/static/css/cloudzcp-grid.css}" />
+    <link rel="stylesheet" href="css/cloudzcp-layout.css" data-th-href="@{/static/css/cloudzcp-layout.css}" />
+    <link rel="stylesheet" href="css/cloudzcp-ui.css" data-th-href="@{/static/css/cloudzcp-ui.css}" />
+    <script src="js/publish/common/alopex-common.js" data-th-src="@{/static/js/publish/common/alopex-common.js}"></script>
+    <script src="js/publish/common/cloudzcp-ui.js" data-th-src="@{/static/js/publish/common/cloudzcp-ui.js}"></script>
+    
+    <!-- application common -->
     <script src="js/common/common.js" data-th-src="@{/static/js/common/common.js}"></script>
     
 </head>

@@ -1,17 +1,18 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" 
+<html lang="ko" 
+    xmlns:th="http://www.thymeleaf.org" 
     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" 
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
 
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
     <meta name="_csrf" th:content="${_csrf} ? ${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf} ? ${_csrf.headerName}"/>
     
-    <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE">ZCP Portal</title>
+    <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE">CloudZ CP</title>
 
     <!-- common static resources-->
     <th:block th:include="common/head/resources :: head"></th:block>
@@ -22,10 +23,76 @@
 </head>
 
 <body>
-    <!-- Layout Content -->
-    <th:block layout:fragment="content">
-        
-    </th:block>
+    <div class="cp-wrapper">
+	    <!-- header -->
+	    <header class="cp-header">
+	        <h1 class="logo"><img src="images/cloudzcp-logo.png" data-th-src="@{/static/images/cloudzcp-logo.png}" alt="CLOUD Z Container Platform" /></h1>
+	        
+	        <!-- utils -->
+	        <div class="header-utils">
+	            <a class="user">skccux01@sk.com</a>
+	            <div class="user-menus">
+	                <ul class="dropmenu-list">
+	                    <li class="selected">나의 정보</li>
+	                    <li>비밀번호 변경</li>
+	                    <li>Admin</li>
+	                    <li>로그아웃</li>
+	                </ul>
+	            </div>
+	        </div>
+	        <!-- /utils -->
+	    </header>
+	    <!-- //header -->
+	    <!-- main-contents -->
+	    <div class="cp-container">
+	        <!-- lnb
+	            서브 메뉴가 있는 경우 : expandable
+	            서브 메뉴를 클릭하고 오픈한 경우 : expanded
+	        -->
+	        <div class="lnb-wrap">
+	            <nav>
+	                <ul>
+	                    <li><a href="#"><img src="images/ico-lnbname.png" data-th-src="@{/static/images/ico-lnbname.png}" class="icon-img" /><span class="lnb-name">ZCP</span></a></li>
+	                    <li><a href="#">대시보드</a></li>
+	                    <li><a href="#">모니터링</a></li>
+	                    <li><a href="#">알림</a></li>
+	                    <li><a href="#">DevOps</a>
+	                        <ul class="lnb-sub">
+	                            <li><a href="#">- 빌드 및 배포</a></li>
+	                            <li><a href="#">- 소스 저장소</a></li>
+	                        </ul>
+	                    </li>
+	                    <li><a href="#">Image Registry</a></li>
+	                    <li><a href="#">ZDB</a></li>
+	                    <li class="selected"><a href="#">설정 및 관리</a>
+	                        <ul class="lnb-sub">
+	                            <li><a href="#">- 네임스페이스</a></li>
+	                            <li class="selected"><a href="#">- 사용자</a></li>
+	                        </ul>
+	                    </li>
+	                    <li><a href="#">안내 및 도움말</a>
+	                        <ul class="lnb-sub">
+	                            <li><a href="#">- 시작하기</a></li>
+	                            <li><a href="#">- 문서</a></li>
+	                            <li><a href="#">- 문의 및 지원</a></li>
+	                            <li><a href="#">- 약관</a></li>
+	                        </ul>
+	                    </li>
+	                    <li>
+	                        <button class="Button btn-toggle lnb-close">접기</button>
+	                    </li>
+	                </ul>
+	            </nav>
+	        </div>
+	        <!-- //lnb -->
+	        
+	        <!-- Layout Content -->
+            <th:block layout:fragment="content"></th:block>
+	        
+	    </div>
+	    <!-- //main-contents -->
+	</div>
+    <!-- Layout lnb -->
 
     <th:block layout:fragment="content-script"></th:block>
     

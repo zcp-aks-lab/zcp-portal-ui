@@ -1,0 +1,117 @@
+[
+  {
+    "name": "대시보드",
+    "order": 1,
+    "url": "/zcp/dashboard",
+    "target": "popup",
+    "sub": [],
+    "accessRole": "cluster-admin"
+  },
+  {
+    "name": "모니터링",
+    "order": 2,
+    "url": "/zcp/monitoring",
+    "target": "popup",
+    "sub": [],
+    "accessRole": "cluster-admin"
+  },
+  {
+    "name": "알림",
+    "order": 3,
+    "url": "/zcp/alert",
+    "target": "popup",
+    "sub": [],
+    "accessRole": "admin"
+  },
+  {
+    "name": "DevOps",
+    "order": 4,
+    "url": "",
+    "target": "",
+    "sub": [
+      {
+        "name": "빌드 및 배포",
+        "order": 1,
+        "url": "/zcp/build",
+        "target": "popup"
+      },
+      {
+        "name": "소스 저장소",
+        "order": 2,
+        "url": "/zcp/repository",
+        "target": "popup"
+      }
+    ],
+    "accessRole": "admin"
+  },
+  {
+    "name": "Image Registry",
+    "order": 5,
+    "url": "/zcp/registry",
+    "target": "popup",
+    "sub": [],
+    "accessRole": "editor"
+  },
+  {
+    "name": "ZDB",
+    "order": 6,
+    "url": "/zcp/zdb",
+    "target": "popup",
+    "sub": [],
+    "accessRole": "viewer"
+  },
+  {
+    "name": "설정 및 관리",
+    "order": 7,
+    "url": "",
+    "target": "",
+    "sub": [
+      {
+        "name": "네임스페이스",
+        "order": 1,
+        "url": "/zcp/namespace",
+        "target": "self"
+      },
+      {
+        "name": "사용자",
+        "order": 2,
+        "url": "/zcp/user",
+        "target": "self"
+      }
+    ],
+    "accessRole": "viewer"
+  },
+  {
+    "name": "안내 및 도움말",
+    "order": 8,
+    "url": "",
+    "target": "",
+    "sub": [
+      {
+        "name": "시작하기",
+        "order": 1,
+        "url": "/zcp/initialize",
+        "target": "self"
+      },
+      {
+        "name": "문서",
+        "order": 2,
+        "url": "/zcp/document",
+        "target": "popup"
+      },
+      {
+        "name": "문의 및 지원",
+        "order": 3,
+        "url": "/zcp/qna",
+        "target": "popup"
+      },
+      {
+        "name": "약관",
+        "order": 4,
+        "url": "/zcp/terms",
+        "target": "popup"
+      }
+    ],
+    "accessRole": "viewer"
+  }
+]
