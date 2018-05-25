@@ -8,96 +8,92 @@
     </head>
     <body>
         <th:block layout:fragment="content">
-            <!-- contents -->
-            <div class="contents-wrap">
-                <!-- location -->
-                <div class="locations-area">
-                    <div class="prj-list">
-                        <strong>Namespace : </strong>
-                        <button class="Dropdownbutton namespace">ONM</button>
-                        <ul class="dropmenu-list">
-                            <li><a>ONM (Default)</a></li>
-                            <li><a>ICN</a></li>
-                            <li><a>NMM</a></li>
-                            <li><a>전체</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="contents-box">
-                    <!-- service top area-->
-                    <div class="top-area">
-                        <h2 class="title">나의 정보</h2>
-                        <div class="tag-wrap">
-                            <span class="tag">나의 기본 정보를 조회 및 수정합니다.</span>
-                        </div>
-                    </div>
-                    <!-- myinfo detail-->
-                    <form>
-                        <fieldset>
-                            <table class="Table Form-type topline">
-                                <colgroup>
-                                    <col style="width: 200px;"></col>
-                                    <col></col>
-                                </colgroup>
-                                <tbody>
-                                    <tr>
-                                        <th>Account</th>
-                                        <td>
-                                            <input class="Textinput Width-60" />
-                                            <button class="Button line-btn">복사</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>생성 일시</th>
-                                        <td>2018/05/30 12:00:00</td>
-                                    </tr>
-                                    <tr>
-                                        <th>사용자 ID</th>
-                                        <td>
-                                            <input class="Textinput" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>이메일<strong class="astertisk">*</strong></th>
-                                        <td>
-                                            <input class="Textinput" />
-                                            <button class="Button btn">이메일 발송</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>이름<strong class="astertisk">*</strong></th>
-                                        <td>
-                                            <input class="Textinput" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>클러스터 권한</th>
-                                        <td>Cluster Admin</td>
-                                    </tr>
-                                    <tr>
-                                        <th>기본 네임스페이스<strong class="astertisk">*</strong></th>
-                                        <td>
-                                            <div class="Divselect" style="width: 200px">
-                                                <select>
-                                                    <option value="korea">Namespace1</option>
-                                                    <option value="usa">Namespace2</option>
-                                                    <option value="japan">Namespace3</option>
-                                                </select>
-                                                <span></span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="btn-wrap">
-                                <div class="btn-left"><button class="Button btn">취소</button></div>
-                                <div class="btn-right"><button class="Button btn bg-red">변경</button></div>
-                            </div>
-                        </fieldset>
-                    </form>
+            <!-- location -->
+            <div class="locations-area">
+                <div class="prj-list">
+                    <strong>Namespace : </strong>
+                    <button class="Dropdownbutton namespace">ONM</button>
+                    <ul class="dropmenu-list">
+                        <li><a>ONM (Default)</a></li>
+                        <li><a>ICN</a></li>
+                        <li><a>NMM</a></li>
+                        <li><a>전체</a></li>
+                    </ul>
                 </div>
             </div>
-            <!-- //contents -->
+            <div class="contents-box">
+                <!-- service top area-->
+                <div class="top-area">
+                    <h2 class="title">나의 정보</h2>
+                    <div class="tag-wrap">
+                        <span class="tag">나의 기본 정보를 조회 및 수정합니다.</span>
+                    </div>
+                </div>
+                <!-- myinfo detail-->
+                <form>
+                    <fieldset>
+                        <table class="Table Form-type topline">
+                            <colgroup>
+                                <col style="width: 200px;"></col>
+                                <col></col>
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <th>Account</th>
+                                    <td>
+                                        <input class="Textinput Width-60" />
+                                        <button class="Button line-btn">복사</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>생성 일시</th>
+                                    <td>2018/05/30 12:00:00</td>
+                                </tr>
+                                <tr>
+                                    <th>사용자 ID</th>
+                                    <td>
+                                        <input class="Textinput" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>이메일<strong class="astertisk">*</strong></th>
+                                    <td>
+                                        <input class="Textinput" />
+                                        <button class="Button btn">이메일 발송</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>이름<strong class="astertisk">*</strong></th>
+                                    <td>
+                                        <input class="Textinput" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>클러스터 권한</th>
+                                    <td>Cluster Admin</td>
+                                </tr>
+                                <tr>
+                                    <th>기본 네임스페이스<strong class="astertisk">*</strong></th>
+                                    <td>
+                                        <div class="Divselect" style="width: 200px">
+                                            <select>
+                                                <option value="korea">Namespace1</option>
+                                                <option value="usa">Namespace2</option>
+                                                <option value="japan">Namespace3</option>
+                                            </select>
+                                            <span></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="btn-wrap">
+                            <div class="btn-left"><button class="Button btn">취소</button></div>
+                            <div class="btn-right"><button class="Button btn bg-red">변경</button></div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
         </th:block>
     </body>
 </html>
