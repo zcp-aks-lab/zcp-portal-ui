@@ -11,15 +11,10 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
 import com.skcc.cloudz.zcp.common.domain.vo.CommonVo;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 /**
  * @author Administrator
  *
  */
-@Getter @Setter @NoArgsConstructor
 public class OpenIdConnectUserDetailsVo extends CommonVo implements UserDetails {
     private static final long serialVersionUID = -899359145312156965L;
     
@@ -27,6 +22,8 @@ public class OpenIdConnectUserDetailsVo extends CommonVo implements UserDetails 
     private String email;
     private String group;
     private OAuth2AccessToken token;
+    
+    public OpenIdConnectUserDetailsVo() {}
 
     public OpenIdConnectUserDetailsVo(Map<String, String> userInfo, OAuth2AccessToken token) {
         this.userId = userInfo.get("sub");
@@ -68,6 +65,38 @@ public class OpenIdConnectUserDetailsVo extends CommonVo implements UserDetails 
     @Override
     public String getUsername() {
         return this.email;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public OAuth2AccessToken getToken() {
+        return token;
+    }
+
+    public void setToken(OAuth2AccessToken token) {
+        this.token = token;
     }
     
 }

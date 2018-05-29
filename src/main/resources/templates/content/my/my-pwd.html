@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-default">
+    <head>
+        <title>비밀번호 변경</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        
+    </head>
+    <body>
+        <th:block layout:fragment="content">
+            <!-- location -->
+            <div class="locations-area">
+                <div class="prj-list">
+                    <strong>Namespace : </strong>
+                    <button class="Dropdownbutton namespace">ONM</button>
+                    <ul class="dropmenu-list">
+                        <li><a>ONM (Default)</a></li>
+                        <li><a>ICN</a></li>
+                        <li><a>NMM</a></li>
+                        <li><a>전체</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="contents-box">
+                <!-- service top area-->
+                <div class="top-area">
+                    <h2 class="title">비밀번호 변경</h2>
+                    <div class="tag-wrap">
+                        <span class="tag">비밀번호를 변경하거나 이중 로그인 보안을 설정할 수 있습니다.</span>
+                    </div>
+                </div>
+                <!-- accordion wrap-->
+                <ul class="Accordion cp-accordion">
+                    <li>
+                        <a>비밀번호 변경</a>
+                        <div class="accor-contents__wrap">
+                            <form>
+                                <fieldset>
+                                    <table class="Table Form-type">
+                                        <colgroup>
+                                            <col style="width: 200px;"></col>
+                                            <col></col>
+                                        </colgroup>
+                                        <tbody>
+                                            <tr>
+                                                <th>현재 비밀번호<strong class="astertisk">*</strong></th>
+                                                <td>
+                                                    <input class="Textinput" />
+                                                    <p class="info-text">비밀번호를 입력하세요.</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>새 비밀번호<strong class="astertisk">*</strong></th>
+                                                <td>
+                                                    <input class="Textinput" />
+                                                    <p class="info-text">기존 비밀번호와 동일하게 설정할 수 없습니다.</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>새 비밀번호 확인<strong class="astertisk">*</strong></th>
+                                                <td>
+                                                    <input class="Textinput" />
+                                                    <p class="info-text">두개의 비밀번호가 일치하지 않습니다.</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="btn-wrap__right">
+                                        <button class="Button btn bg-red">확인</button>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </li>
+                    <li>
+                        <a>이중 로그인 보안 설정</a>
+                        <div class="accor-contents__wrap">
+                            <table class="Table Form-type">
+                                <colgroup>
+                                    <col style="width: 200px;"></col>
+                                    <col></col>
+                                </colgroup>
+                                <tbody>
+                                    <tr>
+                                        <th>모바일 인증</th>
+                                        <td>
+                                            <label class="ImageCheckbox" id="checkTest03">
+                                                <input class="Checkbox" type="checkbox" name="chk1" value = "check1" checked="checked" />
+                                                사용함
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </th:block>
+    </body>
+</html>

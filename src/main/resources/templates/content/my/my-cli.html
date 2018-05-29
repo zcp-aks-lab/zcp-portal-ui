@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-default">
+    <head>
+        <title>Cli Command</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        
+    </head>
+    <body>
+        <th:block layout:fragment="content">
+            <!-- location -->
+            <div class="locations-area">
+                <div class="prj-list">
+                    <strong>Namespace : </strong>
+                    <button class="Dropdownbutton namespace">ONM</button>
+                    <ul class="dropmenu-list">
+                        <li><a>ONM (Default)</a></li>
+                        <li><a>ICN</a></li>
+                        <li><a>NMM</a></li>
+                        <li><a>전체</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="contents-box">
+                <!-- service top area-->
+                <div class="top-area">
+                    <h2 class="title">CLI Command</h2>
+                    <div class="tag-wrap">
+                        <span class="tag">kubectl command line interface 를 이용하여 클러스터 콘솔로 바로 접속할 수 있습니다. 아래 단계를 따라 CLI 환경을 설정 하세요</span>
+                    </div>
+                </div>
+                <!-- myinfo detail-->
+                <form>
+                    <fieldset>
+                        <table class="Table Form-type topline">
+                            <colgroup>
+                                <col style="width: 200px;"></col>
+                                <col></col>
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <th><span class="ico-num">1</span>단계</th>
+                                    <td>
+                                        <span class="Padding-right-10">kubectl command line interface를 PC에 설치합니다.</span> 
+                                        <button class="Button btn bg-gray">Download</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="Valign-top"><span class="ico-num">2</span>단계</th>
+                                    <td><p class="Margin-bottom-10">CLI구성을 위하여 터미널에 아래의 command를 실행합니다.</p><textarea class="Textarea cli-area"></textarea>
+                                    <button class="Button line-btn">복사</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </form>
+            </div>
+        </th:block>
+    </body>
+</html>

@@ -26,16 +26,16 @@
     <div class="cp-wrapper">
 	    <!-- header -->
 	    <header class="cp-header">
-	        <h1 class="logo"><img src="images/cloudzcp-logo.png" data-th-src="@{/static/images/cloudzcp-logo.png}" alt="CLOUD Z Container Platform" /></h1>
+	        <h1 class="logo" onclick="location.href='/'"><img src="images/cloudzcp-logo.png" data-th-src="@{/static/images/cloudzcp-logo.png}" alt="CLOUD Z Container Platform" /></h1>
 	        
 	        <!-- utils -->
 	        <div class="header-utils">
 	            <a class="user" th:text="${#authentication.principal.username}">skccux01@sk.com</a>
 	            <div class="user-menus">
 	                <ul class="dropmenu-list">
-	                    <li class="selected">나의 정보</li>
-	                    <li>비밀번호 변경</li>
-	                    <li>Admin</li>
+	                    <li class="selected" onclick="location.href='/my/my-info'" >나의 정보</li>
+	                    <li onclick="location.href='/my/my-pwd'">비밀번호 변경</li>
+	                    <li onclick="location.href='/my/my-cli'">CLI Command</li>
 	                    <li>로그아웃</li>
 	                </ul>
 	            </div>
@@ -49,6 +49,38 @@
 	            서브 메뉴가 있는 경우 : expandable
 	            서브 메뉴를 클릭하고 오픈한 경우 : expanded
 	        -->
+	        
+	       <!--  addOnServiceMetaData : 
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th scope="row">이름</th>
+                    <th scope="row">URL</th>
+                    <th scope="row">target</th>
+                    <th scope="row">order</th>
+                    <th scope="row">accessRole</th>
+                </tr>
+            </thead>
+            <tbody th:id="tbody_resources">
+                <th:block>
+                    <tr th:if="${#lists.isEmpty(addOnServiceMataData)}">
+                        <td th:colspan="5">데이터가 존재 하지 않습니다.</td>
+                    </tr>
+                    <tr th:each="resource, iterStat : ${addOnServiceMataData}">
+                        <td th:text="${resource.name}">대시보드</td>
+                        <td th:text="${resource.url}">/zcp/dashboard</td>
+                        <td th:text="${resource.target}">popup</td>
+                        <td th:text="${resource.order}">1</td>
+                        <td th:text="${resource.accessRole}">cluster-admin</td>
+                    </tr>
+                </th:block>
+            </tbody>
+        
+        </table>
+    </div> -->
+	        
+	        
 	        <div class="lnb-wrap">
 	            <nav>
 	                <ul>
