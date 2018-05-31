@@ -393,7 +393,8 @@ $a.page(function() {
     		paging: {
     			perPage: 5,
     			pagerCount: 5,
-    			pagerSelect: true
+    			pagerSelect: true,
+                pagerTotal: true
     		},
             defaultColumnMapping : {
                 sorting:true

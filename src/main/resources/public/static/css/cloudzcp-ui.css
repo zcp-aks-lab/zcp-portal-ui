@@ -46,7 +46,7 @@
 .Splitter, .Splitter *,
 .Hierarchical, .Hierarchical *,
 .MultiSelect, .MultiSelect * {
-	font-family: "본고딕", "Noto";
+	font-family: "NotoKrR";
 }
 .Button, .Button:hover, .Button:active, .Button.Checked,
 .Dropdownbutton, .Dropdownbutton:hover, .Dropdownbutton:active, .Dropdownbutton.Checked {
@@ -63,6 +63,7 @@
 	-o-transition: none;
 	transition: none;
 }
+.ImageCheckbox, .ImageRadio {font-size: 1.0rem;}
 .ImageCheckbox:after {
 	left: 1px;
 	top: 42%;
@@ -82,7 +83,7 @@
 }
 .ImageRadio:after {
 	top: 39%;
-	left: -6px;
+	left: 0;
 	width: 18px;
 	height: 18px;
 	background: url("../images/ico-form.png") no-repeat  0 -53px;
@@ -97,8 +98,8 @@
 	background: url("../images/ico-form.png") no-repeat -79px -53px;
 }
 .Textinput {
-	height: 38px;
-	width: 200px;
+	height: 36px;
+	min-width: 200px;
 	padding: 0 15px;
 	font-size: 1.0rem;
 	line-height: 2.4rem;
@@ -124,6 +125,7 @@
 .Table.Form-type tbody th {
 	padding: 10px 20px;
 	font-size: 1.06rem;
+	font-weight: 500;
 	color: #444444;
 	text-align: left;
 	border: 0;
@@ -133,9 +135,10 @@
 	padding: 10px 20px;
 	font-size: 1.0rem;
 	color: #666666; 
+	border-left: 0;
 }
 .Divselect {
-	padding: 5px 18px 8px 10px;
+	padding: 4px 18px 8px 10px;
 	font-size: 1.0rem;
 	color: #999999;
 	border-color: #cccccc;
@@ -148,4 +151,64 @@
 .Divselect:hover, .Divselect:active, .Divselect.ui-state-active {
 	border-color: #888888;
 	background: #ffffff url("../images/ico-form.png") no-repeat right -50px;
+}
+.Tooltip {
+	padding: 6px 20px 8px;
+	font-size: 0.93rem;
+	font-weight: 500;
+	background: #333333;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	-ms-border-radius: 6px;
+	border-radius: 6px;
+}
+.Tooltip.Bottom:before {border-bottom: 6px solid #333333;}
+.Tooltip.Left:before {border-left: 6px solid #333333;}
+.Tooltip.Right:before {border-right: 6px solid #333333;}
+.Tabs > ul > li, .Tabs > .Scroller > ul > li {
+	font-size: 1.13rem;
+	color: #ffffff;
+	background: #aaaaaa;
+	border-color: #888888;
+	border-bottom: 1px solid #888888;
+}
+.Tabs > ul,
+.Tabs > ul > li:first-child, .Tabs > .Scroller > ul > li:first-child {
+	border-color: #888888;
+}
+.Tabs > ul > li:hover, 
+.Tabs > .Scroller > ul > li:hover, 
+.Tabs > ul > li:active, 
+.Tabs > .Scroller > ul > li:active,
+.Tabs > ul > li.Selected, 
+.Tabs > .Scroller > ul > li.Selected {
+	border-left: 1px solid #888888;
+	border-right: 1px solid #888888;
+	border-top: 4px solid #ea0530;
+	border-bottom: 1px solid #888888;
+	color: #333333;
+}
+.Tabs.Fixed > ul > li, .Tabs.Fixed > .Scroller > ul > li {float: inherit; font-weight: normal;}
+.Tabs > .Scroller > ul {
+	background: #f9f9f9;
+	border: 1px solid #eeeeee;
+}
+.Label {
+	height: 22px;
+	padding: 0 8px 1px;
+	line-height: 20px;
+	margin-right: 1px;
+	font-family: 'NotoKrL';
+	border: 1px solid #666666;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-ms-border-radius: 3px;
+	border-radius: 3px;
+}
+.Label.Default {background: #666666}
+.Label.white {
+	color: #666666;
+	margin-right: 4px;
+	border: 1px solid #cccccc;
+	background: #ffffff;
 }
