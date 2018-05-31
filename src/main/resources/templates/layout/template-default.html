@@ -49,44 +49,12 @@
 	            서브 메뉴가 있는 경우 : expandable
 	            서브 메뉴를 클릭하고 오픈한 경우 : expanded
 	        -->
-	        
-	       <!--  addOnServiceMetaData : 
-    <div>
-        <table>
-            <thead>
-                <tr>
-                    <th scope="row">이름</th>
-                    <th scope="row">URL</th>
-                    <th scope="row">target</th>
-                    <th scope="row">order</th>
-                    <th scope="row">accessRole</th>
-                </tr>
-            </thead>
-            <tbody th:id="tbody_resources">
-                <th:block>
-                    <tr th:if="${#lists.isEmpty(addOnServiceMataData)}">
-                        <td th:colspan="5">데이터가 존재 하지 않습니다.</td>
-                    </tr>
-                    <tr th:each="resource, iterStat : ${addOnServiceMataData}">
-                        <td th:text="${resource.name}">대시보드</td>
-                        <td th:text="${resource.url}">/zcp/dashboard</td>
-                        <td th:text="${resource.target}">popup</td>
-                        <td th:text="${resource.order}">1</td>
-                        <td th:text="${resource.accessRole}">cluster-admin</td>
-                    </tr>
-                </th:block>
-            </tbody>
-        
-        </table>
-    </div> -->
-	        
-	        
 	        <div class="lnb-wrap">
 	            <nav>
 	                <ul>
 	                    <li><a href="#"><img src="images/ico-lnbname.png" data-th-src="@{/static/images/ico-lnbname.png}" class="icon-img" /><span class="lnb-name">ZCP</span></a></li>
 	                    <li><a href="#">대시보드</a></li>
-	                    <li><a href="#">모니터링</a></li>
+	                    <li><a href="http://grafana.cloudzcp.io/login/generic_oauth" target="_blank">모니터링</a></li>
 	                    <li><a href="#">알림</a></li>
 	                    <li><a href="#">DevOps</a>
 	                        <ul class="lnb-sub">

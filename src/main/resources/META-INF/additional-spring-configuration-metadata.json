@@ -28,5 +28,10 @@
     "name": "props.keycloak.zcp.redirect-uri",
     "type": "java.lang.String",
     "description": "A description for 'props.keycloak.zcp.redirect-uri'"
+  },
+  {
+    "name": "props.iam.base-url",
+    "type": "java.lang.String",
+    "description": "A description for 'props.iam.base-url'"
   }
 ]}

@@ -53,5 +53,18 @@ $a.page(function(){
 				$(user).removeClass('close');
 			}
 		});
+
+		//on off button
+		var onoff = $('.onoff-wrap > button');
+		$(onoff).click(function(e){
+			e.preventDefault();
+			if($(this).hasClass('btn-on')) {
+				$(this).removeClass('btn-on').addClass('btn-off');
+				$(this).text('OFF');
+			} else {
+				$(this).removeClass('btn-off').addClass('btn-on');
+				$(this).text('ON');
+			}
+		})
 	}
 });

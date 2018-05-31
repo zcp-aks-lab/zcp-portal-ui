@@ -14,19 +14,19 @@
 .alopexgrid .cell {
 	height: 40px;
 	padding-top: 8px;
-	font-size: 15px;
+	font-size: 1.0rem;
 	border-right: 0;
 	border-color: #eeeeee;
 }
 .alopexgrid .relative-wrap .column-title {
 	position: relative;
-	top: 0;
-	font-size: 15px;
+	top: -6px;
+	font-size: 1.0rem;
 }
 .alopexgrid .column-title {
 	position: relative;
 	top: -8px;
-	font-size: 15px;
+	font-size: 1.0rem;
 }
 .alopexgrid .cell.bodycell.selected,
 .alopexgrid .cell.bodycell.selected.nextrow-selected,
@@ -113,8 +113,8 @@
 .alopexgrid .alopexgrid-input-wrapper.alopexgrid-input-checkbox-wrapper .alopexgrid-default-renderer, 
 .alopexgrid .alopexgrid-input-wrapper.alopexgrid-input-checkbox-wrapper .selector-checkbox {margin-top: 16px;}
 
-.alopexgrid .headercell .alopexgrid-input-wrapper.alopexgrid-input-checkbox-wrapper .alopexgrid-default-renderer, 
-.alopexgrid .headercell.cell-header-lastrow.cell-header-firstrow .alopexgrid-input-wrapper.alopexgrid-input-checkbox-wrapper .selector-checkbox {margin-top: 6px;}
+.alopexgrid .headercell .alopexgrid-input-wrapper.alopexgrid-input-checkbox-wrapper .alopexgrid-default-renderer {margin-top: 6px;}
+.alopexgrid .headercell.cell-header-lastrow.cell-header-firstrow .alopexgrid-input-wrapper.alopexgrid-input-checkbox-wrapper .selector-checkbox {margin-top: 12px;}
 
 /* sorting-handle */
 .alopexgrid .sorting .sorting-handle {
@@ -149,7 +149,7 @@
 	position: relative;
 	top: -7px;
 	width: 40px;
-	font-size: 16px;
+	font-size: 1.07rem;
 	color: #666666;
 	border: 0;
 	-moz-appearance: none;
@@ -178,14 +178,6 @@
 	color: #ea0530;
 	background: #ffffff;
 }
-/* 
-.alopexgrid .pager .page-button.first-page a,
-.alopexgrid .pager .page-button.prev-page a,
-.alopexgrid .pager .page-button.next-page a,
-.alopexgrid .pager .page-button.last-page a {
-	position: relative;
-	top: 3px;
-} */
 .alopexgrid .pager .page-button.first-page a {
 	background: transparent url("../images/ico-paging.png") no-repeat -22px 0;
 }
@@ -217,4 +209,8 @@
 
 .alopexgrid .pager .page-button.last-page.hovering a {
 	background: transparent url("../images/ico-paging.png") no-repeat -160px 0;
+}
+.alopexgrid .pager .pager-left span{
+	font-size: 1.07rem;
+	color: #666666;
 }

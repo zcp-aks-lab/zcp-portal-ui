@@ -10,11 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skcc.cloudz.zcp.common.security.vo.JwtIdToken;
 import com.skcc.cloudz.zcp.domain.vo.OpenIdConnectUserDetailsVo;
 
-/**
- * 시큐리티 공통 서비스
- * @author Administrator
- *
- */
 @Service
 public class SecurityService {
     

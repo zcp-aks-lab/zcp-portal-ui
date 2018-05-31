@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,11 +25,15 @@ import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.skcc.cloudz.zcp.common.service.IamApiService;
 import com.skcc.cloudz.zcp.domain.vo.OpenIdConnectUserDetailsVo;
 
 public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter {
     
     private static final Logger log = LoggerFactory.getLogger(OpenIdConnectFilter.class);
+    
+    @Autowired
+    private IamApiService iamApiService;
     
     public OpenIdConnectFilter(String defaultFilterProcessesUrl) {
         super(defaultFilterProcessesUrl);
@@ -71,6 +76,9 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
             final Map<String, String> authInfo = new ObjectMapper().readValue(tokenDecoded.getClaims(), Map.class);
             
             /* TODO: get cluster role binding by username */
+            Map<String, Object> userMap = iamApiService.getUser();
+            String baseUrl = userMap.get("iamBaseUrl") != null ? userMap.get("iamBaseUrl").toString() : "";
+            log.debug("OpenIdConnectFilter baseUrl : {}", baseUrl);
             
             /* TODO: get namespace by username */
             

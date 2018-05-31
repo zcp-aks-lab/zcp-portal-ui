@@ -30,9 +30,14 @@ public class MainController {
             log.debug("Principal : {}", principal);
         }
         
-        model.addAttribute("sUser", securityService.getUserDetails());
+        //model.addAttribute("sUser", securityService.getUserDetails());
         
-        return "content/main";
+        log.debug("getUserDetails : {}", securityService.getUserDetails());
+        log.debug("getIdToken : {}", securityService.getIdToken());
+        log.debug("getAccessToken : {}", securityService.getAccessToken());
+        
+        //return "content/main";
+        return "redirect:/my/my-info";
     }
 
 }
