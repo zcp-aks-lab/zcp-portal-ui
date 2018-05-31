@@ -15,6 +15,6 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: zcp-console-ui
+          serviceName: zcp-portal-ui
           servicePort: 80
 

@@ -16,7 +16,7 @@ spring:
     ansi:
       enabled: always
   profiles:
-    active: local
+    active: dev
   resources:
     chain:
       enabled: true
@@ -84,6 +84,7 @@ props:
       accessTokenUri: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/token
       userAuthorizationUri: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/auth
       redirectUri: https://console.cloudzcp.io/k8s-login
+#      redirectUri: ${HOME_URL:http://localhost:8181}/k8s-login
   iam:
     baseUrl: http://zcp-iam:80
 
