@@ -1,0 +1,72 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: zcp-portal-ui
+  namespace: zcp-system
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: zcp-portal-ui
+#        stack: stable
+    spec:
+      tolerations:
+      - key: "management"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - "amd64"
+              - key: role
+                operator: In
+                values:
+                - "management"
+      containers:
+      - name: zcp-portal-ui
+        image: cloudzcp/zcp-portal-ui
+        imagePullPolicy: Always
+        ports:
+        - name: cont-port
+          containerPort: 8181
+#        envFrom:
+#        - configMapRef:
+#            name: cloud-movie-bk-config
+#        env:
+#          - name: REDIS_PASSWORD
+#            valueFrom:
+#              secretKeyRef:
+#                name: cloud-movie-bk-secret
+#                key: REDIS_PASSWORD
+#          - name: MARIADB_PASSWORD
+#            valueFrom:
+#              secretKeyRef:
+#                name: cloud-movie-bk-secret
+#                key: MARIADB_PASSWORD
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: zcp-portal-ui
+  labels:
+    name: zcp-portal-ui
+  namespace: zcp-system
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: "cont-port"
+    protocol: TCP
+    name: http
+  selector:
+    component: zcp-portal-ui
+
