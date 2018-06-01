@@ -16,7 +16,7 @@ spring:
     ansi:
       enabled: always
   profiles:
-    active: dev
+    active: local
   resources:
     chain:
       enabled: true
@@ -55,7 +55,7 @@ props:
   keycloak:
     zcp:
       clientId: account
-      clientSecret: ec551f1e-4dcb-4d80-b380-0f1917039a9c
+      clientSecret: 944eb586-e550-4577-8081-93f91a22b248
       accessTokenUri: http://localhost:8080/auth/realms/zcp/protocol/openid-connect/token
       userAuthorizationUri: http://localhost:8080/auth/realms/zcp/protocol/openid-connect/auth
       redirectUri: ${HOME_URL:http://localhost:8181}/k8s-login
@@ -63,7 +63,7 @@ props:
     baseUrl: http://zcp-iam:80
   
 ---
-# stg (zcp realm)
+# dev (zcp realm)
 spring:
   profiles: dev
 

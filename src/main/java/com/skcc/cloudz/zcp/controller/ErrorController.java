@@ -12,7 +12,7 @@ public class ErrorController {
     static final String RESOURCE_PATH = "/error";
     
     /**
-     * 404 not found error
+     * 404 not found
      * @return
      * @throws Exception
      */
@@ -22,13 +22,23 @@ public class ErrorController {
     }
     
     /**
-     * 500 internal server error
+     * 500 internal server
      * @return
      * @throws Exception
      */
     @GetMapping(value = "/serverError", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String serverError() throws Exception {
         return "common/error/serverError";
+    }
+    
+    /**
+     * 401 Unauthorized
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/accessDenied", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+    public String accessDenied() throws Exception {
+        return "common/error/accessDenied";
     }
 
 }

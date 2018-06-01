@@ -62,6 +62,7 @@ public class ZcpPortalApplication implements CommandLineRunner {
                 compression.setMinResponseSize(2048);
                 container.setCompression(compression);
                 
+                container.addErrorPages(new ErrorPage(HttpStatus.UNAUTHORIZED, "/error/unauthorized"));
                 container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/error/notFound"));
                 container.addErrorPages(new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/error/serverError"));
             }
