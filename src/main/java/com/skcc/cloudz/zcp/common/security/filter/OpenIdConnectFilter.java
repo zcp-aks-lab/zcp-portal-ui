@@ -76,13 +76,12 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
             final Map<String, String> authInfo = new ObjectMapper().readValue(tokenDecoded.getClaims(), Map.class);
             
             /* TODO: get cluster role binding by username */
-            Map<String, Object> userMap = iamApiService.getUser();
-            String baseUrl = userMap.get("iamBaseUrl") != null ? userMap.get("iamBaseUrl").toString() : "";
-            log.debug("OpenIdConnectFilter baseUrl : {}", baseUrl);
+            Map<String, Object> dataMap = iamApiService.getClusterRoleBinding();
             
             /* TODO: get namespace by username */
             
-
+            authInfo.put("accessRole", dataMap.get("accessRole").toString());
+            
             final OpenIdConnectUserDetailsVo user = new OpenIdConnectUserDetailsVo(authInfo, accessToken);
             log.debug("=======> user : {}", user.toString());
             return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

@@ -7,5 +7,7 @@ public interface IamApiService {
     Map<String, Object> getUser();
     
     Map<String, Object> getNamespace();
+    
+    Map<String, Object> getClusterRoleBinding();
 
 }

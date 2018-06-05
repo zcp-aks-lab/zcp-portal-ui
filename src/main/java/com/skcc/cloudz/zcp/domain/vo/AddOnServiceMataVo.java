@@ -2,15 +2,26 @@ package com.skcc.cloudz.zcp.domain.vo;
 
 import java.util.List;
 
+import com.skcc.cloudz.zcp.common.constants.AccessRole;
+
 public class AddOnServiceMataVo {
+    private String id;
     private String name;
     private int order;
     private String url;
     private String target;
-    private String accessRole;
+    private List<AccessRole> accessRoles;
     private List<AddOnServiceMataSubVo> sub;
     
     public AddOnServiceMataVo() {}
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -44,12 +55,12 @@ public class AddOnServiceMataVo {
         this.target = target;
     }
 
-    public String getAccessRole() {
-        return accessRole;
+    public List<AccessRole> getAccessRoles() {
+        return accessRoles;
     }
 
-    public void setAccessRole(String accessRole) {
-        this.accessRole = accessRole;
+    public void setAccessRoles(List<AccessRole> accessRoles) {
+        this.accessRoles = accessRoles;
     }
 
     public List<AddOnServiceMataSubVo> getSub() {

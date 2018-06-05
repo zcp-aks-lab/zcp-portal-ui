@@ -10,16 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.skcc.cloudz.zcp.common.constants.AccessRole;
+import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.domain.vo.AddOnServiceMataVo;
 
 public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
     
     private static final Logger log = LoggerFactory.getLogger(AddOnServiceMetaDataInterceptor.class);
+    
+    @Autowired
+    private SecurityService securityService;
     
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
@@ -33,25 +39,35 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
         }
         
         modelAndView.addObject("addOnServiceMataData", this.getAddOnServiceMetaData());
+        modelAndView.addObject("activePath", requestURI);
     }
     
     public List<AddOnServiceMataVo> getAddOnServiceMetaData () {
-        List<AddOnServiceMataVo> list = new ArrayList<AddOnServiceMataVo>();
-        
+        List<AddOnServiceMataVo> addOnServiceMataResultList = new ArrayList<AddOnServiceMataVo>();
         ObjectMapper mapper = new ObjectMapper();
         
         try {
             InputStream inputStream = AddOnServiceMetaDataInterceptor.class.getClassLoader().getResourceAsStream("addOnServiceMetaData.json");
             if (inputStream != null) {
-                list = mapper.readValue(inputStream, new TypeReference<List<AddOnServiceMataVo>>(){});
+                List<AddOnServiceMataVo> addOnServiceMataList = mapper.readValue(inputStream, new TypeReference<List<AddOnServiceMataVo>>(){});
                 
-                log.debug("list : {}", list.size());
+                String userAccessRole = securityService.getUserDetails().getAccessRole();
+                
+                for (AddOnServiceMataVo addOnServiceMataVo : addOnServiceMataList) {
+                    if (addOnServiceMataVo == null) continue;
+                    
+                    for (AccessRole accessRole : addOnServiceMataVo.getAccessRoles()) {
+                        if (accessRole.getName().equals(userAccessRole)) {
+                            addOnServiceMataResultList.add(addOnServiceMataVo);        
+                        }
+                    }
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         
-        return list;
+        return addOnServiceMataResultList;
     }
 
 }

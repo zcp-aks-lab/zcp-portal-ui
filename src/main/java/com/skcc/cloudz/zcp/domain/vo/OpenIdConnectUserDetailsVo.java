@@ -22,6 +22,7 @@ public class OpenIdConnectUserDetailsVo extends CommonVo implements UserDetails 
     private String email;
     private String group;
     private OAuth2AccessToken token;
+    private String accessRole;
     
     public OpenIdConnectUserDetailsVo() {}
 
@@ -30,6 +31,7 @@ public class OpenIdConnectUserDetailsVo extends CommonVo implements UserDetails 
         this.email = userInfo.get("email");
         this.group = userInfo.get("group");
         this.token = token;
+        this.accessRole = userInfo.get("accessRole");
     }
     
     @Override
@@ -97,6 +99,14 @@ public class OpenIdConnectUserDetailsVo extends CommonVo implements UserDetails 
 
     public void setToken(OAuth2AccessToken token) {
         this.token = token;
+    }
+
+    public String getAccessRole() {
+        return accessRole;
+    }
+
+    public void setAccessRole(String accessRole) {
+        this.accessRole = accessRole;
     }
     
 }

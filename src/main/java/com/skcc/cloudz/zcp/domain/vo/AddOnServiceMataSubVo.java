@@ -1,12 +1,21 @@
 package com.skcc.cloudz.zcp.domain.vo;
 
 public class AddOnServiceMataSubVo {
+    private String id;
     private String name;
     private int order;
     private String url;
     private String target;
     
     public AddOnServiceMataSubVo() {}
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

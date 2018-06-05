@@ -2,8 +2,8 @@ server:
   port: 8181
   tomcat:
     uri-encoding: UTF-8
-#  session:
-#    timeout: 999999
+  session:
+    timeout: 999999
   error:
     whitelabel:
       enabled: false
@@ -36,6 +36,10 @@ spring:
       charset: UTF-8 # the encoding of HTTP requests/responses
       enabled: true # enable http encoding support
       force: true # force the configured encoding
+
+security:
+  basic:
+    enabled: false
 
 ---
 # local

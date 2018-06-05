@@ -41,9 +41,14 @@ public class IamApiServiceImpl implements IamApiService {
         // TODO Auto-generated method stub
         return null;
     }
-    
-    
-    
-    
+
+    @Override
+    public Map<String, Object> getClusterRoleBinding() {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        resultMap.put("accessRole", "admin");
+        
+        return resultMap;
+    }
 
 }

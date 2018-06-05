@@ -52,10 +52,21 @@
 	        <div class="lnb-wrap">
 	            <nav>
 	                <ul>
-	                    <li><a href="#"><img src="images/ico-lnbname.png" data-th-src="@{/static/images/ico-lnbname.png}" class="icon-img" /><span class="lnb-name">ZCP</span></a></li>
-	                    <li><a href="https://dashboard.cloudzcp.io" target="_blank">대시보드</a></li>
-                      <li><a href="https://grafana.cloudzcp.io/login/generic_oauth" target="_blank">모니터링</a></li>
-                      <li><a href="https://kibana.cloudzcp.io" target="_blank">로깅</a></li>
+                        <li><a href="javascript:void(0);"><img src="images/ico-lnbname.png" data-th-src="@{/static/images/ico-lnbname.png}" class="icon-img" /><span class="lnb-name">ZCP</span></a></li>
+                        
+                        <li th:each="parent, iterStat : ${addOnServiceMataData}" >
+                            <a th:href="${parent.url} != '' ? ${parent.url} : '#'" th:target="|_${parent.target}|" th:text="${parent.name}">DevOps</a>
+                            
+                            <ul class="lnb-sub" th:if="${not #lists.isEmpty(parent.sub)}" >
+                                <li th:each="child, iterStat : ${parent.sub}">
+                                    <a th:href="${child.url} != '' ? ${parent.url} : '#'" th:target="|_${parent.target}|" th:text="|-${child.name}|">- 빌드 및 배포</a>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                        <!-- <li><a href="https://dashboard.cloudzcp.io" target="_blank">대시보드</a></li>
+                        <li><a href="https://grafana.cloudzcp.io/login/generic_oauth" target="_blank">모니터링</a></li>
+                        <li><a href="https://kibana.cloudzcp.io" target="_blank">로깅</a></li>
 	                    <li><a href="#">알림</a></li>
 	                    <li><a href="#">DevOps</a>
 	                        <ul class="lnb-sub">
@@ -63,8 +74,8 @@
 	                            <li><a href="#">- 소스 저장소</a></li>
 	                        </ul>
 	                    </li>
-                      <li><a href="https://registry.cloudzcp.io" target="_blank">Image Registry</a></li>
-                      <li><a href="https://catalog.cloudzcp.io" target="_blank">Catalog</a></li>
+                        <li><a href="https://registry.cloudzcp.io" target="_blank">Image Registry</a></li>
+                        <li><a href="https://catalog.cloudzcp.io" target="_blank">Catalog</a></li>
 	                    <li class="selected"><a href="#">설정 및 관리</a>
 	                        <ul class="lnb-sub">
 	                            <li><a href="#">- 네임스페이스</a></li>
@@ -81,7 +92,7 @@
 	                    </li>
 	                    <li>
 	                        <button class="Button btn-toggle lnb-close">접기</button>
-	                    </li>
+	                    </li> -->
 	                </ul>
 	            </nav>
 	        </div>
