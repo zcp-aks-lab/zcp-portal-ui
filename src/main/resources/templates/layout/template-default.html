@@ -54,15 +54,20 @@
 	                <ul>
                         <li><a href="javascript:void(0);"><img src="images/ico-lnbname.png" data-th-src="@{/static/images/ico-lnbname.png}" class="icon-img" /><span class="lnb-name">ZCP</span></a></li>
                         
-                        <li th:each="parent, iterStat : ${addOnServiceMataData}" >
-                            <a th:href="${parent.url} != '' ? ${parent.url} : '#'" th:target="|_${parent.target}|" th:text="${parent.name}">DevOps</a>
-                            
-                            <ul class="lnb-sub" th:if="${not #lists.isEmpty(parent.sub)}" >
-                                <li th:each="child, iterStat : ${parent.sub}">
-                                    <a th:href="${child.url} != '' ? ${parent.url} : '#'" th:target="|_${parent.target}|" th:text="|-${child.name}|">- 빌드 및 배포</a>
-                                </li>
-                            </ul>
-                        </li>
+                        <th:block th:each="parent, iterStat : ${addOnServiceMataData}">
+	                        <li th:classappend="${parent.url == activePathInfo.firstPath ? 'selected':''}">
+	                            <a th:href="${parent.url} != '' ? ${parent.url} : '#'" th:target="|_${parent.target}|" th:text="${parent.name}">DevOps</a>
+	                            
+	                            <!-- sub -->
+	                            <ul class="lnb-sub" th:if="${not #lists.isEmpty(parent.sub)}" th:style="${parent.url == activePathInfo.firstPath} ? 'display:block' : 'display:none'">
+	                               <th:block th:each="child, iterStat : ${parent.sub}">
+		                               <li th:classappend="${child.url == activePathInfo.fullPath ? 'selected':''}">
+	                                        <a th:href="${child.url} != '' ? ${child.url} : '#'" th:target="|_${child.target}|" th:text="|-${child.name}|">- 빌드 및 배포</a>
+	                                    </li>
+	                               </th:block>
+	                            </ul>
+	                        </li>
+                        </th:block>
                         
                         <!-- <li><a href="https://dashboard.cloudzcp.io" target="_blank">대시보드</a></li>
                         <li><a href="https://grafana.cloudzcp.io/login/generic_oauth" target="_blank">모니터링</a></li>
@@ -89,10 +94,10 @@
 	                            <li><a href="#">- 문의 및 지원</a></li>
 	                            <li><a href="#">- 약관</a></li>
 	                        </ul>
-	                    </li>
+	                    </li> -->
 	                    <li>
 	                        <button class="Button btn-toggle lnb-close">접기</button>
-	                    </li> -->
+	                    </li>
 	                </ul>
 	            </nav>
 	        </div>

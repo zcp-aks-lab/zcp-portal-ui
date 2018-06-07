@@ -4,14 +4,15 @@ import java.util.List;
 
 import com.skcc.cloudz.zcp.common.constants.AccessRole;
 
-public class AddOnServiceMataVo {
+public class AddOnServiceMataVo implements Comparable<AddOnServiceMataVo> {
     private String id;
     private String name;
     private int order;
     private String url;
     private String target;
-    private List<AccessRole> accessRoles;
     private List<AddOnServiceMataSubVo> sub;
+    private List<AccessRole> accessRoles;
+    private boolean enable;
     
     public AddOnServiceMataVo() {}
 
@@ -55,6 +56,14 @@ public class AddOnServiceMataVo {
         this.target = target;
     }
 
+    public List<AddOnServiceMataSubVo> getSub() {
+        return sub;
+    }
+
+    public void setSub(List<AddOnServiceMataSubVo> sub) {
+        this.sub = sub;
+    }
+    
     public List<AccessRole> getAccessRoles() {
         return accessRoles;
     }
@@ -63,12 +72,23 @@ public class AddOnServiceMataVo {
         this.accessRoles = accessRoles;
     }
 
-    public List<AddOnServiceMataSubVo> getSub() {
-        return sub;
+    public boolean isEnable() {
+        return enable;
     }
 
-    public void setSub(List<AddOnServiceMataSubVo> sub) {
-        this.sub = sub;
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
+    @Override
+    public int compareTo(AddOnServiceMataVo addOnServiceMataVo) {
+        if (this.order < addOnServiceMataVo.getOrder()) {
+            return -1;
+        } else if (this.order > addOnServiceMataVo.getOrder()) {
+            return 1;
+        }
+        
+        return 0;
     }
     
 }

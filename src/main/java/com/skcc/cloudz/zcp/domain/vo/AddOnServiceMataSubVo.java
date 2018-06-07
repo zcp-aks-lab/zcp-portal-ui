@@ -1,11 +1,12 @@
 package com.skcc.cloudz.zcp.domain.vo;
 
-public class AddOnServiceMataSubVo {
+public class AddOnServiceMataSubVo implements Comparable<AddOnServiceMataSubVo> {
     private String id;
     private String name;
     private int order;
     private String url;
     private String target;
+    private boolean enable;
     
     public AddOnServiceMataSubVo() {}
 
@@ -47,6 +48,25 @@ public class AddOnServiceMataSubVo {
 
     public void setTarget(String target) {
         this.target = target;
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
+    @Override
+    public int compareTo(AddOnServiceMataSubVo addOnServiceMataSubVo) {
+        if (this.order < addOnServiceMataSubVo.getOrder()) {
+            return -1;
+        } else if (this.order > addOnServiceMataSubVo.getOrder()) {
+            return 1;
+        }
+        
+        return 0;
     }
     
 }

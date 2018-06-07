@@ -46,7 +46,7 @@ public class IamApiServiceImpl implements IamApiService {
     public Map<String, Object> getClusterRoleBinding() {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
-        resultMap.put("accessRole", "admin");
+        resultMap.put("accessRole", "cluster-admin");
         
         return resultMap;
     }

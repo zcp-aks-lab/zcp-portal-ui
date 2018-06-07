@@ -2,8 +2,8 @@ server:
   port: 8181
   tomcat:
     uri-encoding: UTF-8
-  session:
-    timeout: 999999
+#  session:
+#    timeout: 1800
   error:
     whitelabel:
       enabled: false
