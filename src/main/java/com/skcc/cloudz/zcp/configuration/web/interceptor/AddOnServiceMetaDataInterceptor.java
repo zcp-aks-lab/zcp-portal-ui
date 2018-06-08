@@ -58,7 +58,7 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
             resultList = addOnServiceMataComponent.getAddOnServiceMetaVoList();
         }
         
-        modelAndView.addObject("addOnServiceMataData", this.getAddOnServiceMetaData());
+        modelAndView.addObject("addOnServiceMataData", resultList);
         modelAndView.addObject("activePathInfo", this.getAddOnServiceActivePathInfo(requestURI));
     }
     
