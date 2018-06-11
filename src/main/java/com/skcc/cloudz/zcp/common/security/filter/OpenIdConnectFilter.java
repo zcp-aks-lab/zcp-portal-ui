@@ -25,8 +25,8 @@ import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.skcc.cloudz.zcp.common.security.vo.OpenIdConnectUserDetailsVo;
 import com.skcc.cloudz.zcp.common.service.IamApiService;
-import com.skcc.cloudz.zcp.domain.vo.OpenIdConnectUserDetailsVo;
 
 public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter {
     
@@ -75,12 +75,10 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
             @SuppressWarnings("unchecked")
             final Map<String, String> authInfo = new ObjectMapper().readValue(tokenDecoded.getClaims(), Map.class);
             
-            /* TODO: get cluster role binding by username */
-            Map<String, Object> dataMap = iamApiService.getClusterRoleBinding();
+            /* get user info */
+            Map<String, Object> dataMap = iamApiService.getUser(authInfo.get("preferred_username"));
             
-            /* TODO: get namespace by username */
-            
-            authInfo.put("accessRole", dataMap.get("accessRole").toString());
+            authInfo.put("accessRole", "cluster-admin");
             
             final OpenIdConnectUserDetailsVo user = new OpenIdConnectUserDetailsVo(authInfo, accessToken);
             log.debug("=======> user : {}", user.toString());

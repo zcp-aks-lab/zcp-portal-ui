@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.domain.vo;
+package com.skcc.cloudz.zcp.common.domain.vo;
 
 public class AddOnServiceMataSubVo implements Comparable<AddOnServiceMataSubVo> {
     private String id;

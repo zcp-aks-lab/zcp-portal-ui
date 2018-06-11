@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.domain.vo;
+package com.skcc.cloudz.zcp.common.security.vo;
 
 import java.util.Arrays;
 import java.util.Collection;

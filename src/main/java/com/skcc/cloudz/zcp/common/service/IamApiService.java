@@ -4,10 +4,6 @@ import java.util.Map;
 
 public interface IamApiService {
     
-    Map<String, Object> getUser();
-    
-    Map<String, Object> getNamespace();
-    
-    Map<String, Object> getClusterRoleBinding();
+    Map<String, Object> getUser(String username);
 
 }

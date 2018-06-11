@@ -64,7 +64,7 @@ props:
       userAuthorizationUri: http://localhost:8080/auth/realms/zcp/protocol/openid-connect/auth
       redirectUri: ${HOME_URL:http://localhost:8181}/k8s-login
   iam:
-    baseUrl: http://zcp-iam:80
+    baseUrl: https://zcp-iam.cloudzcp.io:443
   
 ---
 # dev (zcp realm)
@@ -73,8 +73,8 @@ spring:
 
 logging:
   level:
-    root: INFO 
-    org.apache: INFO   
+    root: DEBUG 
+    org.apache: DEBUG   
   config: classpath:config/logback-spring.xml
   file : local
   path : data/logs
@@ -87,10 +87,10 @@ props:
       clientSecret: 0227b024-6483-4e96-827b-3bc4dd73637e
       accessTokenUri: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/token
       userAuthorizationUri: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/auth
-      redirectUri: https://console.cloudzcp.io/k8s-login
-#      redirectUri: ${HOME_URL:http://localhost:8181}/k8s-login
+#      redirectUri: https://console.cloudzcp.io/k8s-login
+      redirectUri: ${HOME_URL:http://localhost:8181}/k8s-login
   iam:
-    baseUrl: http://zcp-iam:80
+    baseUrl: https://zcp-iam.cloudzcp.io:443
 
 ---
 # stg (portal realm)
@@ -115,7 +115,7 @@ props:
       userAuthorizationUri: https://keycloak.cloudzcp.io/auth/realms/portal/protocol/openid-connect/auth
       redirectUri: ${HOME_URL:http://localhost:8181}/k8s-login
   iam:
-    baseUrl: http://zcp-iam:80
+    baseUrl: https://zcp-iam.cloudzcp.io:443
   
 ---
 # prod

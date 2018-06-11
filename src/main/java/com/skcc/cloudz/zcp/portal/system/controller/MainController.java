@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.controller;
+package com.skcc.cloudz.zcp.portal.system.controller;
 
 import java.security.Principal;
 
@@ -36,8 +36,7 @@ public class MainController {
         log.debug("getIdToken : {}", securityService.getIdToken());
         log.debug("getAccessToken : {}", securityService.getAccessToken());
         
-        //return "content/main";
-        return "redirect:/my/my-info";
+        return "content/main";
     }
 
 }

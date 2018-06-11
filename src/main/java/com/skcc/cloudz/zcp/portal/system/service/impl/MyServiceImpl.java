@@ -1,15 +1,15 @@
-package com.skcc.cloudz.zcp.service.impl;
+package com.skcc.cloudz.zcp.portal.system.service.impl;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skcc.cloudz.zcp.common.service.IamApiService;
-import com.skcc.cloudz.zcp.service.MyService;
+import com.skcc.cloudz.zcp.portal.system.service.MyService;
 
 @Service
 public class MyServiceImpl implements MyService {
@@ -20,21 +20,20 @@ public class MyServiceImpl implements MyService {
     private IamApiService iamApiService;
     
     @Override
-    public String getMyInfoById() {
-        String baseUrl = StringUtils.EMPTY;
+    public Map<String, Object> getMyInfoByUsername(String username) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         
-        try {
-            Map<String, Object> userMap = iamApiService.getUser();
-            
-            baseUrl = userMap.get("iamBaseUrl") != null ? userMap.get("iamBaseUrl").toString() : "";
-            
-            log.debug("MyServiceImpl baseUrl : {}", baseUrl);
-        } catch (Exception e) {
-            e.printStackTrace();
-            
+        if (log.isDebugEnabled()) {
+            log.debug("username : {}", username);
         }
         
-        return baseUrl;
+        try {
+            resultMap = iamApiService.getUser(username);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return resultMap;
     }
 
     

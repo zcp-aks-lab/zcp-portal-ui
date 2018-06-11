@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skcc.cloudz.zcp.domain.vo.AddOnServiceMataVo;
+import com.skcc.cloudz.zcp.common.domain.vo.AddOnServiceMataVo;
 
 @Component
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)

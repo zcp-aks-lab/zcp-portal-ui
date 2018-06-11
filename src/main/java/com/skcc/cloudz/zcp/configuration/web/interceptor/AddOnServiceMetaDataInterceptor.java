@@ -23,9 +23,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skcc.cloudz.zcp.common.component.AddOnServiceMataComponent;
 import com.skcc.cloudz.zcp.common.constants.AccessRole;
+import com.skcc.cloudz.zcp.common.domain.vo.AddOnServiceMataSubVo;
+import com.skcc.cloudz.zcp.common.domain.vo.AddOnServiceMataVo;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
-import com.skcc.cloudz.zcp.domain.vo.AddOnServiceMataSubVo;
-import com.skcc.cloudz.zcp.domain.vo.AddOnServiceMataVo;
 
 public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
     

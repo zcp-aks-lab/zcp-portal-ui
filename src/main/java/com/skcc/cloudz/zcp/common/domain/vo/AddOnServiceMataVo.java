@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.domain.vo;
+package com.skcc.cloudz.zcp.common.domain.vo;
 
 import java.util.List;
 

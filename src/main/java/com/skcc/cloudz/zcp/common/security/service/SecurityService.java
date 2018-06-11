@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skcc.cloudz.zcp.common.security.vo.JwtIdToken;
-import com.skcc.cloudz.zcp.domain.vo.OpenIdConnectUserDetailsVo;
+import com.skcc.cloudz.zcp.common.security.vo.OpenIdConnectUserDetailsVo;
 
 @Service
 public class SecurityService {
