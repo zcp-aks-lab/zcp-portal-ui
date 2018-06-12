@@ -5,6 +5,74 @@
         <title>비밀번호 변경</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         
+        <script type="text/javascript">
+            var zcpPortalApp = {
+                pageInit: function() {
+                    'use strict';
+                    
+                    // data init
+                    this.data.init();
+                    
+                    // event init
+                    this.event.init();
+                },
+                data: {
+                    init: function() {
+                        this.validate();
+                    },
+                    validate: function() {
+                    	Validator.addMethod('passwordEqual', function(element, value, param) {
+                            var newPassword = $("#newPassword").val();
+                            
+                            if (value === newPassword) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        });
+                    },
+                    updatePassword: function() {
+                        var currentPasswordValid = $('#currentPassword').validate();
+                        var newPasswordValid = $('#newPassword').validate();
+                        var passwordConfirmValid = $('#passwordConfirm').validate();
+                     
+                        if (!currentPasswordValid || !currentPasswordValid || !passwordConfirmValid) {
+                        	return false;
+                        }
+                        
+                        var url = '/my/updatedPassword';
+                        var pars = $('#form').serialize();
+                        
+                        $.ajax({
+                            method: 'post',
+                            url: url,
+                            data: pars
+                            }).done(function(data) {
+                                alert('저장되었습니다.');
+                                location.reload();
+                            }).fail(function(jqXHR, textStatus, errorThrown) {
+                                console.error(jqXHR);
+                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                            }
+                        );
+                    }
+                },
+                event: {
+                    init: function() {
+                        $('#btnUpdate').on('click', function() {
+                            zcpPortalApp.data.updatePassword();
+                        });
+                    }
+                }
+            }
+            
+            $.alopex.page(function() {
+                this.init = function(id, param) { 
+                    zcpPortalApp.pageInit();
+                };
+            });
+        </script>
+        
     </head>
     <body>
         <th:block layout:fragment="content">
@@ -34,7 +102,7 @@
                     <li>
                         <a>비밀번호 변경</a>
                         <div class="accor-contents__wrap">
-                            <form>
+                            <form th:id="form" onsubmit="return false;">
                                 <fieldset>
                                     <table class="Table Form-type">
                                         <colgroup>
@@ -45,28 +113,28 @@
                                             <tr>
                                                 <th>현재 비밀번호<strong class="astertisk">*</strong></th>
                                                 <td>
-                                                    <input class="Textinput" />
-                                                    <p class="info-text">비밀번호를 입력하세요.</p>
+                                                    <input type="password" th:name="currentPassword" th:id="currentPassword" class="Textinput" data-validation-rule="{required:true}" data-validation-message="{required:'현재 비밀번호를 입력해 주세요.'}" />
+                                                    <p class="info-text" data-for="currentPassword"></p>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <th>새 비밀번호<strong class="astertisk">*</strong></th>
                                                 <td>
-                                                    <input class="Textinput" />
-                                                    <p class="info-text">기존 비밀번호와 동일하게 설정할 수 없습니다.</p>
+                                                    <input type="password" th:name="newPassword" th:id="newPassword" class="Textinput" data-validation-rule="{required:true, rangelength:[6,12], numalpha:true}" data-validation-message="{required:'새 비밀번호를 입력해 주세요.'}" />
+                                                    <p class="info-text" data-for="newPassword"></p>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <th>새 비밀번호 확인<strong class="astertisk">*</strong></th>
                                                 <td>
-                                                    <input class="Textinput" />
-                                                    <p class="info-text">두개의 비밀번호가 일치하지 않습니다.</p>
+                                                    <input type="password" th:name="passwordConfirm" th:id="passwordConfirm" class="Textinput" data-validation-rule="{required:true, passwordEqual:'testing'}"  data-validation-message="{required:'새 비밀번호 확인을 입력해 주세요.', passwordEqual:'두개의 비밀번호가 일치하지 않습니다.'}" />
+                                                    <p class="info-text" data-for="passwordConfirm"></p>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                     <div class="btn-wrap__right">
-                                        <button class="Button btn bg-red">확인</button>
+                                        <button class="Button btn bg-red" id="btnUpdate">확인</button>
                                     </div>
                                 </fieldset>
                             </form>

@@ -2,8 +2,8 @@ server:
   port: 8181
   tomcat:
     uri-encoding: UTF-8
-#  session:
-#    timeout: 1800
+  session:
+    timeout: 3600
   error:
     whitelabel:
       enabled: false
@@ -37,9 +37,9 @@ spring:
       enabled: true # enable http encoding support
       force: true # force the configured encoding
 
-security:
-  basic:
-    enabled: false
+#security:
+#  basic:
+#    enabled: false
 
 ---
 # local
@@ -73,8 +73,8 @@ spring:
 
 logging:
   level:
-    root: DEBUG 
-    org.apache: DEBUG   
+    root: INFO 
+    org.apache: INFO   
   config: classpath:config/logback-spring.xml
   file : local
   path : data/logs

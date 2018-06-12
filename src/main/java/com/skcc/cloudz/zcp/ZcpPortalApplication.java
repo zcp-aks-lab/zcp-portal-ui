@@ -12,6 +12,7 @@ import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletCon
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.servlet.ErrorPage;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -20,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 @SpringBootApplication(scanBasePackages = {"com.skcc.cloudz.zcp"})
-public class ZcpPortalApplication implements CommandLineRunner {
+public class ZcpPortalApplication extends SpringBootServletInitializer implements CommandLineRunner {
 
     public static void main(String[] args) {
         SpringApplication.run(ZcpPortalApplication.class, args);

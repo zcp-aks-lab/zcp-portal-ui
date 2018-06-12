@@ -1,9 +1,14 @@
 package com.skcc.cloudz.zcp.common.service;
 
-import java.util.Map;
+import com.skcc.cloudz.zcp.common.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.portal.system.domain.dto.MyUserDto;
 
 public interface IamApiService {
     
-    Map<String, Object> getUser(String username);
+    ApiResponseVo getUser(String userId);
+    
+    ApiResponseVo setUser(MyUserDto myUserDto);
+    
+    ApiResponseVo updatePassword(MyUserDto myUserDto); 
 
 }

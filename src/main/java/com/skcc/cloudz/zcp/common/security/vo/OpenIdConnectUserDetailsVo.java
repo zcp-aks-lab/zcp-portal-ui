@@ -27,7 +27,8 @@ public class OpenIdConnectUserDetailsVo extends CommonVo implements UserDetails 
     public OpenIdConnectUserDetailsVo() {}
 
     public OpenIdConnectUserDetailsVo(Map<String, String> userInfo, OAuth2AccessToken token) {
-        this.userId = userInfo.get("sub");
+        //this.userId = userInfo.get("sub");
+        this.userId = "04461fb8-9739-42a4-96e2-46fa77780c54";
         this.email = userInfo.get("email");
         this.group = userInfo.get("group");
         this.token = token;

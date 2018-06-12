@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import com.skcc.cloudz.zcp.common.security.filter.OpenIdConnectFilter;
@@ -30,22 +31,26 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         
         http
-        .addFilterAfter(new OAuth2ClientContextFilter(), AbstractPreAuthenticatedProcessingFilter.class)
-        .addFilterAfter(openIdConnectFilter(), OAuth2ClientContextFilter.class);
+            .addFilterAfter(new OAuth2ClientContextFilter(), AbstractPreAuthenticatedProcessingFilter.class)
+            .addFilterAfter(openIdConnectFilter(), OAuth2ClientContextFilter.class);
         
         http
-        .httpBasic().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/k8s-login"));
+            .httpBasic().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/k8s-login"))
+            .and()
+            .csrf().disable();;
         
         http
-        .authorizeRequests()
-        //.antMatchers("/main").permitAll()
-        .antMatchers("/error/accessDenied").permitAll()
-        .anyRequest()
-        .authenticated();
+            .authorizeRequests()
+            .antMatchers("/error/accessDenied").permitAll()
+            .anyRequest()
+            .authenticated()
+            .and()
+            .headers()
+            .addHeaderWriter(new StaticHeadersWriter("X-Content-Security-Policy","script-src 'self'"));
         
         http
-        .exceptionHandling()
-        .accessDeniedPage("/error/accessDenied");
+            .exceptionHandling()
+            .accessDeniedPage("/error/accessDenied");
     }
     
     @Bean
