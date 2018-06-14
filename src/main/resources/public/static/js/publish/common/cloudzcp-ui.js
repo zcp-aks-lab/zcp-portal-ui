@@ -66,5 +66,34 @@ $a.page(function(){
 				$(this).text('ON');
 			}
 		})
+
+		//popup
+		$('#pop-temp1').click( function() {
+		    $a.popup({
+		        url: "zcp-pop01.html",
+		        iframe: false,  // default 는 true
+		        width: 826,
+		        height: 480,
+		        title : "패키지 삭제",
+		    });
+		});
+		$('#pop-temp2').click( function() {
+		    $a.popup({
+		        url: "zcp-pop02.html",
+		        iframe: false,  // default 는 true
+		        width: 826,
+		        height: 480,
+		        title : "패키지 삭제",
+		    });
+		});
+		$('#pop-temp3').click( function() {
+		    $a.popup({
+		        url: "zcp-pop03.html",
+		        iframe: false,  // default 는 true
+		        width: 826,
+		        height: 480,
+		        title : "오류 데이터 목록",
+		    });
+		});
 	}
 });

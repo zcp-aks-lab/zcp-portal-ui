@@ -37,9 +37,9 @@ spring:
       enabled: true # enable http encoding support
       force: true # force the configured encoding
 
-#security:
-#  basic:
-#    enabled: false
+security:
+  basic:
+    enabled: false
 
 ---
 # local

@@ -25,9 +25,9 @@ import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.skcc.cloudz.zcp.common.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.common.security.vo.OpenIdConnectUserDetailsVo;
-import com.skcc.cloudz.zcp.common.service.IamApiService;
 
 public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter {
     
