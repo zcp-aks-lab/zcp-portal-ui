@@ -77,18 +77,8 @@
     <body>
         <th:block layout:fragment="content">
             <!-- location -->
-            <div class="locations-area">
-                <div class="prj-list">
-                    <strong>Namespace : </strong>
-                    <button class="Dropdownbutton namespace">ONM</button>
-                    <ul class="dropmenu-list">
-                        <li><a>ONM (Default)</a></li>
-                        <li><a>ICN</a></li>
-                        <li><a>NMM</a></li>
-                        <li><a>전체</a></li>
-                    </ul>
-                </div>
-            </div>
+            <th:block th:include="common/include/namespace :: common"></th:block>
+            
             <div class="contents-box">
                 <!-- service top area-->
                 <div class="top-area">

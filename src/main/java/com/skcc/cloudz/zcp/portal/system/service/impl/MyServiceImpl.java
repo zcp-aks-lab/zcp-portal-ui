@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpKubeConfig;
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpKubeConfigResVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
@@ -54,6 +56,21 @@ public class MyServiceImpl implements MyService {
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(apiResponseVo.getMsg());
         }
+    }
+
+    @Override
+    public ZcpKubeConfig getKubeConfig() throws Exception {
+        String userId = "2578332d-0fcb-4e8e-bea0-206c715c0075";
+        //String userId = securityService.getUserDetails().getUserId();
+        String namespace = "zcp-system";
+        //String namespace = securityService.getUserDetails().getDefaultNamespace();
+        
+        ZcpKubeConfigResVo zcpKubeConfigResVo = iamApiService.kubeconfig(userId, namespace);
+        if (!zcpKubeConfigResVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(zcpKubeConfigResVo.getMsg());
+        }
+        
+        return zcpKubeConfigResVo.getData();
     }
     
 }

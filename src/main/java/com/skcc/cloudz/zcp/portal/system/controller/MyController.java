@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpKubeConfig;
 import com.skcc.cloudz.zcp.portal.system.domain.dto.MyUserDto;
 import com.skcc.cloudz.zcp.portal.system.service.MyService;
 
@@ -55,5 +56,10 @@ public class MyController {
         return "content/system/my/my-cli";
     }
     
+    @GetMapping(value = "/getZcpKubeConfig", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ZcpKubeConfig getZcpKubeConfig() throws Exception {
+        return myService.getKubeConfig();
+    }
 
 }

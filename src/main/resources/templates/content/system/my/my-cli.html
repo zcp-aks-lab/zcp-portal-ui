@@ -5,22 +5,58 @@
         <title>Cli Command</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         
+        <script type="text/javascript">
+            var zcpPortalApp = {
+                pageInit: function() {
+                    'use strict';
+                    
+                    // data init
+                    this.data.init();
+                    
+                    // event init
+                    this.event.init();
+                },
+                data: {
+                    init: function() {
+                        //this.getZcpKubeConfig();
+                    },
+                    getZcpKubeConfig: function() {
+                        var url = '/my/getZcpKubeConfig';
+                        var pars = '';
+                        
+                        $.ajax({
+                            method: 'get',
+                            url: url,
+                            data: pars
+                            }).done(function(data) {
+                                log(data);
+                            }).fail(function(jqXHR, textStatus, errorThrown) {
+                                console.error(jqXHR);
+                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                            }
+                        );
+                    }
+                },
+                event: {
+                    init: function() {
+                        
+                    }
+                }
+            }
+            
+            $.alopex.page(function() {
+                this.init = function(id, param) { 
+                    zcpPortalApp.pageInit();
+                };
+            });
+        </script>
+        
     </head>
     <body>
         <th:block layout:fragment="content">
             <!-- location -->
-            <div class="locations-area">
-                <div class="prj-list">
-                    <strong>Namespace : </strong>
-                    <button class="Dropdownbutton namespace">ONM</button>
-                    <ul class="dropmenu-list">
-                        <li><a>ONM (Default)</a></li>
-                        <li><a>ICN</a></li>
-                        <li><a>NMM</a></li>
-                        <li><a>전체</a></li>
-                    </ul>
-                </div>
-            </div>
+            <th:block th:include="common/include/namespace :: common"></th:block>
+            
             <div class="contents-box">
                 <!-- service top area-->
                 <div class="top-area">
@@ -47,8 +83,10 @@
                                 </tr>
                                 <tr>
                                     <th class="Valign-top"><span class="ico-num">2</span>단계</th>
-                                    <td><p class="Margin-bottom-10">CLI구성을 위하여 터미널에 아래의 command를 실행합니다.</p><textarea class="Textarea cli-area"></textarea>
-                                    <button class="Button line-btn">복사</button></td>
+                                    <td>
+                                        <p class="Margin-bottom-10">CLI구성을 위하여 터미널에 아래의 command를 실행합니다.</p><textarea class="Textarea cli-area"></textarea>
+                                        <button class="btn-ico btn-copy">복사</button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

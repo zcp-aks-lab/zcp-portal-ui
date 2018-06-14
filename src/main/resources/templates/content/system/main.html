@@ -8,12 +8,73 @@
     </head>
     <body>
         <th:block layout:fragment="content">
+            <!-- location -->
+            <th:block th:include="common/include/namespace :: common"></th:block>
             
-  <!--       
-            로그인 유저 : <span th:text="${#authentication.principal.username}">the_username</span> 
-            
-            <br /><div sec:authorize="isAuthenticated()"><span sec:authentication="principal"></span></div><br /> -->
-            
+            <div class="contents-box">
+                <!-- service top area-->
+                <div class="top-area">
+                    <h2 class="title">대시보드</h2>
+                    <div class="tag-wrap">
+                        <span class="tag">Namespace의 시스템 및 리소스 사용 현황을 일괄 조회합니다.</span>
+                    </div>
+                    <div class="btn-wrap__right">
+                        <button class="Button btn btn-dash"><span class="Icon btn-outlink" data-position="right"></span>대시보드</button>
+                    </div>
+                </div>
+                <!-- dashboard panel group-->
+                <div class="panel-line__wrap dash">
+                    <h3 class="dash-title">System Overview</h3>
+                    <!-- chart panel-->
+                    <div class="Panel dash-panel">
+                        <div class="Panel-content">
+                            <h4 class="chart-title">Nodes</h4>
+                            <div class="chart"><img src="images/chart-sample.png" data-th-src="@{/static/images/chart-sample.png}" /></div>
+                            <div class="chart-total"><strong>Total</strong> : <span>103.66GBM</span></div>
+                        </div>
+                    </div>
+                    <!-- chart panel-->
+                    <div class="Panel dash-panel">
+                        <div class="Panel-content">
+                            <h4 class="chart-title">Deployments</h4>
+                            <div class="chart"><img src="images/chart-sample.png" data-th-src="@{/static/images/chart-sample.png}" /></div>
+                            <div class="chart-total"><strong>Total</strong> : <span>103.66GBM</span></div>
+                        </div>
+                    </div>
+                    <!-- chart panel-->
+                    <div class="Panel dash-panel">
+                        <div class="Panel-content">
+                            <h4 class="chart-title">Pods</h4>
+                            <div class="chart"><img src="images/chart-sample.png" data-th-src="@{/static/images/chart-sample.png}" /></div>
+                            <div class="chart-total"><strong>Total</strong> : <span>103.66GBM</span></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- dashboard panel group-->
+                <div class="panel-line__wrap dash">
+                    <h3 class="dash-title">Resource Overview</h3>
+                    <!-- chart panel-->
+                    <div class="Panel dash-panel">
+                        <div class="Panel-content">
+                            <h4 class="chart-title">CPU</h4>
+                            <div class="chart"><img src="images/chart-sample.png" data-th-src="@{/static/images/chart-sample.png}" /></div>
+                            <div class="chart-total"><strong>Total</strong> : <span>103.66GBM</span></div>
+                        </div>
+                    </div>
+                    <!-- chart panel-->
+                    <div class="Panel dash-panel">
+                        <div class="Panel-content">
+                            <h4 class="chart-title">Memory</h4>
+                            <div class="chart"><img src="images/chart-sample.png" data-th-src="@{/static/images/chart-sample.png}" /></div>
+                            <div class="chart-total"><strong>Total</strong> : <span>103.66GBM</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-line__wrap dash">
+                    <h3 class="dash-title">Nodes 목록</h3>
+                    <div id="gr"></div>
+                </div>
+            </div>
         </th:block>
     </body>
 </html>

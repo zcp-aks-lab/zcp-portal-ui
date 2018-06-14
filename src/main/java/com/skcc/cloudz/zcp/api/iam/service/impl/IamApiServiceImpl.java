@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpKubeConfigResVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.portal.system.domain.dto.MyUserDto;
@@ -177,5 +178,40 @@ public class IamApiServiceImpl implements IamApiService {
         
         return apiResponseVo;
     }
+
+    @Override
+    public ZcpKubeConfigResVo kubeconfig(String userId, String namespace) {
+        ZcpKubeConfigResVo zcpKubeConfigResVo = new ZcpKubeConfigResVo();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/user/{id}/kubeconfig")
+                    .queryParam("namespace", namespace)
+                    .buildAndExpand(userId)
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            HttpHeaders headers = new HttpHeaders();
+            HttpEntity<String> requestEntity = new HttpEntity<String>(headers); 
+            
+            ResponseEntity<ZcpKubeConfigResVo> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, ZcpKubeConfigResVo.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
+            log.info("===> Response body code : {}", responseEntity.getBody().getCode());
+            log.info("===> Response body data : {}", responseEntity.getBody().getData());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                zcpKubeConfigResVo.setCode(responseEntity.getBody().getCode());
+                zcpKubeConfigResVo.setMsg(responseEntity.getBody().getMsg());
+                zcpKubeConfigResVo.setData(responseEntity.getBody().getData());    
+            }
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
+        
+        return zcpKubeConfigResVo;
+    }
+    
 
 }

@@ -65,18 +65,8 @@
     <body>
         <th:block layout:fragment="content">
             <!-- location -->
-            <div class="locations-area">
-                <div class="prj-list">
-                    <strong>Namespace : </strong>
-                    <button class="Dropdownbutton namespace">ONM</button>
-                    <ul class="dropmenu-list">
-                        <li><a>ONM (Default)</a></li>
-                        <li><a>ICN</a></li>
-                        <li><a>NMM</a></li>
-                        <li><a>전체</a></li>
-                    </ul>
-                </div>
-            </div>
+            <th:block th:include="common/include/namespace :: common"></th:block>
+            
             <div class="contents-box">
                 <!-- service top area-->
                 <div class="top-area">
@@ -99,7 +89,7 @@
                             </colgroup>
                             <tbody>
                                 <tr>
-                                    <th>Account ID</th>
+                                    <th>Account</th>
                                     <td>
                                         <input type="text" th:name="id" th:id="id" th:value="${content.id}" class="Textinput Width-60" readonly="readonly"/>
                                         <button class="btn-ico btn-copy">복사</button>
@@ -107,7 +97,7 @@
                                 </tr>
                                 <tr>
                                     <th>생성 일시</th>
-                                    <td th:text="${content.createdDate}">2018/05/30 12:00:00</td>
+                                    <td th:text="${#dates.format(content.createdDate, 'yyyy/MM/dd HH:mm:ss')}">2018/05/30 12:00:00</td>
                                 </tr>
                                 <tr>
                                     <th>사용자 ID</th>

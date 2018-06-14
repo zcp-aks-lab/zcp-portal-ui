@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>Namespace</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        
+    </head>
+    
+    <th:block th:fragment="common">
+        <!-- location -->
+        <div class="locations-area">
+            <div class="prj-list">
+                <strong>Namespace : </strong>
+                <button class="Dropdownbutton namespace" th:text="${#authentication.principal.defaultNamespace}">ONM</button>
+                <ul class="dropmenu-list">
+                    <th:block th:each="namespace, iterStat : ${#authentication.principal.namespaces}">
+                        <li th:text="${namespace}"><a>ONM (Default)</a></li>
+                    </th:block>
+                </ul>
+            </div>
+        </div>
+    </th:block>
+    
+</html>
