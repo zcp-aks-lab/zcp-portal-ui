@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-default">
+<head>
+	<title>CloudZ CP</title>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<!-- <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/> -->
+	<script type="text/javascript">
+	function deleteNamespace(name){
+		if(confirm('정말 삭제 하시겠습니까?')){
+		   	ajaxCall('/iam/namespace/delete', {namespace:name}).done(function(data){
+		   		//alert('정상처리 되었습니다.');
+		   		location.reload();
+		   	});
+		}
+	   	
+	}
+	
+	function ajaxCall(url, data){
+		return $.ajax({
+			method: 'post',
+			contentType : 'application/json;charset=UTF-8',
+			url: url,
+			data: JSON.stringify(data)
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            //console.error(jqXHR);
+            alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+        });
+	}
+	
+	/* $(function() {
+	    $(document).ajaxSend(function(e, xhr, options) {
+	    	var token = $("meta[name='_csrf']").attr("content");
+	    	var header = $("meta[name='_csrf_header']").attr("content");
+	        xhr.setRequestHeader(header, token);
+	    });
+	}); */
+	
+    </script>
+</head>
+<body>
+<div class="cp-wrapper">
+	<th:block layout:fragment="content">
+	<!-- main-contents -->
+	<div class="cp-container">
+		<!-- contents -->
+		<div class="contents-wrap">
+			<div class="locations-area">
+				<div class="back-list"><a href="#"><span>목록으로 돌아가기</span></a></div>
+			</div>
+			<div class="contents-box">
+				<!-- service top area-->
+				<div class="top-area">
+                    <h2 class="title">Namespace</h2>
+                    <div class="tag-wrap">
+                    	<strong class="tag">태그 :</strong>
+                    	<span class="Label Default">모든태그</span>
+                    	<span class="Label white">Tworld</span><span class="Label white">html,css</span><span class="Label white">CloudZ, FaaS</span>
+                    </div>
+                    <div class="btn-wrap__right">
+	                    <button class="Button btn-ico__typeb btn-addnamepace">Namespace 추가</button>
+	                    <div class="Tooltip" data-position="left">Namespace 추가</div>
+	                </div>
+				</div>
+				<!-- search-wrap-->
+				<div class="search-wrap">
+					<input class="Textinput srcinput" placeholder="검색어를 입력하세요."/><button class="Button btn-search">검색</button>
+				</div>
+				
+				<!--name space detail view-->
+				<div class="panel-line__wrap">
+					<!-- name space sorting-->
+					<div class="namespace-sort">
+						<div class="sort-button">
+							<button class="Button btn-ico__typeb btn-cardview Checked">카드형으로 보기</button>
+							<button class="Button btn-ico__typeb btn-listview">목록형으로 보기</button>
+						</div>
+						<ul class="sort-list">
+							<li>Namespace</li>
+							<li class="dsc">CPU Req/Limit</li>
+							<li>Memory Req/Limit</li>
+							<li>사용자</li>
+							<li>상태</li>
+							<li>생성일시</li>
+						</ul>
+					</div>
+					<!-- name space panel-->
+					<div class="Panel namespace-panel" th:each="namespace : ${namespace.items} ">
+	                	<div class="Panel-content">
+	                		<span th:class="'state ' + ${active}">active</span>
+	                		<dl class="namespace-info">
+	                			<dt><span th:text="${namespace.namespace}"></span></dt>
+	                			<dd>
+	                				<div class="tag-wrap">
+	                					<div th:each="label : ${namespace.labels}">
+		                					<span class="Label Default" th:text="${label}"></span>
+		                					<button class="btn-ico label-del">삭제</button>
+										</div>
+	                					<button class="Label add-label">추가</button>
+	                					
+	                				</div>
+	                			</dd>
+	                			<dd class="time-info"><strong>생성일시</strong> : <span>5시간 전 </span></dd>
+	                			<dd>
+	                				<div class="namespace-btn__wrap">
+			                			<button class="btn-ico btn-viewdash">대쉬보드보기</button>
+			                			<span class="vline"></span>
+			                			<button class="btn-ico btn-delnamespace" th:onclick="'deleteNamespace(\'' + ${namespace.namespace} + '\')'">삭제</button>
+			                		</div>
+			                	</dd>
+	                		</dl>
+                			<ul class="name-progress__wrap">
+                				<li>
+                					<p class="name-pro__title">CPU Reg./Limit</p>
+                					<span class="name-pro__info" th:text="${namespace.status.used['requests.cpu']} + '/' + ${namespace.status.hard['requests.cpu']}"></span>
+                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.usedCpuRate}"></div>
+                				</li>
+                				<li>
+                					<p class="name-pro__title">Memory Reg./Limit</p>
+                					<span class="name-pro__info" th:text="${namespace.status.used['requests.memory']} + '/' + ${namespace.status.hard['requests.memory']}"></span>
+                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.usedMemoryRate}"></div>
+                				</li>
+                				<li>
+                					<p class="name-pro__title">사용자</p>
+                					<span class="name-user__info" th:text="${namespace.userCount}">10</span>
+                				</li>
+                			</ul>
+	                	</div>
+	                </div>
+	                <!-- panel new make-->
+	                <div class="Panel namespace-panel make-box">
+	                	<div class="Panel-content">
+	                		<a href="#" class="new-make"><span class="Icon ico-cloudz make-plus"></span>Namespace 추가</a>
+	                	</div>
+	                </div>
+				</div>
+			</div>
+		</div>
+		<!-- //contents -->
+	</div>
+	<!-- //main-contents -->
+	</th:block>
+</div>
+</body>
+</html>
