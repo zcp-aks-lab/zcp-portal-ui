@@ -25,7 +25,7 @@ import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.common.security.vo.OpenIdConnectUserDetailsVo;
 
@@ -60,9 +60,6 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
         
         try {
             accessToken = restTemplate.getAccessToken();
-            
-            log.debug("=======> accessToken : {}", accessToken);
-            log.debug("=======> getExpiresIn : {}", accessToken.getExpiresIn());
         } catch (final OAuth2Exception e) {
             e.printStackTrace();
             throw new BadCredentialsException("Could not obtain access token", e);
@@ -71,21 +68,15 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
         try {
             final String idToken = accessToken.getAdditionalInformation().get("id_token").toString();
             final Jwt tokenDecoded = JwtHelper.decode(idToken);
-            log.debug("=======> tokenDecoded : {}", tokenDecoded.getClaims());
             
             @SuppressWarnings("unchecked")
             final Map<String, String> authInfo = new ObjectMapper().readValue(tokenDecoded.getClaims(), Map.class);
             
             /* get user info */
-            ApiResponseVo apiResponseVo = iamApiService.getUser(authInfo.get("sub"));
+            ZcpUserResVo zcpUserResVo = iamApiService.getUser(authInfo.get("sub"));
             
-            
-            log.debug("=======> apiResponseVo : {}", apiResponseVo.getData());
-            
-            authInfo.put("accessRole", "cluster-admin");
-            
-            final OpenIdConnectUserDetailsVo user = new OpenIdConnectUserDetailsVo(authInfo, accessToken);
-            log.debug("=======> user : {}", user.toString());
+            final OpenIdConnectUserDetailsVo user = new OpenIdConnectUserDetailsVo(authInfo, accessToken, zcpUserResVo.getData());
+            log.info("=======> user : {}", user.toString());
             return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         } catch (final InvalidTokenException e) {
             throw new BadCredentialsException("Could not obtain user details from token", e);

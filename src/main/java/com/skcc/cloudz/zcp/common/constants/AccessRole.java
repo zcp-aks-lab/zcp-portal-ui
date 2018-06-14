@@ -6,7 +6,7 @@ public enum AccessRole {
     CLUSTER_ADMIN("cluster-admin", 5),
     ADMIN("admin", 4),
     EDITOR("editor", 3),
-    VIEWER("viewer", 2),
+    VIEW("view", 2),
     NONE("none", 1)
     ;
     

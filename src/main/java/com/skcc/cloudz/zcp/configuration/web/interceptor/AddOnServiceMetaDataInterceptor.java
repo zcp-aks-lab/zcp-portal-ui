@@ -58,6 +58,8 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
             resultList = addOnServiceMataComponent.getAddOnServiceMetaVoList();
         }
         
+        log.info("getAddOnServiceActivePathInfo : {}", this.getAddOnServiceActivePathInfo(requestURI));
+        
         modelAndView.addObject("addOnServiceMataData", resultList);
         modelAndView.addObject("activePathInfo", this.getAddOnServiceActivePathInfo(requestURI));
     }
@@ -68,6 +70,7 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
         
         try {
             String userAccessRole = securityService.getUserDetails().getAccessRole();
+            log.debug("userAccessRole : {}", userAccessRole);
             
             InputStream inputStream = AddOnServiceMetaDataInterceptor.class.getClassLoader().getResourceAsStream("addOnServiceMetaData.json");
             if (inputStream == null) {

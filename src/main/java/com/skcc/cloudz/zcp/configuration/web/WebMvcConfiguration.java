@@ -10,20 +10,6 @@ import com.skcc.cloudz.zcp.configuration.web.interceptor.AddOnServiceMetaDataInt
 
 @Configuration
 public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
-    
-    /*@Bean(name = "localeResolver")
-    public LocaleResolver localeResolver() {
-        SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
-        sessionLocaleResolver.setDefaultLocale(Locale.KOREA);
-        return sessionLocaleResolver;
-    }
-
-    @Bean
-    public LocaleChangeInterceptor localeChangeInterceptor() {
-        LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
-        localeChangeInterceptor.setParamName("language");
-        return localeChangeInterceptor;
-    }*/
 
     @Bean
     public AddOnServiceMetaDataInterceptor addOnServiceMetaDataInterceptor() {
@@ -35,7 +21,7 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(addOnServiceMetaDataInterceptor())
             .addPathPatterns(new String[] {"/*", "/**/*"})
-            .excludePathPatterns(new String[] {"/static/**", "/i18n/properties/**", "/error/**"});
+            .excludePathPatterns(new String[] {"/static/**", "/i18n/**", "/error/**"});
     }
     
     @Override

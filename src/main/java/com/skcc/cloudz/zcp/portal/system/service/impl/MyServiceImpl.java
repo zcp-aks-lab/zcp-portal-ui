@@ -1,14 +1,13 @@
 package com.skcc.cloudz.zcp.portal.system.service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
@@ -27,20 +26,16 @@ public class MyServiceImpl implements MyService {
     private SecurityService securityService;
     
     @Override
-    public Map<String, Object> getMyInfo() throws Exception {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        
+    public ZcpUserVo getMyInfo() throws Exception {
         String userId = securityService.getUserDetails().getUserId();
         log.info("userId : {}", userId);
         
-        ApiResponseVo apiResponseVo = iamApiService.getUser(userId);
-        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(apiResponseVo.getMsg());
+        ZcpUserResVo zcpUserResVo = iamApiService.getUser(userId);
+        if (!zcpUserResVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(zcpUserResVo.getMsg());
         }
         
-        resultMap.putAll(apiResponseVo.getData());
-    
-        return resultMap;
+        return zcpUserResVo.getData();
     }
 
     @Override

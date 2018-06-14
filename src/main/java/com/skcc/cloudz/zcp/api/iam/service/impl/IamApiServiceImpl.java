@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.portal.system.domain.dto.MyUserDto;
 
@@ -34,8 +35,8 @@ public class IamApiServiceImpl implements IamApiService {
     private RestTemplate restTemplate;
 
     @Override
-    public ApiResponseVo getUser(String userId) {
-        ApiResponseVo apiResponseVo = new ApiResponseVo();
+    public ZcpUserResVo getUser(String userId) {
+        ZcpUserResVo zcpUserResVo = new ZcpUserResVo();
         
         try {
             String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path("/iam/user/{id}").buildAndExpand(userId).toString();
@@ -44,7 +45,7 @@ public class IamApiServiceImpl implements IamApiService {
             HttpHeaders headers = new HttpHeaders();
             HttpEntity<String> requestEntity = new HttpEntity<String>(headers); 
             
-            ResponseEntity<ApiResponseVo> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, ApiResponseVo.class);
+            ResponseEntity<ZcpUserResVo> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, ZcpUserResVo.class);
             
             log.info("===> Response status : {}", responseEntity.getStatusCode().value());
             log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
@@ -52,15 +53,15 @@ public class IamApiServiceImpl implements IamApiService {
             log.info("===> Response body data : {}", responseEntity.getBody().getData());
             
             if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
-                apiResponseVo.setCode(responseEntity.getBody().getCode());
-                apiResponseVo.setMsg(responseEntity.getBody().getMsg());
-                apiResponseVo.setData(responseEntity.getBody().getData());    
+                zcpUserResVo.setCode(responseEntity.getBody().getCode());
+                zcpUserResVo.setMsg(responseEntity.getBody().getMsg());
+                zcpUserResVo.setData(responseEntity.getBody().getData());    
             }
         } catch (RestClientException e) {
             e.printStackTrace();
         }
         
-        return apiResponseVo;
+        return zcpUserResVo;
     }
 
     @Override
@@ -146,6 +147,35 @@ public class IamApiServiceImpl implements IamApiService {
         
         return apiResponseVo;
     }
-    
+
+    @Override
+    public ApiResponseVo logout(String userId) {
+        ApiResponseVo apiResponseVo = new ApiResponseVo();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path("/iam/user/{id}/logout").buildAndExpand(userId).toString();
+            log.info("===> Request Url : {}", url);
+            
+            HttpHeaders headers = new HttpHeaders();
+            HttpEntity<String> requestEntity = new HttpEntity<String>(headers); 
+            
+            ResponseEntity<ApiResponseVo> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, ApiResponseVo.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
+            log.info("===> Response body code : {}", responseEntity.getBody().getCode());
+            log.info("===> Response body data : {}", responseEntity.getBody().getData());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                apiResponseVo.setCode(responseEntity.getBody().getCode());
+                apiResponseVo.setMsg(responseEntity.getBody().getMsg());
+                apiResponseVo.setData(responseEntity.getBody().getData());    
+            }
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
+        
+        return apiResponseVo;
+    }
 
 }

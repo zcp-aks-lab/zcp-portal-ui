@@ -10,6 +10,40 @@ var console = window.console || {
     }
 };
 
+var contextPath = /*[[@{/}]]*/;
+if (contextPath == "/") {
+    contextPath = "";
+} else {
+    contextPath = contextPath + "/"; 
+}
+
+$(document).ready(function() {
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ajaxSend(function(e, xhr, options) {
+      if (token !== undefined) {
+        xhr.setRequestHeader(header, token);
+      }
+    });
+    
+    $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
+        if (jqxhr.status === 401) {
+            if (typeof jqxhr.responseJSON === 'object') {
+                alert(jqxhr.responseJSON.message);
+                return;
+            }
+
+            return;
+        }
+
+        if (jqxhr.status === 403) {
+            alert(errorForbidden);
+            $(location).attr('href', contextPath + '/k8s-login');
+            return;
+        }
+    });
+});
+
 </script>
 </head>
 </html>

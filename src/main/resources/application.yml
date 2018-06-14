@@ -11,7 +11,6 @@ server:
 spring:
   application:
     name: zcp-portal
-    index: 1
   output:
     ansi:
       enabled: always
@@ -67,14 +66,14 @@ props:
     baseUrl: https://zcp-iam.cloudzcp.io:443
   
 ---
-# dev (zcp realm)
+# dev
 spring:
   profiles: dev
 
 logging:
   level:
-    root: INFO 
-    org.apache: INFO   
+    root: DEBUG 
+    org.apache: DEBUG   
   config: classpath:config/logback-spring.xml
   file : local
   path : data/logs
@@ -92,43 +91,4 @@ props:
   iam:
     baseUrl: https://zcp-iam.cloudzcp.io:443
 
----
-# stg (portal realm)
-spring:
-  profiles: stg
 
-logging:
-  level:
-    root: INFO 
-    org.apache: INFO   
-  config: classpath:config/logback-spring.xml
-  file : local
-  path : data/logs
-
-props:
-  appName: zcp-portal-stg
-  keycloak:
-    zcp:
-      clientId: account
-      clientSecret: a90b604e-0bf6-4615-9899-b058914ff8a2
-      accessTokenUri: https://keycloak.cloudzcp.io/auth/realms/portal/protocol/openid-connect/token
-      userAuthorizationUri: https://keycloak.cloudzcp.io/auth/realms/portal/protocol/openid-connect/auth
-      redirectUri: ${HOME_URL:http://localhost:8181}/k8s-login
-  iam:
-    baseUrl: https://zcp-iam.cloudzcp.io:443
-  
----
-# prod
-spring:
-  profiles: prod
-
-logging:
-  level:
-    root: ERROR 
-    org.apache: INFO   
-  config: classpath:config/logback-spring.xml
-  file : local
-  path : data/logs
-
-props:
-  appName: zcp-portal-prod
