@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
-import com.skcc.cloudz.zcp.common.domain.vo.ApiResponseVo;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
-import com.skcc.cloudz.zcp.common.service.IamApiService;
 import com.skcc.cloudz.zcp.portal.system.domain.dto.MyUserDto;
 import com.skcc.cloudz.zcp.portal.system.service.MyService;
 

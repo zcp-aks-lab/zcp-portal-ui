@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.common.domain.vo;
+package com.skcc.cloudz.zcp.api.iam.domain.vo;
 
 import java.util.Map;
 

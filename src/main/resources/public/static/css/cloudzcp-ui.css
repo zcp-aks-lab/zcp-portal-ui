@@ -212,3 +212,42 @@
 	border: 1px solid #cccccc;
 	background: #ffffff;
 }
+/* Dialog / Ppopu template */
+.Dialog {
+	width: 829px;
+	font-family: "NotoKrR";
+	font-size: 1.33rem;
+	color: #222222;
+	background: #ffffff;
+	border: 1px solid #dddddd;
+	border-top: 0;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	-ms-border-radius: 0;
+	border-radius: 0;
+}
+.Dialog .Header {
+	position: relative;
+	width: 100%;
+	height: 56px;
+	padding: 0 20px;
+	font-size: 1.33rem;
+	font-weight: 700;
+	line-height: 3.70rem;
+	text-align: left;
+	color: #222222;
+	border-top: 3px solid #ea0530;
+	border-bottom: 1px solid #dddddd;
+	background: #ffffff;
+}
+.Dialog .Header .DialogBtn {
+	top: 18px;
+	right: 26px;
+	width: 16px;
+	height: 16px;
+	background: url("../images/ico-popup.png") no-repeat 0 0;
+}
+.Dialog .Header .DialogBtn:hover,
+.Dialog .Header .DialogBtn:active {
+	background: url("../images/ico-popup.png") no-repeat 0 -30px;
+}

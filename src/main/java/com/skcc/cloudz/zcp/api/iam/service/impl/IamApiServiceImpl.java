@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.common.service.impl;
+package com.skcc.cloudz.zcp.api.iam.service.impl;
 
 import java.util.HashMap;
 
@@ -18,8 +18,8 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.skcc.cloudz.zcp.common.domain.vo.ApiResponseVo;
-import com.skcc.cloudz.zcp.common.service.IamApiService;
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.portal.system.domain.dto.MyUserDto;
 
 @Service

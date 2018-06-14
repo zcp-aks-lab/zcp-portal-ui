@@ -1,6 +1,6 @@
-package com.skcc.cloudz.zcp.common.service;
+package com.skcc.cloudz.zcp.api.iam.service;
 
-import com.skcc.cloudz.zcp.common.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
 import com.skcc.cloudz.zcp.portal.system.domain.dto.MyUserDto;
 
 public interface IamApiService {
