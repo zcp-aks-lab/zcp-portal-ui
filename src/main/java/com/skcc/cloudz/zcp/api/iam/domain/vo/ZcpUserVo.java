@@ -3,10 +3,6 @@ package com.skcc.cloudz.zcp.api.iam.domain.vo;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 public class ZcpUserVo {
     private String id;
     private String username;
@@ -14,9 +10,6 @@ public class ZcpUserVo {
     private String password;
     private String firstName;
     private String lastName;
-    
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date createdDate;
     private Boolean enabled;
     private Boolean emailVerified;

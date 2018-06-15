@@ -75,6 +75,9 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
             /* get user info */
             ZcpUserResVo zcpUserResVo = iamApiService.getUser(authInfo.get("sub"));
             
+            /* set service account */
+            iamApiService.serviceAccount(authInfo.get("sub"));
+            
             final OpenIdConnectUserDetailsVo user = new OpenIdConnectUserDetailsVo(authInfo, accessToken, zcpUserResVo.getData());
             log.info("=======> user : {}", user.toString());
             return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

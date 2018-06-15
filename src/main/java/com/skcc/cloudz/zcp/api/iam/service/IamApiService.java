@@ -15,5 +15,7 @@ public interface IamApiService {
     ApiResponseVo logout(String userId);
     
     ApiResponseVo kubeconfig(String userId, String namespace);
+    
+    ApiResponseVo serviceAccount(String userId);
 
 }
