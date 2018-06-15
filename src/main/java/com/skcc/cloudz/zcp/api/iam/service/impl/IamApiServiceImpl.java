@@ -19,7 +19,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
-import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpKubeConfigResVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.portal.system.domain.dto.MyUserDto;
@@ -40,7 +39,10 @@ public class IamApiServiceImpl implements IamApiService {
         ZcpUserResVo zcpUserResVo = new ZcpUserResVo();
         
         try {
-            String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path("/iam/user/{id}").buildAndExpand(userId).toString();
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/user/{id}")
+                    .buildAndExpand(userId)
+                    .toString();
             log.info("===> Request Url : {}", url);
             
             HttpHeaders headers = new HttpHeaders();
@@ -70,7 +72,10 @@ public class IamApiServiceImpl implements IamApiService {
         ApiResponseVo apiResponseVo = new ApiResponseVo();
         
         try {
-            String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path("/iam/user/{id}").buildAndExpand(myUserDto.getUserId()).toString();
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/user/{id}")
+                    .buildAndExpand(myUserDto.getUserId())
+                    .toString();
             log.info("===> Request Url : {}", url);
             
             ObjectMapper objectMapper = new ObjectMapper();
@@ -113,7 +118,10 @@ public class IamApiServiceImpl implements IamApiService {
         ApiResponseVo apiResponseVo = new ApiResponseVo();
         
         try {
-            String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path("/iam/user/{id}/password").buildAndExpand(myUserDto.getUserId()).toString();
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/user/{id}/password")
+                    .buildAndExpand(myUserDto.getUserId())
+                    .toString();
             log.info("===> Request Url : {}", url);
             
             ObjectMapper objectMapper = new ObjectMapper();
@@ -154,7 +162,10 @@ public class IamApiServiceImpl implements IamApiService {
         ApiResponseVo apiResponseVo = new ApiResponseVo();
         
         try {
-            String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path("/iam/user/{id}/logout").buildAndExpand(userId).toString();
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/user/{id}/logout")
+                    .buildAndExpand(userId)
+                    .toString();
             log.info("===> Request Url : {}", url);
             
             HttpHeaders headers = new HttpHeaders();
@@ -180,8 +191,8 @@ public class IamApiServiceImpl implements IamApiService {
     }
 
     @Override
-    public ZcpKubeConfigResVo kubeconfig(String userId, String namespace) {
-        ZcpKubeConfigResVo zcpKubeConfigResVo = new ZcpKubeConfigResVo();
+    public ApiResponseVo kubeconfig(String userId, String namespace) {
+        ApiResponseVo apiResponseVo = new ApiResponseVo();
         
         try {
             String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
@@ -194,7 +205,7 @@ public class IamApiServiceImpl implements IamApiService {
             HttpHeaders headers = new HttpHeaders();
             HttpEntity<String> requestEntity = new HttpEntity<String>(headers); 
             
-            ResponseEntity<ZcpKubeConfigResVo> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, ZcpKubeConfigResVo.class);
+            ResponseEntity<ApiResponseVo> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, ApiResponseVo.class);
             
             log.info("===> Response status : {}", responseEntity.getStatusCode().value());
             log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
@@ -202,15 +213,15 @@ public class IamApiServiceImpl implements IamApiService {
             log.info("===> Response body data : {}", responseEntity.getBody().getData());
             
             if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
-                zcpKubeConfigResVo.setCode(responseEntity.getBody().getCode());
-                zcpKubeConfigResVo.setMsg(responseEntity.getBody().getMsg());
-                zcpKubeConfigResVo.setData(responseEntity.getBody().getData());    
+                apiResponseVo.setCode(responseEntity.getBody().getCode());
+                apiResponseVo.setMsg(responseEntity.getBody().getMsg());
+                apiResponseVo.setData(responseEntity.getBody().getData());    
             }
         } catch (RestClientException e) {
             e.printStackTrace();
         }
         
-        return zcpKubeConfigResVo;
+        return apiResponseVo;
     }
     
 

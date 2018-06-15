@@ -50,6 +50,15 @@
 	        			$('#btnUpdate').on('click', function() {
 	        				zcpPortalApp.data.updateMyInfo();
 	                    });
+	        			
+	        			$('#btnCopy').on('click', function() {
+                            var t = document.createElement("textarea");
+                            document.body.appendChild(t);
+                            t.value = $('#id').val();
+                            t.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(t);
+                        });
 	        		}
 	        	}
 	        }
@@ -92,7 +101,7 @@
                                     <th>Account</th>
                                     <td>
                                         <input type="text" th:name="id" th:id="id" th:value="${content.id}" class="Textinput Width-60" readonly="readonly"/>
-                                        <button class="btn-ico btn-copy">복사</button>
+                                        <button class="btn-ico btn-copy" id="btnCopy">복사</button>
                                     </td>
                                 </tr>
                                 <tr>

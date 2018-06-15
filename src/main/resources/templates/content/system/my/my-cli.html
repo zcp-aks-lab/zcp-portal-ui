@@ -5,6 +5,8 @@
         <title>Cli Command</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         
+        <script src="js/lib/json/json2yaml.js" data-th-src="@{/static/js/lib/json/json2yaml.js}"></script>
+        
         <script type="text/javascript">
             var zcpPortalApp = {
                 pageInit: function() {
@@ -18,7 +20,7 @@
                 },
                 data: {
                     init: function() {
-                        //this.getZcpKubeConfig();
+                        this.getZcpKubeConfig();
                     },
                     getZcpKubeConfig: function() {
                         var url = '/my/getZcpKubeConfig';
@@ -29,7 +31,8 @@
                             url: url,
                             data: pars
                             }).done(function(data) {
-                                log(data);
+                                if (!data) return false;
+                                $('#cliArea').val(json2yaml(data));
                             }).fail(function(jqXHR, textStatus, errorThrown) {
                                 console.error(jqXHR);
                                 alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -39,7 +42,14 @@
                 },
                 event: {
                     init: function() {
-                        
+                    	$('#btnCopy').on('click', function() {
+                    		var t = document.createElement("textarea");
+                    	    document.body.appendChild(t);
+                    	    t.value = $('#cliArea').val();
+                    	    t.select();
+                    	    document.execCommand('copy');
+                    	    document.body.removeChild(t);
+                    	});
                     }
                 }
             }
@@ -66,7 +76,7 @@
                     </div>
                 </div>
                 <!-- myinfo detail-->
-                <form>
+                <form onsubmit="return false;">
                     <fieldset>
                         <table class="Table Form-type topline">
                             <colgroup>
@@ -84,8 +94,8 @@
                                 <tr>
                                     <th class="Valign-top"><span class="ico-num">2</span>단계</th>
                                     <td>
-                                        <p class="Margin-bottom-10">CLI구성을 위하여 터미널에 아래의 command를 실행합니다.</p><textarea class="Textarea cli-area"></textarea>
-                                        <button class="btn-ico btn-copy">복사</button>
+                                        <p class="Margin-bottom-10">CLI구성을 위하여 터미널에 아래의 command를 실행합니다.</p><textarea id="cliArea" class="Textarea cli-area"></textarea>
+                                        <button class="btn-ico btn-copy" id="btnCopy">복사</button>
                                     </td>
                                 </tr>
                             </tbody>

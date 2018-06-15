@@ -1,13 +1,14 @@
 package com.skcc.cloudz.zcp.portal.system.service.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
-import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpKubeConfig;
-import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpKubeConfigResVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
@@ -59,18 +60,24 @@ public class MyServiceImpl implements MyService {
     }
 
     @Override
-    public ZcpKubeConfig getKubeConfig() throws Exception {
-        String userId = "2578332d-0fcb-4e8e-bea0-206c715c0075";
-        //String userId = securityService.getUserDetails().getUserId();
-        String namespace = "zcp-system";
-        //String namespace = securityService.getUserDetails().getDefaultNamespace();
+    public Map<String, Object> getKubeConfig() throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         
-        ZcpKubeConfigResVo zcpKubeConfigResVo = iamApiService.kubeconfig(userId, namespace);
-        if (!zcpKubeConfigResVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(zcpKubeConfigResVo.getMsg());
+        //String namespace = securityService.getUserDetails().getDefaultNamespace();
+        //String userId = securityService.getUserDetails().getUserId();
+        
+        String userId = "2578332d-0fcb-4e8e-bea0-206c715c0075";
+        String namespace = "zcp-system";
+        
+        
+        ApiResponseVo apiResponseVo = iamApiService.kubeconfig(userId, namespace);
+        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(apiResponseVo.getMsg());
         }
         
-        return zcpKubeConfigResVo.getData();
+        resultMap.putAll(apiResponseVo.getData());
+        
+        return resultMap;
     }
     
 }

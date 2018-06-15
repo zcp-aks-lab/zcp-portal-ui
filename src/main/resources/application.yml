@@ -72,7 +72,7 @@ spring:
 
 logging:
   level:
-    root: DEBUG 
+    root: INFO 
     org.apache: DEBUG   
   config: classpath:config/logback-spring.xml
   file : local

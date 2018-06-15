@@ -1,5 +1,7 @@
 package com.skcc.cloudz.zcp.portal.system.controller;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpKubeConfig;
 import com.skcc.cloudz.zcp.portal.system.domain.dto.MyUserDto;
 import com.skcc.cloudz.zcp.portal.system.service.MyService;
 
@@ -58,7 +59,7 @@ public class MyController {
     
     @GetMapping(value = "/getZcpKubeConfig", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ZcpKubeConfig getZcpKubeConfig() throws Exception {
+    public Map<String, Object> getZcpKubeConfig() throws Exception {
         return myService.getKubeConfig();
     }
 
