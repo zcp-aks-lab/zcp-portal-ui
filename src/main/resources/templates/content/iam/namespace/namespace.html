@@ -7,7 +7,9 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<!-- <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
 	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/> -->
-	<script type="text/javascript">
+	<script th:inline="javascript" type="text/javascript">
+	/*<![CDATA[*/
+	var g_order= false;
 	function deleteNamespace(name){
 		if(confirm('정말 삭제 하시겠습니까?')){
 		   	ajaxCall('/iam/namespace/delete', {namespace:name}).done(function(data){
@@ -30,14 +32,87 @@
         });
 	}
 	
-	/* $(function() {
+	function search1(){
+		var param = {
+			namespace : /*[[${param.namespace}]]*/
+			,label : /*[[${param.label}]]*/
+			,sortItem : /*[[${param.sortItem}]]*/
+			,sortOrder : /*[[${param.sortOrder}]]*/
+		};
+		var path =  /*[[@{/iam/namespace/namespace-list}]]*/ ;
+		var b_order = g_order ?  'true' : 'false';
+		var searchText = '';
+		searchText += 'namespace=' + $('#search').val() + '&';
+		searchText += 'label=' +( !param.label ? '' : param.label) + '&';
+		searchText +='sortItem=' + ( !param.sortItem ? '' : param.sortItem)+ '&';
+		searchText +='sortOrder='+ b_order ;
+		
+		location.href=path+'?'+searchText;
+	}
+	
+	
+	function orderby(item, own){
+		var param = {
+				namespace : /*[[${param.namespace}]]*/
+				,label : /*[[${param.label}]]*/
+				,sortItem : /*[[${param.sortItem}]]*/
+				,sortOrder : /*[[${param.sortOrder}]]*/
+			};
+		var searchText = '';
+		var b_order = !g_order ?  'true' : 'false';
+		searchText += 'namespace=' + param.namespace[0] + '&';
+		searchText += 'label=' +( !param.label ? '' : param.label) + '&'
+		searchText +='sortItem=' + item + '&';
+		searchText +='sortOrder=' + b_order ;
+		g_order =  !g_order;
+		var path =  /*[[@{/iam/namespace/namespace-list}]]*/ ;
+		location.href=path+'?'+searchText;
+	}
+	
+	function selectLabel(own){
+		$(own).text();
+		var param = {
+				namespace : /*[[${param.namespace}]]*/
+				,label : /*[[${param.label}]]*/
+				,sortItem : /*[[${param.sortItem}]]*/
+				,sortOrder : /*[[${param.sortOrder}]]*/
+			};
+		var searchText = '';
+		var b_order = g_order ?  'true' : 'false';
+		var label = own ? $(own).text() : '';
+		searchText += 'namespace=' + param.namespace[0] + '&';
+		searchText += 'label=' +label + '&'
+		searchText +='sortItem=' + ( !param.sortItem ? '' : param.sortItem)+ '&';
+		searchText +='sortOrder='+ b_order ;
+		
+		var path =  /*[[@{/iam/namespace/namespace-list}]]*/ ;
+		location.href=path+'?'+searchText;
+	}
+	
+	
+	
+	$(document).ready(function(){
+		var name = /*[[${param.namespace}]]*/;
+		 $('#search').val(name[0]);
+		 var sortItem = /*[[${param.sortItem}]]*/;
+		 var sortOrder = /*[[${param.sortOrder}]]*/;
+		 $.each($('#sort').children(), function(idx, li){
+			 $(li).attr('class', 'dsc');
+		 });
+		 if(sortOrder && sortOrder[0] == 'true'){
+			 $('#'+sortItem[0]).attr('class', '');
+			 g_order = true;
+		 } 
+	})
+	
+	/*[+ $(function() {
 	    $(document).ajaxSend(function(e, xhr, options) {
 	    	var token = $("meta[name='_csrf']").attr("content");
 	    	var header = $("meta[name='_csrf_header']").attr("content");
 	        xhr.setRequestHeader(header, token);
 	    });
-	}); */
-	
+	}); +]*/
+	 /*]]>*/
     </script>
 </head>
 <body>
@@ -56,8 +131,10 @@
                     <h2 class="title">Namespace</h2>
                     <div class="tag-wrap">
                     	<strong class="tag">태그 :</strong>
-                    	<span class="Label Default">모든태그</span>
-                    	<span class="Label white">Tworld</span><span class="Label white">html,css</span><span class="Label white">CloudZ, FaaS</span>
+                    	<span class="Label Default" onclick="selectLabel()">모든태그</span>
+                    	<temp th:each="label : ${labels.items} ">
+							<span class="Label white" onclick="selectLabel(this)" th:text="${label}"/>
+						</temp>
                     </div>
                     <div class="btn-wrap__right">
 	                    <button class="Button btn-ico__typeb btn-addnamepace">Namespace 추가</button>
@@ -66,7 +143,7 @@
 				</div>
 				<!-- search-wrap-->
 				<div class="search-wrap">
-					<input class="Textinput srcinput" placeholder="검색어를 입력하세요."/><button class="Button btn-search">검색</button>
+					<input class="Textinput srcinput" placeholder="검색어를 입력하세요." id='search'/><button class="Button btn-search" th:onclick="'search1()'">검색</button>
 				</div>
 				
 				<!--name space detail view-->
@@ -77,13 +154,13 @@
 							<button class="Button btn-ico__typeb btn-cardview Checked">카드형으로 보기</button>
 							<button class="Button btn-ico__typeb btn-listview">목록형으로 보기</button>
 						</div>
-						<ul class="sort-list">
-							<li>Namespace</li>
-							<li class="dsc">CPU Req/Limit</li>
-							<li>Memory Req/Limit</li>
-							<li>사용자</li>
-							<li>상태</li>
-							<li>생성일시</li>
+						<ul class="sort-list" id="sort">
+							<li class="dsc" id="namespace" onclick="orderby('namespace', this)">Namespace</li>
+							<li class="dsc" id="cpu" onclick="orderby('cpu', this)">CPU Req/Limit</li>
+							<li class="dsc" id="memory" onclick="orderby('memory', this)">Memory Req/Limit</li>
+							<li class="dsc" id="user" onclick="orderby('user', this)">사용자</li>
+							<li class="dsc" id="status" onclick="orderby('status',  this)">상태</li>
+							<li class="dsc" id="createTime" onclick="orderby('createTime', this)">생성일시</li>
 						</ul>
 					</div>
 					<!-- name space panel-->
@@ -94,10 +171,10 @@
 	                			<dt><span th:text="${namespace.namespace}"></span></dt>
 	                			<dd>
 	                				<div class="tag-wrap">
-	                					<div th:each="label : ${namespace.labels}">
+	                					<temp th:each="label : ${namespace.labels}">
 		                					<span class="Label Default" th:text="${label}"></span>
 		                					<button class="btn-ico label-del">삭제</button>
-										</div>
+										</temp>
 	                					<button class="Label add-label">추가</button>
 	                					
 	                				</div>

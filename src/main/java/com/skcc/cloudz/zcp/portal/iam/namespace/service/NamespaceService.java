@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
 import com.skcc.cloudz.zcp.api.iam.service.impl.IamRestClient;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
+import com.skcc.cloudz.zcp.portal.iam.namespace.vo.EnquryNamespaceVO;
 
 @Service
 public class NamespaceService {
@@ -17,10 +18,23 @@ public class NamespaceService {
 	@Autowired
     private IamRestClient client;
 	
-    public Map<String, Object> getResourceQuota() throws Exception {
+    public Map<String, Object> getResourceQuota(EnquryNamespaceVO vo) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
-        ApiResponseVo response = client.request(HttpMethod.GET, "/iam/resourceQuota", null);
+        ApiResponseVo response = client.request("/iam/resourceQuota", vo);
+        if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(response.getMsg());
+        }
+        
+        resultMap.putAll(response.getData());
+    
+        return resultMap;
+    }
+    
+    public Map<String, Object> getResourceLabel() throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        ApiResponseVo response = client.request(HttpMethod.GET, "/iam/namespace/labels", null);
         if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(response.getMsg());
         }
@@ -37,7 +51,7 @@ public class NamespaceService {
         if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(response.getMsg());
         }
-        
     }
+    
 
 }

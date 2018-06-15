@@ -9,12 +9,14 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.portal.iam.namespace.service.NamespaceService;
+import com.skcc.cloudz.zcp.portal.iam.namespace.vo.EnquryNamespaceVO;
 
 
 @Controller
@@ -28,8 +30,9 @@ public class NamespaceController {
     private NamespaceService namespaceService;
     
     @GetMapping(value = "/namespace/namespace-list", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
-    public String cardNamespace(Model model) throws Exception {
-    	model.addAttribute("namespace", namespaceService.getResourceQuota());
+    public String cardNamespace(Model model, @ModelAttribute EnquryNamespaceVO vo) throws Exception {
+    	model.addAttribute("namespace", namespaceService.getResourceQuota(vo));
+    	model.addAttribute("labels", namespaceService.getResourceLabel());
     	return "content/iam/namespace/namespace";
     }
     
@@ -41,3 +44,4 @@ public class NamespaceController {
     }
     
 }
+

@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.portal.iam.namespace.vo.EnquryNamespaceVO;
 
 @Service
 public class IamRestClient {
@@ -67,6 +68,42 @@ public class IamRestClient {
                 apiResponseVo.setData(responseEntity.getBody().getData());    
             }
         } catch (RestClientException | IOException e) {
+            e.printStackTrace();
+        }
+        
+        return apiResponseVo;
+    }
+    
+    
+    public ApiResponseVo request(String targetUrl, EnquryNamespaceVO data) {
+        ApiResponseVo apiResponseVo = new ApiResponseVo();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path(targetUrl)
+            		.queryParam("namespace", data.getNamespace())
+                    .queryParam("sortItem", data.getSortItem())
+                    .queryParam("sortOrder", data.isSortOrder())
+                    .queryParam("label", data.getLabel())
+            		.build().toString();
+            log.info("===> Request Url : {}", url);
+            ObjectMapper oMapper = new ObjectMapper();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            HttpEntity<?> httpEntity  = new HttpEntity<>(httpHeaders); 
+            Map<String, String> params = oMapper.convertValue(data, Map.class);
+            ResponseEntity<ApiResponseVo> responseEntity =restTemplate.exchange(url, HttpMethod.GET, httpEntity,ApiResponseVo.class);
+            
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
+            log.info("===> Response body code : {}", responseEntity.getBody().getCode());
+            log.info("===> Response body data : {}", responseEntity.getBody().getData());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                apiResponseVo.setCode(responseEntity.getBody().getCode());
+                apiResponseVo.setMsg(responseEntity.getBody().getMsg());
+                apiResponseVo.setData(responseEntity.getBody().getData());    
+            }
+        } catch (RestClientException e) {
             e.printStackTrace();
         }
         
