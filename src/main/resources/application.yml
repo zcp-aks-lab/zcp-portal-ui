@@ -73,7 +73,7 @@ spring:
 logging:
   level:
     root: INFO 
-    org.apache: DEBUG   
+    org.apache: INFO   
   config: classpath:config/logback-spring.xml
   file : local
   path : data/logs

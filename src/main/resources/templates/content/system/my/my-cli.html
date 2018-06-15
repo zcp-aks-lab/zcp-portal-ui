@@ -23,21 +23,22 @@
                         this.getZcpKubeConfig();
                     },
                     getZcpKubeConfig: function() {
-                        var url = '/my/getZcpKubeConfig';
-                        var pars = '';
-                        
-                        $.ajax({
+                    	$a.request('/my/getZcpKubeConfig', {
                             method: 'get',
-                            url: url,
-                            data: pars
-                            }).done(function(data) {
-                                if (!data) return false;
-                                $('#cliArea').val(json2yaml(data));
-                            }).fail(function(jqXHR, textStatus, errorThrown) {
-                                console.error(jqXHR);
+                            data: null, 
+                            success : function(res) {
+                                if (res.resultCd !== '200') {
+                                    if (res.resultMsg) alert(res.resultMsg);
+                                    return false;
+                                }
+                                
+                                if (!res.resultData) return false;
+                                $('#cliArea').val(json2yaml(res.resultData));
+                            },
+                            error : function(errObject) {
                                 alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
                             }
-                        );
+                        })
                     }
                 },
                 event: {
@@ -94,7 +95,7 @@
                                 <tr>
                                     <th class="Valign-top"><span class="ico-num">2</span>단계</th>
                                     <td>
-                                        <p class="Margin-bottom-10">CLI구성을 위하여 터미널에 아래의 command를 실행합니다.</p><textarea id="cliArea" class="Textarea cli-area"></textarea>
+                                        <p class="Margin-bottom-10">CLI구성을 위하여 터미널에 아래의 command를 실행합니다.</p><textarea id="cliArea" class="Textarea cli-area" readonly="readonly"></textarea>
                                         <button class="btn-ico btn-copy" id="btnCopy">복사</button>
                                     </td>
                                 </tr>

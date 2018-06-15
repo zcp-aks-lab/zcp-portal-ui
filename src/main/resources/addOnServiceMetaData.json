@@ -30,7 +30,8 @@
     "target": "blank",
     "accessRoles": [
       "cluster-admin",
-      "admin"
+      "admin",
+      "view"
     ],
     "enable": true
   },

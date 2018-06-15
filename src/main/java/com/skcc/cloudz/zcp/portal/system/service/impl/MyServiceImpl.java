@@ -62,13 +62,11 @@ public class MyServiceImpl implements MyService {
     @Override
     public Map<String, Object> getKubeConfig() throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
+        String namespace = securityService.getUserDetails().getDefaultNamespace();
+        String userId = securityService.getUserDetails().getUserId();
         
-        //String namespace = securityService.getUserDetails().getDefaultNamespace();
-        //String userId = securityService.getUserDetails().getUserId();
-        
-        String userId = "2578332d-0fcb-4e8e-bea0-206c715c0075";
-        String namespace = "zcp-system";
-        
+        //String userId = "2578332d-0fcb-4e8e-bea0-206c715c0075";
+        //String namespace = "zcp-system";
         
         ApiResponseVo apiResponseVo = iamApiService.kubeconfig(userId, namespace);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {

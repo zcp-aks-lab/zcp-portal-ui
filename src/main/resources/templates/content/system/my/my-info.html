@@ -21,28 +21,36 @@
 	                    // init
 	                },
 	                updateMyInfo: function() {
+	                	if (!this.validation()) {
+	                		return false;
+	                	}
+                        
+                        $a.request('/my/updatedMyInfo', {
+                        	method: 'post',
+                            data: $('#form').serializeObject(), 
+                            success : function(res) {
+                            	if (res.resultCd !== '200') {
+                            		if (res.resultMsg) alert(res.resultMsg);
+                            		return false;
+                            	}
+                            	
+                            	alert('저장되었습니다.');
+                                location.reload();
+                            },
+                            error : function(errObject) {
+                            	alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                            }
+                        })
+	                },
+	                validation: function() {
 	                	var emaildValid = $('#email').validate();
                         var firstNameValid = $('#firstName').validate();
                         
                         if (!emaildValid || !firstNameValid) {
                             return false;
+                        } else {
+                        	return true;
                         }
-	                	
-	                	var url = '/my/updatedMyInfo';
-	                	var pars = $('#form').serialize();
-	                	
-	                    $.ajax({
-	                        method: 'post',
-	                        url: url,
-	                        data: pars
-	                        }).done(function(data) {
-	                            alert('저장되었습니다.');
-	                            location.reload();
-	                        }).fail(function(jqXHR, textStatus, errorThrown) {
-	                            console.error(jqXHR);
-	                            alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
-	                        }
-	                    );
 	                }
 	        	},
 	        	event: {
