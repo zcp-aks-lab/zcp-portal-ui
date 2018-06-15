@@ -31,6 +31,7 @@ public class OpenIdConnectUserDetailsVo extends CommonVo implements UserDetails 
 
     public OpenIdConnectUserDetailsVo(Map<String, String> userInfo, OAuth2AccessToken token, ZcpUserVo zcpUserVo) {
         this.userId = userInfo.get("sub");
+        //this.userId = "04461fb8-9739-42a4-96e2-46fa77780c54";
         this.email = userInfo.get("email");
         this.token = token;
         
