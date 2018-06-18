@@ -94,7 +94,7 @@
         "id": "repository",
         "name": "소스 저장소",
         "order": 2,
-        "url": "",
+        "url": "https://git.cloudzcp.io/user/oauth2/keycloak",
         "target": "blank",
         "enable": true
       }
