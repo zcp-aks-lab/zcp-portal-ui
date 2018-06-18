@@ -63,7 +63,10 @@
 	-o-transition: none;
 	transition: none;
 }
-.ImageCheckbox, .ImageRadio {font-size: 1.0rem;}
+.ImageCheckbox, .ImageRadio {
+	font-size: 1.0rem;
+	padding-left: 4px;
+}
 .ImageCheckbox:after {
 	left: 1px;
 	top: 42%;
@@ -110,7 +113,8 @@
 	-ms-border-radius: 0;
 	border-radius: 0;
 }
-.Textinput:hover, .Textinput:focus, .Textinput:active {
+.Textinput:hover, .Textinput:focus, .Textinput:active, 
+.Textarea, .Textarea:hover, .Textarea:focus, .Textarea:active {
 	border: 1px solid #cccccc;
 }
 .Table.Form-type {
@@ -148,9 +152,18 @@
 	-ms-border-radius: 0;
 	border-radius: 0;
 }
+.Divselect > select {
+	padding: 10px;
+	font-size: 1.0rem;
+	color: #999999;
+}
 .Divselect:hover, .Divselect:active, .Divselect.ui-state-active {
 	border-color: #888888;
 	background: #ffffff url("../images/ico-form.png") no-repeat right -50px;
+}
+.Divselect.Disabled, .Divselect.Disabled:hover {
+	border-color: #cccccc;
+	background: #ebebeb url("../images/ico-form.png") no-repeat right -50px;
 }
 .Tooltip {
 	padding: 6px 20px 8px;

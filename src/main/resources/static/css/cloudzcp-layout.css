@@ -73,6 +73,7 @@ body.login {background: #ffffff}
 	height: 100%;
 	border-top: 4px solid #ea0530;
 }
+.contents-box:after,
 .locations-area:after,
 .top-area:after,
 .accor-contents__wrap:after,
@@ -80,7 +81,8 @@ body.login {background: #ffffff}
 .login-menu:after,
 .member-title__wrap:after,
 .namespace-sort:after,
-.panel-line__wrap:after {
+.panel-line__wrap:after,
+.now-alert__wrap:after {
 	clear: both;
 	content: '';
 	display: block;
@@ -156,6 +158,8 @@ body.login {background: #ffffff}
 .state.inactive {background: #999999;}
 .state.locked {background: #ea0530}
 .state.active {background: #43a047}
+.Textinput + .Button.btn, .Divselect + .Button.btn, 
+.Button.btn + .Button.btn {margin-left: 6px;}
 /*---------------------------------------
 	header css
 ---------------------------------------*/
@@ -246,6 +250,12 @@ body.login {background: #ffffff}
 	background: #d72340;
 	border: 1px solid #d72340;
 }
+.Button.btn.Disabled,
+.Button.btn.Disabled:hover {
+	color: #bbbbbb;
+	background: #eeeeee;
+	border: 1px solid #dddddd;
+}
 .Button.btn.bg-gray {
 	color: #ffffff;
 	background: #999999;
@@ -328,6 +338,8 @@ body.login {background: #ffffff}
 	background-position: -386px -60px;
 }
 .btn-ico.btn-copy:hover, .btn-ico.btn-copy:hover:active {background-position: -416px -60px;}
+.btn-ico.channel-del {background-position: -295px 2px;}
+.btn-ico.channel-del:hover, .btn-ico.channel-del:active {background-position: -325px 2px;}
 .Textinput.acc-input {
 	width: 80%; 
 	padding: 0 30px 0 15px;
@@ -359,7 +371,6 @@ body.login {background: #ffffff}
 .Button.btn-config:hover, .Button.btn-config:active {background-position: -320px 8px;}
 .Button.btn-adduser, .Button.btn-adduser:hover, .Button.btn-adduser:active {background-position: 6px 6px;}
 .Button.btn-addnamepace, .Button.btn-addnamepace:hover, .Button.btn-addnamepace:active {background-position: 6px -52px;}
-
 .Button.btn-cardview, .Button.btn-listview {
 	width: 26px;
 	height: 26px;
@@ -370,6 +381,13 @@ body.login {background: #ffffff}
 .Button.btn-listview:hover, .Button.btn-listview:active, .Button.btn-listview.Checked {background-position: -147px -61px}
 .Button.btn-godash {background-position: 7px -111px}
 .Button.btn-godash:hover, .Button.btn-godash:active {background-position: -30px -111px}
+.Button.btn-rules {background-position: -116px -113px}
+.Button.btn-rules:hover, .Button.btn-rules:active, .Button.btn-rules.Checked {background-position: -156px -113px}
+.Button.btn-addchannel {
+	width: 30px; 
+	height: 30px;
+	background-position: -227px -118px}
+.Button.btn-addchannel:hover, .Button.btn-addchannel:active, .Button.btn-addchannel.Checked {background-position: -264px -118px}
 /*---------------------------------------
 	Login css
 ---------------------------------------*/
@@ -665,6 +683,10 @@ a.blank-link {
 	height: 30px;
 	text-indent: -9999px;
 	background: transparent url("../images/btn-toggleimg.png") no-repeat 0 0;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	-ms-border-radius: 0;
+	border-radius: 0;
 }
 .Button.btn-toggle:hover {
 	background: transparent url("../images/btn-toggleimg.png") no-repeat -48px 0;
@@ -727,8 +749,8 @@ a.blank-link {
 }
 .contents-box {
 	margin: 0 20px;
-	padding: 30px 30px 100px 30px;
-	min-height: 800px;
+	padding: 30px 30px 80px 30px;
+	min-height: 700px;
 	background-color: #fff;
 	-webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 	-ms-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -1186,6 +1208,7 @@ a.blank-link {
 .lay-item__right {
 	display: table-cell; 
 	vertical-align: top;
+	width: 50%;
 }
 .lay-item__left {padding-right: 25px}
 .lay-item__right {padding-left: 25px}
@@ -1197,7 +1220,8 @@ a.blank-link {
 	color: #444444;
 	border-top: 1px solid #444444;
 }
-.Tabs .form-title {
+.Tabs .form-title,
+.channel-wrap .form-title {
 	margin-top: 0;
 	padding: 11px 0 14px;
 	font-size: 1.2rem;
@@ -1451,6 +1475,80 @@ a.view-detail:active {
 	font-size: 0.8rem;
 	color: #666666;
 }
+.alert-wrap {
+	clear: both;
+	margin-top: 20px;
+	border-top: 2px solid #444444;
+}
+.alert-title {
+	margin-top: 0;
+	padding: 11px 0 14px;
+	font-size: 1.2rem;
+	font-weight: 500;
+}
+.now-alert__wrap {margin-bottom: 30px;}
+.now-alert li {
+	float: left;
+	width: calc((100% / 4) - 60px);
+	margin-right: 26px;
+	padding: 20px;
+	color: #ffffff;
+}
+.now-alert li:last-child {
+	margin-right: 0
+}
+.now-alert li.bg-typea {background: #f0ad4e;}
+.now-alert li.bg-typeb {background: #43a047;}
+.alert-info {
+	font-size: 3.33rem;
+	font-weight: bold;
+}
+.alert-info em {
+	padding: 0 4px;
+	font-style: normal;
+	font-weight: normal;
+}
+.alert-option__wrap {position: relative;}
+.alert-option {
+	position: absolute;
+	top: 6px;
+	right: 0;
+}
+.alert-option .Divselect {
+	width: 150px;
+	margin: 0 10px;
+	border-color: #888888;
+}
+.form-btn__wrap {position: relative;}
+.form-btn__wrap .btn-wrap__right {
+	position: absolute;
+	right: 0;
+	top: -7px;
+}
+.form-btn__wrap .form-title {
+	margin-bottom: 20px;
+	border-bottom: 1px solid #cccccc;
+}
+.form-btn__wrap .form-subtitle {
+	margin-top: 6px;
+	padding: 14px 0 10px;
+	font-size: 1.07rem;
+	font-weight: 500;
+	color: #444444;
+}
+.channel-noti {
+	display: table;
+	width: 100%;
+	padding: 20px 0;
+	border-bottom: 1px solid #cccccc;
+}
+.channel-noti__left,
+.channel-noti__right {
+	display: table-cell; 
+	vertical-align: middle;
+}
+.channel-noti__right  {text-align: right;}
+.Table.Form-type.channel-line tbody {border-top: 1px solid #444444;}
 /*---------------------------------------
 	popup css
 ---------------------------------------*/
