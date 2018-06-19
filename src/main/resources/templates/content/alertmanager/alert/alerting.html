@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<title>CloudZ CP</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<!-- alopexui_theme default -->
+	<link rel="stylesheet" href="../styles/css/alopex/alopex-ui-default.css">
+	<!-- end alopexui_theme -->
+		
+	<!-- alopexui_basic -->
+	<link rel="stylesheet" href="../styles/css/alopex/src/alopex-ext.css">
+	<script src="../script/libs/jquery/jquery-1.12.4.min.js"></script>
+	<script src="../script/libs/alopex/alopex-ui.min.js"></script>
+	<script src="../script/libs/alopex/src/alopex-ext.min.js"></script>
+	<script src="../script/libs/alopex/src/alopex-ext-setup.js"></script>
+
+	<link rel="stylesheet" href="../styles/css/alopex/alopex-grid.css" />
+	<script src="../script/libs/alopex/alopex-grid.min.js"></script>
+	<script src="../script/libs/alopex/alopex-grid-excel.min.js"></script>
+	<!-- end alopexui_basic -->
+
+	<link rel="stylesheet" href="../styles/css/cloudzcp-grid.css">
+	<link rel="stylesheet" href="../styles/css/cloudzcp-layout.css">
+	<link rel="stylesheet" href="../styles/css/cloudzcp-ui.css">
+	<script src="../script/app/common/alopex-common.js"></script>
+	<script src="../script/app/common/cloudzcp-ui.js"></script>
+</head>
+<body>
+<div class="cp-wrapper">
+	<!-- header -->
+	<header class="cp-header">
+		<h1 class="logo"><img src="../styles/images/cloudzcp-logo.png" alt="CLOUD Z Container Platform"></h1>
+		<!-- utils -->
+		<div class="header-utils">
+			<a class="user">김마에 님</a>
+			<div class="user-menus">
+				<ul class="dropmenu-list">
+					<li class="selected">나의 정보</li>
+					<li>비밀번호 변경</li>
+					<li>CLI Command</li>
+					<li>로그아웃</li>
+				</ul>
+			</div>
+		</div>
+		<!-- /utils -->
+	</header>
+	<!-- //header -->
+	<!-- main-contents -->
+	<div class="cp-container">
+		<!-- lnb
+			서브 메뉴가 있는 경우 : expandable
+			서브 메뉴를 클릭하고 오픈한 경우 : expanded
+		-->
+		<div class="lnb-wrap">
+			<nav>
+				<ul>
+					<li><a href="#"><img class="icon-img" src="../styles/images/ico-lnbname.png"><span class="lnb-name">ZCP</span></a></li>
+					<li><a href="#">대시보드</a></li>
+					<li><a href="#">모니터링</a></li>
+					<li><a href="#">알림</a></li>
+					<li><a href="#">DevOps</a>
+						<ul class="lnb-sub">
+							<li><a href="#">- 빌드 및 배포</a></li>
+							<li><a href="#">- 소스 저장소</a></li>
+						</ul>
+					</li>
+					<li><a href="#">Image Registry</a></li>
+					<li><a href="#">ZDB</a></li>
+					<li class="selected"><a href="#">설정 및 관리</a>
+						<ul class="lnb-sub">
+							<li><a href="#">- Namespace</a></li>
+							<li class="selected"><a href="#">- 사용자</a></li>
+						</ul>
+					</li>
+					<li><a href="#">안내 및 도움말</a>
+						<ul class="lnb-sub">
+							<li><a href="#">- 시작하기</a></li>
+							<li><a href="#">- 문서</a></li>
+							<li><a href="#">- 문의 및 지원</a></li>
+							<li><a href="#">- 약관</a></li>
+						</ul>
+					</li>
+					<li>
+						<button class="Button btn-toggle lnb-close">접기</button>
+					</li>
+				</ul>
+			</nav>
+		</div>
+		<!-- //lnb -->
+		<!-- contents -->
+		<div class="contents-wrap">
+			<div class="locations-area"></div>
+			<div class="contents-box">
+				<!-- service top area-->
+				<div class="top-area">
+                    <h2 class="title">Alerting</h2>
+                    <div class="tag-wrap">
+                    	<span class="tag">클러스터에 현재 발생한 Alert 입니다.</span>
+                    </div>
+				</div>
+				<!--alert detail view-->
+				<div class="alert-wrap">
+					<h3 class="alert-title">현재 알림 상황</h3>
+					<div class="now-alert__wrap">
+						<ul class="now-alert">
+							<li class="bg-typea">
+								<span>Ready</span>
+								<p class="alert-info">15</p>
+							</li>
+							<li class="bg-typea">
+								<span>API Server</span>
+								<p class="alert-info">Downed</p>
+							</li>
+							<li class="bg-typeb">
+								<span>Node Not Ready</span>
+								<p class="alert-info"><span>3</span><em>/</em><span>4</span></p>
+							</li>
+							<li class="bg-typeb">
+								<span>Node Down</span>
+								<p class="alert-info"><span>0</span><em>/</em><span>5</span></p>
+							</li>
+						</ul>
+					</div>
+					<div id="gr"></div>
+				</div>
+				<!--alert option view-->
+				<div class="alert-wrap">
+					<div class="alert-option__wrap">
+						<h3 class="alert-title">알림 히스토리</h3>
+						<div class="alert-option">
+							<span class="alert-option__title">알람 일시:</span>
+							<div class="Divselect">
+							    <select>
+							        <option value="korea">지난 1시간동안</option>
+							        <option value="usa">2시간동안</option>
+							        <option value="japan">어제</option>
+							        <option value="china">반나절</option>
+							    </select>
+							    <span></span>
+							</div>
+							<span class="alert-option__title">심각도:</span>
+							<div class="Divselect">
+							    <select>
+							        <option value="korea">전체</option>
+							        <option value="usa">심각</option>
+							        <option value="japan">양호</option>
+							    </select>
+							    <span></span>
+							</div>
+						</div>
+					</div>
+					<div id="gr2"></div>
+				</div>
+			</div>
+		</div>
+		<!-- //contents -->
+	</div>
+	<!-- //main-contents -->
+</div>
+</body>
+</html>
