@@ -1,0 +1,25 @@
+<div class="popup-wrap">
+	<div class="popup-contents">
+		<div class="popup-text">
+		<span id="span_text"></span><br/><br/>
+			<span>네임스페이스를 입력하세요: </span>
+			<input type="text" id="input_namespace" length="30"/>
+		</div>
+	</div>
+	<!--button-->
+	<div class="popup-btn__wrap">
+		<button class="Button btn bg-gray" id="btn_closePop">확인</button>
+	</div>
+	<!--//button-->
+</div>
+<script>
+$a.page(function() {
+    this.init = function(id, param) {
+    	 var namespace = param["namespace"];
+    	$('#span_text').text(namespace + ' 네임 스페이스를 삭제 하시겠습니까?');
+        $('#btn_closePop').click( function(){ 
+            $a.close($('#input_namespace').val()); 
+        });
+    }
+});
+</script>
