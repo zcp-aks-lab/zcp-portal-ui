@@ -20,5 +20,15 @@ public class RuleController {
 	public String ruleList(Model model) throws Exception {
 		return "content/alertmanager/rule/rules";
 	}
+	
+	@GetMapping(value = "/addRule", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+	public String addRule(Model model) throws Exception {
+		return "content/alertmanager/rule/addrules";
+	}
+	
+	@GetMapping(value = "/detailRule", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+	public String detailRule(Model model) throws Exception {
+		return "content/alertmanager/rule/detailrules";
+	}
 
 }

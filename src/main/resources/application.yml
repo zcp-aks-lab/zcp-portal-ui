@@ -90,6 +90,3 @@ props:
       redirectUri: ${HOME_URL:http://localhost:8181}/k8s-login
   iam:
     baseUrl: https://zcp-iam.cloudzcp.io:443
-#ID: edu-020
-#PW: 111111
-

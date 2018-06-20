@@ -4,7 +4,108 @@
     <head>
         <title>알림</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        
+        <script type="text/javascript">
+        	var zcpPortalApp = {
+                pageInit: function() {
+                    'use strict';
+                    
+                    // data init
+                    this.grid.init();
+                    
+                    // data init
+                    this.data.init();
+                },
+                
+                grid: {
+                	init: function() {
+                		$("#alert-grid").removeAlopexGrid();
+                        $('#alert-grid').alopexGrid({ 
+                            pager: true,
+                            paging: {
+                                perPage: 10,
+                                pagerCount: 10,
+                                pagerSelect: true,
+                                pagerTotal: true
+                            },
+                            defaultSorting:{
+                                sortingColumn: 'time',
+                                sortingDirection: 'desc'
+                            },
+                            defaultColumnMapping : {
+                                sorting: true,
+                                resizing : true
+                            },
+                            message: {
+                                nodata: '데이타가 없습니다.'
+                            },
+                            enableDefaultContextMenu: false,
+                            autoColumnIndex: true,
+                            columnMapping: [
+                                {
+                                    key: 'time',
+                                    title: '발생 일시',
+                                    width: '120px',
+                                    align: 'left'
+                                }, 
+                                {
+                                    key: 'severity',
+                                    title: '심각도',
+                                    width: '120px',
+                                    align : 'left'
+                                },
+                                {
+                                    key: 'type',
+                                    title: 'Rule 종류',
+                                    width: '120px',
+                                    align : 'left'
+                                },
+                                {
+                                    key: 'receiver',
+                                    title: '채널',
+                                    width: '120px',
+                                    align : 'left'
+                                },
+                                {
+                                    key: 'description',
+                                    title: '설명',
+                                    width: '300px',
+                                    align : 'left'
+                                }
+                            ],
+                        });
+                	},
+                },
+                
+                data: {
+                    init: function() {
+                        this.getList();
+                    },
+                    getList: function() {
+                    	$a.request('/alertmanager/alertList', {
+                            method: 'get',
+                            data: null, 
+                            success : function(res) {
+                                if (res.resultCd !== '200') {
+                                    if (res.resultMsg) alert(res.resultMsg);
+                                    return false;
+                                }
+                                
+                                $('#alert-grid').alopexGrid('dataSet', res.resultData);
+                            },
+                            error : function(errObject) {
+                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                            }
+                        })
+                    }
+                }
+            }
+            
+            $.alopex.page(function() {
+                this.init = function(id, param) { 
+                    zcpPortalApp.pageInit();
+                };
+            });
+        </script>
     </head>
     <body>
         <th:block layout:fragment="content">
@@ -27,25 +128,41 @@
 					<h3 class="alert-title">현재 알림 상황</h3>
 					<div class="now-alert__wrap">
 						<ul class="now-alert">
-							<li class="bg-typea">
-								<span>Ready</span>
-								<p class="alert-info">15</p>
+							<li class="bg-typeb" th:if="${activeCount.equals('0')}">
+								<span>Alerts</span>
+								<p class="alert-info" th:text="${activeCount}"></p>
 							</li>
-							<li class="bg-typea">
+							<li class="bg-typea" th:unless="${activeCount.equals('0')}">
+								<span>Alerts</span>
+								<p class="alert-info" th:text="${activeCount}"></p>
+							</li>
+							<li class="bg-typeb" th:if="${apiServer.equals('OK')}">
 								<span>API Server</span>
-								<p class="alert-info">Downed</p>
+								<p class="alert-info" th:text="${apiServer}"></p>
 							</li>
-							<li class="bg-typeb">
+							<li class="bg-typea" th:unless="${apiServer.equals('OK')}">
+								<span>API Server</span>
+								<p class="alert-info" th:text="${apiServer}"></p>
+							</li>
+							<li class="bg-typeb" th:if="${nodeNotReadyCnt.equals('0')}">
 								<span>Node Not Ready</span>
-								<p class="alert-info"><span>3</span><em>/</em><span>4</span></p>
+								<p class="alert-info"><span th:text="${nodeNotReadyCnt}"></span><em>/</em><span th:text="${nodeNotReadyTotCnt}"></span></p>
 							</li>
-							<li class="bg-typeb">
+							<li class="bg-typea" th:unless="${nodeNotReadyCnt.equals('0')}">
+								<span>Node Not Ready</span>
+								<p class="alert-info"><span th:text="${nodeNotReadyCnt}"></span><em>/</em><span th:text="${nodeNotReadyTotCnt}"></span></p>
+							</li>
+							<li class="bg-typeb" th:if="${nodeDownCnt.equals('0')}">
 								<span>Node Down</span>
-								<p class="alert-info"><span>0</span><em>/</em><span>5</span></p>
+								<p class="alert-info"><span th:text="${nodeDownCnt}"></span><em>/</em><span th:text="${nodeDownTotCnt}"></span></p>
+							</li>
+							<li class="bg-typea" th:unless="${nodeDownCnt.equals('0')}">
+								<span>Node Down</span>
+								<p class="alert-info"><span th:text="${nodeDownCnt}"></span><em>/</em><span th:text="${nodeDownTotCnt}"></span></p>
 							</li>
 						</ul>
 					</div>
-					<div id="gr"></div>
+					<div id="alert-grid"></div>
 				</div>
 				<!--alert option view-->
 				<div class="alert-wrap">
