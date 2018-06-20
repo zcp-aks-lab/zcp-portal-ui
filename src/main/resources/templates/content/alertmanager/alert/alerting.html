@@ -21,8 +21,9 @@
                 		$("#alert-grid").removeAlopexGrid();
                         $('#alert-grid').alopexGrid({ 
                             pager: true,
+                            fitTableWidth: true,
                             paging: {
-                                perPage: 10,
+                                perPage: 5,
                                 pagerCount: 10,
                                 pagerSelect: true,
                                 pagerTotal: true
@@ -44,19 +45,82 @@
                                 {
                                     key: 'time',
                                     title: '발생 일시',
-                                    width: '120px',
-                                    align: 'left'
+                                    width: '140px',
+                                    align: 'center'
                                 }, 
                                 {
                                     key: 'severity',
                                     title: '심각도',
-                                    width: '120px',
+                                    width: '80px',
                                     align : 'left'
                                 },
                                 {
                                     key: 'type',
                                     title: 'Rule 종류',
+                                    width: '150px',
+                                    align : 'left'
+                                },
+                                {
+                                    key: 'receiver',
+                                    title: '채널',
                                     width: '120px',
+                                    align : 'left'
+                                },
+                                {
+                                    key: 'description',
+                                    title: '설명',
+                                    width: '300px',
+                                    align : 'left'
+                                }
+                            ],
+                        });
+                        
+                        $("#history-grid").removeAlopexGrid();
+                        $('#history-grid').alopexGrid({ 
+                            pager: true,
+                            fitTableWidth: true,
+                            paging: {
+                                perPage: 5,
+                                pagerCount: 10,
+                                pagerSelect: true,
+                                pagerTotal: true
+                            },
+                            defaultSorting:{
+                                sortingColumn: 'time',
+                                sortingDirection: 'desc'
+                            },
+                            defaultColumnMapping : {
+                                sorting: true,
+                                resizing : true
+                            },
+                            message: {
+                                nodata: '데이타가 없습니다.'
+                            },
+                            enableDefaultContextMenu: false,
+                            autoColumnIndex: true,
+                            columnMapping: [
+                                {
+                                    key: 'time',
+                                    title: '발생 일시',
+                                    width: '140px',
+                                    align: 'center'
+                                }, 
+                                {
+                                    key: 'state',
+                                    title: '상태',
+                                    width: '80px',
+                                    align: 'left'
+                                }, 
+                                {
+                                    key: 'severity',
+                                    title: '심각도',
+                                    width: '80px',
+                                    align : 'left'
+                                },
+                                {
+                                    key: 'type',
+                                    title: 'Rule 종류',
+                                    width: '150px',
                                     align : 'left'
                                 },
                                 {
@@ -190,7 +254,7 @@
 							</div>
 						</div>
 					</div>
-					<div id="gr2"></div>
+					<div id="history-grid"></div>
 				</div>
 			</div>
 		</div>
