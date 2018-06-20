@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.skcc.cloudz.zcp.configuration.web.interceptor.AddOnServiceMetaDataInterceptor;
@@ -35,4 +36,10 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
           .maxAge(3600);
     }
     
+	@Override
+	public void addViewControllers(ViewControllerRegistry registry) {
+	    registry.addViewController("/iam/namespace/popNamespaceDel.html").setViewName("content/iam/namespace/popNamespaceDel");
+	    registry.addViewController("/iam/namespace/namespace-add").setViewName("content/iam/namespace/namespace-add");
+	      
+	}
 }

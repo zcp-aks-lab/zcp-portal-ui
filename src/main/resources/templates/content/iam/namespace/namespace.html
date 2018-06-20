@@ -11,13 +11,34 @@
 	/*<![CDATA[*/
 	var g_order= false;
 	function deleteNamespace(name){
-		if(confirm('정말 삭제 하시겠습니까?')){
-		   	ajaxCall('/iam/namespace/delete', {namespace:name}).done(function(data){
-		   		//alert('정상처리 되었습니다.');
-		   		location.reload();
-		   	});
-		}
-	   	
+	    $a.popup({
+	        url: "./popNamespaceDel.html",
+	        iframe: false,  // default 는 true
+	        width: 826,
+	        height: 480,
+	        title : "Namespace 삭제",
+	        data : {namespace : name},
+	        callback : function(data){
+	        	if(data==name){
+	        		ajaxCall('/iam/namespace/delete', {namespace:name}).done(function(data){
+		    	   		alert('삭제  되었습니다.');
+		    	   		location.reload();
+	    	   		});		
+	        	}else if(data){
+	        		alert('네임스페이스명이 다릅니다.');
+	        	}
+	        },
+	        alias: "flag1",
+	        xButtonClickCallback : function(el){  // 우측 상단 X 버튼으로 닫을 경우 동작하는 콜백
+	            if(el.alias === "flag1"){
+	                //if(confirm("저장되지 않은 데이터가 있습니다. 창을 닫으시겠습니까?")){
+	                    return true;
+	                //} else {
+	                //    return false;
+	                //}
+	            }
+	        }
+	    });
 	}
 	
 	function ajaxCall(url, data){
@@ -27,7 +48,7 @@
 			url: url,
 			data: JSON.stringify(data)
         }).fail(function(jqXHR, textStatus, errorThrown) {
-            //console.error(jqXHR);
+            console.log(jqXHR);
             alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
         });
 	}
@@ -70,7 +91,6 @@
 	}
 	
 	function selectLabel(own){
-		$(own).text();
 		var param = {
 				namespace : /*[[${param.namespace}]]*/
 				,label : /*[[${param.label}]]*/
@@ -80,7 +100,8 @@
 		var searchText = '';
 		var b_order = g_order ?  'true' : 'false';
 		var label = own ? $(own).text() : '';
-		searchText += 'namespace=' + param.namespace[0] + '&';
+		var namespace = param.namespace ? param.namespace[0] : '';
+		searchText += 'namespace=' + namespace + '&';
 		searchText += 'label=' +label + '&'
 		searchText +='sortItem=' + ( !param.sortItem ? '' : param.sortItem)+ '&';
 		searchText +='sortOrder='+ b_order ;
@@ -93,25 +114,95 @@
 	
 	$(document).ready(function(){
 		var name = /*[[${param.namespace}]]*/;
-		 $('#search').val(name[0]);
-		 var sortItem = /*[[${param.sortItem}]]*/;
-		 var sortOrder = /*[[${param.sortOrder}]]*/;
-		 $.each($('#sort').children(), function(idx, li){
-			 $(li).attr('class', 'dsc');
-		 });
-		 if(sortOrder && sortOrder[0] == 'true'){
-			 $('#'+sortItem[0]).attr('class', '');
-			 g_order = true;
-		 } 
-	})
+		$('#search').val(name ? name[0] : '');
+		var sortItem = /*[[${param.sortItem}]]*/;
+		var sortOrder = /*[[${param.sortOrder}]]*/;
+		var label = /*[[${param.label}]]*/
+		$.each($('#sort').children(), function(idx, li){
+		 $(li).attr('class', 'dsc');
+		});
+		if(sortOrder && sortOrder[0] == 'true'){
+		 $('#'+sortItem[0]).attr('class', '');
+		 g_order = true;
+		}
+		if(label && label[0] != '')
+			$.each($('#div_label').find('span'), function(){
+				if($(this).text() == label[0]) 
+					$(this).removeClass('white').addClass('Default');
+			});
+		else
+			$('#div_label').find('span').eq(0).removeClass('white').addClass('Default');
+		
+	})	
+	//////////////////////////////// grid /////////////////////////////////////////
+	function grid_init(data){ 
+    	AlopexGrid.setup({
+    		fitTableWidth : true // 테이블의 너비를 그리드 너비에 맞춰 확장시키는 옵션
+    	});
+    	
+    	$('#gr').alopexGrid({
+    		pager: true,
+    		paging: {
+    			perPage: 5,
+    			pagerCount: 5,
+    			pagerSelect: true,
+                pagerTotal: true
+    		},
+            defaultColumnMapping : {
+                sorting:true
+            },
+    		autoColumnIndex: true,
+    		columnMapping : [
+    			{
+    				key : 'name',
+    				title : '네임스페이스',
+    				width : '100px'
+    			}, {
+    				key : 'phone',
+    				title : 'CPU Req/Limit',
+    				width : '100px'
+    			}, {
+    				key : 'email',
+    				title : 'Memory Req/Limit',
+    				width : '250px'
+    			}, {
+    				align : 'center',
+    				key : 'birthday',
+    				title : '사용자',
+    				width : '100px'
+    			}, {
+    				align : 'center',
+    				key : 'zip',
+    				title : '상태',
+    				width : '100px'
+    			}, {
+    				align : 'right',
+    				key : 'salary',
+    				title : '생성일시',
+    				width : '100px'
+    			}, {
+    				key : 'country',
+    				title : '관리',
+    				width : '200px'
+    			}, {
+    				key : 'city',
+    				title : 'city',
+    				width : '150px'
+    			}, {
+    				key : 'company',
+    				title : 'company',
+    				width : '200px'
+    			}, {
+    				key : 'type',
+    				align: 'center',
+    				title : 'type',
+    				width : '50px'
+    			}
+    		],
+    		data: data
+    	});
 	
-	/*[+ $(function() {
-	    $(document).ajaxSend(function(e, xhr, options) {
-	    	var token = $("meta[name='_csrf']").attr("content");
-	    	var header = $("meta[name='_csrf_header']").attr("content");
-	        xhr.setRequestHeader(header, token);
-	    });
-	}); +]*/
+	}
 	 /*]]>*/
     </script>
 </head>
@@ -123,21 +214,23 @@
 		<!-- contents -->
 		<div class="contents-wrap">
 			<div class="locations-area">
-				<div class="back-list"><a href="#"><span>목록으로 돌아가기</span></a></div>
+				<th:block th:include="common/include/namespace :: common"></th:block>
 			</div>
 			<div class="contents-box">
 				<!-- service top area-->
 				<div class="top-area">
                     <h2 class="title">Namespace</h2>
-                    <div class="tag-wrap">
+                    <div class="tag-wrap" id="div_label">
                     	<strong class="tag">태그 :</strong>
-                    	<span class="Label Default" onclick="selectLabel()">모든태그</span>
+                    	<temp>
+                    		<span class="Label white" onclick="selectLabel()">모든태그</span>
+                    	</temp>
                     	<temp th:each="label : ${labels.items} ">
 							<span class="Label white" onclick="selectLabel(this)" th:text="${label}"/>
 						</temp>
                     </div>
                     <div class="btn-wrap__right">
-	                    <button class="Button btn-ico__typeb btn-addnamepace">Namespace 추가</button>
+	                    <button class="Button btn-ico__typeb btn-addnamepace" onclick="location.href='/iam/namespace/namespace-add'">Namespace 추가</button>
 	                    <div class="Tooltip" data-position="left">Namespace 추가</div>
 	                </div>
 				</div>
@@ -168,7 +261,7 @@
 	                	<div class="Panel-content">
 	                		<span th:class="'state ' + ${active}">active</span>
 	                		<dl class="namespace-info">
-	                			<dt><span th:text="${namespace.namespace}"></span></dt>
+	                			<dt><a th:href="'/iam/namespace/namespace-add?namespace=' + ${namespace.namespace}"  th:text="${namespace.namespace}"></a></dt>
 	                			<dd>
 	                				<div class="tag-wrap">
 	                					<temp th:each="label : ${namespace.labels}">
@@ -176,13 +269,12 @@
 		                					<button class="btn-ico label-del">삭제</button>
 										</temp>
 	                					<button class="Label add-label">추가</button>
-	                					
 	                				</div>
 	                			</dd>
 	                			<dd class="time-info"><strong>생성일시</strong> : <span>5시간 전 </span></dd>
 	                			<dd>
 	                				<div class="namespace-btn__wrap">
-			                			<button class="btn-ico btn-viewdash">대쉬보드보기</button>
+			                			<button class="btn-ico btn-viewdash" th:onclick="'location.href=\'/?namespace=' + ${namespace.namespace} + '\';'">대쉬보드보기</button>
 			                			<span class="vline"></span>
 			                			<button class="btn-ico btn-delnamespace" th:onclick="'deleteNamespace(\'' + ${namespace.namespace} + '\')'">삭제</button>
 			                		</div>
@@ -209,7 +301,7 @@
 	                <!-- panel new make-->
 	                <div class="Panel namespace-panel make-box">
 	                	<div class="Panel-content">
-	                		<a href="#" class="new-make"><span class="Icon ico-cloudz make-plus"></span>Namespace 추가</a>
+	                		<a href="/iam/namespace/namespace-add" class="new-make"><span class="Icon ico-cloudz make-plus"></span>Namespace 추가</a>
 	                	</div>
 	                </div>
 				</div>

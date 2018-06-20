@@ -136,5 +136,14 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
         
         return resultMap;
     }
+    
+    @Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+			throws Exception {
+    	Object o1 = request.getAttribute("data");
+    	Object o2 = request.getAttribute("namespace");
+    	
+		return true;
+	}
 
 }

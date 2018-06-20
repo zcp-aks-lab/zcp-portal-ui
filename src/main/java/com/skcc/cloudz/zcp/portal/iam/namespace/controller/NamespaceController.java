@@ -1,6 +1,7 @@
 package com.skcc.cloudz.zcp.portal.iam.namespace.controller;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.portal.iam.namespace.service.NamespaceService;
@@ -39,8 +41,21 @@ public class NamespaceController {
     @PostMapping(value = "/namespace/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
     public void deleteNamespace(@RequestBody HashMap<String, String> name) throws Exception {
-    	log.debug("namespace=" + name);
-    	//namespaceService.deleteNamespace(name);
+    	log.debug("namespace=" + name.get("namespace"));
+    	namespaceService.deleteNamespace(name.get("namespace"));
+    }
+    
+    @RequestMapping(value = "/namespace/getNamespaceResource")
+    @ResponseBody 
+    public Map<String, Object> getNamespaceResource(@RequestBody EnquryNamespaceVO info) throws Exception {
+    	return namespaceService.getNamespaceResource(info.getNamespace());
+    }
+    
+    @PostMapping(value = "/namespace/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody 
+    public void createNamespace(@RequestBody HashMap<String, Object> data) throws Exception {
+    	//log.debug("namespace=" + data);
+    	namespaceService.createNamespace(data);
     }
     
 }
