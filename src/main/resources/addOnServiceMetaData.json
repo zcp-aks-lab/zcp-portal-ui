@@ -39,14 +39,14 @@
     "id": "alert",
     "name": "알림",
     "order": 4,
-    "url": "/alert",
+    "url": "/alertmanager",
     "target": "self",
     "sub": [
       {
         "id": "alerting",
         "name": "Alerting",
         "order": 1,
-        "url": "/alert/alerting/alerting-list",
+        "url": "/alertmanager/alert",
         "target": "self",
         "enable": true
       },
@@ -54,7 +54,7 @@
         "id": "rules",
         "name": "Rules",
         "order": 2,
-        "url": "/alert/rules/rules-list",
+        "url": "/alertmanager/rule",
         "target": "self",
         "enable": true
       },
@@ -62,7 +62,7 @@
         "id": "channel",
         "name": "Channel",
         "order": 3,
-        "url": "/alert/channe/channel-list",
+        "url": "/alertmanager/channel",
         "target": "self",
         "enable": true
       }

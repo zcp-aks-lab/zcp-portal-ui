@@ -14,12 +14,12 @@ import com.skcc.cloudz.zcp.portal.iam.user.UserController;
 @RequestMapping(value = AlertController.RESOURCE_PATH)
 public class AlertController {
 
-	private static final Logger log = LoggerFactory.getLogger(UserController.class);
+	private static final Logger log = LoggerFactory.getLogger(AlertController.class);
 
 	static final String RESOURCE_PATH = "/alertmanager";
 
 	@GetMapping(value = "/alert", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
-	public String userList(Model model) throws Exception {
+	public String alertList(Model model) throws Exception {
 		return "content/alertmanager/alert/alerting";
 	}
 

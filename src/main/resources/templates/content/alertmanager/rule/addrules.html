@@ -1,94 +1,16 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head>
-	<title>CloudZ CP</title>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
-	<!-- alopexui_theme default -->
-	<link rel="stylesheet" href="../styles/css/alopex/alopex-ui-default.css">
-	<!-- end alopexui_theme -->
-		
-	<!-- alopexui_basic -->
-	<link rel="stylesheet" href="../styles/css/alopex/src/alopex-ext.css">
-	<script src="../script/libs/jquery/jquery-1.12.4.min.js"></script>
-	<script src="../script/libs/alopex/alopex-ui.min.js"></script>
-	<script src="../script/libs/alopex/src/alopex-ext.min.js"></script>
-	<script src="../script/libs/alopex/src/alopex-ext-setup.js"></script>
-
-	<link rel="stylesheet" href="../styles/css/alopex/alopex-grid.css" />
-	<script src="../script/libs/alopex/alopex-grid.min.js"></script>
-	<script src="../script/libs/alopex/alopex-grid-excel.min.js"></script>
-	<!-- end alopexui_basic -->
-
-	<link rel="stylesheet" href="../styles/css/cloudzcp-grid.css">
-	<link rel="stylesheet" href="../styles/css/cloudzcp-layout.css">
-	<link rel="stylesheet" href="../styles/css/cloudzcp-ui.css">
-	<script src="../script/app/common/alopex-common.js"></script>
-	<script src="../script/app/common/cloudzcp-ui.js"></script>
-</head>
-<body>
-<div class="cp-wrapper">
-	<!-- header -->
-	<header class="cp-header">
-		<h1 class="logo"><img src="../styles/images/cloudzcp-logo.png" alt="CLOUD Z Container Platform"></h1>
-		<!-- utils -->
-		<div class="header-utils">
-			<a class="user">김마에 님</a>
-			<div class="user-menus">
-				<ul class="dropmenu-list">
-					<li class="selected">나의 정보</li>
-					<li>비밀번호 변경</li>
-					<li>CLI Command</li>
-					<li>로그아웃</li>
-				</ul>
-			</div>
-		</div>
-		<!-- /utils -->
-	</header>
-	<!-- //header -->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-default">
+    <head>
+        <title>알림</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        
+    </head>
+    <body>
+        <th:block layout:fragment="content">
+        	
 	<!-- main-contents -->
 	<div class="cp-container">
-		<!-- lnb
-			서브 메뉴가 있는 경우 : expandable
-			서브 메뉴를 클릭하고 오픈한 경우 : expanded
-		-->
-		<div class="lnb-wrap">
-			<nav>
-				<ul>
-					<li><a href="#"><img class="icon-img" src="../styles/images/ico-lnbname.png"><span class="lnb-name">ZCP</span></a></li>
-					<li><a href="#">대시보드</a></li>
-					<li><a href="#">모니터링</a></li>
-					<li><a href="#">알림</a></li>
-					<li><a href="#">DevOps</a>
-						<ul class="lnb-sub">
-							<li><a href="#">- 빌드 및 배포</a></li>
-							<li><a href="#">- 소스 저장소</a></li>
-						</ul>
-					</li>
-					<li><a href="#">Image Registry</a></li>
-					<li><a href="#">ZDB</a></li>
-					<li class="selected"><a href="#">설정 및 관리</a>
-						<ul class="lnb-sub">
-							<li><a href="#">- Namespace</a></li>
-							<li class="selected"><a href="#">- 사용자</a></li>
-						</ul>
-					</li>
-					<li><a href="#">안내 및 도움말</a>
-						<ul class="lnb-sub">
-							<li><a href="#">- 시작하기</a></li>
-							<li><a href="#">- 문서</a></li>
-							<li><a href="#">- 문의 및 지원</a></li>
-							<li><a href="#">- 약관</a></li>
-						</ul>
-					</li>
-					<li>
-						<button class="Button btn-toggle lnb-close">접기</button>
-					</li>
-				</ul>
-			</nav>
-		</div>
-		<!-- //lnb -->
 		<!-- contents -->
 		<div class="contents-wrap">
 			<div class="locations-area">
@@ -211,6 +133,7 @@
 		<!-- //contents -->
 	</div>
 	<!-- //main-contents -->
-</div>
-</body>
-</html>
+	
+        </th:block>
+    </body>
+</html>	
