@@ -1,5 +1,6 @@
 package com.skcc.cloudz.zcp.api.iam.service.impl;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -19,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserListVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.portal.system.domain.dto.MyUserDto;
@@ -35,13 +37,13 @@ public class IamApiServiceImpl implements IamApiService {
     private RestTemplate restTemplate;
 
     @Override
-    public ZcpUserResVo getUser(String userId) {
+    public ZcpUserResVo getUser(String id) {
         ZcpUserResVo zcpUserResVo = new ZcpUserResVo();
         
         try {
             String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
                     .path("/iam/user/{id}")
-                    .buildAndExpand(userId)
+                    .buildAndExpand(id)
                     .toString();
             log.info("===> Request Url : {}", url);
             
@@ -68,24 +70,17 @@ public class IamApiServiceImpl implements IamApiService {
     }
 
     @Override
-    public ApiResponseVo setUser(MyUserDto myUserDto) {
+    public ApiResponseVo updateUser(String id, HashMap<String, Object> reqMap) {
         ApiResponseVo apiResponseVo = new ApiResponseVo();
         
         try {
             String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
                     .path("/iam/user/{id}")
-                    .buildAndExpand(myUserDto.getUserId())
+                    .buildAndExpand(id)
                     .toString();
             log.info("===> Request Url : {}", url);
             
             ObjectMapper objectMapper = new ObjectMapper();
-            
-            HashMap<String, Object> reqMap = new HashMap<String, Object>();
-            reqMap.put("defaultNamespace", myUserDto.getDefaultNamespace());
-            reqMap.put("email", myUserDto.getEmail());
-            reqMap.put("firstName", myUserDto.getFirstName());
-            reqMap.put("username", myUserDto.getUsername());
-            
             String requestBody = objectMapper.writeValueAsString(reqMap);
             log.info("===> Request Body : {}", requestBody);
             
@@ -148,11 +143,9 @@ public class IamApiServiceImpl implements IamApiService {
             apiResponseVo.setCode(responseEntity.getBody().getCode());
             apiResponseVo.setMsg(responseEntity.getBody().getMsg());
             apiResponseVo.setData(responseEntity.getBody().getData());
-        } catch (RestClientException e) {
+        } catch (RestClientException | IOException e) {
             e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } 
         
         return apiResponseVo;
     }
@@ -226,7 +219,7 @@ public class IamApiServiceImpl implements IamApiService {
 
     @Override
     public ApiResponseVo serviceAccount(String userId) {
-ApiResponseVo apiResponseVo = new ApiResponseVo();
+        ApiResponseVo apiResponseVo = new ApiResponseVo();
         
         try {
             String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
@@ -256,6 +249,79 @@ ApiResponseVo apiResponseVo = new ApiResponseVo();
         
         return apiResponseVo;
     }
+
+    @Override
+    public ZcpUserListVo users() {
+        ZcpUserListVo zcpUserListVo = new ZcpUserListVo();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/users")
+                    .buildAndExpand()
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            HttpHeaders headers = new HttpHeaders();
+            HttpEntity<String> requestEntity = new HttpEntity<String>(headers); 
+            
+            ResponseEntity<ZcpUserListVo> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, ZcpUserListVo.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
+            log.info("===> Response body code : {}", responseEntity.getBody().getCode());
+            log.info("===> Response body data : {}", responseEntity.getBody().getData());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                zcpUserListVo.setCode(responseEntity.getBody().getCode());
+                zcpUserListVo.setMsg(responseEntity.getBody().getMsg());
+                zcpUserListVo.setData(responseEntity.getBody().getData());    
+            }
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
+        
+        return zcpUserListVo;
+    }
+
+    @Override
+    public ApiResponseVo resetPassword(String id, HashMap<String, Object> reqMap) {
+        ApiResponseVo apiResponseVo = new ApiResponseVo();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/user/{id}/resetPassword")
+                    .buildAndExpand(id)
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            ObjectMapper objectMapper = new ObjectMapper();
+            String requestBody = objectMapper.writeValueAsString(reqMap);
+            log.info("===> Request Body : {}", requestBody);
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            
+            HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers); 
+            
+            ResponseEntity<ApiResponseVo> responseEntity = restTemplate.exchange(url, HttpMethod.POST, entity, ApiResponseVo.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
+            log.info("===> Response body code : {}", responseEntity.getBody().getCode());
+            log.info("===> Response body data : {}", responseEntity.getBody().getData());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                apiResponseVo.setCode(responseEntity.getBody().getCode());
+                apiResponseVo.setMsg(responseEntity.getBody().getMsg());
+                apiResponseVo.setData(responseEntity.getBody().getData());    
+            }
+        } catch (RestClientException | IOException e) {
+            e.printStackTrace();
+        }
+        
+        return apiResponseVo;
+    }
+    
     
 
 }

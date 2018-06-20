@@ -147,9 +147,6 @@
                                         <div class="Divselect" style="width: 200px">
                                             <select th:name="defaultNamespace" th:id="defaultNamespace">
                                                 <option th:each="namespace : ${content.namespaces}" th:value="${namespace}" th:text="${namespace}" th:selected="(${namespace} == *{content.defaultNamespace})" ></option>
-                                                <!-- <option value="korea">Namespace1</option>
-                                                <option value="usa">Namespace2</option>
-                                                <option value="japan">Namespace3</option> -->
                                             </select>
                                             <span></span>
                                         </div>

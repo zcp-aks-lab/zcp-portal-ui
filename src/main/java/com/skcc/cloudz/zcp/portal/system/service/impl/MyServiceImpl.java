@@ -43,7 +43,13 @@ public class MyServiceImpl implements MyService {
 
     @Override
     public void updateUser(MyUserDto myUserDto) throws Exception {
-        ApiResponseVo apiResponseVo = iamApiService.setUser(myUserDto);
+        HashMap<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("defaultNamespace", myUserDto.getDefaultNamespace());
+        reqMap.put("email", myUserDto.getEmail());
+        reqMap.put("firstName", myUserDto.getFirstName());
+        reqMap.put("username", myUserDto.getUsername());
+        
+        ApiResponseVo apiResponseVo = iamApiService.updateUser(myUserDto.getUserId(), reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(apiResponseVo.getMsg());
         }
@@ -64,9 +70,6 @@ public class MyServiceImpl implements MyService {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         String namespace = securityService.getUserDetails().getDefaultNamespace();
         String userId = securityService.getUserDetails().getUserId();
-        
-        //String userId = "2578332d-0fcb-4e8e-bea0-206c715c0075";
-        //String namespace = "zcp-system";
         
         ApiResponseVo apiResponseVo = iamApiService.kubeconfig(userId, namespace);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {

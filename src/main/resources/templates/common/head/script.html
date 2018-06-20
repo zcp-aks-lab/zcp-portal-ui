@@ -17,6 +17,7 @@ if (contextPath == "/") {
     contextPath = contextPath + "/"; 
 }
 
+// request common
 $a.request.setup({
 	url: function(id, param) {
         return id;
@@ -37,32 +38,10 @@ $a.request.setup({
     }
 });
 
-/* $(document).ready(function() {
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
-    $(document).ajaxSend(function(e, xhr, options) {
-      if (token !== undefined) {
-        xhr.setRequestHeader(header, token);
-      }
-    });
-    
-    $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
-        if (jqxhr.status === 401) {
-            if (typeof jqxhr.responseJSON === 'object') {
-                alert(jqxhr.responseJSON.message);
-                return;
-            }
-
-            return;
-        }
-
-        if (jqxhr.status === 403) {
-            alert(errorForbidden);
-            $(location).attr('href', contextPath + '/k8s-login');
-            return;
-        }
-    });
-}); */
+// grid common
+AlopexGrid.setup({
+	fitTableWidth: true // 테이블의 너비를 그리드 너비에 맞춰 확장시키는 옵션
+});
 
 </script>
 </head>

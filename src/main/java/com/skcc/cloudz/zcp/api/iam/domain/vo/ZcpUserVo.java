@@ -3,6 +3,8 @@ package com.skcc.cloudz.zcp.api.iam.domain.vo;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class ZcpUserVo {
     private String id;
     private String username;
@@ -10,6 +12,7 @@ public class ZcpUserVo {
     private String password;
     private String firstName;
     private String lastName;
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+9")
     private Date createdDate;
     private Boolean enabled;
     private Boolean emailVerified;
