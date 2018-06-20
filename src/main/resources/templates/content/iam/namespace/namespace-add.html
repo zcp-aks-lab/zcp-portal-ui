@@ -10,18 +10,19 @@
 	<script th:inline="javascript" type="text/javascript">
 	/*<![CDATA[*/
 		function initNamespace(namespace){
-			var url = "/namespace/getNamespaceResource";
+			var url = "/iam/namespace/getNamespaceResource";
 			ajaxCall(url, {"namespace" : namespace}).done(function(data){
 				if(data.resourceQuota){
-					$('#input_cpu_requests').val(data.resourceQuota.status.hard.requests.cpu);
-					$('#input_cpu_limits').val(data.resourceQuota.status.hard.limits.memory);
-					$('#input_memory_requests').val(data.resourceQuota.status.hard.requests.cpu);
-					$('#input_memory_limits').val(data.resourceQuota.status.hard.limits.memory);
+					$('#input_cpu_requests').val(data.resourceQuota.status.hard["requests.cpu"]);
+					$('#input_cpu_limits').val(data.resourceQuota.status.hard["limits.memory"]);
+					$('#input_memory_requests').val(data.resourceQuota.status.hard["requests.cpu"]);
+					$('#input_memory_limits').val(data.resourceQuota.status.hard["limits.memory"]);
 					$('#input_pods').val(data.resourceQuota.status.hard.pods);
+					$('#input_services').val(data.resourceQuota.status.hard.services);
 					$('#input_secrets').val(data.resourceQuota.status.hard.secrets);
 					$('#input_config_maps').val(data.resourceQuota.status.hard.configmaps);
 					$('#input_persistent_volume').val(data.resourceQuota.status.hard.persistentvolumeclaims);
-					$('#input_persistent_service_load').val(data.resourceQuota.status.hard.services.loadbalancers);
+					$('#input_service_load').val(data.resourceQuota.status.hard["services.loadbalancers"]);
 				}
 				if(data.limitRange){
 					$('#input_pod_cpu_requests').val(	data.limitRange.spec.limits[0].defaultRequest.cpu.number);
@@ -50,7 +51,11 @@
 		
 		$(document).ready(function(){
 			var namespace = /*[[${param.namespace}]]*/;
-			if(namespace) initNamespace(namespace[0]);
+			if(namespace){
+				$('#input_namespace').val(namespace);
+				initNamespace(namespace[0]);	
+			}
+			
 		});
 		
 		function addNamespace(){
@@ -58,55 +63,63 @@
 			
 			var data={
 				resourceQuota : {
-					status :{
+					spec :{
 						hard : {
-							"requests.cpu" : $('#input_cpu_requests').val()
-							,"limits.cpu" : $('#input_cpu_limits').val()
-							,"requests.memory" : $('#input_memory_request').val()
-							,"pods" : $('#input_pods').val()
-							,"secrets" : $('#input_secrets').val()
-							,"configmaps" : $('#input_config_maps').val()
-							,"persistentvolumeclaims" : $('#input_persistent_volume').val()
-							,"services.loadbalancers" : $('#input_persistent_service_load').val()
+							"requests.cpu" : $('#input_cpu_requests').val() + ''
+							,"limits.cpu" : $('#input_cpu_limits').val() + ''
+							,"requests.memory" : $('#input_memory_requests').val() + ''
+							,"limits.memory" : $('#input_memory_limits').val() + ''
+							,"pods" : $('#input_pods').val() ? $('#input_pods').val() + '': "0" 
+							,"secrets" : $('#input_secrets').val() ? $('#input_secrets').val()+ '' : "0"
+							,"configmaps" : $('#input_config_maps').val() ? $('#input_config_maps').val()+ '' : "0"
+							,"persistentvolumeclaims" : $('#input_persistent_volume').val() ? $('#input_persistent_volume').val()+ '' : "0"
+							,"services.loadbalancers" : $('#input_persistent_service_load').val() ? $('#input_persistent_service_load').val()+ '' : "0"
 						}
 					}
 				},
 				limitRange : {
 					spec : {
-						limits : {
+						limits : [{
 							defaultRequest : {
-								cpu : {
-									number : $('#input_pod_cpu_requests').val()
-								}
-								,memory : {
-									number : $('#input_pod_memory_requests').val()
-								}
+								cpu : $('#input_pod_cpu_requests').val()
+								,memory :  $('#input_pod_memory_requests').val()
 							},
 							default : {
-								cpu : {
-									number : $('#input_pod_cpu_limits').val()
-								}
-								,memory : {
-									number : $('#input_pod_memory_limits').val()
-								}
-							}
-						}
+								cpu :  $('#input_pod_cpu_limits').val()
+								,memory : $('#input_pod_memory_limits').val()
+							},
+							type: "Container"
+						}]
 					}
 				},
 				namespace :  $('#input_namespace').val()
 			};
 			var url = "/iam/namespace/create";
+			
 			ajaxCall(url, data).done(function(data){
-				
+				alert('정상처리되었습니다.');
+				location.href='/iam/namespace/namespace-list';
 			});
 		}
 		
 		function validate(){
-			var regex_namespace = /^[a-zA-Z]{1}[0-9a-zA-z\-]{5,11}$/;
+			var regex_namespace = /^[a-zA-Z][0-9a-zA-z\-]{5,11}$/;
 			if(!regex_namespace.test($('#input_namespace').val())){
 				alert('허용하지 않는 문자입니다.');
 				return false;
 			}
+			if(!$('#input_cpu_requests').val()) {
+				$('#input_cpu_requests').focus();
+				alert('필수값 입니다.');
+				return false;
+			}
+			if(!$('#input_cpu_limits').val()) return false;
+			if(!$('#input_memory_requests').val()) return false;
+			if(!$('#input_memory_limits').val()) return false;
+			if(!$('#input_pod_cpu_requests').val()) return false;
+			if(!$('#input_pod_cpu_limits').val()) return false;
+			if(!$('#input_pod_memory_requests').val()) return false;
+			if(!$('#input_pod_memory_limits').val()) return false;
 			return true;
 		}
 		

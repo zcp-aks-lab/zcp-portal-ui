@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,8 @@ import com.skcc.cloudz.zcp.portal.iam.namespace.vo.EnquryNamespaceVO;
 @Service
 public class NamespaceService {
     
+	private final Logger logger = (Logger) LoggerFactory.getLogger(NamespaceService.class);
+	
 	@Autowired
     private IamRestClient client;
 	
@@ -66,9 +70,10 @@ public class NamespaceService {
         return resultMap;
     }
     
-    public void createNamespace(HashMap<String, String> data) throws Exception {
-        ApiResponseVo response = client.request(HttpMethod.PUT, "/iam/namespace", null);
+    public void createNamespace(HashMap<String, Object> data) throws Exception {
+        ApiResponseVo response = client.request(HttpMethod.POST, "/iam/namespace", data);
         if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
+        	logger.debug(response.getMsg());
             throw new Exception(response.getMsg());
         }
     }

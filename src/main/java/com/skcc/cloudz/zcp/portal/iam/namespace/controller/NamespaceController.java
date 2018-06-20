@@ -45,15 +45,15 @@ public class NamespaceController {
     	namespaceService.deleteNamespace(name.get("namespace"));
     }
     
-    @PostMapping(value = "/namespace/getNamespaceResource", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/namespace/getNamespaceResource")
     @ResponseBody 
-    public Map<String, Object> getNamespaceResource(@RequestBody HashMap<String, String> info) throws Exception {
-    	return namespaceService.getNamespaceResource(info.get("namespace"));
+    public Map<String, Object> getNamespaceResource(@RequestBody EnquryNamespaceVO info) throws Exception {
+    	return namespaceService.getNamespaceResource(info.getNamespace());
     }
     
     @PostMapping(value = "/namespace/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public void createNamespace(@RequestBody HashMap<String, String> data) throws Exception {
+    public void createNamespace(@RequestBody HashMap<String, Object> data) throws Exception {
     	//log.debug("namespace=" + data);
     	namespaceService.createNamespace(data);
     }
