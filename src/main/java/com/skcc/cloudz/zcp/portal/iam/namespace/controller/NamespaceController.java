@@ -11,10 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.portal.iam.namespace.service.NamespaceService;
@@ -26,16 +26,16 @@ import com.skcc.cloudz.zcp.portal.iam.namespace.vo.EnquryNamespaceVO;
 public class NamespaceController {
 	private static final Logger log = LoggerFactory.getLogger(NamespaceController.class);
     
-	static final String RESOURCE_PATH = "/iam";
+	static final String RESOURCE_PATH = "/management";
 	
     @Autowired
     private NamespaceService namespaceService;
     
-    @GetMapping(value = "/namespace/namespace-list", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+    @GetMapping(value = "/namespaces", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String cardNamespace(Model model, @ModelAttribute EnquryNamespaceVO vo) throws Exception {
     	model.addAttribute("namespace", namespaceService.getResourceQuota(vo));
     	model.addAttribute("labels", namespaceService.getResourceLabel());
-    	return "content/iam/namespace/namespace";
+    	return "content/management/namespace/namespace";
     }
     
     @PostMapping(value = "/namespace/delete", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -45,17 +45,22 @@ public class NamespaceController {
     	namespaceService.deleteNamespace(name.get("namespace"));
     }
     
-    @RequestMapping(value = "/namespace/getNamespaceResource")
+    @PostMapping(value = "/namespace/getNamespaceResource", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
     public Map<String, Object> getNamespaceResource(@RequestBody EnquryNamespaceVO info) throws Exception {
     	return namespaceService.getNamespaceResource(info.getNamespace());
     }
     
-    @PostMapping(value = "/namespace/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/namespace/createAndEdit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
     public void createNamespace(@RequestBody HashMap<String, Object> data) throws Exception {
-    	//log.debug("namespace=" + data);
     	namespaceService.createNamespace(data);
+    }
+    
+    @GetMapping(value = "/namespace/{namespace}", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+    public String editNamespace(Model model, @PathVariable("namespace") String namespace , @ModelAttribute EnquryNamespaceVO vo) throws Exception {
+    	model.addAttribute("namespace", namespace);
+    	return "content/management/namespace/namespace-detail";
     }
     
 }

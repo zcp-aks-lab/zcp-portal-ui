@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-default">
+    <head>
+        <title>유저 목록</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        
+    </head>
+    <body>
+        <th:block layout:fragment="content">
+            <div class="locations-area"></div>
+            <div class="contents-box">
+                <!-- service top area-->
+                <div class="top-area">
+                    <h2 class="title">사용자</h2>
+                    <div class="tag-wrap">
+                        <span class="tag">Container Platform의 사용자 목록 관리 입니다.</span>
+                    </div>
+                    <div class="btn-wrap__right">
+                        <button class="Button btn-ico__typeb btn-adduser">사용자추가</button>
+                        <div class="Tooltip" data-position="left">사용자추가</div>
+                    </div>
+                </div>
+                <!-- search-wrap-->
+                <div class="search-wrap">
+                    <input class="Textinput srcinput" placeholder="검색어를 입력하세요." /><button class="Button btn-search">검색</button>
+                </div>
+                <div class="grid-line__wrap">
+                    <div id="gr"></div>
+                </div>
+            </div>
+        </th:block>
+    </body>
+</html>

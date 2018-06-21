@@ -38,8 +38,8 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
     
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-	    registry.addViewController("/iam/namespace/popNamespaceDel.html").setViewName("content/iam/namespace/popNamespaceDel");
-	    registry.addViewController("/iam/namespace/namespace-add").setViewName("content/iam/namespace/namespace-add");
+		registry.addViewController("/management/namespace/popNamespaceDel.html").setViewName("content/management/namespace/popNamespaceDel");
+	    registry.addViewController("/management/namespace/create").setViewName("content/management/namespace/namespace-add");
 	      
 	}
 }

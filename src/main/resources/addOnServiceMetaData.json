@@ -145,7 +145,7 @@
         "id": "namespace",
         "name": "네임스페이스",
         "order": 1,
-        "url": "/iam/namespace/namespace-list",
+        "url": "/management/namespaces",
         "target": "self",
         "enable": true
       },
