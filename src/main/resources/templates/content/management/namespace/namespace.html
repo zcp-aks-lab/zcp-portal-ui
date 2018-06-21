@@ -221,13 +221,6 @@
 				<div class="top-area">
                     <h2 class="title">Namespace</h2>
                     <div class="tag-wrap" id="div_label">
-                    	<strong class="tag">태그 :</strong>
-                    	<temp>
-                    		<span class="Label white" onclick="selectLabel()">모든태그</span>
-                    	</temp>
-                    	<temp th:each="label : ${labels.items} ">
-							<span class="Label white" onclick="selectLabel(this)" th:text="${label}"/>
-						</temp>
                     </div>
                     <div class="btn-wrap__right">
 	                    <button class="Button btn-ico__typeb btn-addnamepace" onclick="location.href='/management/namespace/create'">Namespace 추가</button>
@@ -259,16 +252,12 @@
 					<!-- name space panel-->
 					<div class="Panel namespace-panel" th:each="namespace : ${namespace.items} ">
 	                	<div class="Panel-content">
-	                		<span th:class="'state ' + ${active}">active</span>
+	                		<span th:class="'state ' + ${namespace.active}">active</span>
 	                		<dl class="namespace-info">
 	                			<dt><a th:href="'/management/namespace/' + ${namespace.namespace}"  th:text="${namespace.namespace}"></a></dt>
 	                			<dd>
 	                				<div class="tag-wrap">
-	                					<temp th:each="label : ${namespace.labels}">
-		                					<span class="Label Default" th:text="${label}"></span>
-		                					<button class="btn-ico label-del">삭제</button>
-										</temp>
-	                					<button class="Label add-label">추가</button>
+	                					&nbsp;
 	                				</div>
 	                			</dd>
 	                			<dd class="time-info"><strong>생성일시</strong> : <span>5시간 전 </span></dd>
