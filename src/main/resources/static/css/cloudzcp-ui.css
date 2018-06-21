@@ -115,7 +115,7 @@
 }
 .Textinput:hover, .Textinput:focus, .Textinput:active, 
 .Textarea, .Textarea:hover, .Textarea:focus, .Textarea:active {
-	border: 1px solid #cccccc;
+	border: 1px solid #888888;
 }
 .Table.Form-type {
 	border-top: 1px solid #cccccc;
@@ -185,9 +185,14 @@
 	border-color: #888888;
 	border-bottom: 1px solid #888888;
 }
+.Tabs > ul {border-bottom: 0;}
 .Tabs > ul,
 .Tabs > ul > li:first-child, .Tabs > .Scroller > ul > li:first-child {
 	border-color: #888888;
+}
+.Tabs > .Scroller > ul {
+	background: #f9f9f9;
+	border-bottom: 1px solid #eeeeee;
 }
 .Tabs > ul > li:hover, 
 .Tabs > .Scroller > ul > li:hover, 
@@ -202,9 +207,31 @@
 	color: #333333;
 }
 .Tabs.Fixed > ul > li, .Tabs.Fixed > .Scroller > ul > li {float: inherit; font-weight: normal;}
-.Tabs > .Scroller > ul {
-	background: #f9f9f9;
-	border: 1px solid #eeeeee;
+/* table 내에 tabs 이 들어간 경우 */
+.Table.Form-type .Tabs > ul > li, .Table.Form-type .Tabs > .Scroller > ul > li {
+	font-size: 1.13rem;
+	color: #ffffff;
+	background: #aaaaaa;
+	border-color: #aaaaaa;
+	border-bottom: 1px solid #aaaaaa;
+	border-top: 4px solid #aaaaaa;
+}
+.Table.Form-type .Tabs > ul,
+.Table.Form-type .Tabs > ul > li:first-child, .Table.Form-type .Tabs > .Scroller > ul > li:first-child {
+	border-color: #aaaaaa;
+}
+.Table.Form-type .Tabs > ul > li:hover, 
+.Table.Form-type .Tabs > .Scroller > ul > li:hover, 
+.Table.Form-type .Tabs > ul > li:active, 
+.Table.Form-type .Tabs > .Scroller > ul > li:active,
+.Table.Form-type .Tabs > ul > li.Selected, 
+.Table.Form-type .Tabs > .Scroller > ul > li.Selected {
+	border-left: 1px solid #888888;
+	border-right: 1px solid #888888;
+	border-top: 4px solid #ea0530;
+	border-bottom: 1px solid #888888;
+	color: #333333;
+	background: #ffffff;
 }
 .Label {
 	height: 22px;
@@ -263,4 +290,103 @@
 .Dialog .Header .DialogBtn:hover,
 .Dialog .Header .DialogBtn:active {
 	background: url("../images/ico-popup.png") no-repeat 0 -30px;
+}
+.Dateinput > input, .Daterange .Startdate > input, .Daterange .Enddate > input {
+	height: 34px;
+	font-size: 15px;
+	color: #999999;
+	border: 1px solid #888888;
+	border-right: 0;
+}
+.Dateinput > input:hover, .Daterange .Startdate > input:hover, 
+.Daterange .Enddate > input:hover, .Dateinput > input:focus, 
+.Daterange .Startdate > input:focus, .Daterange .Enddate > input:focus {
+	border: 1px solid #888888;
+	border-right: 0;
+}
+.Dateinput > .Calendar, .Daterange .Calendar {
+	width: 34px;
+	height: 34px;
+	right: 6px;
+	background: #ffffff url("../images/ico-form.png") no-repeat -150px 8px;
+	border-top: 1px solid #888888;
+	border-right: 1px solid #888888;
+	border-bottom: 1px solid #888888;
+	border-left: 1px solid #dbdbdb;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	-ms-border-radius: 0;
+	border-radius: 0;
+}
+.Dateinput > .Calendar:hover, 
+.Daterange .Calendar:hover, 
+.Dateinput > .Calendar:active, 
+.Daterange .Calendar:active {
+	border-top: 1px solid #888888;
+	border-right: 1px solid #888888;
+	border-bottom: 1px solid #888888;
+	border-left: 1px solid #dbdbdb;
+	background: #ffffff url("../images/ico-form.png") no-repeat -150px 8px;
+}
+.Spinner {
+	height: 34px;
+	border: 1px solid #888888;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	-ms-border-radius: 0;
+	border-radius: 0;
+}
+.Spinner > .Up {
+	background: #ffffff url("../images/ico-common.png") no-repeat 6px -76px;
+}
+.Spinner > .Down {
+	background: url("../images/ico-common.png") no-repeat 6px -112px;
+}
+.Spinner > .Up:hover {
+	background: #ffffff url("../images/ico-common.png") no-repeat -14px -76px;
+}
+.Spinner > .Down:hover {
+	background: #ffffff url("../images/ico-common.png") no-repeat -14px -112px;
+}
+/*---------------------------------------
+	fileUploader css
+---------------------------------------*/
+.onefile {
+	height: 36px;
+	min-width: 200px;
+	padding: 0 15px;
+	margin-right: 90px;
+	font-size: 1.0rem;
+	line-height: 2.4rem;
+	border: 1px solid #cccccc;
+	color: #666666;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	-ms-border-radius: 0;
+	border-radius: 0;
+}
+.Fileupload {
+    position:absolute; 
+    top: 15px;
+    right: 0;
+}
+.Fileupload .Button {
+	padding: 0 15px;
+	min-width: 100px;
+	height: 38px;
+	font-size: 1.0rem;
+	line-height: 2.4rem;
+	background: #ffffff;
+	color: #666666;
+	border: 1px solid #cccccc;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-ms-border-radius: 3px;
+	border-radius: 3px;
+}
+.Fileupload .Button.btn:hover,
+.Fileupload .Button.btn:active,
+.Fileupload .Button.btn.Checked {
+	background: #eeeeee;
+	border: 1px solid #cccccc;
 }

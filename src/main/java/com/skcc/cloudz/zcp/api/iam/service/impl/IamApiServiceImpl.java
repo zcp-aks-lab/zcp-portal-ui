@@ -70,6 +70,45 @@ public class IamApiServiceImpl implements IamApiService {
     }
 
     @Override
+    public ApiResponseVo setUser(HashMap<String, Object> reqMap) {
+        ApiResponseVo apiResponseVo = new ApiResponseVo();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/user")
+                    .buildAndExpand()
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            ObjectMapper objectMapper = new ObjectMapper();
+            String requestBody = objectMapper.writeValueAsString(reqMap);
+            log.info("===> Request Body : {}", requestBody);
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            
+            HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers); 
+            
+            ResponseEntity<ApiResponseVo> responseEntity = restTemplate.exchange(url, HttpMethod.POST, entity, ApiResponseVo.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
+            log.info("===> Response body code : {}", responseEntity.getBody().getCode());
+            log.info("===> Response body data : {}", responseEntity.getBody().getData());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                apiResponseVo.setCode(responseEntity.getBody().getCode());
+                apiResponseVo.setMsg(responseEntity.getBody().getMsg());
+                apiResponseVo.setData(responseEntity.getBody().getData());    
+            }
+        } catch (RestClientException | IOException e) {
+            e.printStackTrace();
+        }
+        
+        return apiResponseVo;
+    }
+
+    @Override
     public ApiResponseVo updateUser(String id, HashMap<String, Object> reqMap) {
         ApiResponseVo apiResponseVo = new ApiResponseVo();
         
@@ -102,6 +141,39 @@ public class IamApiServiceImpl implements IamApiService {
         } catch (RestClientException e) {
             e.printStackTrace();
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return apiResponseVo;
+    }
+
+    @Override
+    public ApiResponseVo deleteUser(String id) {
+        ApiResponseVo apiResponseVo = new ApiResponseVo();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/user/{id}")
+                    .buildAndExpand(id)
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            HttpHeaders headers = new HttpHeaders();
+            HttpEntity<String> requestEntity = new HttpEntity<String>(headers); 
+            
+            ResponseEntity<ApiResponseVo> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, ApiResponseVo.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
+            log.info("===> Response body code : {}", responseEntity.getBody().getCode());
+            log.info("===> Response body data : {}", responseEntity.getBody().getData());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                apiResponseVo.setCode(responseEntity.getBody().getCode());
+                apiResponseVo.setMsg(responseEntity.getBody().getMsg());
+                apiResponseVo.setData(responseEntity.getBody().getData());    
+            }
+        } catch (RestClientException e) {
             e.printStackTrace();
         }
         
@@ -321,7 +393,78 @@ public class IamApiServiceImpl implements IamApiService {
         
         return apiResponseVo;
     }
-    
+
+    @Override
+    public ApiResponseVo resetCredentials(String id, HashMap<String, Object> reqMap) {
+        ApiResponseVo apiResponseVo = new ApiResponseVo();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/user/{id}/resetCredentials")
+                    .buildAndExpand(id)
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            ObjectMapper objectMapper = new ObjectMapper();
+            String requestBody = objectMapper.writeValueAsString(reqMap);
+            log.info("===> Request Body : {}", requestBody);
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            
+            HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers); 
+            
+            ResponseEntity<ApiResponseVo> responseEntity = restTemplate.exchange(url, HttpMethod.POST, entity, ApiResponseVo.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
+            log.info("===> Response body code : {}", responseEntity.getBody().getCode());
+            log.info("===> Response body data : {}", responseEntity.getBody().getData());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                apiResponseVo.setCode(responseEntity.getBody().getCode());
+                apiResponseVo.setMsg(responseEntity.getBody().getMsg());
+                apiResponseVo.setData(responseEntity.getBody().getData());    
+            }
+        } catch (RestClientException | IOException e) {
+            e.printStackTrace();
+        }
+        
+        return apiResponseVo;
+    }
+
+    @Override
+    public ApiResponseVo getClusterRoles() {
+        ApiResponseVo apiResponseVo = new ApiResponseVo();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/clusterRoles")
+                    .buildAndExpand()
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            HttpHeaders headers = new HttpHeaders();
+            HttpEntity<String> requestEntity = new HttpEntity<String>(headers); 
+            
+            ResponseEntity<ApiResponseVo> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, ApiResponseVo.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
+            log.info("===> Response body code : {}", responseEntity.getBody().getCode());
+            log.info("===> Response body data : {}", responseEntity.getBody().getData());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                apiResponseVo.setCode(responseEntity.getBody().getCode());
+                apiResponseVo.setMsg(responseEntity.getBody().getMsg());
+                apiResponseVo.setData(responseEntity.getBody().getData());    
+            }
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
+        
+        return apiResponseVo;
+    }
     
 
 }

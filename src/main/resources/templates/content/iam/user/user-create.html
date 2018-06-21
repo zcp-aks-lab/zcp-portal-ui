@@ -2,13 +2,167 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-default">
     <head>
-        <title>유저 등록</title>
+        <title>사용자 등록</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        
+        <script type="text/javascript">
+            var zcpPortalApp = {
+                pageInit: function() {
+                    'use strict';
+                    
+                    // data init
+                    this.data.init();
+                    
+                    // event init
+                    this.event.init();
+                },
+                data: {
+                    init: function() {
+                        // init
+                    },
+                    createUser: function() {
+                        if (!this.validation()) {
+                            return false;
+                        }
+                        
+                        $a.request('/management/user/createUser', {
+                            method: 'post',
+                            data: $('#form').serializeObject(), 
+                            success : function(res) {
+                                if (res.resultCd !== '200') {
+                                    if (res.resultMsg) alert(res.resultMsg);
+                                    return false;
+                                }
+                                
+                                alert('저장되었습니다.');
+                                location.href = '/management/users';
+                            },
+                            error : function(errObject) {
+                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                            }
+                        })
+                    },
+                    validation: function() {
+                        var usernameValid = $('#username').validate();
+                        var emailValid = $('#email').validate();
+                        var firstNameValid = $('#firstName').validate();
+                        
+                        if (!usernameValid || !emailValid || !firstNameValid) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                },
+                event: {
+                    init: function() {
+                        $('#btnCreate').on('click', function() {
+                            zcpPortalApp.data.createUser();
+                        });
+
+                        $('#btnCancel').on('click', function() {
+                            location.href = '/management/users';
+                        });
+                    }
+                }
+            }
+            
+            $.alopex.page(function() {
+                this.init = function(id, param) { 
+                    zcpPortalApp.pageInit();
+                };
+            });
+        </script>
         
     </head>
     <body>
         <th:block layout:fragment="content">
-            
+            <!-- location 
+                : 같은 dropdown을 사용하지만 usermenu와는 다르게 전체가 없어질수도 있어서 마지막에 class lastborder 를 추가했습니다. 
+            -->
+            <div class="locations-area"></div>
+            <div class="contents-box">
+                <!-- service top area-->
+                <div class="top-area">
+                    <h2 class="title">사용자 추가</h2>
+                    <div class="tag-wrap">
+                        <span class="tag">ZCP 서비스의 신규 사용자를 생성합니다.</span>
+                    </div>
+                </div>
+                <!-- add user-->
+                <form th:id="form" onsubmit="return false;">
+                    <fieldset>
+                        <table class="Table Form-type topline">
+                            <colgroup>
+                                <col style="width: 200px;" />
+                                <col />
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <th>사용자 ID<strong class="astertisk">*</strong></th>
+                                    <td>
+                                        <input th:name="username" th:id="username" class="Textinput Width-60" data-validation-rule="{required:true, numalpha:true}" data-validation-message="{required:'아이디를 입력해 주세요.'}" />
+                                        <p class="info-text" data-for="username"></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>이메일<strong class="astertisk">*</strong></th>
+                                    <td>
+                                        <input th:name="email" th:id="email" class="Textinput" data-validation-rule="{required:true, email:true}" data-validation-message="{required:'이메일을 입력해 주세요.'}" />
+                                        <p class="info-text" data-for="email"></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>이름<strong class="astertisk">*</strong></th>
+                                    <td>
+                                        <input th:name="firstName" th:id="firstName" class="Textinput" data-validation-rule="{required:true}" data-validation-message="{required:'이름을 입력해 주세요.'}" />
+                                        <p class="info-text" data-for="firstName"></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>클러스터 권한</th>
+                                    <td>
+                                        <div class="Divselect" style="width: 200px">
+                                            <select th:name="clusterRole" th:id="clusterRole">
+                                                <option value="">선택</option>
+                                                <option th:each="clusterRole : ${clusterRoles}" th:value="${clusterRole}" th:text="${clusterRole}"></option>
+                                            </select>
+                                            <span></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="btn-wrap">
+                            <div class="btn-left"><button class="Button btn" id="btnCancel">취소</button></div>
+                            <div class="btn-right"><button class="Button btn bg-red" id="btnCreate">등록</button></div>
+                        </div>
+                    </fieldset>
+                </form>
+                <!-- 일괄등록 table 
+                <h3 class="form-title double-line">일괄등록</h3>
+                <form>
+                    <fieldset>
+                        <table class="Table Form-type">
+                            <colgroup>
+                                <col style="width: 200px;" />
+                                <col />
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <th class="Valign-top">파일<strong class="astertisk">*</strong></th>
+                                    <td>
+                                        <div id="fileuploader" class="Fileupload" data-selectType="basic"></div>
+                                        <div class="btn-wrap"><button class="Button btn bg-red">확인</button></div>
+                                        <p class="info-text gray"><a href="#" class="view-detail">샘플파일 다운로드</a>파일을 업로드하여 일괄적으로 사용자를 추가할 수 있습니다.</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </form>
+                -->
+            </div>
         </th:block>
     </body>
 </html>

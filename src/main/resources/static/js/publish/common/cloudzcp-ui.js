@@ -1,3 +1,12 @@
+$a.setup({
+   language: {
+       ko:{
+           fileupload: {
+               uploadStr: '파일 찾기'
+           }
+       }
+   }
+});
 $a.page(function(){
 	//search ux
 	this.init = function(){
@@ -95,5 +104,11 @@ $a.page(function(){
 		        title : "오류 데이터 목록",
 		    });
 		});
+
+		//fileuploader
+		var uploadObj2 = $('#fileuploader').setOptions({
+		   showCancel : false
+		});
+
 	}
 });

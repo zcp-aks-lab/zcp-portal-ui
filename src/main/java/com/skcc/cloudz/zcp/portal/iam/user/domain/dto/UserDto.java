@@ -1,6 +1,10 @@
 package com.skcc.cloudz.zcp.portal.iam.user.domain.dto;
 
-public class UserDto {
+import java.util.List;
+
+import com.skcc.cloudz.zcp.common.domain.dto.CommonDto;
+
+public class UserDto extends CommonDto {
     private String id;
     private String username;
     private String email;
@@ -8,6 +12,10 @@ public class UserDto {
     private String firstName;
     private Boolean enabled;
     private Boolean temporary;
+    private String period;
+    private String type;
+    private List<String> actions;
+    private String clusterRole;
     
     public String getId() {
         return id;
@@ -51,4 +59,29 @@ public class UserDto {
     public void setTemporary(Boolean temporary) {
         this.temporary = temporary;
     }
+    public String getPeriod() {
+        return period;
+    }
+    public void setPeriod(String period) {
+        this.period = period;
+    }
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
+    }
+    public List<String> getActions() {
+        return actions;
+    }
+    public void setActions(List<String> actions) {
+        this.actions = actions;
+    }
+    public String getClusterRole() {
+        return clusterRole;
+    }
+    public void setClusterRole(String clusterRole) {
+        this.clusterRole = clusterRole;
+    }
+    
 }

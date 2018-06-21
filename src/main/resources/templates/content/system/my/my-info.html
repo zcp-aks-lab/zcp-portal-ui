@@ -93,7 +93,6 @@
                     </div>
                 </div>
                 <!-- myinfo detail-->
-                <!-- myinfo detail-->
                 <form th:id="form" onsubmit="return false;">
                     <input type="hidden" th:name="userId" th:id="userId" th:value="${content.id}" />
                     <input type="hidden" th:name="username" th:id="username" th:value="${content.username}" />
@@ -108,7 +107,7 @@
                                 <tr>
                                     <th>Account</th>
                                     <td>
-                                        <input type="text" th:name="id" th:id="id" th:value="${content.id}" class="Textinput Width-60" readonly="readonly"/>
+                                        <input type="text" th:name="id" th:id="id" th:value="${content.id}" class="Textinput Width-60" readonly="readonly" />
                                         <button class="btn-ico btn-copy" id="btnCopy">복사</button>
                                     </td>
                                 </tr>

@@ -44,7 +44,7 @@
                         var data = $('#infoform').serializeObject();
                         data.enabled =  $('#enabled').hasClass('btn-on') ? true : false;
                         
-                        $a.request('/iam/users/updateUser', {
+                        $a.request('/management/user/updateUser', {
                             method: 'post',
                             data: data, 
                             success : function(res) {
@@ -72,11 +72,11 @@
 
                         var data = $('#pwdform').serializeObject();
                         data.temporary =  $('#temporary').hasClass('btn-on') ? true : false;
+                        data.id = $('#id').val();
 
-                        console.log(data);
+                        if (!confirm('비밀번호를 재설정 하시겠습니까?')) return false;
 
-                        return false;
-                        $a.request('/iam/users/resetPassword', {
+                        $a.request('/management/user/resetPassword', {
                             method: 'post',
                             data: data, 
                             success : function(res) {
@@ -91,12 +91,73 @@
                                 alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
                             }
                         })
+                    },
+
+                    resetCredentials: function() {
+                    	var actions = [];
+                    	var updatePassword = $('#updatePassword').is(":checked");
+                    	var configureOtp = $('#configureOtp').is(":checked");
+                    	var updateProfile = $('#updateProfile').is(":checked");
+
+                    	if (updatePassword) actions.push($('#updatePassword').val());
+                    	if (configureOtp) actions.push($('#configureOtp').val());
+                    	if (updateProfile) actions.push($('#updateProfile').val());
+
+                    	if (actions.length === 0) {
+                    	    return false;
+                        }
+                        
+                        var data = $('#credentialsform').serializeObject();
+                        data.id = $('#id').val();
+                        data.actions = actions;
+
+                        if (!confirm('Credentials을 초기화 하시겠습니까?')) return false;
+
+                        $a.request('/management/user/resetCredentials', {
+                            method: 'post',
+                            data: data, 
+                            success : function(res) {
+                                if (res.resultCd !== '200') {
+                                    if (res.resultMsg) alert(res.resultMsg);
+                                    return false;
+                                }
+                                
+                                alert('비밀번호가 재설정 되었습니다.');
+                            },
+                            error : function(errObject) {
+                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                            }
+                        })
+                    },
+
+                    deleteUser: function() {
+                    	var data = {};
+                        data.id = $('#id').val();
+                        
+                    	if (!confirm('사용자 ' + $('#username').val()+ ' 을 삭제하시겠습니까?')) return false;
+                        
+                        $a.request('/management/user/deleteUser', {
+                            method: 'post',
+                            data: data, 
+                            success : function(res) {
+                                if (res.resultCd !== '200') {
+                                    if (res.resultMsg) alert(res.resultMsg);
+                                    return false;
+                                }
+                                
+                                alert('저장되었습니다.');
+                                location.reload();
+                            },
+                            error : function(errObject) {
+                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                            }
+                        })
                     }
                 },
                 event: {
                     init: function() {
                         $('#btnCancel').on('click', function() {
-                            location.href = '/iam/users';
+                            location.href = '/management/users';
                         });
 
                         $('#btnUserUpdate').on('click', function() {
@@ -107,6 +168,13 @@
                         	zcpPortalApp.data.resetPassword();
                         });
                         
+                        $('#btnEmailSend').on('click', function() {
+                        	zcpPortalApp.data.resetCredentials();
+                        });
+                        
+                        $('#btnDelete').on('click', function() {
+                        	zcpPortalApp.data.deleteUser();
+                        });
                     }
                 }
             }
@@ -129,17 +197,17 @@
                 <!-- service top area-->
                 <div class="top-area">
                     <dl class="service-info">
-                        <dt th:text="${zcpUser.firstName}">야이키
+                        <dt><span th:text="${zcpUser.firstName}">야이키</span>
                             <span class="state inactive"></span>
                             <p class="Tooltip" data-position="right">Inactive</p>
                         </dt>
                         <dd class="service-user">
                             사용자ID: <span th:text="${zcpUser.username}">afaserfs</span>
-                            <span class="Margin-left-80">Cluster 권한</span> : <span th:text="${zcpUser.clusterRole != null} ? '${zcpUser.clusterRole}' : 'none'">admin</span>
+                            <span class="Margin-left-80">Cluster 권한</span> : <span th:text="${zcpUser.clusterRole != null} ? ${zcpUser.clusterRole.name} : 'none'">admin</span>
                         </dd>
                     </dl>
                     <div class="btn-wrap__right">
-                        <button class="Button btn-ico__typeb btn-config">삭제</button>
+                        <button class="Button btn-ico__typeb btn-trash" id="btnDelete">삭제</button>
                     </div>
                 </div>
                 <!-- tab wrap -->
@@ -219,8 +287,7 @@
                                 <a>비밀번호 재설정</a>
                                 <div class="accor-contents__wrap">
                                     <form th:id="pwdform" onsubmit="return false;">
-                                        <input type="hidden" th:name="id" th:id="id" th:value="${zcpUser.id}"/>
-                                    
+                                        
                                         <fieldset>
                                             <table class="Table Form-type">
                                                 <colgroup>
@@ -281,7 +348,7 @@
                             <li>
                                 <a>Credentials 초기화</a>
                                 <div class="accor-contents__wrap">
-                                    <form>
+                                    <form th:id="credentialsform" onsubmit="return false;">
                                         <fieldset>
                                             <table class="Table Form-type">
                                                 <colgroup>
@@ -294,16 +361,16 @@
                                                         <td>
                                                             <div class="check-wrap">
                                                                 <label class="ImageCheckbox" id="checkTest03">
-                                                                    <input class="Checkbox" type="checkbox" name="chk1" value = "check1" checked="checked" />
+                                                                    <input class="Checkbox" type="checkbox" th:id="updatePassword" value="UPDATE_PASSWORD"/>
                                                                     비밀번호
                                                                 </label>
                                                                 <label class="ImageCheckbox" id="checkTest03">
-                                                                    <input class="Checkbox" type="checkbox" name="chk2" value = "check2" checked="checked" />
+                                                                    <input class="Checkbox" type="checkbox" th:id="configureOtp" value="CONFIGURE_OTP" />
                                                                     모바일 인증
                                                                 </label>
                                                                 <label class="ImageCheckbox" id="checkTest03">
-                                                                    <input class="Checkbox" type="checkbox" name="chk3" value = "check3" checked="checked" />
-                                                                    이메일 인증
+                                                                    <input class="Checkbox" type="checkbox" th:id="updateProfile" value="UPDATE_PROFILE"/>
+                                                                    프로필
                                                                 </label>
                                                             </div>
                                                         </td>
@@ -312,24 +379,23 @@
                                                         <th>유효기간</th>
                                                         <td>
                                                             <div class="Divselect" style="width: 200px">
-                                                                <select>
-                                                                    <option value="korea">12</option>
-                                                                    <option value="usa">24</option>
-                                                                    <option value="japan">36</option>
-                                                                    <option value="china">48</option>
+                                                                <select th:name="period" th:id="period">
+                                                                    <option value="12">12</option>
+                                                                    <option value="24">24</option>
+                                                                    <option value="36">36</option>
+                                                                    <option value="48">48</option>
                                                                 </select>
                                                                 <span></span>
                                                             </div>
                                                             <div class="Divselect" style="width: 200px">
-                                                                <select>
-                                                                    <option value="korea">Hours</option>
-                                                                    <option value="usa">Minutes</option>
-                                                                    <option value="japan">Seconds</option>
-                                                                    <option value="china">Days</option>
+                                                                <select th:name="type" th:id="type">
+                                                                    <option value="HOUR">Hours</option>
+                                                                    <option value="MIN">Minutes</option>
+                                                                    <option value="DAY">Days</option>
                                                                 </select>
                                                                 <span></span>
                                                             </div>
-                                                            <button class="Button btn">이메일 발송</button>
+                                                            <button class="Button btn" id="btnEmailSend">이메일 발송</button>
                                                             <p class="form-infotxt">사용자가 비밀번호 및 모바일인증을 재설정 할 수 있도록 이메일을 발송합니다. </p>
                                                         </td>
                                                     </tr>
