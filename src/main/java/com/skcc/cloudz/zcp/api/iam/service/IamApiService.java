@@ -11,7 +11,11 @@ public interface IamApiService {
     
     ZcpUserResVo getUser(String id);
     
+    ApiResponseVo setUser(HashMap<String, Object> reqMap);
+    
     ApiResponseVo updateUser(String id, HashMap<String, Object> reqMap);
+    
+    ApiResponseVo deleteUser(String id);
     
     ApiResponseVo updatePassword(MyUserDto myUserDto); 
     
@@ -24,5 +28,9 @@ public interface IamApiService {
     ZcpUserListVo users();
     
     ApiResponseVo resetPassword(String id, HashMap<String, Object> reqMap);
+    
+    ApiResponseVo resetCredentials(String id, HashMap<String, Object> reqMap);
+    
+    ApiResponseVo getClusterRoles();
 
 }

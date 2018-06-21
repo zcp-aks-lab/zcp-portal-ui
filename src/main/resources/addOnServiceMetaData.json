@@ -138,7 +138,7 @@
     "id": "iam",
     "name": "설정 및 관리",
     "order": 8,
-    "url": "/iam",
+    "url": "/management",
     "target": "",
     "sub": [
       {
@@ -153,7 +153,7 @@
         "id": "user",
         "name": "사용자",
         "order": 2,
-        "url": "/iam/user/user-list",
+        "url": "/management/users",
         "target": "self",
         "enable": true
       }
