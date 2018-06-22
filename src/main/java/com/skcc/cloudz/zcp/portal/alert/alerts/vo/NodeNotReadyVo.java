@@ -1,6 +1,6 @@
-package com.skcc.cloudz.zcp.portal.alertmanager.alert.vo;
+package com.skcc.cloudz.zcp.portal.alert.alerts.vo;
 
-public class NodeDownVo {
+public class NodeNotReadyVo {
 
 	private String count;
 	private String totalCount;

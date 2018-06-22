@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.portal.alertmanager.channel.vo;
+package com.skcc.cloudz.zcp.portal.alert.channels.vo;
 
 public class ChannelListVo {
 

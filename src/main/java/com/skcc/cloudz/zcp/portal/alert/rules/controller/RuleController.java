@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.portal.alertmanager.rule.controller;
+package com.skcc.cloudz.zcp.portal.alert.rules.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

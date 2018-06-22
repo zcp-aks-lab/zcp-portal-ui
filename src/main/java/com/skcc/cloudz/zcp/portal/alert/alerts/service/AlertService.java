@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.portal.alertmanager.alert.service;
+package com.skcc.cloudz.zcp.portal.alert.alerts.service;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,25 +14,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.skcc.cloudz.zcp.portal.alertmanager.alert.vo.AlertCountVo;
-import com.skcc.cloudz.zcp.portal.alertmanager.alert.vo.AlertHistoryVo;
-import com.skcc.cloudz.zcp.portal.alertmanager.alert.vo.AlertVo;
-import com.skcc.cloudz.zcp.portal.alertmanager.alert.vo.ApiServerVo;
-import com.skcc.cloudz.zcp.portal.alertmanager.alert.vo.NodeDownVo;
-import com.skcc.cloudz.zcp.portal.alertmanager.alert.vo.NodeNotReadyVo;
+import com.skcc.cloudz.zcp.portal.alert.alerts.vo.AlertCountVo;
+import com.skcc.cloudz.zcp.portal.alert.alerts.vo.AlertHistoryVo;
+import com.skcc.cloudz.zcp.portal.alert.alerts.vo.AlertVo;
+import com.skcc.cloudz.zcp.portal.alert.alerts.vo.ApiServerVo;
+import com.skcc.cloudz.zcp.portal.alert.alerts.vo.NodeDownVo;
+import com.skcc.cloudz.zcp.portal.alert.alerts.vo.NodeNotReadyVo;
 
 @Service
 public class AlertService {
 
 	@Value("${props.alertmanager.baseUrl}")
 	private String baseUrl;
-
-	// String URL_ACTIVECOUNT = "http://localhost:8080/activeCount";
-	// String URL_APISERVER = "http://localhost:8080/apiServer";
-	// String URL_NODENOTREADY = "http://localhost:8080/nodeNotReady";
-	// String URL_NODEDOWN = "http://localhost:8080/nodeDown";
-	// String URL_ALERTLIST = "http://localhost:8080/alertList";
-	// String URL_HISTORYLIST = "http://localhost:8080/alertHistory";
 
 	public AlertCountVo getActiveCount() {
 		HttpHeaders headers = new HttpHeaders();
@@ -145,10 +138,10 @@ public class AlertService {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public AlertHistoryVo[] getAlertHistoryList() {
+	public AlertHistoryVo[] getAlertHistoryList(String time) {
 		HttpHeaders headers = new HttpHeaders();
 		Map params = new HashMap();
-		params.put("time", "time1");
+		params.put("time", time);
 
 		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
 		headers.setContentType(MediaType.APPLICATION_JSON);
