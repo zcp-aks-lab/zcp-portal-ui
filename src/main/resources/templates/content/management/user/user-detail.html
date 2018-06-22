@@ -207,6 +207,15 @@
                         $('#btnClusterRoleBinding').on('click', function() {
                             zcpPortalApp.data.updateClusterRoleBinding();
                         });
+
+                        $('#btnCopy').on('click', function() {
+                            var t = document.createElement("textarea");
+                            document.body.appendChild(t);
+                            t.value = $('#id').val();
+                            t.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(t);
+                        });
                     }
                 }
             }
