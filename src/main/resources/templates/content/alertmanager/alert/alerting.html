@@ -27,6 +27,9 @@
 					$("#history-grid").alopexGrid('setFilter', 'customFilter', customFilter);	
 				}
 			});
+			$('#time').change(function(e) {
+				zcpPortalGrid2.pageInit();
+			});
 			zcpPortalGrid1.pageInit();
 			zcpPortalGrid2.pageInit();
 		};
@@ -292,7 +295,7 @@
 							<div class="alert-option">
 								<span class="alert-option__title">알람 일시:</span>
 								<div class="Divselect">
-									<select id="time">
+									<select id="time" name="time">
 										<option value="time1">지난 1시간동안</option>
 										<option value="time2">오늘</option>
 										<option value="time3">어제</option>
