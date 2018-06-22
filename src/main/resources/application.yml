@@ -15,7 +15,7 @@ spring:
     ansi:
       enabled: always
   profiles:
-    active: stage
+    active: dev
   resources:
     chain:
       enabled: true

@@ -14,9 +14,9 @@ public class RuleController {
 
 	private static final Logger log = LoggerFactory.getLogger(RuleController.class);
 
-	static final String RESOURCE_PATH = "/alertmanager";
+	static final String RESOURCE_PATH = "/alert";
 
-	@GetMapping(value = "/rule", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+	@GetMapping(value = "/rules", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String ruleList(Model model) throws Exception {
 		return "content/alertmanager/rule/rules";
 	}

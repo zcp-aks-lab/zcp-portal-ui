@@ -1,267 +1,326 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-default">
-    <head>
-        <title>알림</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <script type="text/javascript">
-        	var zcpPortalApp = {
-                pageInit: function() {
-                    'use strict';
-                    
-                    // data init
-                    this.grid.init();
-                    
-                    // data init
-                    this.data.init();
-                },
-                
-                grid: {
-                	init: function() {
-                		$("#alert-grid").removeAlopexGrid();
-                        $('#alert-grid').alopexGrid({ 
-                            pager: true,
-                            fitTableWidth: true,
-                            paging: {
-                                perPage: 5,
-                                pagerCount: 10,
-                                pagerSelect: true,
-                                pagerTotal: true
-                            },
-                            defaultSorting:{
-                                sortingColumn: 'time',
-                                sortingDirection: 'desc'
-                            },
-                            defaultColumnMapping : {
-                                sorting: true,
-                                resizing : true
-                            },
-                            message: {
-                                nodata: '데이타가 없습니다.'
-                            },
-                            enableDefaultContextMenu: false,
-                            autoColumnIndex: true,
-                            columnMapping: [
-                                {
-                                    key: 'time',
-                                    title: '발생 일시',
-                                    width: '140px',
-                                    align: 'center'
-                                }, 
-                                {
-                                    key: 'severity',
-                                    title: '심각도',
-                                    width: '80px',
-                                    align : 'left'
-                                },
-                                {
-                                    key: 'type',
-                                    title: 'Rule 종류',
-                                    width: '150px',
-                                    align : 'left'
-                                },
-                                {
-                                    key: 'receiver',
-                                    title: '채널',
-                                    width: '120px',
-                                    align : 'left'
-                                },
-                                {
-                                    key: 'description',
-                                    title: '설명',
-                                    width: '300px',
-                                    align : 'left'
-                                }
-                            ],
-                        });
-                        
-                        $("#history-grid").removeAlopexGrid();
-                        $('#history-grid').alopexGrid({ 
-                            pager: true,
-                            fitTableWidth: true,
-                            paging: {
-                                perPage: 5,
-                                pagerCount: 10,
-                                pagerSelect: true,
-                                pagerTotal: true
-                            },
-                            defaultSorting:{
-                                sortingColumn: 'time',
-                                sortingDirection: 'desc'
-                            },
-                            defaultColumnMapping : {
-                                sorting: true,
-                                resizing : true
-                            },
-                            message: {
-                                nodata: '데이타가 없습니다.'
-                            },
-                            enableDefaultContextMenu: false,
-                            autoColumnIndex: true,
-                            columnMapping: [
-                                {
-                                    key: 'time',
-                                    title: '발생 일시',
-                                    width: '140px',
-                                    align: 'center'
-                                }, 
-                                {
-                                    key: 'state',
-                                    title: '상태',
-                                    width: '80px',
-                                    align: 'left'
-                                }, 
-                                {
-                                    key: 'severity',
-                                    title: '심각도',
-                                    width: '80px',
-                                    align : 'left'
-                                },
-                                {
-                                    key: 'type',
-                                    title: 'Rule 종류',
-                                    width: '150px',
-                                    align : 'left'
-                                },
-                                {
-                                    key: 'receiver',
-                                    title: '채널',
-                                    width: '120px',
-                                    align : 'left'
-                                },
-                                {
-                                    key: 'description',
-                                    title: '설명',
-                                    width: '300px',
-                                    align : 'left'
-                                }
-                            ],
-                        });
-                	},
-                },
-                
-                data: {
-                    init: function() {
-                        this.getList();
-                    },
-                    getList: function() {
-                    	$a.request('/alertmanager/alertList', {
-                            method: 'get',
-                            data: null, 
-                            success : function(res) {
-                                if (res.resultCd !== '200') {
-                                    if (res.resultMsg) alert(res.resultMsg);
-                                    return false;
-                                }
-                                
-                                $('#alert-grid').alopexGrid('dataSet', res.resultData);
-                            },
-                            error : function(errObject) {
-                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
-                            }
-                        })
-                    }
-                }
-            }
-            
-            $.alopex.page(function() {
-                this.init = function(id, param) { 
-                    zcpPortalApp.pageInit();
-                };
-            });
-        </script>
-    </head>
-    <body>
-        <th:block layout:fragment="content">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	layout:decorator="layout/template-default">
+<head>
+<title>알림</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript">
+
+	$.alopex.page(function() {
+		this.init = function(id, param) {
+			$('#severity').change(function(e) {
+				if($("#severity option:selected").val() == "") {
+					zcpPortalGrid2.pageInit();
+				} else {
+					var customFilter = null;
+					try {
+						customFilter = eval("("+$("#customFunction").val()+")");
+					} catch(e) {
+					}
+					if(!customFilter || !$.isFunction(customFilter)) {
+						alert("올바르지 않은 필터함수 입니다.");
+						return;
+					}
+					$("#history-grid").alopexGrid('setFilter', 'customFilter', customFilter);	
+				}
+			});
+			zcpPortalGrid1.pageInit();
+			zcpPortalGrid2.pageInit();
+		};
+	});
 	
-	<!-- main-contents -->
-	<div class="cp-container">
-		<!-- contents -->
-		<div class="contents-wrap">
-			<div class="locations-area"></div>
-			<div class="contents-box">
-				<!-- service top area-->
-				<div class="top-area">
-                    <h2 class="title">Alerting</h2>
-                    <div class="tag-wrap">
-                    	<span class="tag">클러스터에 현재 발생한 Alert 입니다.</span>
-                    </div>
-				</div>
-				<!--alert detail view-->
-				<div class="alert-wrap">
-					<h3 class="alert-title">현재 알림 상황</h3>
-					<div class="now-alert__wrap">
-						<ul class="now-alert">
-							<li class="bg-typeb" th:if="${activeCount.equals('0')}">
-								<span>Alerts</span>
-								<p class="alert-info" th:text="${activeCount}"></p>
-							</li>
-							<li class="bg-typea" th:unless="${activeCount.equals('0')}">
-								<span>Alerts</span>
-								<p class="alert-info" th:text="${activeCount}"></p>
-							</li>
-							<li class="bg-typeb" th:if="${apiServer.equals('OK')}">
-								<span>API Server</span>
-								<p class="alert-info" th:text="${apiServer}"></p>
-							</li>
-							<li class="bg-typea" th:unless="${apiServer.equals('OK')}">
-								<span>API Server</span>
-								<p class="alert-info" th:text="${apiServer}"></p>
-							</li>
-							<li class="bg-typeb" th:if="${nodeNotReadyCnt.equals('0')}">
-								<span>Node Not Ready</span>
-								<p class="alert-info"><span th:text="${nodeNotReadyCnt}"></span><em>/</em><span th:text="${nodeNotReadyTotCnt}"></span></p>
-							</li>
-							<li class="bg-typea" th:unless="${nodeNotReadyCnt.equals('0')}">
-								<span>Node Not Ready</span>
-								<p class="alert-info"><span th:text="${nodeNotReadyCnt}"></span><em>/</em><span th:text="${nodeNotReadyTotCnt}"></span></p>
-							</li>
-							<li class="bg-typeb" th:if="${nodeDownCnt.equals('0')}">
-								<span>Node Down</span>
-								<p class="alert-info"><span th:text="${nodeDownCnt}"></span><em>/</em><span th:text="${nodeDownTotCnt}"></span></p>
-							</li>
-							<li class="bg-typea" th:unless="${nodeDownCnt.equals('0')}">
-								<span>Node Down</span>
-								<p class="alert-info"><span th:text="${nodeDownCnt}"></span><em>/</em><span th:text="${nodeDownTotCnt}"></span></p>
-							</li>
-						</ul>
-					</div>
-					<div id="alert-grid"></div>
-				</div>
-				<!--alert option view-->
-				<div class="alert-wrap">
-					<div class="alert-option__wrap">
-						<h3 class="alert-title">알림 히스토리</h3>
-						<div class="alert-option">
-							<span class="alert-option__title">알람 일시:</span>
-							<div class="Divselect">
-							    <select>
-							        <option value="korea">지난 1시간동안</option>
-							        <option value="usa">2시간동안</option>
-							        <option value="japan">어제</option>
-							        <option value="china">반나절</option>
-							    </select>
-							    <span></span>
-							</div>
-							<span class="alert-option__title">심각도:</span>
-							<div class="Divselect">
-							    <select>
-							        <option value="korea">전체</option>
-							        <option value="usa">심각</option>
-							        <option value="japan">양호</option>
-							    </select>
-							    <span></span>
-							</div>
+	var zcpPortalGrid1 = {
+		pageInit : function() {
+			'use strict';
+			this.grid.init();
+			this.data.init();
+		},
+		grid : {
+			init : function() {
+				$("#alert-grid").removeAlopexGrid();
+				$('#alert-grid').alopexGrid({
+					pager : true,
+					fitTableWidth : true,
+					paging : {
+						perPage : 5,
+						pagerCount : 5,
+						pagerSelect : true,
+						pagerTotal : true
+					},
+					defaultSorting : {
+						sortingColumn : 'time',
+						sortingDirection : 'desc'
+					},
+					defaultColumnMapping : {
+						sorting : true,
+						resizing : true
+					},
+					message : {
+						nodata : '데이타가 없습니다.'
+					},
+					enableDefaultContextMenu : false,
+					autoColumnIndex : true,
+					columnMapping : [ {
+						key : 'time',
+						title : '발생 일시',
+						width : '140px',
+						align : 'center'
+					}, {
+						key : 'severity',
+						title : '심각도',
+						width : '80px',
+						align : 'left'
+					}, {
+						key : 'type',
+						title : 'Rule 종류',
+						width : '150px',
+						align : 'left'
+					}, {
+						key : 'receiver',
+						title : '채널',
+						width : '120px',
+						align : 'left'
+					}, {
+						key : 'description',
+						title : '설명',
+						width : '300px',
+						align : 'left'
+					} ],
+				});
+			},
+		},
+		data : {
+			init : function() {
+				this.getList();
+			},
+			getList : function() {
+				$a.request('/alert/alertList', {
+					method : 'get',
+					data : null,
+					success : function(res) {
+						if (res.resultCd !== '200') {
+							if (res.resultMsg)
+								alert(res.resultMsg);
+							return false;
+						}
+
+						$('#alert-grid').alopexGrid('dataSet', res.resultData);
+					},
+					error : function(errObject) {
+						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+					}
+				})
+			}
+		}
+	}
+
+	var zcpPortalGrid2 = {
+		pageInit : function() {
+			'use strict';
+			this.grid.init();
+			this.data.init();
+		},
+		grid : {
+			init : function() {
+				$("#history-grid").removeAlopexGrid();
+				$('#history-grid').alopexGrid({
+					pager : true,
+					fitTableWidth : true,
+					filteringHeader: false,
+					filter: {
+						movable: true,
+						saveFilterSize: true,
+						title: true
+					},
+					paging : {
+						perPage : 5,
+						pagerCount : 5,
+						pagerSelect : true,
+						pagerTotal : true
+					},
+					defaultSorting : {
+						sortingColumn : 'time',
+						sortingDirection : 'desc'
+					},
+					defaultColumnMapping : {
+						sorting : true,
+						resizing : true
+					},
+					message : {
+						nodata : '데이타가 없습니다.'
+					},
+					enableDefaultContextMenu : false,
+					autoColumnIndex : true,
+					columnMapping : [ {
+						key : 'time',
+						title : '발생 일시',
+						width : '140px',
+						align : 'center'
+					}, {
+						key : 'status',
+						title : '상태',
+						width : '60px',
+						align : 'left'
+					}, {
+						key : 'severity',
+						title : '심각도',
+						width : '80px',
+						align : 'left'
+					}, {
+						key : 'type',
+						title : 'Rule 종류',
+						width : '150px',
+						align : 'left'
+					}, {
+						key : 'receiver',
+						title : '채널',
+						width : '120px',
+						align : 'left'
+					}, {
+						key : 'description',
+						title : '설명',
+						width : '300px',
+						align : 'left'
+					} ],
+				});
+			},
+		},
+		data : {
+			init : function() {
+				this.getHistoryList();
+			},
+			getHistoryList : function() {
+				$a.request('/alert/alertHistoryList', {
+					method : 'get',
+					data : null,
+					success : function(res) {
+						if (res.resultCd !== '200') {
+							if (res.resultMsg)
+								alert(res.resultMsg);
+							return false;
+						}
+
+						$('#history-grid')
+								.alopexGrid('dataSet', res.resultData);
+					},
+					error : function(errObject) {
+						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+					}
+				})
+			}
+		}
+	}
+
+</script>
+</head>
+<body>
+	<th:block layout:fragment="content">
+		<textarea id="customFunction" style="display:none;">
+			function(data) {
+				return data['severity'] == $("#severity option:selected").val();
+			}
+		</textarea>
+		<!-- main-contents -->
+		<div class="cp-container">
+			<!-- contents -->
+			<div class="contents-wrap">
+				<div class="locations-area"></div>
+				<div class="contents-box">
+					<!-- service top area-->
+					<div class="top-area">
+						<h2 class="title">Alerting</h2>
+						<div class="tag-wrap">
+							<span class="tag">클러스터에 현재 발생한 Alert 입니다.</span>
 						</div>
 					</div>
-					<div id="history-grid"></div>
+					<!--alert detail view-->
+					<div class="alert-wrap">
+						<h3 class="alert-title">현재 알림 상황</h3>
+						<div class="now-alert__wrap">
+							<ul class="now-alert">
+								<li class="bg-typeb" th:if="${activeCount.equals('0')}"><span>Alerts</span>
+									<p class="alert-info" th:text="${activeCount}"></p></li>
+								<li class="bg-typea" th:unless="${activeCount.equals('0')}">
+									<span>Alerts</span>
+									<p class="alert-info" th:text="${activeCount}"></p>
+								</li>
+								<li class="bg-typeb" th:if="${apiServer.equals('OK')}"><span>API
+										Server</span>
+									<p class="alert-info" th:text="${apiServer}"></p></li>
+								<li class="bg-typea" th:unless="${apiServer.equals('OK')}">
+									<span>API Server</span>
+									<p class="alert-info" th:text="${apiServer}"></p>
+								</li>
+								<li class="bg-typeb" th:if="${nodeNotReadyCnt.equals('0')}">
+									<span>Node Not Ready</span>
+									<p class="alert-info">
+										<span th:text="${nodeNotReadyCnt}"></span><em>/</em><span
+											th:text="${nodeNotReadyTotCnt}"></span>
+									</p>
+								</li>
+								<li class="bg-typea" th:unless="${nodeNotReadyCnt.equals('0')}">
+									<span>Node Not Ready</span>
+									<p class="alert-info">
+										<span th:text="${nodeNotReadyCnt}"></span><em>/</em><span
+											th:text="${nodeNotReadyTotCnt}"></span>
+									</p>
+								</li>
+								<li class="bg-typeb" th:if="${nodeDownCnt.equals('0')}"><span>Node
+										Down</span>
+									<p class="alert-info">
+										<span th:text="${nodeDownCnt}"></span><em>/</em><span
+											th:text="${nodeDownTotCnt}"></span>
+									</p></li>
+								<li class="bg-typea" th:unless="${nodeDownCnt.equals('0')}">
+									<span>Node Down</span>
+									<p class="alert-info">
+										<span th:text="${nodeDownCnt}"></span><em>/</em><span
+											th:text="${nodeDownTotCnt}"></span>
+									</p>
+								</li>
+							</ul>
+						</div>
+						<div id="alert-grid"></div>
+					</div>
+					<!--alert option view-->
+					<div class="alert-wrap">
+						<div class="alert-option__wrap">
+							<h3 class="alert-title">알림 히스토리</h3>
+							<div class="alert-option">
+								<span class="alert-option__title">알람 일시:</span>
+								<div class="Divselect">
+									<select id="time">
+										<option value="time1">지난 1시간동안</option>
+										<option value="time2">오늘</option>
+										<option value="time3">어제</option>
+										<option value="time4">지난 이틀간</option>
+										<option value="time5">이번주</option>
+										<option value="time6">지난주</option>
+										<option value="time7">이번달</option>
+										<option value="time8">지난달</option>
+									</select> <span></span>
+								</div>
+								<span class="alert-option__title">심각도:</span>
+								<div class="Divselect">
+									<select id="severity" name="severity">
+										<option value="">전체</option>
+										<option value="warning">warning</option>
+										<option value="critical">critical</option>
+									</select> <span></span>
+								</div>
+							</div>
+						</div>
+						<div id="history-grid"></div>
+					</div>
 				</div>
 			</div>
+			<!-- //contents -->
 		</div>
-		<!-- //contents -->
-	</div>
-	<!-- //main-contents -->
+		<!-- //main-contents -->
 
-        </th:block>
-    </body>
-</html>	
+	</th:block>
+</body>
+</html>
