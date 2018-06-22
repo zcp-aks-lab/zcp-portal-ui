@@ -146,7 +146,7 @@
                                     return false;
                                 }
                                 
-                                alert('저장되었습니다.');
+                                alert('정상처리 되었습니다.');
                                 location.href = '/management/users';
                             },
                             error : function(errObject) {
@@ -174,6 +174,7 @@
                                 
                                 alert('클러스터 권한이 변경되었습니다.');
                                 location.reload();
+                                //$('#detailTab').setTabIndex(2);
                             },
                             error : function(errObject) {
                                 alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -242,7 +243,7 @@
                     </div>
                 </div>
                 <!-- tab wrap -->
-                <div class="Tabs Fixed" data-tab-width="180px">
+                <div class="Tabs Fixed" data-tab-width="180px" id="detailTab">
                     <ul>
                         <li data-content="#tab1">서비스 정보</li>
                         <li data-content="#tab2">Condentials</li>

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserListVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
-import com.skcc.cloudz.zcp.portal.system.domain.dto.MyUserDto;
 
 public interface IamApiService {
     
@@ -17,7 +16,7 @@ public interface IamApiService {
     
     ApiResponseVo deleteUser(String id);
     
-    ApiResponseVo updatePassword(MyUserDto myUserDto); 
+    ApiResponseVo updatePassword(String id, HashMap<String, Object> reqMap); 
     
     ApiResponseVo logout(String id);
     

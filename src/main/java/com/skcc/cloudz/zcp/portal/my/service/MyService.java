@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.portal.system.service.impl;
+package com.skcc.cloudz.zcp.portal.my.service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,13 +14,12 @@ import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
-import com.skcc.cloudz.zcp.portal.system.domain.dto.MyUserDto;
-import com.skcc.cloudz.zcp.portal.system.service.MyService;
+import com.skcc.cloudz.zcp.portal.my.vo.MyUserVo;
 
 @Service
-public class MyServiceImpl implements MyService {
+public class MyService {
     
-    private static final Logger log = LoggerFactory.getLogger(MyServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(MyService.class);
     
     @Autowired
     private IamApiService iamApiService;
@@ -28,8 +27,7 @@ public class MyServiceImpl implements MyService {
     @Autowired
     private SecurityService securityService;
     
-    @Override
-    public ZcpUserVo getMyInfo() throws Exception {
+    public ZcpUserVo getMyUser() throws Exception {
         String userId = securityService.getUserDetails().getUserId();
         log.info("userId : {}", userId);
         
@@ -40,32 +38,35 @@ public class MyServiceImpl implements MyService {
         
         return zcpUserResVo.getData();
     }
-
-    @Override
-    public void updateUser(MyUserDto myUserDto) throws Exception {
+    
+    public void updateUser(MyUserVo myUserVo) throws Exception {
         HashMap<String, Object> reqMap = new HashMap<String, Object>();
-        reqMap.put("defaultNamespace", myUserDto.getDefaultNamespace());
-        reqMap.put("email", myUserDto.getEmail());
-        reqMap.put("firstName", myUserDto.getFirstName());
-        reqMap.put("username", myUserDto.getUsername());
+        reqMap.put("defaultNamespace", myUserVo.getDefaultNamespace());
+        reqMap.put("email", myUserVo.getEmail());
+        reqMap.put("firstName", myUserVo.getFirstName());
+        reqMap.put("username", myUserVo.getUsername());
         
-        ApiResponseVo apiResponseVo = iamApiService.updateUser(myUserDto.getUserId(), reqMap);
+        String userId = securityService.getUserDetails().getUserId();
+        
+        ApiResponseVo apiResponseVo = iamApiService.updateUser(userId, reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(apiResponseVo.getMsg());
         }
     }
-
-    @Override
-    public void updatePassword(MyUserDto myUserDto) throws Exception {
-        myUserDto.setUserId(securityService.getUserDetails().getUserId());
+    
+    public void updatePassword(MyUserVo myUserVo) throws Exception {
+        HashMap<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("currentPassword", myUserVo.getCurrentPassword());
+        reqMap.put("newPassword", myUserVo.getNewPassword());
         
-        ApiResponseVo apiResponseVo = iamApiService.updatePassword(myUserDto);
+        String userId = securityService.getUserDetails().getUserId();
+        
+        ApiResponseVo apiResponseVo = iamApiService.updatePassword(userId, reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(apiResponseVo.getMsg());
         }
     }
-
-    @Override
+    
     public Map<String, Object> getKubeConfig() throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         String namespace = securityService.getUserDetails().getDefaultNamespace();
@@ -80,5 +81,5 @@ public class MyServiceImpl implements MyService {
         
         return resultMap;
     }
-    
+
 }

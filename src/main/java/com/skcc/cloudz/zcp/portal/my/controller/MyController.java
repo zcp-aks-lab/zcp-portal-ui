@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.portal.system.controller;
+package com.skcc.cloudz.zcp.portal.my.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,44 +16,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
-import com.skcc.cloudz.zcp.portal.system.domain.dto.MyUserDto;
-import com.skcc.cloudz.zcp.portal.system.service.MyService;
+import com.skcc.cloudz.zcp.portal.my.service.MyService;
+import com.skcc.cloudz.zcp.portal.my.vo.MyUserVo;
 
 @Controller
 @RequestMapping(value = MyController.RESOURCE_PATH)
 public class MyController {
     
-    private static final Logger log = LoggerFactory.getLogger(MyController.class);
+private static final Logger log = LoggerFactory.getLogger(MyController.class);
     
     static final String RESOURCE_PATH = "/my";
     
     @Autowired
     private MyService myService;
     
-    @GetMapping(value = "/my-info", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+    @GetMapping(value = "/profile", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String myInfo(Model model) throws Exception {
-        model.addAttribute("content", myService.getMyInfo());
+        model.addAttribute("zcpUser", myService.getMyUser());
         
-        return "content/system/my/my-info";
+        return "content/my/my-profile";
     }
     
-    @GetMapping(value = "/my-pwd", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+    @GetMapping(value = "/pwd", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String myPwd(Model model) throws Exception {
-        return "content/system/my/my-pwd";
+        return "content/my/my-pwd";
     }
     
-    @GetMapping(value = "/my-cli", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+    @GetMapping(value = "/cli", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String myCli(Model model) throws Exception {
-        return "content/system/my/my-cli";
+        return "content/my/my-cli";
     }
     
-    @PostMapping(value = "/updatedMyInfo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/updateMyProfile", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public Map<String, Object> updatedMyInfo(@RequestBody MyUserDto myUserDto) throws Exception {
+    public Map<String, Object> updatedMyProfile(@RequestBody MyUserVo myUserVo) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
         try {
-            myService.updateUser(myUserDto);
+            myService.updateUser(myUserVo);
             
             resultMap.put("resultCd", ApiResult.SUCCESS.getCode());    
             resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
@@ -69,11 +69,11 @@ public class MyController {
     
     @PostMapping(value = "/updatedPassword", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public Map<String, Object> updatedPassword(@RequestBody MyUserDto myUserDto) throws Exception {
+    public Map<String, Object> updatedPassword(@RequestBody MyUserVo myUserVo) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
         try {
-            myService.updatePassword(myUserDto);
+            myService.updatePassword(myUserVo);
             
             resultMap.put("resultCd", ApiResult.SUCCESS.getCode());    
             resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
