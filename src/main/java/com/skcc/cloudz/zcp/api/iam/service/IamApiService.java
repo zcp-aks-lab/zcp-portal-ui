@@ -25,12 +25,14 @@ public interface IamApiService {
     
     ApiResponseVo serviceAccount(String id);
     
-    ZcpUserListVo users();
+    ZcpUserListVo getUsers(String keyword);
     
     ApiResponseVo resetPassword(String id, HashMap<String, Object> reqMap);
     
     ApiResponseVo resetCredentials(String id, HashMap<String, Object> reqMap);
     
     ApiResponseVo getClusterRoles();
+    
+    ApiResponseVo updateClusterRoleBinding(String id, HashMap<String, Object> reqMap);
 
 }

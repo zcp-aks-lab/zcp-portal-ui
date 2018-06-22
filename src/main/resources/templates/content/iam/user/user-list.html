@@ -73,7 +73,7 @@
                                     align: 'center',
                                     render: function (value, data) {
                                         if (data.clusterRole) {
-                                            return data.clusterRole.name;
+                                            return data.clusterRole;
                                         } else {
                                             return 'none';
                                         }
@@ -124,9 +124,9 @@
                 	},
                 	
                 	search: function() {
-                		var search = $('#search').val();
-                        //var data = $('#user-grid').alopexGrid('dataGet', {username: search}, {email: search}, {firstName: search});
+                		var keyword = $('#keyword').val();
                         
+                		zcpPortalApp.data.getUsers(keyword);
                     }
                 },
                 
@@ -134,10 +134,14 @@
                     init: function() {
                         this.getUsers();
                     },
-                    getUsers: function() {
+                    getUsers: function(keyword) {
+                    	var data = {
+                    		keyword: keyword || ''	
+                    	}
+                    	
                     	$a.request('/management/user/getUsers', {
-                            method: 'get',
-                            data: null, 
+                            method: 'post',
+                            data: data, 
                             success : function(res) {
                                 if (res.resultCd !== '200') {
                                     if (res.resultMsg) alert(res.resultMsg);
@@ -152,7 +156,28 @@
                         })
                     },
                     userDelete: function(id) {
-                    	alert(id);
+                    	var data = {
+                    		id: id	
+                    	};
+                        
+                        if (!confirm('사용자를 삭제하시겠습니까?')) return false;
+                        
+                        $a.request('/management/user/deleteUser', {
+                            method: 'post',
+                            data: data, 
+                            success : function(res) {
+                                if (res.resultCd !== '200') {
+                                    if (res.resultMsg) alert(res.resultMsg);
+                                    return false;
+                                }
+                                
+                                alert('저장되었습니다.');
+                                location.reload();
+                            },
+                            error : function(errObject) {
+                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                            }
+                        })
                     },
                     userDetail: function(id) {
                     	location.href = '/management/user/' + id;
@@ -164,7 +189,7 @@
                     		zcpPortalApp.grid.search();
                         });
                     	
-                    	$('#search').on('keydown', function(e) {
+                    	$('#keyword').on('keydown', function(e) {
                             if (e.keyCode === 13) {
                             	zcpPortalApp.grid.search();
                             }
@@ -202,7 +227,7 @@
                 </div>
                 <!-- search-wrap-->
                 <div class="search-wrap">
-                    <input type="text" name="search" id="search" class="Textinput srcinput" placeholder="검색어를 입력하세요." /><button class="Button btn-search" id="btnSearch">검색</button>
+                    <input type="text" name="keyword" id="keyword" class="Textinput srcinput" placeholder="검색어를 입력하세요." /><button class="Button btn-search" id="btnSearch">검색</button>
                 </div>
                 <div class="grid-line__wrap">
                     <div id="user-grid"></div>
