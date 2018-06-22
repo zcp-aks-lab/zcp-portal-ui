@@ -14,9 +14,9 @@ public class ChannelController {
 
 	private static final Logger log = LoggerFactory.getLogger(ChannelController.class);
 
-	static final String RESOURCE_PATH = "/alertmanager";
+	static final String RESOURCE_PATH = "/alert";
 
-	@GetMapping(value = "/channel", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+	@GetMapping(value = "/channels", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String channelList(Model model) throws Exception {
 		return "content/alertmanager/channel/channel";
 	}

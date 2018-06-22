@@ -1,10 +1,8 @@
-package com.skcc.cloudz.zcp.portal.iam.user.domain.dto;
+package com.skcc.cloudz.zcp.portal.iam.user.vo;
 
 import java.util.List;
 
-import com.skcc.cloudz.zcp.common.domain.dto.CommonDto;
-
-public class UserDto extends CommonDto {
+public class UserVo {
     private String id;
     private String username;
     private String email;
@@ -16,6 +14,7 @@ public class UserDto extends CommonDto {
     private String type;
     private List<String> actions;
     private String clusterRole;
+    private String keyword;
     
     public String getId() {
         return id;
@@ -82,6 +81,12 @@ public class UserDto extends CommonDto {
     }
     public void setClusterRole(String clusterRole) {
         this.clusterRole = clusterRole;
+    }
+    public String getKeyword() {
+        return keyword;
+    }
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
     
 }

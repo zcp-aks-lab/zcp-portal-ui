@@ -22,12 +22,12 @@ import com.skcc.cloudz.zcp.portal.alertmanager.alert.vo.NodeNotReadyVo;
 @RequestMapping(value = AlertController.RESOURCE_PATH)
 public class AlertController {
 
-	static final String RESOURCE_PATH = "/alertmanager";
+	static final String RESOURCE_PATH = "/alert";
 
 	@Autowired
 	private AlertService alertService;
 
-	@GetMapping(value = "/alert", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+	@GetMapping(value = "/alerts", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String alertStat(Model model) throws Exception {
 		AlertCountVo alertCountVo = new AlertCountVo();
 
@@ -53,24 +53,41 @@ public class AlertController {
 
 		return "content/alertmanager/alert/alerting";
 	}
-	
+
 	@GetMapping(value = "/alertList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public Map<String, Object> alertList() throws Exception {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        System.out.println("####################");
-        try {
-            resultMap.put("resultCd", ApiResult.SUCCESS.getCode());    
-            resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
-            resultMap.put("resultData", alertService.getAlertList());
-        } catch (Exception e) {
-            e.printStackTrace();
-            
-            resultMap.put("resultCd", ApiResult.FAIL.getCode());
-            resultMap.put("resultMsg", e.getMessage());
-        }
-        
-        return resultMap;
-    }
+	@ResponseBody
+	public Map<String, Object> alertList() throws Exception {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		try {
+			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
+			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
+			resultMap.put("resultData", alertService.getAlertList());
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			resultMap.put("resultCd", ApiResult.FAIL.getCode());
+			resultMap.put("resultMsg", e.getMessage());
+		}
+
+		return resultMap;
+	}
+
+	@GetMapping(value = "/alertHistoryList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String, Object> alertHistoryList() throws Exception {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		try {
+			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
+			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
+			resultMap.put("resultData", alertService.getAlertHistoryList());
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			resultMap.put("resultCd", ApiResult.FAIL.getCode());
+			resultMap.put("resultMsg", e.getMessage());
+		}
+
+		return resultMap;
+	}
 
 }
