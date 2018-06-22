@@ -16,7 +16,7 @@ import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
-import com.skcc.cloudz.zcp.portal.iam.user.domain.dto.UserDto;
+import com.skcc.cloudz.zcp.portal.iam.user.vo.UserVo;
 
 @Service
 public class UserService {
@@ -26,8 +26,8 @@ public class UserService {
     @Autowired
     private IamApiService iamApiService;
 
-    public List<ZcpUserVo> getUsers() throws Exception {
-        ZcpUserListVo zcpUserListVo = iamApiService.users();
+    public List<ZcpUserVo> getUsers(String keyword) throws Exception {
+        ZcpUserListVo zcpUserListVo = iamApiService.getUsers(keyword);
         if (!zcpUserListVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(zcpUserListVo.getMsg());
         }
@@ -44,12 +44,12 @@ public class UserService {
         return zcpUserResVo.getData();
     }
     
-    public void setUser(UserDto userDto) throws Exception {
+    public void setUser(UserVo userVo) throws Exception {
         HashMap<String, Object> reqMap = new HashMap<String, Object>();
-        reqMap.put("email", userDto.getEmail());
-        reqMap.put("firstName", userDto.getFirstName());
-        reqMap.put("username", userDto.getUsername());
-        reqMap.put("clusterRole", userDto.getClusterRole());
+        reqMap.put("email", userVo.getEmail());
+        reqMap.put("firstName", userVo.getFirstName());
+        reqMap.put("username", userVo.getUsername());
+        reqMap.put("clusterRole", userVo.getClusterRole());
         
         ApiResponseVo apiResponseVo = iamApiService.setUser(reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
@@ -57,14 +57,14 @@ public class UserService {
         }
     }
     
-    public void updateUser(UserDto userDto) throws Exception {
+    public void updateUser(UserVo userVo) throws Exception {
         HashMap<String, Object> reqMap = new HashMap<String, Object>();
-        reqMap.put("email", userDto.getEmail());
-        reqMap.put("firstName", userDto.getFirstName());
-        reqMap.put("enabled", userDto.getEnabled());
-        reqMap.put("username", userDto.getUsername());
+        reqMap.put("email", userVo.getEmail());
+        reqMap.put("firstName", userVo.getFirstName());
+        reqMap.put("enabled", userVo.getEnabled());
+        reqMap.put("username", userVo.getUsername());
         
-        ApiResponseVo apiResponseVo = iamApiService.updateUser(userDto.getId(), reqMap);
+        ApiResponseVo apiResponseVo = iamApiService.updateUser(userVo.getId(), reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(apiResponseVo.getMsg());
         }
@@ -77,24 +77,24 @@ public class UserService {
         }
     }
     
-    public void resetPassword(UserDto userDto) throws Exception {
+    public void resetPassword(UserVo userVo) throws Exception {
         HashMap<String, Object> reqMap = new HashMap<String, Object>();
-        reqMap.put("password", userDto.getPassword());
-        reqMap.put("temporary", userDto.getTemporary());
+        reqMap.put("password", userVo.getPassword());
+        reqMap.put("temporary", userVo.getTemporary());
         
-        ApiResponseVo apiResponseVo = iamApiService.resetPassword(userDto.getId(), reqMap);
+        ApiResponseVo apiResponseVo = iamApiService.resetPassword(userVo.getId(), reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(apiResponseVo.getMsg());
         }
     }
     
-    public void resetCredentials(UserDto userDto) throws Exception  {
+    public void resetCredentials(UserVo userVo) throws Exception  {
         HashMap<String, Object> reqMap = new HashMap<String, Object>();
-        reqMap.put("period", userDto.getPeriod());
-        reqMap.put("type", userDto.getType());
-        reqMap.put("actions", userDto.getActions());
+        reqMap.put("period", Integer.parseInt(userVo.getPeriod()));
+        reqMap.put("type", userVo.getType());
+        reqMap.put("actions", userVo.getActions());
         
-        ApiResponseVo apiResponseVo = iamApiService.resetCredentials(userDto.getId(), reqMap);
+        ApiResponseVo apiResponseVo = iamApiService.resetCredentials(userVo.getId(), reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(apiResponseVo.getMsg());
         }
@@ -117,6 +117,16 @@ public class UserService {
         }
         
         return clusterRoles;
+    }
+    
+    public void updateClusterRoleBinding(UserVo userVo) throws Exception  {
+        HashMap<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("clusterRole", userVo.getClusterRole());
+        
+        ApiResponseVo apiResponseVo = iamApiService.updateClusterRoleBinding(userVo.getId(), reqMap);
+        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(apiResponseVo.getMsg());
+        }
     }
 
 }

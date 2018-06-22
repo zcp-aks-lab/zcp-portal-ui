@@ -323,12 +323,13 @@ public class IamApiServiceImpl implements IamApiService {
     }
 
     @Override
-    public ZcpUserListVo users() {
+    public ZcpUserListVo getUsers(String keyword) {
         ZcpUserListVo zcpUserListVo = new ZcpUserListVo();
         
         try {
             String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
                     .path("/iam/users")
+                    .queryParam("keyword", keyword)
                     .buildAndExpand()
                     .toString();
             log.info("===> Request Url : {}", url);
@@ -465,6 +466,42 @@ public class IamApiServiceImpl implements IamApiService {
         
         return apiResponseVo;
     }
-    
+
+    @Override
+    public ApiResponseVo updateClusterRoleBinding(String id, HashMap<String, Object> reqMap) {
+        ApiResponseVo apiResponseVo = new ApiResponseVo();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/user/{id}/clusterRoleBinding")
+                    .buildAndExpand(id)
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            ObjectMapper objectMapper = new ObjectMapper();
+            String requestBody = objectMapper.writeValueAsString(reqMap);
+            log.info("===> Request Body : {}", requestBody);
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            
+            HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers);
+            
+            ResponseEntity<ApiResponseVo> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, entity, ApiResponseVo.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
+            log.info("===> Response body code : {}", responseEntity.getBody().getCode());
+            log.info("===> Response body data : {}", responseEntity.getBody().getData());
+            
+            apiResponseVo.setCode(responseEntity.getBody().getCode());
+            apiResponseVo.setMsg(responseEntity.getBody().getMsg());
+            apiResponseVo.setData(responseEntity.getBody().getData());
+        } catch (RestClientException | IOException e) {
+            e.printStackTrace();
+        } 
+        
+        return apiResponseVo;
+    }
 
 }
