@@ -1,7 +1,7 @@
-package com.skcc.cloudz.zcp.portal.system.domain.dto;
+package com.skcc.cloudz.zcp.portal.my.vo;
 
-public class MyUserDto {
-    private String userId;
+public class MyUserVo {
+    private String id;
     private String username;
     private String email;
     private String firstName;
@@ -9,16 +9,14 @@ public class MyUserDto {
     private String currentPassword;
     private String newPassword;
     
-    public MyUserDto() {}
-    
-    public String getUserId() {
-        return userId;
+    public String getId() {
+        return id;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setId(String id) {
+        this.id = id;
     }
-    
+
     public String getUsername() {
         return username;
     }
@@ -66,5 +64,4 @@ public class MyUserDto {
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
     }
-
 }

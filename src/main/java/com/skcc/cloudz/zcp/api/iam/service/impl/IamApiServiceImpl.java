@@ -23,7 +23,6 @@ import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserListVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
-import com.skcc.cloudz.zcp.portal.system.domain.dto.MyUserDto;
 
 @Service
 public class IamApiServiceImpl implements IamApiService {
@@ -181,22 +180,17 @@ public class IamApiServiceImpl implements IamApiService {
     }
 
     @Override
-    public ApiResponseVo updatePassword(MyUserDto myUserDto) {
+    public ApiResponseVo updatePassword(String id, HashMap<String, Object> reqMap) {
         ApiResponseVo apiResponseVo = new ApiResponseVo();
         
         try {
             String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
                     .path("/iam/user/{id}/password")
-                    .buildAndExpand(myUserDto.getUserId())
+                    .buildAndExpand(id)
                     .toString();
             log.info("===> Request Url : {}", url);
             
             ObjectMapper objectMapper = new ObjectMapper();
-            
-            HashMap<String, Object> reqMap = new HashMap<String, Object>();
-            reqMap.put("currentPassword", myUserDto.getCurrentPassword());
-            reqMap.put("newPassword", myUserDto.getNewPassword());
-            
             String requestBody = objectMapper.writeValueAsString(reqMap);
             log.info("===> Request Body : {}", requestBody);
             

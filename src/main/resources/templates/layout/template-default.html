@@ -13,6 +13,7 @@
     <meta name="_csrf_header" th:content="${_csrf} ? ${_csrf.headerName}"/>
     
     <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE">CloudZ CP</title>
+    <link rel="icon" href="images/favicon_zcp.ico" th:href="@{/images/favicon_zcp.ico}" />
 
     <!-- common static resources-->
     <th:block th:include="common/head/resources :: head"></th:block>
@@ -33,9 +34,9 @@
 	            <a class="user" th:text="${#authentication.principal.username}">skccux01@sk.com</a>
 	            <div class="user-menus">
 	                <ul class="dropmenu-list">
-	                    <li class="selected" onclick="location.href='/my/my-info'" >나의 정보</li>
-	                    <li onclick="location.href='/my/my-pwd'">비밀번호 변경</li>
-	                    <li onclick="location.href='/my/my-cli'">CLI Command</li>
+	                    <li class="selected" onclick="location.href='/my/profile'" >나의 정보</li>
+	                    <li onclick="location.href='/my/pwd'">비밀번호 변경</li>
+	                    <li onclick="location.href='/my/cli'">CLI Command</li>
 	                    <li onclick="location.href='/logout'">로그아웃</li>
 	                </ul>
 	            </div>

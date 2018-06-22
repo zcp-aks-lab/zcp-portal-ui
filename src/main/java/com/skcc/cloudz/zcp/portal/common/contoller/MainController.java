@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.portal.system.controller;
+package com.skcc.cloudz.zcp.portal.common.contoller;
 
 import java.security.Principal;
 
@@ -20,7 +20,7 @@ public class MainController {
             log.debug("Principal : {}", principal);
         }
         
-        return "content/system/main";
+        return "content/main";
     }
 
 }

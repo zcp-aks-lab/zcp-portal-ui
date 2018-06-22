@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.portal.iam.user.controller;
+package com.skcc.cloudz.zcp.portal.management.user.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
-import com.skcc.cloudz.zcp.portal.iam.user.service.UserService;
-import com.skcc.cloudz.zcp.portal.iam.user.vo.UserVo;
+import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
+import com.skcc.cloudz.zcp.portal.management.user.vo.UserVo;
 
 @Controller
 public class UserController {
@@ -31,7 +31,7 @@ public class UserController {
     
     @GetMapping(value = "/management/users", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String userList(Model model) throws Exception {
-        return "content/iam/user/user-list";
+        return "content/management/user/user-list";
     }
     
     @GetMapping(value = "/management/user/{id}", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
@@ -44,12 +44,12 @@ public class UserController {
         model.addAttribute("clusterRoles", clusterRoles);
         
         if (id.equals("create")) {
-            return "content/iam/user/user-create";    
+            return "content/management/user/user-create";    
         } else {
             ZcpUserVo zcpUserVo = userService.getUser(id);
             model.addAttribute("zcpUser", zcpUserVo);
             
-            return "content/iam/user/user-detail";
+            return "content/management/user/user-detail";
         }
     }
     

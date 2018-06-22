@@ -23,7 +23,6 @@ $a.request.setup({
         return id;
     },
     useServiceId: false,
-    //timeout: 30000,
     before: function(id, option) {
         this.requestHeaders["Content-Type"] ="application/json; charset=UTF-8";
         
@@ -34,7 +33,7 @@ $a.request.setup({
         }
     },
     error: function(errObject) {
-               
+        console.log(JSON.stringify(errObject));           
     }
 });
 

@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.portal.iam.user.vo;
+package com.skcc.cloudz.zcp.portal.management.user.vo;
 
 import java.util.List;
 

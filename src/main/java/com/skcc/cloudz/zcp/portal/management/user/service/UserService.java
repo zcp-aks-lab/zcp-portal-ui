@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.portal.iam.user.service;
+package com.skcc.cloudz.zcp.portal.management.user.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
-import com.skcc.cloudz.zcp.portal.iam.user.vo.UserVo;
+import com.skcc.cloudz.zcp.portal.management.user.vo.UserVo;
 
 @Service
 public class UserService {

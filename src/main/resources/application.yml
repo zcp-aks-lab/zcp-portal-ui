@@ -64,6 +64,8 @@ props:
       redirectUri: ${HOME_URL:http://localhost:8181}/k8s-login
   iam:
     baseUrl: https://zcp-iam.cloudzcp.io:443
+  alertmanager:
+    baseUrl: http://localhost:8080
   
 ---
 # dev
@@ -90,6 +92,8 @@ props:
       redirectUri: ${HOME_URL:http://localhost:8181}/k8s-login
   iam:
     baseUrl: https://zcp-iam.cloudzcp.io:443
+  alertmanager:
+    baseUrl: http://localhost:8080
 
 ---
 # stage
@@ -115,3 +119,5 @@ props:
       redirectUri: https://console.cloudzcp.io/k8s-login
   iam:
     baseUrl: http://zcp-iam:80
+  alertmanager:
+    baseUrl: http://alertmanager-service:9093

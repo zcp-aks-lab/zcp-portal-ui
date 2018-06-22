@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.portal.system.controller;
+package com.skcc.cloudz.zcp.portal.common.contoller;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
