@@ -13,6 +13,7 @@
     <meta name="_csrf_header" th:content="${_csrf} ? ${_csrf.headerName}"/>
     
     <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE">CloudZ CP</title>
+    <link rel="icon" href="images/favicon_zcp.ico" th:href="@{/images/favicon_zcp.ico}" />
 
     <!-- common static resources-->
     <th:block th:include="common/head/resources :: head"></th:block>
