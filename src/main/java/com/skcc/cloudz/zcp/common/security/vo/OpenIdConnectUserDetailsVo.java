@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,7 +43,7 @@ public class OpenIdConnectUserDetailsVo extends CommonVo implements UserDetails 
             this.namespaces = zcpUserVo.getNamespaces();
             this.defaultNamespace = zcpUserVo.getDefaultNamespace();
             this.usedNamespace = zcpUserVo.getUsedNamespace();
-            this.accessRole = zcpUserVo.getClusterRole() != null ? zcpUserVo.getClusterRole().getName() : AccessRole.NONE.getName();
+            this.accessRole = !StringUtils.isEmpty(zcpUserVo.getClusterRole()) ? zcpUserVo.getClusterRole() : AccessRole.NONE.getName();
             //this.accessRole = AccessRole.CLUSTER_ADMIN.getName();
         }
     }
