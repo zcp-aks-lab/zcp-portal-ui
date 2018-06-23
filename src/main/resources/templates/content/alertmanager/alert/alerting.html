@@ -198,7 +198,7 @@
 			getHistoryList : function() {
 				$a.request('/alert/alertHistoryList', {
 					method : 'get',
-					data : null,
+					data : 'time1',
 					success : function(res) {
 						if (res.resultCd !== '200') {
 							if (res.resultMsg)

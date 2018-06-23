@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.portal.alertmanager.alert.controller;
+package com.skcc.cloudz.zcp.portal.alert.alerts.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,15 +8,16 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
-import com.skcc.cloudz.zcp.portal.alertmanager.alert.service.AlertService;
-import com.skcc.cloudz.zcp.portal.alertmanager.alert.vo.AlertCountVo;
-import com.skcc.cloudz.zcp.portal.alertmanager.alert.vo.ApiServerVo;
-import com.skcc.cloudz.zcp.portal.alertmanager.alert.vo.NodeDownVo;
-import com.skcc.cloudz.zcp.portal.alertmanager.alert.vo.NodeNotReadyVo;
+import com.skcc.cloudz.zcp.portal.alert.alerts.service.AlertService;
+import com.skcc.cloudz.zcp.portal.alert.alerts.vo.AlertCountVo;
+import com.skcc.cloudz.zcp.portal.alert.alerts.vo.ApiServerVo;
+import com.skcc.cloudz.zcp.portal.alert.alerts.vo.NodeDownVo;
+import com.skcc.cloudz.zcp.portal.alert.alerts.vo.NodeNotReadyVo;
 
 @Controller
 @RequestMapping(value = AlertController.RESOURCE_PATH)
@@ -72,14 +73,15 @@ public class AlertController {
 		return resultMap;
 	}
 
-	@GetMapping(value = "/alertHistoryList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/alertHistoryList", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Map<String, Object> alertHistoryList() throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+		String time = "time1";
 		try {
 			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
 			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
-			resultMap.put("resultData", alertService.getAlertHistoryList());
+			resultMap.put("resultData", alertService.getAlertHistoryList(time));
 		} catch (Exception e) {
 			e.printStackTrace();
 

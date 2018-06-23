@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.portal.alertmanager.rule.vo;
+package com.skcc.cloudz.zcp.portal.alert.rules.vo;
 
 public class RuleVo {
 
