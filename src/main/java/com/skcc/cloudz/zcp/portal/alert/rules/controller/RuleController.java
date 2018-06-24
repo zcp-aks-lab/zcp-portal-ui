@@ -18,17 +18,17 @@ public class RuleController {
 
 	@GetMapping(value = "/rules", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String ruleList(Model model) throws Exception {
-		return "content/alertmanager/rule/rules";
+		return "content/alert/rules/rules";
 	}
 	
 	@GetMapping(value = "/addRule", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String addRule(Model model) throws Exception {
-		return "content/alertmanager/rule/addrules";
+		return "content/alert/rules/addrules";
 	}
 	
 	@GetMapping(value = "/detailRule", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String detailRule(Model model) throws Exception {
-		return "content/alertmanager/rule/detailrules";
+		return "content/alert/rules/detailrules";
 	}
 
 }

@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
@@ -52,7 +53,7 @@ public class AlertController {
 		model.addAttribute("nodeDownCnt", nodeDownVo.getCount());
 		model.addAttribute("nodeDownTotCnt", nodeDownVo.getTotalCount());
 
-		return "content/alertmanager/alert/alerting";
+		return "content/alert/alerts/alerting";
 	}
 
 	@GetMapping(value = "/alertList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -75,13 +76,13 @@ public class AlertController {
 
 	@GetMapping(value = "/alertHistoryList", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public Map<String, Object> alertHistoryList() throws Exception {
+	public Map<String, Object> alertHistoryList(@RequestParam Map<String, Object> params) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		String time = "time1";
+		if(params.get("time") == null) params.put("time", "1");
 		try {
 			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
 			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
-			resultMap.put("resultData", alertService.getAlertHistoryList(time));
+			resultMap.put("resultData", alertService.getAlertHistoryList(params.get("time").toString()));
 		} catch (Exception e) {
 			e.printStackTrace();
 

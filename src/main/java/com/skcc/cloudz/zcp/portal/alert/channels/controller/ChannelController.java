@@ -18,7 +18,7 @@ public class ChannelController {
 
 	@GetMapping(value = "/channels", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String channelList(Model model) throws Exception {
-		return "content/alertmanager/channel/channel";
+		return "content/alert/channels/channel";
 	}
 
 }

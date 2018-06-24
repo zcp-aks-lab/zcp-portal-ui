@@ -8,7 +8,8 @@
 <title>알림</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <script type="text/javascript">
-
+	var time = "";
+	var params = "";
 	$.alopex.page(function() {
 		this.init = function(id, param) {
 			$('#severity').change(function(e) {
@@ -28,6 +29,8 @@
 				}
 			});
 			$('#time').change(function(e) {
+				time = $("#time option:selected").val();
+				params = { "time": time };
 				zcpPortalGrid2.pageInit();
 			});
 			zcpPortalGrid1.pageInit();
@@ -198,14 +201,14 @@
 			getHistoryList : function() {
 				$a.request('/alert/alertHistoryList', {
 					method : 'get',
-					data : 'time1',
+					data : params,
+					dataType : 'json',
 					success : function(res) {
 						if (res.resultCd !== '200') {
 							if (res.resultMsg)
 								alert(res.resultMsg);
 							return false;
 						}
-
 						$('#history-grid')
 								.alopexGrid('dataSet', res.resultData);
 					},
@@ -216,7 +219,6 @@
 			}
 		}
 	}
-
 </script>
 </head>
 <body>
@@ -296,14 +298,14 @@
 								<span class="alert-option__title">알람 일시:</span>
 								<div class="Divselect">
 									<select id="time" name="time">
-										<option value="time1">지난 1시간동안</option>
-										<option value="time2">오늘</option>
-										<option value="time3">어제</option>
-										<option value="time4">지난 이틀간</option>
-										<option value="time5">이번주</option>
-										<option value="time6">지난주</option>
-										<option value="time7">이번달</option>
-										<option value="time8">지난달</option>
+										<option value="1">지난 1시간동안</option>
+										<option value="2">오늘</option>
+										<option value="3">어제</option>
+										<option value="4">지난 이틀간</option>
+										<option value="5">이번주</option>
+										<option value="6">지난주</option>
+										<option value="7">이번달</option>
+										<option value="8">지난달</option>
 									</select> <span></span>
 								</div>
 								<span class="alert-option__title">심각도:</span>
