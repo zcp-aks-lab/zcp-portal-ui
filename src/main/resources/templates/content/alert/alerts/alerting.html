@@ -12,32 +12,37 @@
 	var params = "";
 	$.alopex.page(function() {
 		this.init = function(id, param) {
-			$('#severity').change(function(e) {
-				if($("#severity option:selected").val() == "") {
-					zcpPortalGrid2.pageInit();
-				} else {
-					var customFilter = null;
-					try {
-						customFilter = eval("("+$("#customFunction").val()+")");
-					} catch(e) {
-					}
-					if(!customFilter || !$.isFunction(customFilter)) {
-						alert("올바르지 않은 필터함수 입니다.");
-						return;
-					}
-					$("#history-grid").alopexGrid('setFilter', 'customFilter', customFilter);	
-				}
-			});
+			$('#severity').change(
+					function(e) {
+						if ($("#severity option:selected").val() == "") {
+							zcpPortalGrid2.pageInit();
+						} else {
+							var customFilter = null;
+							try {
+								customFilter = eval("("
+										+ $("#customFunction").val() + ")");
+							} catch (e) {
+							}
+							if (!customFilter || !$.isFunction(customFilter)) {
+								alert("올바르지 않은 필터함수 입니다.");
+								return;
+							}
+							$("#history-grid").alopexGrid('setFilter',
+									'customFilter', customFilter);
+						}
+					});
 			$('#time').change(function(e) {
 				time = $("#time option:selected").val();
-				params = { "time": time };
+				params = {
+					"time" : time
+				};
 				zcpPortalGrid2.pageInit();
 			});
 			zcpPortalGrid1.pageInit();
 			zcpPortalGrid2.pageInit();
 		};
 	});
-	
+
 	var zcpPortalGrid1 = {
 		pageInit : function() {
 			'use strict';
@@ -135,11 +140,11 @@
 				$('#history-grid').alopexGrid({
 					pager : true,
 					fitTableWidth : true,
-					filteringHeader: false,
-					filter: {
-						movable: true,
-						saveFilterSize: true,
-						title: true
+					filteringHeader : false,
+					filter : {
+						movable : true,
+						saveFilterSize : true,
+						title : true
 					},
 					paging : {
 						perPage : 5,
@@ -223,7 +228,7 @@
 </head>
 <body>
 	<th:block layout:fragment="content">
-		<textarea id="customFunction" style="display:none;">
+		<textarea id="customFunction" style="display: none;">
 			function(data) {
 				return data['severity'] == $("#severity option:selected").val();
 			}

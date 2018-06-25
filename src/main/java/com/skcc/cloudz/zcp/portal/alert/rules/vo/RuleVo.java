@@ -10,6 +10,7 @@ public class RuleVo {
 	private String value2;
 	private String duration;
 	private String channel;
+	private String value;
 
 	/**
 	 * @return the id
@@ -131,4 +132,19 @@ public class RuleVo {
 		this.channel = channel;
 	}
 
+	/**
+	 * @return the value
+	 */
+	public String getValue() {
+		return value;
+	}
+
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	
 }

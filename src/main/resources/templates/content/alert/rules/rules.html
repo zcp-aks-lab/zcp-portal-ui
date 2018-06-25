@@ -1,63 +1,231 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-default">
-    <head>
-        <title>알림</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        
-    </head>
-    <body>
-        <th:block layout:fragment="content">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	layout:decorator="layout/template-default">
+<head>
+<title>알림</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript">
+	$.alopex.page(function() {
+		this.init = function(id, param) {
+			zcpPortalGrid1.pageInit();
+			zcpPortalGrid2.pageInit();
+		};
+	});
 
-	<!-- main-contents -->
-	<div class="cp-container">
-		<!-- contents -->
-		<div class="contents-wrap">
-			<div class="locations-area"></div>
-			<div class="contents-box">
-				<!-- rule info area-->
-				<div class="top-area">
-                    <h2 class="title">Rules</h2>
-                    <div class="tag-wrap">
-                    	<span class="tag">Alert 발생을 위한 Rule 정보를 관리합니다.</span>
-                    </div>
-                    <div class="btn-wrap__right">
-	                    <button class="Button btn-ico__typeb btn-rules">Rule추가</button>
-	                    <div class="Tooltip" data-position="left">Rule추가</div>
-	                </div>
-				</div>
-				<form>
-					<fieldset>
-						<table class="Table Form-type topline">
-							<colgroup>
-								<col style="width: 200px;"/>
-								<col/>
-							</colgroup>
-							<tbody>
-								<tr>
-									<th>Repeat interval</th>
-									<td>
-										<input class="Textinput" placeholder="100"/><span class="Padding-left-10 Padding-right-10">분</span>
-										<button class="Button btn">저장</button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</fieldset>
-				</form>
-				<!-- search-wrap-->
-				<div class="search-wrap Margin-top-40">
-					<input class="Textinput srcinput" placeholder="검색어를 입력하세요."/><button class="Button btn-search">검색</button>
-				</div>
-				<div class="grid-line__wrap">
-					<div id="gr"></div>
+	var zcpPortalGrid1 = {
+		pageInit : function() {
+			'use strict';
+			this.grid.init();
+			this.data.init();
+			this.event.init();
+		},
+		grid : {
+			init : function() {
+				$("#rule-grid").removeAlopexGrid();
+				$('#rule-grid')
+						.alopexGrid(
+								{
+									pager : true,
+									fitTableWidth : true,
+									paging : {
+										perPage : 5,
+										pagerCount : 5,
+										pagerSelect : true,
+										pagerTotal : true
+									},
+									defaultSorting : {
+										sortingColumn : 'id',
+										sortingDirection : 'desc'
+									},
+									defaultColumnMapping : {
+										sorting : true,
+										resizing : true
+									},
+									message : {
+										nodata : '데이타가 없습니다.'
+									},
+									enableDefaultContextMenu : false,
+									autoColumnIndex : true,
+									columnMapping : [
+											{
+												key : 'id',
+												title : 'id',
+												width : '100px',
+												align : 'center',
+												hidden : true
+											},
+											{
+												key : 'type',
+												title : 'Rule 종류',
+												width : '200px',
+												align : 'left'
+											},
+											{
+												key : 'severity',
+												title : '심각도',
+												width : '150px',
+												align : 'left'
+											},
+											{
+												key : 'value',
+												title : '임계치',
+												width : '120px',
+												align : 'center'
+											},
+											{
+												key : 'channel',
+												title : '채널',
+												width : '200px',
+												align : 'left'
+											},
+											{
+												key : 'notification',
+												title : 'Notifications',
+												width : '120px',
+												align : 'center'
+											},
+											{
+												selectorColumn : true,
+												key : 'use',
+												title : '사용',
+												width : '100px',
+												align : 'center'
+											},
+											{
+												key : 'delete',
+												title : '관리',
+												width : '100px',
+												align : 'center',
+												render : function(value, data) {
+													return '<button class="btn-ico del" onclick="zcpPortalGrid1.data.deleteRule(\''
+															+ data.id
+															+ '\');" />';
+												}
+											} ],
+								});
+			},
+		},
+		data : {
+			init : function() {
+				this.getList();
+			},
+			getList : function() {
+				$a.request('/alert/ruleList', {
+					method : 'get',
+					data : null,
+					success : function(res) {
+						if (res.resultCd !== '200') {
+							if (res.resultMsg)
+								alert(res.resultMsg);
+							return false;
+						}
+
+						$('#rule-grid').alopexGrid('dataSet', res.resultData);
+					},
+					error : function(errObject) {
+						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+					}
+				})
+			},
+			deleteRule : function(id) {
+				var data = {
+					id : id
+				};
+
+				if (!confirm('삭제하시겠습니까?'))
+					return false;
+				$a.request('/alert/deleteRule', {
+					method : 'post',
+					data : data,
+					success : function(res) {
+						if (res.resultCd !== '200') {
+							if (res.resultMsg)
+								alert(res.resultMsg);
+							return false;
+						}
+
+						alert('정상처리 되었습니다.');
+						location.reload();
+					},
+					error : function(errObject) {
+						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+					}
+				})
+			}
+		},
+		event: {
+            init: function() {
+            	/* $('#btnSearch').on('click', function() {
+            		zcpPortalApp.grid.search();
+                });
+            	$('#keyword').on('keydown', function(e) {
+                    if (e.keyCode === 13) {
+                    	zcpPortalApp.grid.search();
+                    }
+                }); */
+            	$('#btnAdd').on('click', function() {
+                    location.href = '/alert/addRule';
+                });
+            }
+        }
+	}
+</script>
+</head>
+<body>
+	<th:block layout:fragment="content">
+
+		<!-- main-contents -->
+		<div class="cp-container">
+			<!-- contents -->
+			<div class="contents-wrap">
+				<div class="locations-area"></div>
+				<div class="contents-box">
+					<!-- rule info area-->
+					<div class="top-area">
+						<h2 class="title">Rules</h2>
+						<div class="tag-wrap">
+							<span class="tag">Alert 발생을 위한 Rule 정보를 관리합니다.</span>
+						</div>
+						<div class="btn-wrap__right">
+							<button class="Button btn-ico__typeb btn-rules" id="btnAdd">Rule추가</button>
+							<div class="Tooltip" data-position="left">Rule추가</div>
+						</div>
+					</div>
+					<form>
+						<fieldset>
+							<table class="Table Form-type topline">
+								<colgroup>
+									<col style="width: 200px;" />
+									<col />
+								</colgroup>
+								<tbody>
+									<tr>
+										<th>Repeat interval</th>
+										<td><input class="Textinput" placeholder="100" /><span
+											class="Padding-left-10 Padding-right-10">분</span>
+											<button class="Button btn">저장</button></td>
+									</tr>
+								</tbody>
+							</table>
+						</fieldset>
+					</form>
+					<!-- search-wrap-->
+					<div class="search-wrap Margin-top-40">
+						<input class="Textinput srcinput" placeholder="검색어를 입력하세요." />
+						<button class="Button btn-search">검색</button>
+					</div>
+					<div class="grid-line__wrap">
+						<div id="rule-grid"></div>
+					</div>
 				</div>
 			</div>
+			<!-- //contents -->
 		</div>
-		<!-- //contents -->
-	</div>
-	<!-- //main-contents -->
+		<!-- //main-contents -->
 
-        </th:block>
-    </body>
-</html>		
+	</th:block>
+</body>
+</html>
