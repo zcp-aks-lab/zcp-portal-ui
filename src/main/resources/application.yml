@@ -93,7 +93,7 @@ props:
   iam:
     baseUrl: https://zcp-iam.cloudzcp.io:443
   alertmanager:
-    baseUrl: http://localhost:8080
+    baseUrl: http://alertmanager-service:9093
 
 ---
 # stage
