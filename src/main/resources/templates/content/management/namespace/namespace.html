@@ -9,10 +9,31 @@
 	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/> -->
 	<script th:inline="javascript" type="text/javascript">
 	/*<![CDATA[*/
+	Date.prototype.customFormat = function(formatString){
+	  var YYYY,YY,MMMM,MMM,MM,M,DDDD,DDD,DD,D,hhhh,hhh,hh,h,mm,m,ss,s,ampm,AMPM,dMod,th;
+	  YY = ((YYYY=this.getFullYear())+"").slice(-2);
+	  MM = (M=this.getMonth()+1)<10?('0'+M):M;
+	  MMM = (MMMM=["January","February","March","April","May","June","July","August","September","October","November","December"][M-1]).substring(0,3);
+	  DD = (D=this.getDate())<10?('0'+D):D;
+	  DDD = (DDDD=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][this.getDay()]).substring(0,3);
+	  th=(D>=10&&D<=20)?'th':((dMod=D%10)==1)?'st':(dMod==2)?'nd':(dMod==3)?'rd':'th';
+	  formatString = formatString.replace("#YYYY#",YYYY).replace("#YY#",YY).replace("#MMMM#",MMMM).replace("#MMM#",MMM).replace("#MM#",MM).replace("#M#",M).replace("#DDDD#",DDDD).replace("#DDD#",DDD).replace("#DD#",DD).replace("#D#",D).replace("#th#",th);
+	  h=(hhh=this.getHours());
+	  if (h==0) h=24;
+	  if (h>12) h-=12;
+	  hh = h<10?('0'+h):h;
+	  hhhh = hhh<10?('0'+hhh):hhh;
+	  AMPM=(ampm=hhh<12?'am':'pm').toUpperCase();
+	  mm=(m=this.getMinutes())<10?('0'+m):m;
+	  ss=(s=this.getSeconds())<10?('0'+s):s;
+	  return formatString.replace("#hhhh#",hhhh).replace("#hhh#",hhh).replace("#hh#",hh).replace("#h#",h).replace("#mm#",mm).replace("#m#",m).replace("#ss#",ss).replace("#s#",s).replace("#ampm#",ampm).replace("#AMPM#",AMPM);
+	};
+	
 	var g_order= false;
+	var g_mode = "listType";
 	function deleteNamespace(name){
 	    $a.popup({
-	        url: "./popNamespaceDel.html",
+	        url: "./namespace/pop/popNamespaceDel.html",
 	        iframe: false,  // default 는 true
 	        width: 826,
 	        height: 480,
@@ -61,14 +82,30 @@
 			,sortOrder : /*[[${param.sortOrder}]]*/
 		};
 		var path =  /*[[@{/management/namespaces}]]*/ ;
-		var b_order = g_order ?  'true' : 'false';
-		var searchText = '';
-		searchText += 'namespace=' + $('#search').val() + '&';
-		searchText += 'label=' +( !param.label ? '' : param.label) + '&';
-		searchText +='sortItem=' + ( !param.sortItem ? '' : param.sortItem)+ '&';
-		searchText +='sortOrder='+ b_order ;
-		
-		location.href=path+'?'+searchText;
+		if(g_mode == "cardType"){
+			var b_order = g_order ?  'true' : 'false';
+			var searchText = '';
+			searchText += 'namespace=' + $('#search').val() + '&';
+			searchText += 'label=' +( !param.label ? '' : param.label) + '&';
+			searchText +='sortItem=' + ( !param.sortItem ? '' : param.sortItem)+ '&';
+			searchText +='sortOrder='+ b_order ;
+			location.href=path+'?'+searchText;
+		}
+		if(g_mode == "listType"){
+			var b_order = g_order ?  'true' : 'false';
+			var searchText = {
+				namespace : $('#search').val() 
+				,label : ( !param.label ? '' : param.label)
+				,sortItem: ( !param.sortItem ? '' : param.sortItem)
+				,sortOrder : b_order
+			};
+			
+			var list = null;
+			ajaxCall('/management/namespace/list', searchText).done(function(data){
+				grid_init(data.items);
+				$("#grid").alopexGrid( "viewUpdate" );
+	   		});
+		}
 	}
 	
 	
@@ -132,15 +169,35 @@
 			});
 		else
 			$('#div_label').find('span').eq(0).removeClass('white').addClass('Default');
-		
-	})	
+		registEvent();
+	});
+	
+	function registEvent(){
+		$('#grid').on('dataSelect', function(rowData , select ){
+			location.href='/management/namespace/'+rowData.namespace;
+		});
+	}
 	//////////////////////////////// grid /////////////////////////////////////////
 	function grid_init(data){ 
     	AlopexGrid.setup({
     		fitTableWidth : true // 테이블의 너비를 그리드 너비에 맞춰 확장시키는 옵션
     	});
     	
-    	$('#gr').alopexGrid({
+    	$('#grid').alopexGrid({
+    		renderMapping : {
+    			cpu_bar: {
+    				renderer : function(value, data, render, mapping) {
+    					return data.status.used["requests.cpu"] + "/" + data.status.hard["requests.cpu"]
+    						+'<div class="Progressbar name-typea" attr="data-default="' +data.usedCpuRate + '"></div>';
+	    			}
+	    		},
+	    		memory_bar: {
+    				renderer : function(value, data, render, mapping) {
+    					return data.status.used["requests.cpu"] + "/" + data.status.hard["requests.cpu"]
+    					+'<div class="Progressbar name-typea" attr="data-default="' +data.usedMemoryRate + '"></div>';
+	    			}
+	    		}
+    		},
     		pager: true,
     		paging: {
     			perPage: 5,
@@ -148,60 +205,84 @@
     			pagerSelect: true,
                 pagerTotal: true
     		},
+    		rowSelectOption :{
+    			clickSelect: true
+    		},
             defaultColumnMapping : {
                 sorting:true
             },
     		autoColumnIndex: true,
     		columnMapping : [
     			{
-    				key : 'name',
+    				align : 'center',
+    				key : 'namespace',
     				title : '네임스페이스',
     				width : '100px'
     			}, {
-    				key : 'phone',
+    				key : 'status',
     				title : 'CPU Req/Limit',
-    				width : '100px'
-    			}, {
-    				key : 'email',
-    				title : 'Memory Req/Limit',
-    				width : '250px'
+    				width : '200px',
+    				align : 'center',
+    				render : {type:"cpu_bar"}  
     			}, {
     				align : 'center',
-    				key : 'birthday',
+    				key : 'status',
+    				title : 'Memory Req/Limit',
+    				width : '200px',
+    				render : {type:"memory_bar"}
+    			}, {
+    				align : 'center',
+    				key : 'userCount',
     				title : '사용자',
     				width : '100px'
     			}, {
     				align : 'center',
-    				key : 'zip',
+    				key : 'active',
     				title : '상태',
     				width : '100px'
     			}, {
-    				align : 'right',
-    				key : 'salary',
+    				align : 'center',
+    				key : 'creationTimestamp',
     				title : '생성일시',
-    				width : '100px'
+    				width : '100px',
+    				render : function(value, data, render, mapping){
+    					var dt = new Date(Number(data.creationTimestamp.millis));
+    					return dt.customFormat( "#YYYY#/#MM#/#DD# #hh#:#mm#" )
+    				}
     			}, {
+    				align : 'center',
     				key : 'country',
     				title : '관리',
-    				width : '200px'
-    			}, {
-    				key : 'city',
-    				title : 'city',
-    				width : '150px'
-    			}, {
-    				key : 'company',
-    				title : 'company',
-    				width : '200px'
-    			}, {
-    				key : 'type',
-    				align: 'center',
-    				title : 'type',
-    				width : '50px'
+    				width : '50px',
+    				render : function(value, data, render, mapping){
+    					return "<button class=\"btn-ico btn-delnamespace\" onclick=\"deleteNamespace('" + data.namespace + "')\"></button>";
+    				}
     			}
     		],
     		data: data
     	});
+	}
 	
+	function showPage(type){
+		if(type=='listType'){
+			$('#listType').show();
+			$('#cardType').hide();
+			var list = getList();
+			g_mode = "listType";
+		}else if(type=='cardType'){
+			$('#listType').hide();
+			$('#cardType').show();
+			g_mode = "cardType";
+		}
+		
+		function getList(){
+			var name = /*[[${param.namespace}]]*/;
+			var list = null;
+			ajaxCall('/management/namespace/list', {namespace:name}).done(function(data){
+				grid_init(data.items);
+				$("#grid").alopexGrid( "viewUpdate" );
+	   		});
+		}
 	}
 	 /*]]>*/
     </script>
@@ -235,65 +316,76 @@
 				<!--name space detail view-->
 				<div class="panel-line__wrap">
 					<!-- name space sorting-->
-					<div class="namespace-sort">
-						<div class="sort-button">
-							<button class="Button btn-ico__typeb btn-cardview Checked">카드형으로 보기</button>
-							<button class="Button btn-ico__typeb btn-listview">목록형으로 보기</button>
+					<div id="listType" style="display:none">
+						<div class="namespace-sort">
+							<div class="sort-button">
+								<button class="Button btn-ico__typeb btn-cardview" onclick="showPage('cardType')">카드형으로 보기</button>
+								<button class="Button btn-ico__typeb btn-listview Checked" >목록형으로 보기</button>
+							</div>
 						</div>
-						<ul class="sort-list" id="sort">
-							<li class="dsc" id="namespace" onclick="orderby('namespace', this)">Namespace</li>
-							<li class="dsc" id="cpu" onclick="orderby('cpu', this)">CPU Req/Limit</li>
-							<li class="dsc" id="memory" onclick="orderby('memory', this)">Memory Req/Limit</li>
-							<li class="dsc" id="user" onclick="orderby('user', this)">사용자</li>
-							<li class="dsc" id="status" onclick="orderby('status',  this)">상태</li>
-							<li class="dsc" id="createTime" onclick="orderby('createTime', this)">생성일시</li>
-						</ul>
+						<div id="grid"></div>
 					</div>
-					<!-- name space panel-->
-					<div class="Panel namespace-panel" th:each="namespace : ${namespace.items} ">
-	                	<div class="Panel-content">
-	                		<span th:class="'state ' + ${namespace.active}">active</span>
-	                		<dl class="namespace-info">
-	                			<dt><a th:href="'/management/namespace/' + ${namespace.namespace}"  th:text="${namespace.namespace}"></a></dt>
-	                			<dd>
-	                				<div class="tag-wrap">
-	                					&nbsp;
-	                				</div>
-	                			</dd>
-	                			<dd class="time-info"><strong>생성일시</strong> : <span>5시간 전 </span></dd>
-	                			<dd>
-	                				<div class="namespace-btn__wrap">
-			                			<button class="btn-ico btn-viewdash" th:onclick="'location.href=\'/?namespace=' + ${namespace.namespace} + '\';'">대쉬보드보기</button>
-			                			<span class="vline"></span>
-			                			<button class="btn-ico btn-delnamespace" th:onclick="'deleteNamespace(\'' + ${namespace.namespace} + '\')'">삭제</button>
-			                		</div>
-			                	</dd>
-	                		</dl>
-                			<ul class="name-progress__wrap">
-                				<li>
-                					<p class="name-pro__title">CPU Reg./Limit</p>
-                					<span class="name-pro__info" th:text="${namespace.status.used['requests.cpu']} + '/' + ${namespace.status.hard['requests.cpu']}"></span>
-                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.usedCpuRate}"></div>
-                				</li>
-                				<li>
-                					<p class="name-pro__title">Memory Reg./Limit</p>
-                					<span class="name-pro__info" th:text="${namespace.status.used['requests.memory']} + '/' + ${namespace.status.hard['requests.memory']}"></span>
-                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.usedMemoryRate}"></div>
-                				</li>
-                				<li>
-                					<p class="name-pro__title">사용자</p>
-                					<span class="name-user__info" th:text="${namespace.userCount}">10</span>
-                				</li>
-                			</ul>
-	                	</div>
-	                </div>
-	                <!-- panel new make-->
-	                <div class="Panel namespace-panel make-box">
-	                	<div class="Panel-content">
-	                		<a href="/management/namespace/create" class="new-make"><span class="Icon ico-cloudz make-plus"></span>Namespace 추가</a>
-	                	</div>
-	                </div>
-				</div>
+					<div id="cardType">
+						<div class="namespace-sort">
+							<div class="sort-button">
+								<button class="Button btn-ico__typeb btn-cardview Checked" >카드형으로 보기</button>
+								<button class="Button btn-ico__typeb btn-listview" onclick="showPage('listType');">목록형으로 보기</button>
+							</div>
+							<ul class="sort-list" id="sort">
+								<li class="dsc" id="namespace" onclick="orderby('namespace', this)">Namespace</li>
+								<li class="dsc" id="cpu" onclick="orderby('cpu', this)">CPU Req/Limit</li>
+								<li class="dsc" id="memory" onclick="orderby('memory', this)">Memory Req/Limit</li>
+								<li class="dsc" id="user" onclick="orderby('user', this)">사용자</li>
+								<li class="dsc" id="status" onclick="orderby('status',  this)">상태</li>
+								<li class="dsc" id="createTime" onclick="orderby('createTime', this)">생성일시</li>
+							</ul>
+						</div>
+						<!-- name space panel-->
+						<div class="Panel namespace-panel" th:each="namespace : ${namespace.items} ">
+		                	<div class="Panel-content">
+		                		<span th:class="'state ' + ${namespace.active}">active</span>
+		                		<dl class="namespace-info">
+		                			<dt><a th:href="'/management/namespace/' + ${namespace.namespace}"  th:text="${namespace.namespace}"></a></dt>
+		                			<dd>
+		                				<div class="tag-wrap">
+		                					&nbsp;
+		                				</div>
+		                			</dd>
+		                			<dd class="time-info"><strong>생성일시</strong> : <span>5시간 전 </span></dd>
+		                			<dd>
+		                				<div class="namespace-btn__wrap">
+				                			<button class="btn-ico btn-viewdash" th:onclick="'location.href=\'/?namespace=' + ${namespace.namespace} + '\';'">대쉬보드보기</button>
+				                			<span class="vline"></span>
+				                			<button class="btn-ico btn-delnamespace" th:onclick="'deleteNamespace(\'' + ${namespace.namespace} + '\')'">삭제</button>
+				                		</div>
+				                	</dd>
+		                		</dl>
+	                			<ul class="name-progress__wrap">
+	                				<li>
+	                					<p class="name-pro__title">CPU Reg./Limit</p>
+	                					<span class="name-pro__info" th:text="${namespace.status.used['requests.cpu']} + '/' + ${namespace.status.hard['requests.cpu']}"></span>
+	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.usedCpuRate}"></div>
+	                				</li>
+	                				<li>
+	                					<p class="name-pro__title">Memory Reg./Limit</p>
+	                					<span class="name-pro__info" th:text="${namespace.status.used['requests.memory']} + '/' + ${namespace.status.hard['requests.memory']}"></span>
+	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.usedMemoryRate}"></div>
+	                				</li>
+	                				<li>
+	                					<p class="name-pro__title">사용자</p>
+	                					<span class="name-user__info" th:text="${namespace.userCount}">10</span>
+	                				</li>
+	                			</ul>
+		                	</div>
+		                </div>
+		                <!-- panel new make-->
+		                <div class="Panel namespace-panel make-box">
+		                	<div class="Panel-content">
+		                		<a href="/management/namespace/create" class="new-make"><span class="Icon ico-cloudz make-plus"></span>Namespace 추가</a>
+		                	</div>
+		                </div>
+					</div>
+				</div><!-- id=cardType -->
 			</div>
 		</div>
 		<!-- //contents -->

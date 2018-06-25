@@ -136,6 +136,152 @@
 			if(!$('#input_pod_memory_limits').val()) return false;
 			return true;
 		}
+		/////////////////////////////////////  member management /////////////////////////////////////
+		function gridInitMember(data){
+			data=[];
+	    	AlopexGrid.setup({
+	    		fitTableWidth : true 
+	    	});
+	    	//memeber
+	    	$('#grid_member').alopexGrid({
+	    		pager: true,
+	    		paging: {
+	    			perPage: 5,
+	    			pagerCount: 5,
+	    			pagerSelect: true,
+	                pagerTotal: true
+	    		},
+	            defaultColumnMapping : {
+	                sorting:true
+	            },
+	    		autoColumnIndex: true,
+	    		columnMapping : [
+	    			{
+	    				key : 'username',
+	    				title : '사용자 ID',
+	    				width : '100px'
+	    			}, {
+	    				key : 'email',
+	    				title : '이메일',
+	    				width : '100px'
+	    			}, {
+	    				key : 'firstName',
+	    				title : '이름',
+	    				width : '100px'
+	    			}, {
+	    				align : '네임스페이스 권한',
+	    				key : 'defaultNamespace',
+	    				title : '사용자',
+	    				width : '100px'
+	    			}, {
+	    				align : 'center',
+	    				key : 'createdDate',
+	    				title : '멤버 등록 일시',
+	    				width : '100px'
+	    			}, {
+	    				align : 'right',
+	    				key : 'enabled',
+	    				title : '사용자 상태',
+	    				width : '100px'
+	    			}, {
+	    				key : 'country',
+	    				title : '관리',
+	    				width : '50px'
+	    			}
+	    		],
+	    		data: data
+	    	});
+		}
+	    
+		function gridInitUser(data){ 
+	    	//user
+	    	data = [];
+	    	$('#grid_user').alopexGrid({
+	    		pager: true,
+	    		paging: {
+	    			perPage: 5,
+	    			pagerCount: 5,
+	    			pagerSelect: true,
+	                pagerTotal: true
+	    		},
+	            defaultColumnMapping : {
+	                sorting:true
+	            },
+	    		autoColumnIndex: true,
+	    		columnMapping : [
+	    			{
+	    				key : 'username',
+	    				title : '사용자 ID',
+	    				width : '100px'
+	    			}, {
+	    				key : 'email',
+	    				title : '이메일',
+	    				width : '100px'
+	    			}, {
+	    				key : 'lastName',
+	    				title : '이름',
+	    				width : '100px'
+	    			}, {
+	    				align : 'center',
+	    				key : 'clusterRole',
+	    				title : 'Cluster 권한',
+	    				width : '100px'
+	    			},{
+	    				align : 'center',
+	    				key : 'defaultNamespace',
+	    				title : '네임스페이스 권한',
+	    				width : '100px'
+	    			}, {
+	    				align : 'center',
+	    				key : 'createdDate',
+	    				title : '생성 일시',
+	    				width : '100px'
+	    			}, {
+	    				align : 'right',
+	    				key : 'enabled',
+	    				title : '상태',
+	    				width : '100px'
+	    			}, {
+	    				key : 'country',
+	    				title : '추가',
+	    				width : '50px'
+	    			}
+	    		],
+	    		data: data
+	    	});
+		}
+		
+		function showMember(){
+			var namespace = /*[[${namespace}]]*/;
+			var memberList;
+			$('#div_member').show();
+			$('#div_resource').hide();
+			ajaxCall('/management/namespace/users', {namespace : namespace}).done(function(data){
+				gridInitMember(data);
+			});
+		}
+		
+		function showResource(){
+			$('#div_member').hide();
+			$('#div_resource').show();
+		}
+		
+		function showUser(){
+			var namespace = /*[[${namespace}]]*/;
+			var memberList;
+			ajaxCall('/management/namespace/users', {}).done(function(data){
+				gridInitUser(data.items);
+			});
+		}
+		
+		function addUser(){
+			var namespace = /*[[${namespace}]]*/;
+			var memberList;
+			ajaxCall('/management/namespace/save', {}).done(function(data){
+				gridInitUser(data.items);
+			});
+		}
+		
 		
 		
 	 /*]]>*/
@@ -172,11 +318,11 @@
 				<!-- tab wrap -->
 				<div class="Tabs Fixed" data-tab-width="180px">
 				    <ul>
-				        <li data-content="#tab1">Resource 구성</li>
-				        <li data-content="#tab2">멤버관리</li>
+				        <li data-content="#tab1" onclick="showResource()">Resource 구성</li>
+				        <li data-content="#tab2" onclick="showMember()">멤버관리</li>
 				    </ul>
 				    <!-- Resource 구성 -->
-				    <div id="tab1">
+				    <div id="div_resource">
 				    	<p class="intab-txt">Namespace의 Resource 구성정보를 조회 및 변경합니다.<a href="#" class="view-detail">자세히 보기</a></p>
 					    <!-- accordion -->
 					    <!-- namespace name detail data-->
@@ -473,18 +619,19 @@
 						</div>
 					</div>
 				    <!-- 멤버관리 -->
-				    <div id="tab2">
+				    <div id="div_member" style="display:none">
 				    	<p class="intab-txt">Namespace 멤버 권한 정보를 관리합니다.</p>
 			    		<!-- search-wrap-->
 						<div class="search-wrap">
 							<input class="Textinput srcinput" placeholder="검색어를 입력하세요."/><button class="Button btn-search">검색</button>
 						</div>
 						<h3 class="form-title">멤버</h3>
-		            	<div id="gr3"></div>
+		            	<div id="grid_member"></div>
 						<div class="btn-wrap">
-							<div class="btn-left"><button class="Button btn">멤버추가</button></div>
+							<div class="btn-left"><button class="Button btn" onclick="showUser()">멤버추가</button></div>
 							<div class="btn-right"><button class="Button btn bg-red">저장</button></div>
 						</div>
+						<div id="grid_user"></div>
 				    </div>
 				</div>
 			</div>

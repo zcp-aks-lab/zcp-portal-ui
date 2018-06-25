@@ -1,6 +1,8 @@
 package com.skcc.cloudz.zcp.portal.management.namespace.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +28,7 @@ public class NamespaceService {
     public Map<String, Object> getResourceQuota(EnquryNamespaceVO vo) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
-        ApiResponseVo response = client.request("/iam/resourceQuota", vo);
+        ApiResponseVo response = client.request("/iam/resourceQuotas", vo);
         if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(response.getMsg());
         }
@@ -76,6 +78,36 @@ public class NamespaceService {
         	logger.debug(response.getMsg());
             throw new Exception(response.getMsg());
         }
+    }
+    
+    public Map<String, Object> getUsers(HashMap<String, String> data) throws Exception{
+    	Map<String, Object> resultMap = new HashMap<String, Object>();
+    	String namespace = data.get("namespace");
+    	
+    	ApiResponseVo response = client.request(HttpMethod.GET, "/iam/users", null);
+        if(!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(response.getMsg());
+        }
+        
+    	if(StringUtils.isEmpty(namespace)) {
+    		resultMap.putAll(response.getData());
+    	}else {
+    		Map<String, Object> items = (Map<String, Object>)response.getData();
+    		List<Map<String, Object>> users = (List<Map<String, Object>>)items.get("items");
+    		List<Map<String, Object>> newUsers = new ArrayList<>();
+    		for(Map<String, Object> user : users) {
+    			List<String> namespaceNames = (List<String>)user.get("defaultNamespace");
+    			if(namespaceNames != null)
+	    			for(String name : namespaceNames) {
+	    				if(namespace.equals(name)) {
+	    					newUsers.add(user);
+	    				}
+	    			}
+    		}
+    		resultMap.put("items", newUsers);
+    	}
+    	
+    	return resultMap;
     }
 
 }
