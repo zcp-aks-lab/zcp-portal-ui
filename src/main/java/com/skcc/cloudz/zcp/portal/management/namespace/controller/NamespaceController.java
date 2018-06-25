@@ -69,5 +69,18 @@ public class NamespaceController {
     	return "content/management/namespace/namespace-detail";
     }
     
+    
+    @PostMapping(value = "/namespace/users", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody 
+    public Map<String, Object> getUsers(@RequestBody HashMap<String, String> data) throws Exception {
+    	return namespaceService.getUsers(data);
+    }
+    
+    @PostMapping(value = "/namespace/save", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody 
+    public void addUserInNamespace(@RequestBody HashMap<String, Object> data) throws Exception {
+    	namespaceService.addUserInNamespace(data);
+    }
+    
 }
 

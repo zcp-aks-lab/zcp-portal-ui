@@ -7,22 +7,10 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<!-- <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
 	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/> -->
+	<script src="/js/common/namespaceCommon.js" data-th-src="@{/js/common/namespaceCommon.js}"></script>
 	<script th:inline="javascript" type="text/javascript">
 	/*<![CDATA[*/
-		
-		function ajaxCall(url, data){
-			return $.ajax({
-				method: 'post',
-				contentType : 'application/json;charset=UTF-8',
-				url: url,
-				data: JSON.stringify(data)
-	        }).fail(function(jqXHR, textStatus, errorThrown) {
-	        	console.log(jqXHR);
-	            //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
-	        });
-		}
-		
-		
+				
 		function addNamespace(){
 			if(!validate()) return ;
 			

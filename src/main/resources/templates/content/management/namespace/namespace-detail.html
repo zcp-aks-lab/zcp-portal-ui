@@ -5,6 +5,7 @@
 	<title>CloudZ CP</title>
 	<meta charset="UTF-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<script src="/js/common/namespaceCommon.js" data-th-src="@{/js/common/namespaceCommon.js}"></script>
 	<script th:inline="javascript" type="text/javascript">
 	/*<![CDATA[*/
 		function initNamespace(namespace){
@@ -35,18 +36,6 @@
 			
 		}
 	
-		function ajaxCall(url, data){
-			return $.ajax({
-				method: 'post',
-				contentType : 'application/json;charset=UTF-8',
-				url: url,
-				data: JSON.stringify(data)
-	        }).fail(function(jqXHR, textStatus, errorThrown) {
-	        	console.log(jqXHR);
-	            //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
-	        });
-		}
-		
 		$(document).ready(function(){
 			var namespace = /*[[${namespace}]]*/;
 			var status = /*[[${param.status}]]*/;
@@ -138,8 +127,7 @@
 		}
 		/////////////////////////////////////  member management /////////////////////////////////////
 		function gridInitMember(data){
-			data=[];
-	    	AlopexGrid.setup({
+			AlopexGrid.setup({
 	    		fitTableWidth : true 
 	    	});
 	    	//memeber
@@ -167,17 +155,36 @@
 	    			}, {
 	    				key : 'firstName',
 	    				title : '이름',
-	    				width : '100px'
+	    				width : '100px',
+	    				render : function( value, data, render, mapping){
+	    					return data.firstName + " " + data.lastName;
+	    				}
+	    				
 	    			}, {
 	    				align : '네임스페이스 권한',
 	    				key : 'defaultNamespace',
 	    				title : '사용자',
-	    				width : '100px'
+	    				width : '100px',
+	    				editable : {
+	    		            type : "select",
+	    		            rule : [ {value:"person",text:"개인"},
+	    		                    {value:"couple",text:"동반2인"},
+	    		                    {value:"group",text:"동반3인이상"} ],
+	    		            //또는 위와 같은 array를 리턴하는 함수
+	    		            styleclass : "group-select",
+	    		            attr : {
+	    		                disabled : "disabled"
+	    		            }
+	    		        }
 	    			}, {
 	    				align : 'center',
 	    				key : 'createdDate',
 	    				title : '멤버 등록 일시',
-	    				width : '100px'
+	    				width : '100px',
+	    				render : function(value, data, render, mapping){
+	    					var dt = new Date(Number(data.createdDate));
+	    					return dt.customFormat( "#YYYY#/#MM#/#DD# #hh#:#mm#" )
+	    				}
 	    			}, {
 	    				align : 'right',
 	    				key : 'enabled',
@@ -186,7 +193,10 @@
 	    			}, {
 	    				key : 'country',
 	    				title : '관리',
-	    				width : '50px'
+	    				width : '50px',
+	    				render : function(value, data, render, mapping){
+	    					return "<button class=\"btn-ico btn-delnamespace\" onclick=\"deleteNamespace('" + data.namespace + "')\"></button>";
+	    				}
 	    			}
 	    		],
 	    		data: data
@@ -195,8 +205,10 @@
 	    
 		function gridInitUser(data){ 
 	    	//user
-	    	data = [];
+	    	
 	    	$('#grid_user').alopexGrid({
+	    		cellSelectable: true,
+	    		cellInlineEdit: true,
 	    		pager: true,
 	    		paging: {
 	    			perPage: 5,
@@ -220,31 +232,63 @@
 	    			}, {
 	    				key : 'lastName',
 	    				title : '이름',
-	    				width : '100px'
+	    				width : '100px',
+	    				render : function( value, data, render, mapping){
+	    					return data.firstName + " " + data.lastName;
+	    				}
 	    			}, {
 	    				align : 'center',
 	    				key : 'clusterRole',
 	    				title : 'Cluster 권한',
-	    				width : '100px'
+	    				width : '100px',
+	    				/* editable : {
+	    		            type : "select",
+	    		            rule : [ {value:"person",text:"개인"},
+	    		                    {value:"couple",text:"동반2인"},
+	    		                    {value:"group",text:"동반3인이상"} ],
+	    		            //또는 위와 같은 array를 리턴하는 함수
+	    		            styleclass : "group-select",
+	    		            attr : {
+	    		                disabled : "disabled"
+	    		            }
+	    		        } */
 	    			},{
 	    				align : 'center',
 	    				key : 'defaultNamespace',
 	    				title : '네임스페이스 권한',
-	    				width : '100px'
+	    				width : '100px',
+	    				/* editable : {
+	    		            type : "select",
+	    		            rule : [ {value:"person",text:"개인"},
+	    		                    {value:"couple",text:"동반2인"},
+	    		                    {value:"group",text:"동반3인이상"} ],
+	    		            //또는 위와 같은 array를 리턴하는 함수
+	    		            styleclass : "group-select",
+	    		            attr : {
+	    		                disabled : "disabled"
+	    		            }
+	    		        } */
 	    			}, {
 	    				align : 'center',
 	    				key : 'createdDate',
 	    				title : '생성 일시',
-	    				width : '100px'
+	    				width : '100px',
+	    				render : function(value, data, render, mapping){
+	    					var dt = new Date(Number(data.createdDate));
+	    					return dt.customFormat( "#YYYY#/#MM#/#DD# #hh#:#mm#" )
+	    				}
 	    			}, {
 	    				align : 'right',
 	    				key : 'enabled',
 	    				title : '상태',
 	    				width : '100px'
 	    			}, {
-	    				key : 'country',
+	    				align : 'center',
 	    				title : '추가',
-	    				width : '50px'
+	    				width : '50px',
+	    				render : function(value, data, render, mapping){
+	    					return "<button class=\"btn-ico list-add\" onclick=\'addUser(" + JSON.stringify(data) + ")'></button>";
+	    				}
 	    			}
 	    		],
 	    		data: data
@@ -274,11 +318,23 @@
 			});
 		}
 		
-		function addUser(){
+		function addUser(data){
 			var namespace = /*[[${namespace}]]*/;
 			var memberList;
-			ajaxCall('/management/namespace/save', {}).done(function(data){
-				gridInitUser(data.items);
+			var user = {
+				"username" : data.username
+				,"firstName" : data.firstName
+				,"lastName" : data.lastName
+				,"email" : data.email
+				,"enabled" : 'active' == data.enabled ? true : false
+				//,"attribute" : {
+				  ,"defaultNamespace" : namespace 
+				//}
+  				,"clusterRole" : data.clusterRole
+  				,"id" : data.id
+			};
+			ajaxCall('/management/namespace/save', user).done(function(data){
+				gridInitMember(data.items);
 			});
 		}
 		

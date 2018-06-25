@@ -109,5 +109,37 @@ public class NamespaceService {
     	
     	return resultMap;
     }
+    
+    public void addUserInNamespace(HashMap<String, Object> data) throws Exception{
+    	ApiResponseVo resUser = client.request(HttpMethod.GET, "/iam/user/" + data.get("id"), null);
+        if(!resUser.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(resUser.getMsg());
+        }
+        
+        Map<String, Object> map = resUser.getData();
+        Map<String, Object> toSaveAttribute = (Map<String, Object>)data.get("defaultNamespace");
+        List<String> newNamespace = getDefaultNamespace((Map<String, Object> )map.get("attribute"), (String)toSaveAttribute.get("defaultNamespace"));
+        toSaveAttribute.put("defaultNamespace", (List<String>)newNamespace);
+        
+    	ApiResponseVo response = client.request(HttpMethod.PUT, "/iam/user/"+ data.get("id") , data);
+        if(!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(response.getMsg());
+        }
+    }
+    
+    private List<String> getDefaultNamespace(Map<String, Object> beforeNamespace, String newNamespace) {//기존것에 추가된 namespace
+    	List<String> defaultNamespace = null;
+    	if(beforeNamespace == null) {
+    		defaultNamespace = new ArrayList<>();
+        	defaultNamespace.add(newNamespace);	
+    	}else{
+    		defaultNamespace =(List<String>)beforeNamespace.get("defaultNamespace");
+        	defaultNamespace.add(newNamespace);
+    	}
+    	
+    	return defaultNamespace;
+    }
+        
+        
 
 }
