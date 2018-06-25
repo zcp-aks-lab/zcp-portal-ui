@@ -20,7 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
-import com.skcc.cloudz.zcp.portal.iam.namespace.vo.EnquryNamespaceVO;
+import com.skcc.cloudz.zcp.portal.management.namespace.vo.EnquryNamespaceVO;
 
 @Service
 public class IamRestClient {
