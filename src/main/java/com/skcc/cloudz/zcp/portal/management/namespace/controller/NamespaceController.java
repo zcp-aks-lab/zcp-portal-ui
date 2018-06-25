@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.portal.iam.namespace.controller;
+package com.skcc.cloudz.zcp.portal.management.namespace.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skcc.cloudz.zcp.portal.iam.namespace.service.NamespaceService;
-import com.skcc.cloudz.zcp.portal.iam.namespace.vo.EnquryNamespaceVO;
+import com.skcc.cloudz.zcp.portal.management.namespace.service.NamespaceService;
+import com.skcc.cloudz.zcp.portal.management.namespace.vo.EnquryNamespaceVO;
 
 
 @Controller

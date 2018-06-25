@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.portal.iam.namespace.vo;
+package com.skcc.cloudz.zcp.portal.management.namespace.vo;
 
 public class EnquryNamespaceVO {
 	String namespace;

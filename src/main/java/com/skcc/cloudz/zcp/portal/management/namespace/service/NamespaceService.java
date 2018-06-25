@@ -1,4 +1,4 @@
-package com.skcc.cloudz.zcp.portal.iam.namespace.service;
+package com.skcc.cloudz.zcp.portal.management.namespace.service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
 import com.skcc.cloudz.zcp.api.iam.service.impl.IamRestClient;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
-import com.skcc.cloudz.zcp.portal.iam.namespace.vo.EnquryNamespaceVO;
+import com.skcc.cloudz.zcp.portal.management.namespace.vo.EnquryNamespaceVO;
 
 @Service
 public class NamespaceService {
