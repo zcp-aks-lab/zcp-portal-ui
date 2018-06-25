@@ -38,6 +38,12 @@ public class NamespaceController {
     	return "content/management/namespace/namespace";
     }
     
+    @PostMapping(value = "/namespace/list", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody 
+    public Map<String, Object> getNamespace(Model model, @ModelAttribute EnquryNamespaceVO vo) throws Exception {
+    	return namespaceService.getResourceQuota(vo);
+    }
+    
     @PostMapping(value = "/namespace/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
     public void deleteNamespace(@RequestBody HashMap<String, String> name) throws Exception {
