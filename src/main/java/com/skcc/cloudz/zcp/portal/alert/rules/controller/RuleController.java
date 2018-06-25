@@ -16,17 +16,17 @@ public class RuleController {
 
 	static final String RESOURCE_PATH = "/alert";
 
-	@GetMapping(value = "/rules", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+	@GetMapping(value = "/rules", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public String ruleList(Model model) throws Exception {
 		return "content/alert/rules/rules";
 	}
 	
-	@GetMapping(value = "/addRule", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+	@GetMapping(value = "/addRule", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public String addRule(Model model) throws Exception {
 		return "content/alert/rules/addrules";
 	}
 	
-	@GetMapping(value = "/detailRule", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+	@GetMapping(value = "/detailRule", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public String detailRule(Model model) throws Exception {
 		return "content/alert/rules/detailrules";
 	}
