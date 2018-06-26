@@ -94,5 +94,23 @@ public class NamespaceController {
     	namespaceService.delNamespaceRole(data);
     }
     
+    @PostMapping(value = "/namespace/addLabel", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody 
+    public void addLableOfNamespace(@RequestBody HashMap<String, Object> data) throws Exception {
+    	namespaceService.addLableOfNamespace(data);
+    }
+    
+    @PostMapping(value = "/namespace/labels", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody 
+    public Map<String, Object> getLableOfNamespace(@RequestBody HashMap<String, Object> data) throws Exception {
+    	return namespaceService.getLableOfNamespace(data);
+    }
+    
+    @PostMapping(value = "/namespace/delLabel", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody 
+    public void delLableOfNamespace(@RequestBody HashMap<String, Object> data) throws Exception {
+    	namespaceService.delLableOfNamespace(data);
+    }
+    
 }
 

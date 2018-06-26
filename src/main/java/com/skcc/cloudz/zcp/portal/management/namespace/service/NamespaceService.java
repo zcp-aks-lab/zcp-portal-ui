@@ -1,9 +1,11 @@
 package com.skcc.cloudz.zcp.portal.management.namespace.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -104,15 +106,21 @@ public class NamespaceService {
 	    	for(Map<String, String> user : users) {
 	    		if(user.get("username").indexOf(searchWord) > -1) {
 	    			newUser.add(user);
-	    		}else if(user.get("email") != null && user.get("email").indexOf(searchWord) > -1) {
-	    			newUser.add(user);
-	    		}else if(user.get("lastName").indexOf(searchWord) > -1) {
-	    			newUser.add(user);
-	    		}else if(user.get("firstName").indexOf(searchWord) > -1) {
-	    			newUser.add(user);
-	    		}else if((user.get("firstName") + user.get("lastName")).indexOf(searchWord) > -1) {
+	    		}
+	    		if(user.get("email") != null && user.get("email").indexOf(searchWord) > -1) {
 	    			newUser.add(user);
 	    		}
+	    		if(user.get("lastName")!= null && user.get("lastName").indexOf(searchWord) > -1) {
+	    			newUser.add(user);
+	    		}
+	    		if(user.get("firstName")!= null && user.get("firstName").indexOf(searchWord) > -1) {
+	    			newUser.add(user);
+	    		}
+	    		if( user.get("firstName")!= null && user.get("lastName")!= null
+	    				&& (user.get("firstName") + user.get("lastName")).indexOf(searchWord) > -1) {
+	    			newUser.add(user);
+	    		}
+	    		newUser = newUser.stream().distinct().collect(Collectors.toList());
 	    	}
 	    	Map<String, Object> rtnData = new HashMap<>();
 	    	rtnData.put("items", newUser);
@@ -143,6 +151,33 @@ public class NamespaceService {
     
     public void delNamespaceRole(HashMap<String, Object> data) throws Exception{
     	ApiResponseVo resUser = client.request(HttpMethod.DELETE, "/iam/namespace/" + data.get("namespace") + "/roleBinding", data);
+    	if(!resUser.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(resUser.getMsg());
+        }
+        
+    }
+    
+    public void addLableOfNamespace(HashMap<String, Object> data) throws Exception{
+    	ApiResponseVo resUser = client.request(HttpMethod.POST, "/iam/namespace/" + data.get("namespace") + "/label", data);
+    	if(!resUser.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(resUser.getMsg());
+        }
+        
+    }
+    
+    public Map<String, Object> getLableOfNamespace(HashMap<String, Object> data) throws Exception{
+    	Map<String, Object> resultMap = new HashMap<String, Object>();
+    	ApiResponseVo response = client.request(HttpMethod.GET, "/iam/namespace/" + data.get("namespace") + "/labels", null);
+    	if(!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(response.getMsg());
+        }
+    	resultMap.putAll(response.getData());
+        return resultMap;
+        
+    }
+    
+    public void delLableOfNamespace(HashMap<String, Object> data) throws Exception{
+    	ApiResponseVo resUser = client.request(HttpMethod.DELETE, "/iam/namespace/" + data.get("namespace") + "/label", data);
     	if(!resUser.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(resUser.getMsg());
         }

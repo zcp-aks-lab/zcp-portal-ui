@@ -209,10 +209,7 @@
     				align : 'center',
     				key : 'active',
     				title : '상태',
-    				width : '100px',
-    				render : function(value, data){
-    					return value==true ? "active" : "inactive";
-    				}
+    				width : '100px'
     			}, {
     				align : 'center',
     				key : 'creationTimestamp',
@@ -238,13 +235,13 @@
 	
 	function showPage(type){
 		if(type=='listType'){
-			$('#listType').show();
-			$('#cardType').hide();
+			$('#listType').addClass('Checked').show();
+			$('#cardType').removeClass('Checked').hide();
 			var list = getList();
 			g_mode = "listType";
 		}else if(type=='cardType'){
-			$('#listType').hide();
-			$('#cardType').show();
+			$('#listType').removeClass('Checked').hide();
+			$('#cardType').addClass('Checked').show();
 			g_mode = "cardType";
 		}
 		
@@ -336,12 +333,12 @@
 	                			<ul class="name-progress__wrap">
 	                				<li>
 	                					<p class="name-pro__title">CPU Reg./Limit</p>
-	                					<span class="name-pro__info" th:text="${namespace.status.used['requests.cpu']} + '/' + ${namespace.status.hard['requests.cpu']}"></span>
+	                					<span class="name-pro__info" th:text="${namespace.status.used['requests.cpu']} + '/' + ${namespace.status.hard['limits.cpu']}"></span>
 	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.usedCpuRate}"></div>
 	                				</li>
 	                				<li>
 	                					<p class="name-pro__title">Memory Reg./Limit</p>
-	                					<span class="name-pro__info" th:text="${namespace.status.used['requests.memory']} + '/' + ${namespace.status.hard['requests.memory']}"></span>
+	                					<span class="name-pro__info" th:text="${namespace.status.used['requests.memory']} + '/' + ${namespace.status.hard['limits.memory']}"></span>
 	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.usedMemoryRate}"></div>
 	                				</li>
 	                				<li>
