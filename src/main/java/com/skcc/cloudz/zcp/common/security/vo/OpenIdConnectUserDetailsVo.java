@@ -43,7 +43,7 @@ public class OpenIdConnectUserDetailsVo extends CommonVo implements UserDetails 
             this.namespaces = zcpUserVo.getNamespaces();
             this.defaultNamespace = zcpUserVo.getDefaultNamespace();
             this.usedNamespace = zcpUserVo.getUsedNamespace();
-            this.accessRole = !StringUtils.isEmpty(zcpUserVo.getClusterRole()) ? zcpUserVo.getClusterRole() : AccessRole.NONE.getName();
+            this.accessRole = zcpUserVo.getClusterRole() != null ? zcpUserVo.getClusterRole().getName() : AccessRole.NONE.getName();
             //this.accessRole = AccessRole.CLUSTER_ADMIN.getName();
         }
     }

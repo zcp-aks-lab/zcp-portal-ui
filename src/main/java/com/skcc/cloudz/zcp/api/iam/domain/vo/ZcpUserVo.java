@@ -16,10 +16,28 @@ public class ZcpUserVo {
     private Date createdDate;
     private Boolean enabled;
     private Boolean emailVerified;
-    private String clusterRole;
+    private ClusterRole clusterRole;
     private List<String> namespaces;
     private String defaultNamespace;
     private int usedNamespace;
+    
+    public class ClusterRole {
+        private String name;
+        private int value;
+        
+        public String getName() {
+            return name;
+        }
+        public void setName(String name) {
+            this.name = name;
+        }
+        public int getValue() {
+            return value;
+        }
+        public void setValue(int value) {
+            this.value = value;
+        }
+    } 
     
     public ZcpUserVo() {
         super();
@@ -72,12 +90,12 @@ public class ZcpUserVo {
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
-   
-    public String getClusterRole() {
+
+    public ClusterRole getClusterRole() {
         return clusterRole;
     }
 
-    public void setClusterRole(String clusterRole) {
+    public void setClusterRole(ClusterRole clusterRole) {
         this.clusterRole = clusterRole;
     }
 
