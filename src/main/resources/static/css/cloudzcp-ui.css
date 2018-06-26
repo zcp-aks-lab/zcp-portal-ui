@@ -390,3 +390,94 @@
 	background: #eeeeee;
 	border: 1px solid #cccccc;
 }
+/*---------------------------------------
+	Datepicker css
+---------------------------------------*/
+.Datepicker {
+	width: 240px;
+	padding: 0;
+	font-size: 13px;
+	font-family: 'NotoKrL';
+	background: #ffffff;
+	border: 1px solid #cccccc;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	-ms-border-radius: 0;
+	border-radius: 0;
+	-webkit-box-shadow: 0;
+	-moz-box-shadow: 0;
+	box-shadow: 0;
+}
+.Datepicker .PrevYear, .Datepicker .PrevMonth,
+.Datepicker .NextYear, .Datepicker .NextMonth {display: none;}
+.Datepicker .Header {
+	height: 35px;
+	background: #f9f9f9;
+}
+.Datepicker .SubheaderYear {
+	position: relative;
+	top: 6px;
+	left: 50px;
+	margin-right: 0px;
+}
+.Datepicker .SubheaderMonth {
+	position: relative;
+	top: 6px;
+}
+.Datepicker .CurrentYearSelect, .Datepicker .CurrentMonthSelect {
+	color: #000000;
+	font-size: 13px;
+	font-weight: bold;
+	border: 0;
+	background: transparent;
+}
+.Datepicker thead th {
+	height: 20px;
+	font-size: 11px;
+	background: #ffffff;
+	border: 0;
+}
+.Datepicker thead th:first-child {border-left: 0}
+.Datepicker .Weekdays.holiday {
+	color: #ee3b5d;
+}
+.Datepicker .Cell {
+	height: 20px;
+	border: 0;
+}
+.Datepicker a {
+	height: 20px;
+	line-height: 18px;
+}
+.Datepicker .Day:hover, .Datepicker .Month:hover {
+	background: transparent;
+	font-weight: normal;
+	color: #303030;
+}
+.Datepicker .Day.Holiday {
+	background: transparent;
+	color: #ee3b5d;
+}
+.Datepicker .Today,
+.Datepicker .Today:hover {
+	color: #47c83e;
+	background: #f2f2f2;
+	border: 1px solid #cccccc;
+}
+.Datepicker .Bottom {
+	margin-top: 15px;
+	height: 30px;
+	background: #f9f9f9;
+	text-align: center;
+}
+.Datepicker .Bottom .BottomButton {display: none;}
+.Datepicker .Bottom .BottomText {
+	font-size: 13px;
+	text-align: center;
+	color: #000000;
+}
+.Datepicker .BtnClose .Control,
+.Datepicker .BtnClose .Control:hover, 
+.Datepicker .BtnClose .Control:active {
+	background: url("../images/close.png") no-repeat;
+}

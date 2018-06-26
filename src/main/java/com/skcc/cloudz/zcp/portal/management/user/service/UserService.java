@@ -128,5 +128,70 @@ public class UserService {
             throw new Exception(apiResponseVo.getMsg());
         }
     }
+    
+    public Map<String, Object> getRoleBindings(String id) throws Exception  {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        ApiResponseVo apiResponseVo = iamApiService.getRoleBindings(id);
+        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(apiResponseVo.getMsg());
+        }
+        
+        resultMap.putAll(apiResponseVo.getData());
+        
+        return resultMap;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<String> getNamespaces() throws Exception {
+        List<String> namespaces = new ArrayList<String>();
+        
+        ApiResponseVo apiResponseVo = iamApiService.getNamespaces();
+        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(apiResponseVo.getMsg());
+        }
+        
+        Map<String, Object> data = apiResponseVo.getData();
+        List<HashMap<String, Object>> items = (List<HashMap<String, Object>>) data.get("items");
+        
+        for (HashMap<String, Object> item : items) {
+            namespaces.add(((HashMap<String, Object>) item.get("metadata")).get("name").toString());
+        }
+        
+        return namespaces;
+    }
+    
+    public void createRoleBinding(UserVo userVo) throws Exception  {
+        HashMap<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("clusterRole", userVo.getClusterRole());
+        reqMap.put("username", userVo.getUsername());
+        
+        ApiResponseVo apiResponseVo = iamApiService.createRoleBinding(userVo.getNamespace(), reqMap);
+        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(apiResponseVo.getMsg());
+        }
+    }
+    
+    public void updateRoleBinding(UserVo userVo) throws Exception  {
+        HashMap<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("clusterRole", userVo.getClusterRole());
+        reqMap.put("username", userVo.getUsername());
+        
+        ApiResponseVo apiResponseVo = iamApiService.updateRoleBinding(userVo.getNamespace(), reqMap);
+        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(apiResponseVo.getMsg());
+        }
+    }
+    
+    public void deleteRoleBinding(UserVo userVo) throws Exception  {
+        HashMap<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("clusterRole", userVo.getClusterRole());
+        reqMap.put("username", userVo.getUsername());
+        
+        ApiResponseVo apiResponseVo = iamApiService.deleteRoleBinding(userVo.getNamespace(), reqMap);
+        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(apiResponseVo.getMsg());
+        }
+    }
 
 }

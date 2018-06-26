@@ -14,6 +14,7 @@ public class UserVo {
     private String type;
     private List<String> actions;
     private String clusterRole;
+    private String namespace;
     private String keyword;
     
     public String getId() {
@@ -88,5 +89,10 @@ public class UserVo {
     public void setKeyword(String keyword) {
         this.keyword = keyword;
     }
-    
+    public String getNamespace() {
+        return namespace;
+    }
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
 }

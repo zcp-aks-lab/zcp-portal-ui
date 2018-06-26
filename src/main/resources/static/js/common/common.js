@@ -30,3 +30,28 @@ jQuery.fn.serializeObject = function() {
 
 	return obj;
 };
+
+function createOptions(id, data, selected, disabled) {
+    try {
+    	if(data.length > 0) {
+    		
+    		if(disabled == null) {
+    			$('#'+id).removeAttr("disabled");	
+    		} 
+    		
+    		$('#'+id).find('option').each(function() {
+                $(this).remove();
+            });	
+    	}
+
+    	var option = [];
+    	for(var i = 0; i < data.length; i++) {
+    		option.push("<option value=\"" + data[i].value + "\"");
+			if (selected == data[i].value) {
+    			option.push(" selected ");
+			}
+			option.push(">" + data[i].text + "</option>");
+		}
+    	$('#' + id).append(option.join(''));
+    } catch(e) {}
+}

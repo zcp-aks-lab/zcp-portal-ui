@@ -33,5 +33,15 @@ public interface IamApiService {
     ApiResponseVo getClusterRoles();
     
     ApiResponseVo updateClusterRoleBinding(String id, HashMap<String, Object> reqMap);
+    
+    ApiResponseVo getRoleBindings(String id);
+    
+    ApiResponseVo getNamespaces();
+    
+    ApiResponseVo createRoleBinding(String namespace, HashMap<String, Object> reqMap);
+    
+    ApiResponseVo updateRoleBinding(String namespace, HashMap<String, Object> reqMap);
+    
+    ApiResponseVo deleteRoleBinding(String namespace, HashMap<String, Object> reqMap);
 
 }

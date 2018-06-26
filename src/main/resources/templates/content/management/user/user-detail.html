@@ -5,6 +5,13 @@
         <title>사용자 상세</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         
+        <script th:inline="javascript">
+        /*<![CDATA[*/
+        var namespaces = /*[[${namespaces}]]*/;
+        var clusterRoles = /*[[${clusterRoles}]]*/;
+        /*]]>*/
+        </script>
+        
         <script type="text/javascript">
             var zcpPortalApp = {
                 pageInit: function() {
@@ -17,8 +24,27 @@
                     this.event.init();
                 },
                 data: {
+                	namespaces: [],
+                	clusterRoles: [],
+                    
                     init: function() {
                         this.validate();
+                        this.setInitData();
+                    },
+
+                    setInitData: function() {
+                        $.each(namespaces, function (key, value) {
+                        	zcpPortalApp.data.namespaces.push({value: value, text: value});
+                        });
+
+                        zcpPortalApp.data.clusterRoles.push({value: 'none', text: 'none'});
+                        $.each(clusterRoles, function (key, value) {
+                        	zcpPortalApp.data.clusterRoles.push({value: value, text: value});
+                        });
+
+                        if ($('#tbody_namespaces tr').length === 0) {
+                        	zcpPortalApp.event.addNamespaceRole();
+                        } 
                     },
 
                     validate: function() {
@@ -122,7 +148,7 @@
                                     return false;
                                 }
                                 
-                                alert('Credentials 설정 메일이 발송 되었습니다. 메일을 확인하세요.');
+                                alert('Credentials 설정 메일이 발송 되었습니다.');
                             },
                             error : function(errObject) {
                                 alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -174,7 +200,68 @@
                                 
                                 alert('클러스터 권한이 변경되었습니다.');
                                 location.reload();
-                                //$('#detailTab').setTabIndex(2);
+                            },
+                            error : function(errObject) {
+                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                            }
+                        })
+                    },
+
+                    namespaceRoleBinding: function(idx, mode) {
+                        console.log(idx + ' >>>' + mode);
+                        
+                        var msg = '';
+                        switch(mode) {
+                        case 'create':
+                        	msg = '네임스페이스의 권한을 등록 하시겠습니까?';
+                            break
+                        case 'update':
+                        	msg = '네임스페이스의 권한을 수정 하시겠습니까?';
+                            break
+                        case 'delete':
+                        	msg = '네임스페이스의 권한을 삭제 하시겠습니까?';
+                            break
+                        case 'rowDelete':
+                        	$('#namespaceRow_' + idx).remove();
+                            return false;
+                        }
+
+                        var data = {
+                        	username: $('#username').val(),
+                            clusterRole: $('#clusterRole_' + idx).val(),
+                            namespace: $('#namespace_' + idx).val()
+                        };
+
+                        log(JSON.stringify(data));
+
+                        if (!confirm(msg)) return false;
+                        
+                        $a.request('/management/user/roleBinding/' + mode, {
+                            method: 'post',
+                            data: data, 
+                            success : function(res) {
+                                if (res.resultCd !== '200') {
+                                    if (res.resultMsg) alert(res.resultMsg);
+                                    return false;
+                                }
+
+                                switch(mode) {
+                                case 'create':
+                                	alert('네임스페이스의 권한이 등록 되었습니다.');
+
+                                	var html =''
+                                	html += '<button class="Button btn-ico btn-config__save" onclick="zcpPortalApp.data.namespaceRoleBinding(\'' + idx + '\', \'update\');">수정</button>';
+                                    html += '<button class="btn-ico del" onclick="zcpPortalApp.data.namespaceRoleBinding(\'' + idx + '\', \'delete\');">삭제</button>';
+                                	$('#namespaceBtn_' + idx).html(html);
+                                    break
+                                case 'update':
+                                    alert('네임스페이스의 권한이 수정 되었습니다.');
+                                    break
+                                case 'delete':
+                                	alert('네임스페이스의 권한이 삭제 되었습니다.');
+                                	$('#namespaceRow_' + idx).remove();
+                                    break
+                                }
                             },
                             error : function(errObject) {
                                 alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -184,10 +271,8 @@
                 },
                 event: {
                     init: function() {
-                        /* $('#btnCancel').on('click', function() {
-                            location.href = '/management/users';
-                        }); */
-
+                    	//$('#detailTab').setTabIndex(2);
+                        
                         $('#btnUserUpdate').on('click', function() {
                         	zcpPortalApp.data.updateUser();
                         });
@@ -216,10 +301,49 @@
                             document.execCommand('copy');
                             document.body.removeChild(t);
                         });
+                        
+                        $('#btnNamespaceRoleAdd').on('click', function() {
+                        	zcpPortalApp.event.addNamespaceRole();
+                        });
+                    },
+
+                    addNamespaceRole: function() {
+                        var currentRowCount = $('#tbody_namespaces tr').length;
+                        var idIndex = currentRowCount + namespaceRoleAddCnt + 1;
+                  
+                        var namespaceId = 'namespace_' + idIndex;
+                        var nsClusterRoleId = 'clusterRole_' + idIndex;
+                        
+                        var html = '';
+                        html += '<tr id="namespaceRow_' + idIndex + '">';
+                        html += '    <td>';
+                        html += '        <div class="Divselect" style="width: 300px">';
+                        html += '            <select id="' + namespaceId + '"></select>';
+                        html += '            <span></span>';
+                        html += '        </div>';
+                        html += '    </td>';
+                        html += '    <td>';
+                        html += '        <div class="Divselect" style="width: 300px">';
+                        html += '            <select id="' + nsClusterRoleId + '"></select>';
+                        html += '            <span></span>';
+                        html += '        </div>';
+                        html += '    </td>';
+                        html += '    <td id="namespaceBtn_' + idIndex + '">';
+                        html += '        <button class="Button btn-ico btn-config__save" onclick="zcpPortalApp.data.namespaceRoleBinding(\'' + idIndex + '\', \'create\');">등록</button>';
+                        html += '        <button class="btn-ico list-del" onclick="zcpPortalApp.data.namespaceRoleBinding(\'' + idIndex + '\', \'rowDelete\');">삭제</button>';
+                        html += '    </td>';
+                        html += '</tr>';  
+           
+                        $('#tbody_namespaces').append(html);
+                        createOptions(namespaceId, zcpPortalApp.data.namespaces, '');
+                        createOptions(nsClusterRoleId, zcpPortalApp.data.clusterRoles, '');
+                        $a.convert($('#tbody_namespaces'));
+                        namespaceRoleAddCnt++;
                     }
                 }
             }
-            
+
+            var namespaceRoleAddCnt = 0;
             $.alopex.page(function() {
                 this.init = function(id, param) { 
                     zcpPortalApp.pageInit();
@@ -254,9 +378,9 @@
                 <!-- tab wrap -->
                 <div class="Tabs Fixed" data-tab-width="180px" id="detailTab">
                     <ul>
-                        <li data-content="#tab1">서비스 정보</li>
+                        <li data-content="#tab1">사용자 정보</li>
                         <li data-content="#tab2">Condentials</li>
-                        <li data-content="#tab3">접근권한</li>
+                        <li data-content="#tab3">접근 권한</li>
                         <li>로그<span class="Icon outlink"></span></li>
                     </ul>
                     <!-- 서비스 상세 : 서비스 정보 -->
@@ -315,7 +439,6 @@
                             </fieldset>
                         </form>
                         <div class="btn-wrap">
-                            <!-- <div class="btn-left"><button class="Button btn" id="btnCancel">취소</button></div> -->
                             <div class="btn-right"><button class="Button btn bg-red" id="btnUserUpdate">변경</button></div>
                         </div>
                     </div>
@@ -510,67 +633,23 @@
                                                                 <th>권한</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td><input class="Textinput" style="width: 300px" /></td>
+                                                        <tbody th:id="tbody_namespaces">
+                                                            <tr th:each="item, iterStat : ${roleBindings.items}" th:id="|namespaceRow_${iterStat.index}|">
+                                                                <td>
+                                                                    <input type="text" th:id="|namespace_${iterStat.index}|" th:value="${item.metadata.namespace}" class="Textinput" style="width: 300px" readonly="readonly" />
+                                                                </td>
                                                                 <td>
                                                                     <div class="Divselect" style="width: 300px">
-                                                                        <select>
-                                                                            <option value="korea">Cluster Admin</option>
-                                                                            <option value="usa">Cluster Admin</option>
-                                                                            <option value="japan">Cluster Admin</option>
-                                                                            <option value="china">Cluster Admin</option>
+                                                                        <select th:id="|clusterRole_${iterStat.index}|">
+                                                                            <option value="none">none</option>
+                                                                            <option th:each="clusterRole : ${clusterRoles}" th:value="${clusterRole}" th:text="${clusterRole}" th:selected="${clusterRole == item.roleRef.name}"></option>
                                                                         </select>
                                                                         <span></span>
                                                                     </div>
                                                                 </td>
                                                                 <td>
-                                                                    <button class="btn-ico list-del">삭제</button>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td><input class="Textinput" style="width: 300px" /></td>
-                                                                <td>
-                                                                    <div class="Divselect" style="width: 300px">
-                                                                        <select>
-                                                                            <option value="korea">Cluster Admin</option>
-                                                                            <option value="usa">Cluster Admin</option>
-                                                                            <option value="japan">Cluster Admin</option>
-                                                                            <option value="china">Cluster Admin</option>
-                                                                        </select>
-                                                                        <span></span>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <button class="btn-ico list-del">삭제</button>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <div class="Divselect" style="width: 300px">
-                                                                        <select>
-                                                                            <option value="korea">Cluster Admin</option>
-                                                                            <option value="usa">Cluster Admin</option>
-                                                                            <option value="japan">Cluster Admin</option>
-                                                                            <option value="china">Cluster Admin</option>
-                                                                        </select>
-                                                                        <span></span>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="Divselect" style="width: 300px">
-                                                                        <select>
-                                                                            <option value="korea">Cluster Admin</option>
-                                                                            <option value="usa">Cluster Admin</option>
-                                                                            <option value="japan">Cluster Admin</option>
-                                                                            <option value="china">Cluster Admin</option>
-                                                                        </select>
-                                                                        <span></span>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <button class="btn-ico list-del">삭제</button>
-                                                                    <button class="btn-ico list-add">추가</button>
+                                                                    <button class="Button btn-ico btn-config__save" th:onclick="'zcpPortalApp.data.namespaceRoleBinding(\'' +  ${iterStat.index} + '\', \'update\');'">수정</button>
+                                                                    <button class="btn-ico del" th:onclick="'zcpPortalApp.data.namespaceRoleBinding(\'' +  ${iterStat.index} + '\', \'delete\');'">삭제</button>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -580,8 +659,7 @@
                                         </tbody>
                                     </table>
                                     <div class="btn-wrap">
-                                        <div class="btn-left"><button class="Button btn">취소</button></div>
-                                        <div class="btn-right"><button class="Button btn bg-red">확인</button></div>
+                                        <div class="btn-right"><button class="Button btn" id="btnNamespaceRoleAdd">권한설정 추가</button></div>
                                     </div>
                                 </div>
                             </li>
