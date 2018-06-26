@@ -208,8 +208,6 @@
                     },
 
                     namespaceRoleBinding: function(idx, mode) {
-                        console.log(idx + ' >>>' + mode);
-                        
                         var msg = '';
                         switch(mode) {
                         case 'create':
@@ -231,8 +229,6 @@
                             clusterRole: $('#clusterRole_' + idx).val(),
                             namespace: $('#namespace_' + idx).val()
                         };
-
-                        log(JSON.stringify(data));
 
                         if (!confirm(msg)) return false;
                         
