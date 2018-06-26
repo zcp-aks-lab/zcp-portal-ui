@@ -83,63 +83,69 @@ public class NamespaceService {
     public Map<String, Object> getUsers(HashMap<String, String> data) throws Exception{
     	Map<String, Object> resultMap = new HashMap<String, Object>();
     	String namespace = data.get("namespace");
-    	
-    	ApiResponseVo response = client.request(HttpMethod.GET, "/iam/users", null);
-        if(!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(response.getMsg());
-        }
-        
+    	ApiResponseVo response =null;
     	if(StringUtils.isEmpty(namespace)) {
-    		resultMap.putAll(response.getData());
+    		response = client.request(HttpMethod.GET, "/iam/users", null);
+            if(!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
+                throw new Exception(response.getMsg());
+            }
+            
+    		
     	}else {
-    		Map<String, Object> items = (Map<String, Object>)response.getData();
-    		List<Map<String, Object>> users = (List<Map<String, Object>>)items.get("items");
-    		List<Map<String, Object>> newUsers = new ArrayList<>();
-    		for(Map<String, Object> user : users) {
-    			List<String> namespaceNames = (List<String>)user.get("defaultNamespace");
-    			if(namespaceNames != null)
-	    			for(String name : namespaceNames) {
-	    				if(namespace.equals(name)) {
-	    					newUsers.add(user);
-	    				}
-	    			}
-    		}
-    		resultMap.put("items", newUsers);
+    		response = client.request(HttpMethod.GET, "/iam/namespace/"+namespace + "/users", null);
+            if(!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
+                throw new Exception(response.getMsg());
+            }
+    	}
+    	String searchWord = data.get("searchWord");
+    	if(StringUtils.isNoneEmpty(searchWord)) {
+	    	List<Object> newUser = new ArrayList();
+	    	List<Map<String, String>> users =(List<Map<String, String>>)((Map<String, Object>)response.getData()).get("items");
+	    	for(Map<String, String> user : users) {
+	    		if(user.get("username").indexOf(searchWord) > -1) {
+	    			newUser.add(user);
+	    		}else if(user.get("email") != null && user.get("email").indexOf(searchWord) > -1) {
+	    			newUser.add(user);
+	    		}else if(user.get("lastName").indexOf(searchWord) > -1) {
+	    			newUser.add(user);
+	    		}else if(user.get("firstName").indexOf(searchWord) > -1) {
+	    			newUser.add(user);
+	    		}else if((user.get("firstName") + user.get("lastName")).indexOf(searchWord) > -1) {
+	    			newUser.add(user);
+	    		}
+	    	}
+	    	Map<String, Object> rtnData = new HashMap<>();
+	    	rtnData.put("items", newUser);
+	    	
+	    	return rtnData;
     	}
     	
-    	return resultMap;
+    	 resultMap.putAll(response.getData());
+    	    
+         return resultMap;
     }
     
     public void addUserInNamespace(HashMap<String, Object> data) throws Exception{
-    	ApiResponseVo resUser = client.request(HttpMethod.GET, "/iam/user/" + data.get("id"), null);
+    	ApiResponseVo resUser = client.request(HttpMethod.POST, "/iam/namespace/" + data.get("namespace") + "/roleBinding", data);
         if(!resUser.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(resUser.getMsg());
         }
         
-        Map<String, Object> map = resUser.getData();
-        Map<String, Object> toSaveAttribute = (Map<String, Object>)data.get("defaultNamespace");
-        List<String> newNamespace = getDefaultNamespace((Map<String, Object> )map.get("attribute"), (String)toSaveAttribute.get("defaultNamespace"));
-        toSaveAttribute.put("defaultNamespace", (List<String>)newNamespace);
-        
-    	ApiResponseVo response = client.request(HttpMethod.PUT, "/iam/user/"+ data.get("id") , data);
-        if(!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(response.getMsg());
-        }
     }
     
-    private List<String> getDefaultNamespace(Map<String, Object> beforeNamespace, String newNamespace) {//기존것에 추가된 namespace
-    	List<String> defaultNamespace = null;
-    	if(beforeNamespace == null) {
-    		defaultNamespace = new ArrayList<>();
-        	defaultNamespace.add(newNamespace);	
-    	}else{
-    		defaultNamespace =(List<String>)beforeNamespace.get("defaultNamespace");
-        	defaultNamespace.add(newNamespace);
-    	}
-    	
-    	return defaultNamespace;
+    public void modifyNamespaceRole(HashMap<String, Object> data) throws Exception{
+    	ApiResponseVo resUser = client.request(HttpMethod.PUT, "/iam/namespace/" + data.get("namespace") + "/roleBinding", data);
+    	if(!resUser.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(resUser.getMsg());
+        }
+        
     }
+    
+    public void delNamespaceRole(HashMap<String, Object> data) throws Exception{
+    	ApiResponseVo resUser = client.request(HttpMethod.DELETE, "/iam/namespace/" + data.get("namespace") + "/roleBinding", data);
+    	if(!resUser.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(resUser.getMsg());
+        }
         
-        
-
+    }
 }

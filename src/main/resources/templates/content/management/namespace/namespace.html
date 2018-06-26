@@ -209,7 +209,10 @@
     				align : 'center',
     				key : 'active',
     				title : '상태',
-    				width : '100px'
+    				width : '100px',
+    				render : function(value, data){
+    					return value==true ? "active" : "inactive";
+    				}
     			}, {
     				align : 'center',
     				key : 'creationTimestamp',

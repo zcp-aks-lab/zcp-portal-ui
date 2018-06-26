@@ -76,10 +76,22 @@ public class NamespaceController {
     	return namespaceService.getUsers(data);
     }
     
-    @PostMapping(value = "/namespace/save", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/namespace/saveRole", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
     public void addUserInNamespace(@RequestBody HashMap<String, Object> data) throws Exception {
     	namespaceService.addUserInNamespace(data);
+    }
+    
+    @PostMapping(value = "/namespace/modifyRole", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody 
+    public void addNamespaceRole(@RequestBody HashMap<String, Object> data) throws Exception {
+    	namespaceService.modifyNamespaceRole(data);
+    }
+    
+    @PostMapping(value = "/namespace/delRole", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody 
+    public void delNamespaceRole(@RequestBody HashMap<String, Object> data) throws Exception {
+    	namespaceService.delNamespaceRole(data);
     }
     
 }
