@@ -116,10 +116,7 @@
 			
 			function selected(id, value, unit){
 				if(value && value.indexOf(unit) > -1) 
-					$('#select_'+id+'').val(unit);
-			}
-			function _v(data, postVal){
-				return  data ? eval(data + val) : 0
+					$('#select_'+id).setSelected(unit)
 			}
 		}
 	
@@ -595,8 +592,8 @@
 														<div class="tbl-group__wrap">
 															<div class="left"><input class="Textinput" id="input_cpu_requests"/></div>
 															<div class="left">
-																<div class="Divselect">
-																    <select id="select_cpu_requests">
+																<div class="Divselect" id="select_cpu_requests">
+																    <select >
 																        <option value="">CPU(core)</option>
 												        				<option value="m">m(core)</option>
 																    </select>
@@ -618,8 +615,8 @@
 														<div class="tbl-group__wrap">
 															<div class="left">
 																<input class="Textinput" id="input_cpu_limits"/>
-																<div class="Divselect">
-																    <select id="select_cpu_limits">
+																<div class="Divselect"  id="select_cpu_limits">
+																    <select>
 																        <option value="">CPU(core)</option>
 												        				<option value="m">m(core)</option>
 																    </select>
@@ -641,8 +638,8 @@
 														<div class="tbl-group__wrap">
 															<div class="left">
 																<input class="Textinput" id="input_memory_requests"/>
-																<div class="Divselect">
-																    <select id="select_memory_requests">
+																<div class="Divselect" id="select_memory_requests">
+																    <select >
 																        <option value="Gi">Gi</option>
 												        				<option value="">Mi</option>
 																    </select>
@@ -664,8 +661,8 @@
 														<div class="tbl-group__wrap">
 															<div class="left">
 																<input class="Textinput" id="input_memory_limits"/>
-																<div class="Divselect">
-																    <select id="select_memory_limits">
+																<div class="Divselect"  id="select_memory_limits">
+																    <select>
 																        <option value="Gi">Gi</option>
 												        				<option value="">Mi</option>
 																    </select>
@@ -799,8 +796,8 @@
 														<div class="tbl-group__wrap">
 															<div class="left">
 																<input class="Textinput" id="input_pod_cpu_requests"/>
-																<div class="Divselect">
-																    <select id="select_pod_cpu_requests">
+																<div class="Divselect" id="select_pod_cpu_requests">
+																    <select >
 																        <option value="">CPU(core)</option>
 												        				<option value="m">m(core)</option>
 																    </select>
@@ -822,8 +819,8 @@
 														<div class="tbl-group__wrap">
 															<div class="left">
 																<input class="Textinput" id="input_pod_cpu_limits"/>
-																<div class="Divselect" >
-																    <select id="select_pod_cpu_limits">
+																<div class="Divselect"  id="select_pod_cpu_limits">
+																    <select>
 																        <option value="">CPU(core)</option>
 												        				<option value="m">m(core)</option>
 																    </select>
@@ -845,8 +842,8 @@
 														<div class="tbl-group__wrap">
 															<div class="left">
 																<input class="Textinput" id="input_pod_memory_requests"/>
-																<div class="Divselect">
-																    <select id="select_pod_memory_requests">
+																<div class="Divselect"  id="select_pod_memory_requests">
+																    <select>
 																        <option value="Gi">Gi</option>
 												        				<option value="">Mi</option>
 																    </select>
@@ -868,8 +865,8 @@
 														<div class="tbl-group__wrap">
 															<div class="left">
 																<input class="Textinput" id="input_pod_memory_limits"/>
-																<div class="Divselect">
-																   <select id="select_pod_memory_limits">
+																<div class="Divselect"  id="select_pod_memory_limits">
+																   <select>
 																        <option value="Gi">Gi</option>
 												        				<option value="">Mi</option>
 																    </select>
