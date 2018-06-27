@@ -1,5 +1,5 @@
 FROM java:8
-ENV SPRING_ACTIVE_PROFILE stage
+ENV SPRING_ACTIVE_PROFILE dev
 ADD dist/zcp-portal-ui-0.0.1-SNAPSHOT.war app.war
 VOLUME /tmp
 VOLUME /target
