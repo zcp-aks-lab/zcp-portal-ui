@@ -14,22 +14,30 @@
 				var quota = data.resourceQuota;
 				var limit = data.limitRange;
 				if(quota){
-					$('#input_cpu_requests').val(quota.status.hard["requests.cpu"]);
-					$('#input_cpu_limits').val(quota.status.hard["limits.memory"]);
-					$('#input_memory_requests').val(quota.status.hard["requests.cpu"]);
-					$('#input_memory_limits').val(quota.status.hard["limits.memory"]);
+					$('#input_cpu_requests').val(ntrim(quota.status.hard["requests.cpu"]));
+					$('#input_cpu_limits').val(ntrim(quota.status.hard["limits.cpu"]));
+					$('#input_memory_requests').val(ntrim(quota.status.hard["requests.memory"]));
+					$('#input_memory_limits').val(ntrim(quota.status.hard["limits.memory"]));
 					$('#input_pods').val(quota.status.hard.pods);
 					$('#input_services').val(quota.status.hard.services);
 					$('#input_secrets').val(quota.status.hard.secrets);
 					$('#input_config_maps').val(quota.status.hard.configmaps);
 					$('#input_pesistent_volumne').val(quota.status.hard.persistentvolumeclaims);
 					$('#input_load_balancers').val(quota.status.hard["services.loadbalancers"]);
+					selected('cpu_requests', quota.status.hard["requests.cpu"], 'm');
+					selected('cpu_limits', quota.status.hard["limits.cpu"], 'm');
+					selected('memory_requests', quota.status.hard["requests.memory"], 'Gi');
+					selected('memory_limits', quota.status.hard["limits.memory"], 'Gi');
 				}
 				if(limit){
 					$('#input_pod_cpu_requests').val(	limit.spec.limits[0].defaultRequest.cpu.number);
 					$('#input_pod_cpu_limits').val(		limit.spec.limits[0].default.cpu.number);
 					$('#input_pod_memory_requests').val(limit.spec.limits[0].defaultRequest.memory.number);
 					$('#input_pod_memory_limits').val(	limit.spec.limits[0].default.memory.number);
+					selected('pod_cpu_requests', quota.status.hard["requests.cpu"], 'm');
+					selected('pod_cpu_limits', quota.status.hard["limits.cpu"], 'm');
+					selected('pod_memory_requests', quota.status.hard["requests.memory"], 'Gi');
+					selected('pod_memory_limits', quota.status.hard["limits.memory"], 'Gi');
 				}
 				if(data.namespace){
 					$('#input_namespace').val(data.namespace)
@@ -66,6 +74,7 @@
 				setGraphPod('memory_requests', memRmPod);
 				setGraphPod('memory_limits', 0);
 				
+				
 			});
 			url = "/management/namespace/labels";
 			ajaxCall(url, {"namespace" : namespace}).done(function(data){
@@ -84,20 +93,34 @@
 			});
 			
 			function setGraph(obj_id, used){
+				used = ntrim(used);
 				$('#div_' +obj_id).find('div').css('width', used + 'px');
 				$('#span_'+ obj_id).text(used + '%');
-				if(used > 80){
+				if(Number(used) > 80){
 					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typee');
 				}
 			}
 			function setGraphPod(obj_id, used){
+				used = ntrim(used);
 				$('#div_pod_' +obj_id).find('div').css('width', used + 'px');
 				$('#span_pod_'+ obj_id).text(used + '%');
-				if(used > 80){
+				if(Number(used) > 80){
 					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typee');
 				}
 			}
 			
+			function selected(id, value, unit){
+				if(value && value.indexOf(unit) > -1) 
+					$('#select_'+id+'').val(unit);
+			}
+		}
+	
+		function ntrim(data){
+			data = data +'';
+			data = data.replace('m','');
+			data = data.replace('Gi','');
+			data = isNaN(data) ? 0 : data;
+			return data;
 		}
 	
 		$(document).ready(function(){
@@ -131,10 +154,10 @@
 				resourceQuota : {
 					spec :{
 						hard : {
-							"requests.cpu" : $('#input_cpu_requests').val() + ''
-							,"limits.cpu" : $('#input_cpu_limits').val() + ''
-							,"requests.memory" : $('#input_memory_requests').val() + ''
-							,"limits.memory" : $('#input_memory_limits').val() + ''
+							"requests.cpu" : $('#input_cpu_requests').val() + $('#select_cpu_requests option:selected').val()
+							,"limits.cpu" : $('#input_cpu_limits').val() + $('#select_cpu_limits option:selected').val()
+							,"requests.memory" : $('#input_memory_requests').val() + $('#select_memory_requests option:selected').val()
+							,"limits.memory" : $('#input_memory_limits').val() + $('#select_memory_limits option:selected').val()
 							,"pods" : $('#input_pods').val() ? $('#input_pods').val() + '': "0" 
 							,"services" : $('#input_services').val() ? $('#input_services').val() + '': "0"
 							,"secrets" : $('#input_secrets').val() ? $('#input_secrets').val()+ '' : "0"
@@ -148,12 +171,12 @@
 					spec : {
 						limits : [{
 							defaultRequest : {
-								cpu : $('#input_pod_cpu_requests').val()
-								,memory :  $('#input_pod_memory_requests').val()
+								cpu : $('#input_pod_cpu_requests').val()  + $('#select_pod_cpu_requests option:selected').val()
+								,memory :  $('#input_pod_memory_requests').val() + $('#select_pod_memory_requests option:selected').val()
 							},
 							default : {
-								cpu :  $('#input_pod_cpu_limits').val()
-								,memory : $('#input_pod_memory_limits').val()
+								cpu :  $('#input_pod_cpu_limits').val() + $('#select_pod_cpu_limits option:selected').val()
+								,memory : $('#input_pod_memory_limits').val() + $('#select_pod_memory_limits option:selected').val()
 							},
 							type: "Container"
 						}]
@@ -485,6 +508,15 @@
 			});
 		}
 		
+		function goMain(){
+			var namespace = /*[[${namespace}]]*/;
+			location.href='/?namespace='+namespace;
+		}
+		
+		function goUser(){
+			location.href='/management/users';
+		}
+		
 		
 	 /*]]>*/
     </script>
@@ -513,8 +545,8 @@
             			</dd>
             		</dl>
             		<div class="btn-wrap__right">
-	                    <button class="Button btn-ico__typeb btn-godash">Dashoboard 보기</button>
-	                    <button class="Button btn-ico__typeb btn-config">삭제</button>
+	                    <button class="Button btn-ico__typeb btn-godash" onclick='goMain()'>Dashoboard 보기</button>
+	                    <button class="Button btn-ico__typeb btn-config" onclick='goUser()'></button>
 	                </div>
 				</div>
 				<!-- tab wrap -->
@@ -565,9 +597,9 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="25" id="div_cpu_requests"></div>
+																	<div class="Progressbar name-typea" data-default="0" id="div_cpu_requests"></div>
 																</div>
-																<span class="name-pro__num" id="span_cpu_requests">25%</span>
+																<span class="name-pro__num" id="span_cpu_requests"></span>
 															</div>
 														</div>
 													</td>
@@ -588,9 +620,9 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="50" id="div_cpu_limits"></div>
+																	<div class="Progressbar name-typea" data-default="0" id="div_cpu_limits"></div>
 																</div>
-																<span class="name-pro__num" id="span_cpu_limits">50%</span>
+																<span class="name-pro__num" id="span_cpu_limits"></span>
 															</div>
 														</div>
 													</td>
@@ -611,9 +643,9 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="70" id="div_memory_requests"></div>
+																	<div class="Progressbar name-typea" data-default="0" id="div_memory_requests"></div>
 																</div>
-																<span class="name-pro__num" id="span_memory_requests">70%</span>
+																<span class="name-pro__num" id="span_memory_requests"></span>
 															</div>
 														</div>
 													</td>
@@ -634,9 +666,9 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="20" id="div_memory_limits"></div>
+																	<div class="Progressbar name-typea" data-default="0" id="div_memory_limits"></div>
 																</div>
-																<span class="name-pro__num" id="span_memory_limits">20%</span>
+																<span class="name-pro__num" id="span_memory_limits"></span>
 															</div>
 														</div>
 													</td>
@@ -650,9 +682,9 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="70" id="div_pods"></div>
+																	<div class="Progressbar name-typea" data-default="0" id="div_pods"></div>
 																</div>
-																<span class="name-pro__num" id="span_pods">70%</span>
+																<span class="name-pro__num" id="span_pods"></span>
 															</div>
 														</div>
 													</td>
@@ -666,9 +698,9 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="100" id="div_services"></div>
+																	<div class="Progressbar name-typea" data-default="0" id="div_services"></div>
 																</div>
-																<span class="name-pro__num" id="span_services">100%</span>
+																<span class="name-pro__num" id="span_services"></span>
 															</div>
 														</div>
 													</td>
@@ -682,9 +714,9 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="100" id="div_secrets"></div>
+																	<div class="Progressbar name-typea" data-default="0" id="div_secrets"></div>
 																</div>
-																<span class="name-pro__num" id="span_secrets">100%</span>
+																<span class="name-pro__num" id="span_secrets"></span>
 															</div>
 														</div>
 													</td>
@@ -698,9 +730,9 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="10" id="div_config_maps"></div>
+																	<div class="Progressbar name-typea" data-default="0" id="div_config_maps"></div>
 																</div>
-																<span class="name-pro__num" id="span_config_maps">10%</span>
+																<span class="name-pro__num" id="span_config_maps"></span>
 															</div>
 														</div>
 													</td>
@@ -714,9 +746,9 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="66" id="div_persistent_volumne"></div>
+																	<div class="Progressbar name-typea" data-default="0" id="div_persistent_volumne"></div>
 																</div>
-																<span class="name-pro__num" id="span_persistent_volumne">66%</span>
+																<span class="name-pro__num" id="span_persistent_volumne"></span>
 															</div>
 														</div>
 													</td>
@@ -730,9 +762,9 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="80" id="div_load_balancers"></div>
+																	<div class="Progressbar name-typea" data-default="0" id="div_load_balancers"></div>
 																</div>
-																<span class="name-pro__num" id="span_load_balancers">80%</span>
+																<span class="name-pro__num" id="span_load_balancers"></span>
 															</div>
 														</div>
 													</td>
@@ -769,9 +801,9 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="40" id="div_pod_cpu_requests"></div>
+																	<div class="Progressbar name-typea" data-default="0" id="div_pod_cpu_requests"></div>
 																</div>
-																<span class="name-pro__num" id="span_pod_cpu_requests">40%</span>
+																<span class="name-pro__num" id="span_pod_cpu_requests"></span>
 															</div>
 														</div>
 													</td>
@@ -792,9 +824,9 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typeb" data-default="50" id="div_pod_cpu_limits"></div>
+																	<div class="Progressbar name-typeb" data-default="0" id="div_pod_cpu_limits"></div>
 																</div>
-																<span class="name-pro__num" id="span_pod_cpu_limits">50%</span>
+																<span class="name-pro__num" id="span_pod_cpu_limits"></span>
 															</div>
 														</div>
 													</td>
@@ -815,9 +847,9 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typec" data-default="50" id="div_pod_memory_requests"></div>
+																	<div class="Progressbar name-typec" data-default="0" id="div_pod_memory_requests"></div>
 																</div>
-																<span class="name-pro__num" id="span_pod_memory_requests">50%</span>
+																<span class="name-pro__num" id="span_pod_memory_requests"></span>
 															</div>
 														</div>
 													</td>
@@ -838,9 +870,9 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typed" data-default="25" id="div_pod_memory_limits"></div>
+																	<div class="Progressbar name-typed" data-default="0" id="div_pod_memory_limits"></div>
 																</div>
-																<span class="name-pro__num" id="span_pod_memory_limits">25%</span>
+																<span class="name-pro__num" id="span_pod_memory_limits"></span>
 															</div>
 														</div>
 													</td>
