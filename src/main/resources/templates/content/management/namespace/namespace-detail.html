@@ -11,27 +11,61 @@
 		function initNamespace(namespace){
 			var url = "/management/namespace/getNamespaceResource";
 			ajaxCall(url, {"namespace" : namespace}).done(function(data){
-				if(data.resourceQuota){
-					$('#input_cpu_requests').val(data.resourceQuota.status.hard["requests.cpu"]);
-					$('#input_cpu_limits').val(data.resourceQuota.status.hard["limits.memory"]);
-					$('#input_memory_requests').val(data.resourceQuota.status.hard["requests.cpu"]);
-					$('#input_memory_limits').val(data.resourceQuota.status.hard["limits.memory"]);
-					$('#input_pods').val(data.resourceQuota.status.hard.pods);
-					$('#input_services').val(data.resourceQuota.status.hard.services);
-					$('#input_secrets').val(data.resourceQuota.status.hard.secrets);
-					$('#input_config_maps').val(data.resourceQuota.status.hard.configmaps);
-					$('#input_pesistent_volumne').val(data.resourceQuota.status.hard.persistentvolumeclaims);
-					$('#input_service_load').val(data.resourceQuota.status.hard["services.loadbalancers"]);
+				var quota = data.resourceQuota;
+				var limit = data.limitRange;
+				if(quota){
+					$('#input_cpu_requests').val(quota.status.hard["requests.cpu"]);
+					$('#input_cpu_limits').val(quota.status.hard["limits.memory"]);
+					$('#input_memory_requests').val(quota.status.hard["requests.cpu"]);
+					$('#input_memory_limits').val(quota.status.hard["limits.memory"]);
+					$('#input_pods').val(quota.status.hard.pods);
+					$('#input_services').val(quota.status.hard.services);
+					$('#input_secrets').val(quota.status.hard.secrets);
+					$('#input_config_maps').val(quota.status.hard.configmaps);
+					$('#input_pesistent_volumne').val(quota.status.hard.persistentvolumeclaims);
+					$('#input_load_balancers').val(quota.status.hard["services.loadbalancers"]);
 				}
-				if(data.limitRange){
-					$('#input_pod_cpu_requests').val(	data.limitRange.spec.limits[0].defaultRequest.cpu.number);
-					$('#input_pod_cpu_limits').val(		data.limitRange.spec.limits[0].default.cpu.number);
-					$('#input_pod_memory_requests').val(data.limitRange.spec.limits[0].defaultRequest.memory.number);
-					$('#input_pod_memory_limits').val(	data.limitRange.spec.limits[0].default.memory.number);
+				if(limit){
+					$('#input_pod_cpu_requests').val(	limit.spec.limits[0].defaultRequest.cpu.number);
+					$('#input_pod_cpu_limits').val(		limit.spec.limits[0].default.cpu.number);
+					$('#input_pod_memory_requests').val(limit.spec.limits[0].defaultRequest.memory.number);
+					$('#input_pod_memory_limits').val(	limit.spec.limits[0].default.memory.number);
 				}
 				if(data.namespace){
 					$('#input_namespace').val(data.namespace)
 				}
+				var maxCnt = 1000;
+				
+				var cpuRq = Number(quota.status.used["requests.cpu"]) / Number(quota.status.hard["requests.cpu"]) *100;
+				var cpuLm = Number(quota.status.used["limits.cpu"]) / Number(quota.status.hard["limits.cpu"]) *100;
+				var memRm = Number(quota.status.used["requests.memory"]) / Number(quota.status.hard["requests.memory"]) *100;
+				var memLm = Number(quota.status.used["limits.memory"]) / Number(quota.status.hard["limits.memory"]) *100;
+				var pods =  Number(quota.status.hard.pods) / maxCnt *100;
+				var services =  Number(quota.status.hard.services) / maxCnt *100;
+				var secrets =  Number(quota.status.hard.secrets) / maxCnt *100;
+				var configMaps =  Number(quota.status.hard.secrets) / maxCnt *100;
+				var persistentVolumne =  Number(quota.status.hard.persistentvolumeclaims) / maxCnt *100;
+				var loadbalancers =  Number(quota.status.hard["services.loadbalancers"]) / maxCnt *100;
+				var cpuRqPod = Number(limit.spec.limits[0].defaultRequest.cpu.number) / Number(limit.spec.limits[0].default.memory.number) *100;
+				//var cpuLmPod = Number(quota.status.used["limits.cpu"]) / Number(quota.status.hard["limits.cpu"]) *100;
+				var memRmPod = Number(limit.spec.limits[0].defaultRequest.memory.number) / Number(limit.spec.limits[0].default.memory.number) *100;
+				//var memLmPod = Number(quota.status.used["limits.memory"]) / Number(quota.status.hard["limits.memory"]) *100;
+				
+				setGraph('cpu_requests', cpuRq);
+				setGraph('cpu_limits', cpuLm);
+				setGraph('memory_requests', memRm);
+				setGraph('memory_limits', memLm);
+				setGraph('pods', pods);
+				setGraph('services', services);
+				setGraph('secrets', secrets);
+				setGraph('config_maps', configMaps);
+				setGraph('persistent_volumne', persistentVolumne);
+				setGraph('load_balancers', loadbalancers);
+				setGraphPod('cpu_requests', cpuRqPod);
+				setGraphPod('cpu_limits', 0);
+				setGraphPod('memory_requests', memRmPod);
+				setGraphPod('memory_limits', 0);
+				
 			});
 			url = "/management/namespace/labels";
 			ajaxCall(url, {"namespace" : namespace}).done(function(data){
@@ -48,6 +82,21 @@
 					return html;
 				}
 			});
+			
+			function setGraph(obj_id, used){
+				$('#div_' +obj_id).find('div').css('width', used + 'px');
+				$('#span_'+ obj_id).text(used + '%');
+				if(used > 80){
+					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typee');
+				}
+			}
+			function setGraphPod(obj_id, used){
+				$('#div_pod_' +obj_id).find('div').css('width', used + 'px');
+				$('#span_pod_'+ obj_id).text(used + '%');
+				if(used > 80){
+					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typee');
+				}
+			}
 			
 		}
 	
@@ -90,8 +139,8 @@
 							,"services" : $('#input_services').val() ? $('#input_services').val() + '': "0"
 							,"secrets" : $('#input_secrets').val() ? $('#input_secrets').val()+ '' : "0"
 							,"configmaps" : $('#input_config_maps').val() ? $('#input_config_maps').val()+ '' : "0"
-							,"persistentvolumeclaims" : $('#input_persistent_volume').val() ? $('#input_persistent_volume').val()+ '' : "0"
-							,"services.loadbalancers" : $('#input_persistent_service_load').val() ? $('#input_persistent_service_load').val()+ '' : "0"
+							,"persistentvolumeclaims" : $('#input_persistent_volumne').val() ? $('#input_persistent_volumne').val()+ '' : "0"
+							,"services.loadbalancers" : $('#input_load_balancers').val() ? $('#input_load_balancers').val()+ '' : "0"
 						}
 					}
 				},
@@ -431,7 +480,6 @@
 		
 		function delLabel(label){
 			var namespace = /*[[${namespace}]]*/;
-			var label = $('#input_label').val();
 			ajaxCall('/management/namespace/delLabel', {namespace : namespace, label : label}).done(function(data){
 				location.reload();
 			});
@@ -508,8 +556,8 @@
 															<div class="left"><input class="Textinput" id="input_cpu_requests"/></div>
 															<div class="left">
 																<div class="Divselect">
-																    <select>
-																        <option value="k">CPU(core)</option>
+																    <select id="select_cpu_requests">
+																        <option value="">CPU(core)</option>
 												        				<option value="m">m(core)</option>
 																    </select>
 																    <span></span>
@@ -517,7 +565,7 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typed" data-default="25" id="div_cpu_requests"></div>
+																	<div class="Progressbar name-typea" data-default="25" id="div_cpu_requests"></div>
 																</div>
 																<span class="name-pro__num" id="span_cpu_requests">25%</span>
 															</div>
@@ -531,8 +579,8 @@
 															<div class="left">
 																<input class="Textinput" id="input_cpu_limits"/>
 																<div class="Divselect">
-																    <select>
-																        <option value="k">CPU(core)</option>
+																    <select id="select_cpu_limits">
+																        <option value="">CPU(core)</option>
 												        				<option value="m">m(core)</option>
 																    </select>
 																    <span></span>
@@ -540,7 +588,7 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typeb" data-default="50" id="div_cpu_limits"></div>
+																	<div class="Progressbar name-typea" data-default="50" id="div_cpu_limits"></div>
 																</div>
 																<span class="name-pro__num" id="span_cpu_limits">50%</span>
 															</div>
@@ -554,9 +602,9 @@
 															<div class="left">
 																<input class="Textinput" id="input_memory_requests"/>
 																<div class="Divselect">
-																    <select>
-																        <option value="k">CPU(core)</option>
-												        				<option value="m">m(core)</option>
+																    <select id="select_memory_requests">
+																        <option value="Gi">Gi</option>
+												        				<option value="">Mi</option>
 																    </select>
 																    <span></span>
 																</div>
@@ -577,16 +625,16 @@
 															<div class="left">
 																<input class="Textinput" id="input_memory_limits"/>
 																<div class="Divselect">
-																    <select>
-																        <option value="k">CPU(core)</option>
-												        				<option value="m">m(core)</option>
+																    <select id="select_memory_limits">
+																        <option value="Gi">Gi</option>
+												        				<option value="">Mi</option>
 																    </select>
 																    <span></span>
 																</div>
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typee" data-default="20" id="div_memory_limits"></div>
+																	<div class="Progressbar name-typea" data-default="20" id="div_memory_limits"></div>
 																</div>
 																<span class="name-pro__num" id="span_memory_limits">20%</span>
 															</div>
@@ -650,7 +698,7 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typec" data-default="10" id="div_config_maps"></div>
+																	<div class="Progressbar name-typea" data-default="10" id="div_config_maps"></div>
 																</div>
 																<span class="name-pro__num" id="span_config_maps">10%</span>
 															</div>
@@ -666,9 +714,9 @@
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typed" data-default="66" id="div_persistent_volume"></div>
+																	<div class="Progressbar name-typea" data-default="66" id="div_persistent_volumne"></div>
 																</div>
-																<span class="name-pro__num" id="span_persistent_volume">66%</span>
+																<span class="name-pro__num" id="span_persistent_volumne">66%</span>
 															</div>
 														</div>
 													</td>
@@ -678,13 +726,13 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput"  id="input_service_load"/><span class="num-txt">개</span>
+																<input class="Textinput"  id="input_load_balancers"/><span class="num-txt">개</span>
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typee" data-default="80" id="div_services_load"></div>
+																	<div class="Progressbar name-typea" data-default="80" id="div_load_balancers"></div>
 																</div>
-																<span class="name-pro__num" id="span_services_load">80%</span>
+																<span class="name-pro__num" id="span_load_balancers">80%</span>
 															</div>
 														</div>
 													</td>
@@ -712,8 +760,8 @@
 															<div class="left">
 																<input class="Textinput" id="input_pod_cpu_requests"/>
 																<div class="Divselect">
-																    <select>
-																        <option value="k">CPU(core)</option>
+																    <select id="select_pod_cpu_requests">
+																        <option value="">CPU(core)</option>
 												        				<option value="m">m(core)</option>
 																    </select>
 																    <span></span>
@@ -734,9 +782,9 @@
 														<div class="tbl-group__wrap">
 															<div class="left">
 																<input class="Textinput" id="input_pod_cpu_limits"/>
-																<div class="Divselect">
-																    <select>
-																        <option value="k">CPU(core)</option>
+																<div class="Divselect" >
+																    <select id="select_pod_cpu_limits">
+																        <option value="">CPU(core)</option>
 												        				<option value="m">m(core)</option>
 																    </select>
 																    <span></span>
@@ -758,9 +806,9 @@
 															<div class="left">
 																<input class="Textinput" id="input_pod_memory_requests"/>
 																<div class="Divselect">
-																    <select>
-																        <option value="k">CPU(core)</option>
-												        				<option value="m">m(core)</option>
+																    <select id="select_pod_memory_requests">
+																        <option value="Gi">Gi</option>
+												        				<option value="">Mi</option>
 																    </select>
 																    <span></span>
 																</div>
@@ -781,9 +829,9 @@
 															<div class="left">
 																<input class="Textinput" id="input_pod_memory_limits"/>
 																<div class="Divselect">
-																    <select>
-																        <option value="k">CPU(core)</option>
-												        				<option value="m">m(core)</option>
+																   <select id="select_pod_memory_limits">
+																        <option value="Gi">Gi</option>
+												        				<option value="">Mi</option>
 																    </select>
 																    <span></span>
 																</div>
@@ -805,23 +853,25 @@
 						</div>
 						<!-- button wrap-->
 						<div class="btn-wrap">
-							<div class="btn-left"><button class="Button btn">취소</button></div>
 							<div class="btn-right"><button class="Button btn bg-red"  onclick="addNamespace();">저장</button></div>
 						</div>
 					</div>
 				    <!-- 멤버관리 -->
-				    <div id="tab2">
+				    <div id="div_member" style="display:none">
 				    	<p class="intab-txt">Namespace 멤버 권한 정보를 관리합니다.</p>
 			    		<!-- search-wrap-->
 						<div class="search-wrap">
-							<input class="Textinput srcinput" placeholder="검색어를 입력하세요."/><button class="Button btn-search">검색</button>
+							<input class="Textinput srcinput" id="searchWord1" placeholder="검색어를 입력하세요."/><button class="Button btn-search" onclick="search1()">검색</button>
 						</div>
 						<h3 class="form-title">멤버</h3>
-		            	<div id="gr3"></div>
+		            	<div id="grid_member"></div>
 						<div class="btn-wrap">
-							<div class="btn-left"><button class="Button btn">멤버추가</button></div>
-							<div class="btn-right"><button class="Button btn bg-red">저장</button></div>
+							<div class="btn-left"><button class="Button btn" onclick="showUser()">멤버추가</button></div>
 						</div>
+						<!-- <div class="search-wrap">
+							<input class="Textinput srcinput" id="searchWord2" placeholder="검색어를 입력하세요."/><button class="Button btn-search">검색</button>
+						</div> -->
+						<div id="grid_user"></div>
 				    </div>
 				</div>
 			</div>
