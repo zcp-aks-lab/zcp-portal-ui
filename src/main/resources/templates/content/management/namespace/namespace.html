@@ -87,8 +87,9 @@
 				,sortOrder : /*[[${param.sortOrder}]]*/
 			};
 		var searchText = '';
+		var namespace = param.namespace ? param.namespace[0] : ''; 
 		var b_order = !g_order ?  'true' : 'false';
-		searchText += 'namespace=' + param.namespace[0] + '&';
+		searchText += 'namespace=' + namespace + '&';
 		searchText += 'label=' +( !param.label ? '' : param.label) + '&'
 		searchText +='sortItem=' + item + '&';
 		searchText +='sortOrder=' + b_order ;

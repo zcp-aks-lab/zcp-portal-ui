@@ -13,6 +13,7 @@
 			ajaxCall(url, {"namespace" : namespace}).done(function(data){
 				var quota = data.resourceQuota;
 				var limit = data.limitRange;
+				var cpu_requeset, cpu_limit, memory_request, memory_limit;
 				if(quota){
 					$('#input_cpu_requests').val(ntrim(quota.status.hard["requests.cpu"]));
 					$('#input_cpu_limits').val(ntrim(quota.status.hard["limits.cpu"]));
@@ -30,10 +31,14 @@
 					selected('memory_limits', quota.status.hard["limits.memory"], 'Gi');
 				}
 				if(limit){
-					$('#input_pod_cpu_requests').val(	limit.spec.limits[0].defaultRequest.cpu.number);
-					$('#input_pod_cpu_limits').val(		limit.spec.limits[0].default.cpu.number);
-					$('#input_pod_memory_requests').val(limit.spec.limits[0].defaultRequest.memory.number);
-					$('#input_pod_memory_limits').val(	limit.spec.limits[0].default.memory.number);
+					cpu_requeset = limit.spec.limits[0].defaultRequest.cpu ? limit.spec.limits[0].defaultRequest.cpu.number : 0;
+					cpu_limit = limit.spec.limits[0].default.cpu ? limit.spec.limits[0].default.cpu.number : 0;
+					memory_request = limit.spec.limits[0].defaultRequest.memory ? limit.spec.limits[0].defaultRequest.memory.number : 0;
+					memory_limit = limit.spec.limits[0].default.memory ? limit.spec.limits[0].default.memory.number : 0;
+					$('#input_pod_cpu_requests').val(	cpu_requeset);
+					$('#input_pod_cpu_limits').val(		cpu_limit);
+					$('#input_pod_memory_requests').val( memory_request);
+					$('#input_pod_memory_limits').val(	memory_limit);
 					selected('pod_cpu_requests', ntrim(quota.status.hard["requests.cpu"]), 'm');
 					selected('pod_cpu_limits', ntrim(quota.status.hard["limits.cpu"]), 'm');
 					selected('pod_memory_requests', ntrim(quota.status.hard["requests.memory"]), 'Gi');
@@ -54,9 +59,9 @@
 				var configMaps =  Number(quota.status.hard.secrets) / maxCnt *100;
 				var persistentVolumne =  Number(quota.status.hard.persistentvolumeclaims) / maxCnt *100;
 				var loadbalancers =  Number(quota.status.hard["services.loadbalancers"]) / maxCnt *100;
-				var cpuRqPod = Number(limit.spec.limits[0].defaultRequest.cpu.number) / Number(limit.spec.limits[0].default.memory.number) *100;
+				var cpuRqPod = Number(limit.spec.limits[0].defaultRequest.cpu.number) / Number(limit.spec.limits[0].default.cpu.number) *100;
 				//var cpuLmPod = Number(quota.status.used["limits.cpu"]) / Number(quota.status.hard["limits.cpu"]) *100;
-				var memRmPod = Number(limit.spec.limits[0].defaultRequest.memory.number) / Number(limit.spec.limits[0].default.memory.number) *100;
+				var memRmPod = Number(memory_request) / Number(memory_limit) *100;
 				//var memLmPod = Number(quota.status.used["limits.memory"]) / Number(quota.status.hard["limits.memory"]) *100;
 				
 				setGraph('cpu_requests', cpuRq);
@@ -112,6 +117,9 @@
 			function selected(id, value, unit){
 				if(value && value.indexOf(unit) > -1) 
 					$('#select_'+id+'').val(unit);
+			}
+			function _v(data, postVal){
+				return  data ? eval(data + val) : 0
 			}
 		}
 	
@@ -188,7 +196,7 @@
 			
 			ajaxCall(url, data).done(function(data){
 				alert('정상처리되었습니다.');
-				location.href='/management/namespaces';
+				//location.href='/management/namespaces';
 			});
 		}
 		
