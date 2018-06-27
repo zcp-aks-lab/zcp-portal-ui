@@ -39,17 +39,12 @@
                         $a.request('/my/updatedPassword', {
                             method: 'post',
                             data: $('#form').serializeObject(), 
-                            success : function(res) {
-                                if (res.resultCd !== '200') {
-                                	if (res.resultMsg) alert(res.resultMsg);
-                                    return false;
-                                }
-                                
+                            success: function(res) {
                                 alert('저장되었습니다.');
                                 location.reload();
                             },
-                            error : function(errObject) {
-                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                            error: function(errObject) {
+                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
                             }
                         })
                     },

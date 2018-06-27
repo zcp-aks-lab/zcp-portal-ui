@@ -13,6 +13,7 @@ import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
+import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.portal.my.vo.MyUserVo;
 
@@ -33,7 +34,7 @@ public class MyService {
         
         ZcpUserResVo zcpUserResVo = iamApiService.getUser(userId);
         if (!zcpUserResVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(zcpUserResVo.getMsg());
+            throw new ZcpPortalException(zcpUserResVo.getMsg());
         }
         
         return zcpUserResVo.getData();
@@ -50,7 +51,7 @@ public class MyService {
         
         ApiResponseVo apiResponseVo = iamApiService.updateUser(userId, reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(apiResponseVo.getMsg());
+            throw new ZcpPortalException(apiResponseVo);
         }
     }
     
@@ -63,7 +64,7 @@ public class MyService {
         
         ApiResponseVo apiResponseVo = iamApiService.updatePassword(userId, reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(apiResponseVo.getMsg());
+            throw new ZcpPortalException(apiResponseVo);
         }
     }
     
@@ -74,7 +75,7 @@ public class MyService {
         
         ApiResponseVo apiResponseVo = iamApiService.kubeconfig(userId, namespace);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(apiResponseVo.getMsg());
+            throw new ZcpPortalException(apiResponseVo);
         }
         
         resultMap.putAll(apiResponseVo.getData());

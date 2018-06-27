@@ -1,8 +1,6 @@
 package com.skcc.cloudz.zcp.portal.management.user.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
-import com.skcc.cloudz.zcp.common.constants.ApiResult;
 import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
 import com.skcc.cloudz.zcp.portal.management.user.vo.UserVo;
-import com.skcc.cloudz.zcp.portal.my.controller.MyController;
 
 @Controller
 @RequestMapping(value = "/management")
@@ -59,169 +55,56 @@ public class UserController {
     
     @PostMapping(value = "/user/getUsers", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Object> getUsers(@RequestBody UserVo userVo) throws Exception {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        
-        try {
-            resultMap.put("resultCd", ApiResult.SUCCESS.getCode());    
-            resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
-            resultMap.put("resultData", userService.getUsers(userVo.getKeyword()));
-        } catch (Exception e) {
-            e.printStackTrace();
-            
-            resultMap.put("resultCd", ApiResult.FAIL.getCode());
-            resultMap.put("resultMsg", e.getMessage());
-        }
-        
-        return resultMap;
+    public List<ZcpUserVo> getUsers(@RequestBody UserVo userVo) throws Exception {
+        return userService.getUsers(userVo.getKeyword());
     }
     
     @PostMapping(value = "/user/createUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public Map<String, Object> createUser(@RequestBody UserVo userVo) throws Exception {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        
-        try {
-            userService.setUser(userVo);
-            
-            resultMap.put("resultCd", ApiResult.SUCCESS.getCode());    
-            resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-            
-            resultMap.put("resultCd", ApiResult.FAIL.getCode());
-            resultMap.put("resultMsg", e.getMessage());
-        }
-        
-        return resultMap;
+    public void createUser(@RequestBody UserVo userVo) throws Exception {
+        userService.setUser(userVo);
     }
     
     @PostMapping(value = "/user/updateUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public Map<String, Object> updateUser(@RequestBody UserVo userVo) throws Exception {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        
-        try {
-            userService.updateUser(userVo);
-            
-            resultMap.put("resultCd", ApiResult.SUCCESS.getCode());    
-            resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-            
-            resultMap.put("resultCd", ApiResult.FAIL.getCode());
-            resultMap.put("resultMsg", e.getMessage());
-        }
-        
-        return resultMap;
+    public void updateUser(@RequestBody UserVo userVo) throws Exception {
+        userService.updateUser(userVo);
     }
     
     @PostMapping(value = "/user/deleteUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public Map<String, Object> deleteUser(@RequestBody UserVo userVo) throws Exception {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        
-        try {
-            userService.deleteUser(userVo.getId());
-            
-            resultMap.put("resultCd", ApiResult.SUCCESS.getCode());    
-            resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-            
-            resultMap.put("resultCd", ApiResult.FAIL.getCode());
-            resultMap.put("resultMsg", e.getMessage());
-        }
-        
-        return resultMap;
+    public void deleteUser(@RequestBody UserVo userVo) throws Exception {
+        userService.deleteUser(userVo.getId());
     }
     
     @PostMapping(value = "/user/resetPassword", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public Map<String, Object> resetPassword(@RequestBody UserVo userVo) throws Exception {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        
-        try {
-            userService.resetPassword(userVo);
-            
-            resultMap.put("resultCd", ApiResult.SUCCESS.getCode());    
-            resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-            
-            resultMap.put("resultCd", ApiResult.FAIL.getCode());
-            resultMap.put("resultMsg", e.getMessage());
-        }
-        
-        return resultMap;
+    public void resetPassword(@RequestBody UserVo userVo) throws Exception {
+        userService.resetPassword(userVo);
     }
     
     @PostMapping(value = "/user/resetCredentials", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public Map<String, Object> resetCredentials(@RequestBody UserVo userVo) throws Exception {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        
-        try {
-            userService.resetCredentials(userVo);
-            
-            resultMap.put("resultCd", ApiResult.SUCCESS.getCode());    
-            resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-            
-            resultMap.put("resultCd", ApiResult.FAIL.getCode());
-            resultMap.put("resultMsg", e.getMessage());
-        }
-        
-        return resultMap;
+    public void resetCredentials(@RequestBody UserVo userVo) throws Exception {
+        userService.resetCredentials(userVo);
     }
     
     @PostMapping(value = "/user/updateClusterRoleBinding", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public Map<String, Object> updateClusterRoleBinding(@RequestBody UserVo userVo) throws Exception {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        
-        try {
-            userService.updateClusterRoleBinding(userVo);
-            
-            resultMap.put("resultCd", ApiResult.SUCCESS.getCode());    
-            resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-            
-            resultMap.put("resultCd", ApiResult.FAIL.getCode());
-            resultMap.put("resultMsg", e.getMessage());
-        }
-        
-        return resultMap;
+    public void updateClusterRoleBinding(@RequestBody UserVo userVo) throws Exception {
+        userService.updateClusterRoleBinding(userVo);
     }
     
     @PostMapping(value = "/user/roleBinding/{mode}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public Map<String, Object> roleBinding(@PathVariable("mode") String mode, @RequestBody UserVo userVo) throws Exception {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        
-        try {
-            if (mode.equals("create")) {
-                userService.createRoleBinding(userVo);
-            } else if (mode.equals("update")) {
-                userService.updateRoleBinding(userVo);
-            } else if (mode.equals("delete")) {
-                userService.deleteRoleBinding(userVo);
-            } else {
-                throw new Exception("Invalid action mode!!!");
-            }
-            
-            resultMap.put("resultCd", ApiResult.SUCCESS.getCode());    
-            resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-            
-            resultMap.put("resultCd", ApiResult.FAIL.getCode());
-            resultMap.put("resultMsg", e.getMessage());
-        }
-        
-        return resultMap;
+    public void roleBinding(@PathVariable("mode") String mode, @RequestBody UserVo userVo) throws Exception {
+        if (mode.equals("create")) {
+            userService.createRoleBinding(userVo);
+        } else if (mode.equals("update")) {
+            userService.updateRoleBinding(userVo);
+        } else if (mode.equals("delete")) {
+            userService.deleteRoleBinding(userVo);
+        } 
     }
 
 }

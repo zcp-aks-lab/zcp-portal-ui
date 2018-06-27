@@ -142,16 +142,11 @@
                     	$a.request('/management/user/getUsers', {
                             method: 'post',
                             data: data, 
-                            success : function(res) {
-                                if (res.resultCd !== '200') {
-                                    if (res.resultMsg) alert(res.resultMsg);
-                                    return false;
-                                }
-                                
-                                $('#user-grid').alopexGrid('dataSet', res.resultData);
+                            success: function(res) {
+                                $('#user-grid').alopexGrid('dataSet', res);
                             },
-                            error : function(errObject) {
-                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                            error: function(errObject) {
+                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
                             }
                         })
                     },
@@ -166,16 +161,11 @@
                             method: 'post',
                             data: data, 
                             success : function(res) {
-                                if (res.resultCd !== '200') {
-                                    if (res.resultMsg) alert(res.resultMsg);
-                                    return false;
-                                }
-                                
                                 alert('정상처리 되었습니다.');
                                 location.reload();
                             },
                             error : function(errObject) {
-                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
                             }
                         })
                     },

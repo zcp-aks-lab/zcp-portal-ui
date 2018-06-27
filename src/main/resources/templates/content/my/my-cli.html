@@ -26,17 +26,12 @@
                     	$a.request('/my/getZcpKubeConfig', {
                             method: 'get',
                             data: null, 
-                            success : function(res) {
-                                if (res.resultCd !== '200') {
-                                    if (res.resultMsg) alert(res.resultMsg);
-                                    return false;
-                                }
-                                
-                                if (!res.resultData) return false;
-                                $('#cliArea').val(json2yaml(res.resultData));
+                            success: function(res) {
+                                if (!res) return false;
+                                $('#cliArea').val(json2yaml(res));
                             },
-                            error : function(errObject) {
-                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                            error: function(errObject) {
+                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
                             }
                         })
                     }

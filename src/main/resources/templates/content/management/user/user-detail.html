@@ -74,16 +74,11 @@
                             method: 'post',
                             data: data, 
                             success : function(res) {
-                                if (res.resultCd !== '200') {
-                                    if (res.resultMsg) alert(res.resultMsg);
-                                    return false;
-                                }
-                                
                                 alert('저장되었습니다.');
                                 location.reload();
                             },
                             error : function(errObject) {
-                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
                             }
                         })
                     },
@@ -106,15 +101,10 @@
                             method: 'post',
                             data: data, 
                             success : function(res) {
-                                if (res.resultCd !== '200') {
-                                    if (res.resultMsg) alert(res.resultMsg);
-                                    return false;
-                                }
-                                
                                 alert('비밀번호가 재설정 되었습니다.');
                             },
                             error : function(errObject) {
-                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
                             }
                         })
                     },
@@ -143,15 +133,10 @@
                             method: 'post',
                             data: data, 
                             success : function(res) {
-                                if (res.resultCd !== '200') {
-                                    if (res.resultMsg) alert(res.resultMsg);
-                                    return false;
-                                }
-                                
                                 alert('Credentials 설정 메일이 발송 되었습니다.');
                             },
                             error : function(errObject) {
-                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
                             }
                         })
                     },
@@ -167,16 +152,11 @@
                             method: 'post',
                             data: data, 
                             success : function(res) {
-                                if (res.resultCd !== '200') {
-                                    if (res.resultMsg) alert(res.resultMsg);
-                                    return false;
-                                }
-                                
                                 alert('정상처리 되었습니다.');
                                 location.href = '/management/users';
                             },
                             error : function(errObject) {
-                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
                             }
                         })
                     },
@@ -193,16 +173,11 @@
                             method: 'post',
                             data: data, 
                             success : function(res) {
-                                if (res.resultCd !== '200') {
-                                    if (res.resultMsg) alert(res.resultMsg);
-                                    return false;
-                                }
-                                
                                 alert('클러스터 권한이 변경되었습니다.');
                                 location.reload();
                             },
                             error : function(errObject) {
-                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
                             }
                         })
                     },
@@ -236,11 +211,6 @@
                             method: 'post',
                             data: data, 
                             success : function(res) {
-                                if (res.resultCd !== '200') {
-                                    if (res.resultMsg) alert(res.resultMsg);
-                                    return false;
-                                }
-
                                 switch(mode) {
                                 case 'create':
                                 	alert('네임스페이스의 권한이 등록 되었습니다.');
@@ -260,7 +230,7 @@
                                 }
                             },
                             error : function(errObject) {
-                                alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
                             }
                         })
                     }

@@ -16,6 +16,7 @@ import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
+import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
 import com.skcc.cloudz.zcp.portal.management.user.vo.UserVo;
 
 @Service
@@ -29,7 +30,7 @@ public class UserService {
     public List<ZcpUserVo> getUsers(String keyword) throws Exception {
         ZcpUserListVo zcpUserListVo = iamApiService.getUsers(keyword);
         if (!zcpUserListVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(zcpUserListVo.getMsg());
+            throw new ZcpPortalException(zcpUserListVo.getMsg());
         }
         
         return zcpUserListVo.getData().getItems();
@@ -38,7 +39,7 @@ public class UserService {
     public ZcpUserVo getUser(String id) throws Exception {
         ZcpUserResVo zcpUserResVo = iamApiService.getUser(id);
         if (!zcpUserResVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(zcpUserResVo.getMsg());
+            throw new ZcpPortalException(zcpUserResVo.getMsg());
         }
         
         return zcpUserResVo.getData();
@@ -53,7 +54,7 @@ public class UserService {
         
         ApiResponseVo apiResponseVo = iamApiService.setUser(reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(apiResponseVo.getMsg());
+            throw new ZcpPortalException(apiResponseVo);
         }
     }
     
@@ -66,14 +67,14 @@ public class UserService {
         
         ApiResponseVo apiResponseVo = iamApiService.updateUser(userVo.getId(), reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(apiResponseVo.getMsg());
+            throw new ZcpPortalException(apiResponseVo);
         }
     }
     
     public void deleteUser(String id) throws Exception {
         ApiResponseVo apiResponseVo = iamApiService.deleteUser(id);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(apiResponseVo.getMsg());
+            throw new ZcpPortalException(apiResponseVo);
         }
     }
     
@@ -84,7 +85,7 @@ public class UserService {
         
         ApiResponseVo apiResponseVo = iamApiService.resetPassword(userVo.getId(), reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(apiResponseVo.getMsg());
+            throw new ZcpPortalException(apiResponseVo);
         }
     }
     
@@ -96,7 +97,7 @@ public class UserService {
         
         ApiResponseVo apiResponseVo = iamApiService.resetCredentials(userVo.getId(), reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(apiResponseVo.getMsg());
+            throw new ZcpPortalException(apiResponseVo);
         }
     }
     
@@ -106,7 +107,7 @@ public class UserService {
         
         ApiResponseVo apiResponseVo = iamApiService.getClusterRoles();
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(apiResponseVo.getMsg());
+            throw new ZcpPortalException(apiResponseVo);
         }
         
         Map<String, Object> data = apiResponseVo.getData();
@@ -125,7 +126,7 @@ public class UserService {
         
         ApiResponseVo apiResponseVo = iamApiService.updateClusterRoleBinding(userVo.getId(), reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(apiResponseVo.getMsg());
+            throw new ZcpPortalException(apiResponseVo);
         }
     }
     
@@ -134,7 +135,7 @@ public class UserService {
         
         ApiResponseVo apiResponseVo = iamApiService.getRoleBindings(id);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(apiResponseVo.getMsg());
+            throw new ZcpPortalException(apiResponseVo);
         }
         
         resultMap.putAll(apiResponseVo.getData());
@@ -148,7 +149,7 @@ public class UserService {
         
         ApiResponseVo apiResponseVo = iamApiService.getNamespaces();
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(apiResponseVo.getMsg());
+            throw new ZcpPortalException(apiResponseVo);
         }
         
         Map<String, Object> data = apiResponseVo.getData();
@@ -168,7 +169,7 @@ public class UserService {
         
         ApiResponseVo apiResponseVo = iamApiService.createRoleBinding(userVo.getNamespace(), reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(apiResponseVo.getMsg());
+            throw new ZcpPortalException(apiResponseVo);
         }
     }
     
@@ -179,7 +180,7 @@ public class UserService {
         
         ApiResponseVo apiResponseVo = iamApiService.updateRoleBinding(userVo.getNamespace(), reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(apiResponseVo.getMsg());
+            throw new ZcpPortalException(apiResponseVo);
         }
     }
     
@@ -190,7 +191,7 @@ public class UserService {
         
         ApiResponseVo apiResponseVo = iamApiService.deleteRoleBinding(userVo.getNamespace(), reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(apiResponseVo.getMsg());
+            throw new ZcpPortalException(apiResponseVo);
         }
     }
 
