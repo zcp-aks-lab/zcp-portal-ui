@@ -34,10 +34,10 @@
 					$('#input_pod_cpu_limits').val(		limit.spec.limits[0].default.cpu.number);
 					$('#input_pod_memory_requests').val(limit.spec.limits[0].defaultRequest.memory.number);
 					$('#input_pod_memory_limits').val(	limit.spec.limits[0].default.memory.number);
-					selected('pod_cpu_requests', quota.status.hard["requests.cpu"], 'm');
-					selected('pod_cpu_limits', quota.status.hard["limits.cpu"], 'm');
-					selected('pod_memory_requests', quota.status.hard["requests.memory"], 'Gi');
-					selected('pod_memory_limits', quota.status.hard["limits.memory"], 'Gi');
+					selected('pod_cpu_requests', ntrim(quota.status.hard["requests.cpu"]), 'm');
+					selected('pod_cpu_limits', ntrim(quota.status.hard["limits.cpu"]), 'm');
+					selected('pod_memory_requests', ntrim(quota.status.hard["requests.memory"]), 'Gi');
+					selected('pod_memory_limits', ntrim(quota.status.hard["limits.memory"]), 'Gi');
 				}
 				if(data.namespace){
 					$('#input_namespace').val(data.namespace)
