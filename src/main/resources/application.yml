@@ -93,7 +93,7 @@ props:
   iam:
     baseUrl: https://zcp-iam.cloudzcp.io:443
   alertmanager:
-    baseUrl: http://alertmanager-service:9093
+    baseUrl: https://alert.cloudzcp.io:443
 
 ---
 # stage
@@ -109,7 +109,7 @@ logging:
   path : data/logs
 
 props:
-  appName: zcp-portal-dev
+  appName: zcp-portal-stage
   keycloak:
     zcp:
       clientId: account
