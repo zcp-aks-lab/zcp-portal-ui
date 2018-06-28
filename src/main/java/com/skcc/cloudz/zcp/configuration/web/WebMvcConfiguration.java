@@ -22,7 +22,7 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(addOnServiceMetaDataInterceptor())
             .addPathPatterns(new String[] {"/*", "/**/*"})
-            .excludePathPatterns(new String[] {"/static/**", "/i18n/**", "/error/**"});
+            .excludePathPatterns(new String[] {"/static/**", "/error/**"});
     }
     
     @Override
