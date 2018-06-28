@@ -1235,6 +1235,7 @@ a.blank-link {
 }
 .Label + .btn-ico.label-del {
 	position: relative;
+	top: -1px;
 	right: 12px;
 	width: 21px;
 	height: 22px;
@@ -1242,10 +1243,12 @@ a.blank-link {
 	font-family: "NotoKrR";
 	line-height: 20px;
 	background: #666666 url("../images/ico-btn.png") no-repeat -350px -65px;
+	border: 1px solid #666666;
 	-webkit-border-radius: 0 3px 3px 0;
 	-moz-border-radius: 0 3px 3px 0;
 	-ms-border-radius: 0 3px 3px 0;
 	border-radius: 0 3px 3px 0;
+	vertical-align: middle;
 }
 .Label.add-label {
 	cursor: pointer;

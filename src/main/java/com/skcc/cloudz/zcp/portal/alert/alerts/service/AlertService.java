@@ -36,6 +36,7 @@ public class AlertService {
 		HttpEntity<AlertCountVo> entity = new HttpEntity<AlertCountVo>(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
+		System.out.println("# URL: "+baseUrl);
 		ResponseEntity<AlertCountVo> response = restTemplate.exchange(baseUrl + "/activeCount", HttpMethod.GET, entity,
 				AlertCountVo.class);
 

@@ -1,139 +1,221 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-default">
-    <head>
-        <title>알림</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        
-    </head>
-    <body>
-        <th:block layout:fragment="content">
-        	
-	<!-- main-contents -->
-	<div class="cp-container">
-		<!-- contents -->
-		<div class="contents-wrap">
-			<div class="locations-area">
-				<div class="back-list"><a href="#"><span>목록으로 돌아가기</span></a></div>
-			</div>
-			<div class="contents-box">
-				<!-- rule info area-->
-				<div class="top-area">
-                    <h2 class="title">Rules 추가</h2>
-                    <div class="tag-wrap">
-                    	<span class="tag">Alert 발생을 위한 신규 Rule을 생성합니다.</span>
-                    </div>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	layout:decorator="layout/template-default">
+<head>
+<title>알림</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript">
+	var zcpPortalApp = {
+		pageInit : function() {
+			'use strict';
+			this.data.init();
+			this.event.init();
+		},
+		data : {
+			init : function() {
+			},
+			createRule : function() {
+				if (!this.validation()) {
+					return false;
+				}
+
+				$a.request('/alert/addRule', {
+					method : 'post',
+					data : $('#form').serializeObject(),
+					success : function(res) {
+						if (res.resultCd !== '200') {
+							if (res.resultMsg)
+								alert(res.resultMsg);
+							return false;
+						}
+
+						alert('저장되었습니다.');
+						location.href = '/alert/ruleList';
+					},
+					error : function(errObject) {
+						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+					}
+				})
+			},
+			validation : function() {
+				var type = $('#type').validate();
+				var condition = $('#condition').validate();
+
+				if (!type || !condition) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		},
+		event : {
+			init : function() {
+				$('#btnCreate').on('click', function() {
+					zcpPortalApp.data.createRule();
+				});
+
+				$('#btnCancel').on('click', function() {
+					location.href = '/alert/rules';
+				});
+			}
+		}
+	}
+
+	$.alopex.page(function() {
+		this.init = function(id, param) {
+			zcpPortalApp.pageInit();
+		};
+	});
+</script>
+</head>
+<body>
+	<th:block layout:fragment="content">
+
+		<!-- main-contents -->
+		<div class="cp-container">
+			<!-- contents -->
+			<div class="contents-wrap">
+				<div class="locations-area">
+					<div class="back-list">
+						<a href="/alert/rules"><span>목록으로 돌아가기</span></a>
+					</div>
 				</div>
-				<!-- add rule table-->
-				<form>
-					<fieldset>
-						<table class="Table Form-type topline">
-							<colgroup>
-								<col style="width: 200px;"/>
-								<col/>
-							</colgroup>
-							<tbody>
-								<tr>
-									<th>Rule 종류<strong class="astertisk">*</strong></th>
-									<td>
-										<div class="Divselect" style="width: 300px;">
-										    <select>
-										        <option value="korea">Rule 종류 선택</option>
-										        <option value="usa">Rule 종류</option>
-										        <option value="japan">Rule 종류</option>
-										    </select>
-										    <span></span>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th>Namespace<strong class="astertisk">*</strong></th>
-									<td>
-										<div class="Divselect" data-disabled="true"  style="width: 300px;">
-										    <select>
-										        <option value="korea">Namespace 선택</option>
-										        <option value="usa">Namespace</option>
-										        <option value="japan">Namespace</option>
-										    </select>
-										    <span></span>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th>pod<strong class="astertisk">*</strong></th>
-									<td>
-										<div class="Divselect" data-disabled="true"  style="width: 300px;">
-										    <select>
-										        <option value="korea">pod 선택</option>
-										        <option value="usa">pod</option>
-										        <option value="japan">pod</option>
-										    </select>
-										    <span></span>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th>심각도<strong class="astertisk">*</strong></th>
-									<td>
-										<label class="ImageRadio">
-										    <input class="Radio" name="radio2" value="value1"/>Warning
+				<div class="contents-box">
+					<!-- rule info area-->
+					<div class="top-area">
+						<h2 class="title">Rules 추가</h2>
+						<div class="tag-wrap">
+							<span class="tag">Alert 발생을 위한 신규 Rule을 생성합니다.</span>
+						</div>
+					</div>
+					<!-- add rule table-->
+					<form>
+						<fieldset>
+							<table class="Table Form-type topline">
+								<colgroup>
+									<col style="width: 200px;" />
+									<col />
+								</colgroup>
+								<tbody>
+									<tr>
+										<th>Rule 종류<strong class="astertisk">*</strong></th>
+										<td>
+											<div class="Divselect" style="width: 300px;">
+												<select th:name="type" th:id="type"
+													data-validation-rule="{required:true}"
+													data-validation-message="{required:'Rule 종류를 선택해주세요.'}">
+													<option value="">Rule 종류 선택</option>
+													<option value="NodeDown">NodeDown</option>
+													<option value="NodeCPUUsage">NodeCPUUsage</option>
+													<option value="NodeLoadAverage5">NodeLoadAverage5</option>
+													<option value="NodeSwapUsage">NodeSwapUsage</option>
+													<option value="NodeMemoryUsage">NodeMemoryUsage</option>
+													<option value="NodeLowRootDisk">NodeLowRootDisk</option>
+													<option value="ApiserverDown">ApiserverDown</option>
+													<option value="APIServerLatencyHigh">APIServerLatencyHigh</option>
+													<option value="APIServerErrorsHigh">APIServerErrorsHigh</option>
+													<option value="K8SNodeNotReady">K8SNodeNotReady</option>
+													<option value="K8SKubeletDown">K8SKubeletDown</option>
+													<option value="ETCD_Down">ETCD_Down</option>
+													<option value="ETCD_NoLeader">ETCD_NoLeader</option>
+													<option value="ETCD_InsufficientMembers">ETCD_InsufficientMembers</option>
+													<option value="ETCD_HighNumberOfLeaderChanges">ETCD_HighNumberOfLeaderChanges</option>
+													<option value="PodFrequentlyRestarting">PodFrequentlyRestarting</option>
+													<option value="PrometheusConfigReloadFailed">PrometheusConfigReloadFailed</option>
+													<option value="PrometheusErrorSendingAlerts">PrometheusErrorSendingAlerts</option>
+													<option value="AlertmanagerFailedReload">AlertmanagerFailedReload</option>
+													<option value="ZCPMonitoringDown">ZCPMonitoringDown</option>
+												</select> <span></span>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>Namespace<strong class="astertisk">*</strong></th>
+										<td>
+											<div class="Divselect" data-disabled="true"
+												style="width: 300px;">
+												<select>
+													<option value="korea">Namespace 선택</option>
+													<option value="usa">Namespace</option>
+												</select> <span></span>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>pod<strong class="astertisk">*</strong></th>
+										<td>
+											<div class="Divselect" data-disabled="true"
+												style="width: 300px;">
+												<select>
+													<option value="korea">pod 선택</option>
+													<option value="usa">pod</option>
+												</select> <span></span>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>심각도<strong class="astertisk">*</strong></th>
+										<td><label class="ImageRadio"> <input
+												class="Radio" name="severity" id="" value="warning"
+												checked="checked" />Warning
+										</label> <label class="ImageRadio Margin-left-40"> <input
+												class="Radio" data-disabled="false" name="severity"
+												id="critical" value="value2" />Critical
 										</label>
-										<label class="ImageRadio Margin-left-40">
-										    <input class="Radio" data-disabled="true" name="radio2" value="value2"/>Critical
-										</label>
-										<p class="info-text">이미 등록된 심각도는 추가할 수 없습니다.</p>
-									</td>
-								</tr>
-								<tr>
-									<th>임계치<strong class="astertisk">*</strong></th>
-									<td>
-										<div class="Divselect">
-										    <select>
-										        <option value="korea">선택</option>
-										        <option value="usa">선택2</option>
-										        <option value="japan">선택3</option>
-										    </select>
-										    <span></span>
-										</div>
-										<div class="Divselect">
+											<p class="info-text">이미 등록된 심각도는 추가할 수 없습니다.</p></td>
+									</tr>
+									<tr>
+										<th>임계치<strong class="astertisk">*</strong></th>
+										<td>
+											<div class="Divselect">
+												<select th:name="condition" th:id="condition">
+													<option value="greaterthan">&gt;</option>
+													<option value="lessthan">&lt;</option>
+												</select> <span></span>
+											</div> <!-- <div class="Divselect">
 										    <select>
 										        <option value="korea">1</option>
 										        <option value="usa">2</option>
 										        <option value="japan">3</option>
 										    </select>
 										    <span></span>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th>채널<strong class="astertisk">*</strong></th>
-									<td>
-										<div class="Divselect" style="width: 300px;">
-										    <select>
-										        <option value="korea">Slack Admin</option>
-										        <option value="usa">Admin</option>
-										        <option value="japan">Slack</option>
-										    </select>
-										    <span></span>
-										</div>
-										<button class="Button btn">신규 채널</button>
-										<p class="Margin-top-5">Notification <span>3</span>개</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</fieldset>
-				</form>
-				<div class="btn-wrap">
-					<div class="btn-left"><button class="Button btn">취소</button></div>
-					<div class="btn-right"><button class="Button btn bg-red">확인</button></div>
+										</div> --> <input class="Textinput" th:name="value2"
+											th:id="value2" />
+										</td>
+									</tr>
+									<tr>
+										<th>채널<strong class="astertisk">*</strong></th>
+										<td>
+											<div class="Divselect" style="width: 300px;">
+												<select th:name="channel"
+											th:id="channel">
+													<option value="test">test-channel</option>
+												</select> <span></span>
+											</div>
+											<button class="Button btn">신규 채널</button> <!-- <p class="Margin-top-5">Notification <span>3</span>개</p> -->
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</fieldset>
+					</form>
+					<div class="btn-wrap">
+						<div class="btn-left">
+							<button class="Button btn" id="btnCancel">취소</button>
+						</div>
+						<div class="btn-right">
+							<button class="Button btn bg-red" id="btnCreate">확인</button>
+						</div>
+					</div>
 				</div>
 			</div>
+			<!-- //contents -->
 		</div>
-		<!-- //contents -->
-	</div>
-	<!-- //main-contents -->
-	
-        </th:block>
-    </body>
-</html>	
+		<!-- //main-contents -->
+
+	</th:block>
+</body>
+</html>
