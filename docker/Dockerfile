@@ -21,3 +21,4 @@ ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Dspring.profiles.
 #           -e RABBITMQ_USERNAME=kks \
 #           -e RABBITMQ_PASSWORD=kang7045 \
 #           kilsoo75/skb-account-service:0.9 
+

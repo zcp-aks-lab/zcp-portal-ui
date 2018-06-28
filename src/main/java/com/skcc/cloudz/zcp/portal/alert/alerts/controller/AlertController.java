@@ -35,7 +35,6 @@ public class AlertController {
 		model.addAttribute("activeCount", alertCountVo.getCount());
 
 		ApiServerVo apiServerVo = new ApiServerVo();
-
 		apiServerVo = alertService.getApiServer();
 		model.addAttribute("apiServer", apiServerVo.getStatus());
 

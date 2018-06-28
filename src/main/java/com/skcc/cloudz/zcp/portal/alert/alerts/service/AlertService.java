@@ -25,6 +25,7 @@ import com.skcc.cloudz.zcp.portal.alert.alerts.vo.NodeNotReadyVo;
 
 @Service
 public class AlertService {
+	
 	private static Logger logger = Logger.getLogger(AlertService.class);
 
 	@Value("${props.alertmanager.baseUrl}")

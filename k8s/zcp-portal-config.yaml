@@ -8,3 +8,5 @@ data:
   MARIADB_HOST: bk-mariadb-mariadb.bk-service
   MARIADB_USER: zcp-user
   REDIS_HOST: bk-redis-redis.bk-service
+
+  
