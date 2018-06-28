@@ -25,14 +25,14 @@ import com.skcc.cloudz.zcp.portal.alert.alerts.vo.NodeNotReadyVo;
 
 @Service
 public class AlertService {
-	
+
 	private static Logger logger = Logger.getLogger(AlertService.class);
 
 	@Value("${props.alertmanager.baseUrl}")
 	private String baseUrl;
 
 	public AlertCountVo getActiveCount() {
-		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/activeCount").toString();
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/activeCount").build().toString();
 		logger.info(url);
 
 		HttpHeaders headers = new HttpHeaders();
@@ -56,7 +56,7 @@ public class AlertService {
 	}
 
 	public ApiServerVo getApiServer() {
-		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/apiServer").toString();
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/apiServer").build().toString();
 		logger.info(url);
 
 		HttpHeaders headers = new HttpHeaders();
@@ -80,7 +80,7 @@ public class AlertService {
 	}
 
 	public NodeNotReadyVo getNodeNotReady() {
-		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/nodeNotReady").toString();
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/nodeNotReady").build().toString();
 		logger.info(url);
 
 		HttpHeaders headers = new HttpHeaders();
@@ -105,7 +105,7 @@ public class AlertService {
 	}
 
 	public NodeDownVo getNodeDown() {
-		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/nodeDown").toString();
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/nodeDown").build().toString();
 		logger.info(url);
 
 		HttpHeaders headers = new HttpHeaders();
@@ -129,7 +129,7 @@ public class AlertService {
 	}
 
 	public AlertVo[] getAlertList() {
-		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/alertList").toString();
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/alertList").build().toString();
 		logger.info(url);
 
 		HttpHeaders headers = new HttpHeaders();

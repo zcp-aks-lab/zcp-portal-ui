@@ -1,9 +1,8 @@
 package com.skcc.cloudz.zcp.portal.alert.rules.service;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,18 +12,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
-import com.skcc.cloudz.zcp.common.constants.ApiResult;
 import com.skcc.cloudz.zcp.portal.alert.rules.vo.RuleVo;
 
 @Service
 public class RuleService {
-	
+
+	private static Logger logger = Logger.getLogger(RuleService.class);
+
 	@Value("${props.alertmanager.baseUrl}")
 	private String baseUrl;
-	
+
 	public RuleVo[] getRuleList() {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/rule").build().toString();
+		logger.info(url);
+
 		HttpHeaders headers = new HttpHeaders();
 
 		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
@@ -33,8 +36,7 @@ public class RuleService {
 		HttpEntity<RuleVo[]> entity = new HttpEntity<RuleVo[]>(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<RuleVo[]> response = restTemplate.exchange(baseUrl + "/rule", HttpMethod.GET, entity,
-				RuleVo[].class);
+		ResponseEntity<RuleVo[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, RuleVo[].class);
 
 		HttpStatus statusCode = response.getStatusCode();
 
@@ -45,7 +47,7 @@ public class RuleService {
 
 		return ruleVo;
 	}
-	
+
 	public RuleVo deleteRule(RuleVo params) {
 		HttpHeaders headers = new HttpHeaders();
 
@@ -66,6 +68,6 @@ public class RuleService {
 		}
 
 		return ruleVo;
-    }
+	}
 
 }
