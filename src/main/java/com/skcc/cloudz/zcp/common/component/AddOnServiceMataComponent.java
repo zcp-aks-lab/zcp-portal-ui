@@ -15,8 +15,8 @@ import com.skcc.cloudz.zcp.common.domain.vo.AddOnServiceMataVo;
 @Component
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class AddOnServiceMataComponent implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+    
+    private static final long serialVersionUID = 3639865422732730897L;
     
     private String userId;
     private List<AddOnServiceMataVo> addOnServiceMetaVoList;

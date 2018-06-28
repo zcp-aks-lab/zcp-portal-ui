@@ -1,9 +1,5 @@
 package com.skcc.cloudz.zcp.common.util;
 
-/**
- * @author Administrator
- * 공통 유틸
- */
 public class CommonUtil {
 
     private CommonUtil() {}
