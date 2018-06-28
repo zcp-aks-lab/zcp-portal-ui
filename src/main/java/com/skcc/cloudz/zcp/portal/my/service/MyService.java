@@ -3,8 +3,6 @@ package com.skcc.cloudz.zcp.portal.my.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +18,6 @@ import com.skcc.cloudz.zcp.portal.my.vo.MyUserVo;
 @Service
 public class MyService {
     
-    private static final Logger log = LoggerFactory.getLogger(MyService.class);
-    
     @Autowired
     private IamApiService iamApiService;
     
@@ -30,7 +26,6 @@ public class MyService {
     
     public ZcpUserVo getMyUser() throws Exception {
         String userId = securityService.getUserDetails().getUserId();
-        log.info("userId : {}", userId);
         
         ZcpUserResVo zcpUserResVo = iamApiService.getUser(userId);
         if (!zcpUserResVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
