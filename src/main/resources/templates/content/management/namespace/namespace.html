@@ -140,7 +140,7 @@
 			});
 		else
 			$('#div_label').find('span').eq(0).removeClass('white').addClass('Default');
-		registEvent();
+		//registEvent();
 	});
 	
 	function registEvent(){
@@ -149,11 +149,18 @@
 		});
 	}
 	//////////////////////////////// grid /////////////////////////////////////////
-	function grid_init(data){ 
+	function objToString(data){
+		$.each(data, function(idx, row){
+			row.creationTimestamp =row.creationTimestamp.millis;
+		});
+		return data;
+	}
+		
+	function grid_init(data){
     	AlopexGrid.setup({
     		fitTableWidth : true // 테이블의 너비를 그리드 너비에 맞춰 확장시키는 옵션
     	});
-    	
+    	data = objToString(data);
     	$('#grid').alopexGrid({
     		renderMapping : {
     			cpu_bar: {
@@ -176,19 +183,23 @@
     			pagerSelect: true,
                 pagerTotal: true
     		},
-    		rowSelectOption :{
+    		/* rowSelectOption :{
     			clickSelect: true
-    		},
+    		}, */
             defaultColumnMapping : {
                 sorting:true
             },
+            enableDefaultContextMenu: false,
     		autoColumnIndex: true,
     		columnMapping : [
     			{
     				align : 'center',
     				key : 'namespace',
     				title : '네임스페이스',
-    				width : '100px'
+    				width : '100px',
+    				render : function(value, data){
+    					return '<a href="/management/namespace/'+value+'">' +value+ '</a>';
+    				}
     			}, {
     				key : 'status',
     				title : 'CPU Req/Limit',
@@ -217,8 +228,8 @@
     				title : '생성일시',
     				width : '100px',
     				render : function(value, data, render, mapping){
-    					var dt = new Date(Number(data.creationTimestamp.millis));
-    					return dt.customFormat( "#YYYY#/#MM#/#DD# #hh#:#mm#" )
+    					var dt = new Date(Number(data.creationTimestamp));
+    					return  dt.customFormat( "#YYYY#/#MM#/#DD# #hh#:#mm#:#ss#" )
     				}
     			}, {
     				align : 'center',
