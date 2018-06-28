@@ -34,12 +34,13 @@ $a.request.setup({
     },
     error: function(errObject) {
     	console.log(JSON.stringify(errObject));
-        
-        var status = errObject.status;
 
+        var responseText = JSON.parse(errObject.responseText);
+
+        var status = errObject.status;
         switch(status) {
         case 500:
-            alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+            alert(responseText.message);
             break;
         }
     }

@@ -4,13 +4,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skcc.cloudz.zcp.common.security.vo.JwtIdToken;
 import com.skcc.cloudz.zcp.common.security.vo.OpenIdConnectUserDetailsVo;
 
-@Service
+@Component
 public class SecurityService {
     
     public OpenIdConnectUserDetailsVo getUserDetails() {

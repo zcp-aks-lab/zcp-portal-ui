@@ -8,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.skcc.cloudz.zcp.configuration.web.interceptor.AddOnServiceMetaDataInterceptor;
+import com.skcc.cloudz.zcp.configuration.web.interceptor.UserNamespaceInterceptor;
 
 @Configuration
 public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
@@ -17,12 +18,17 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
         AddOnServiceMetaDataInterceptor addOnServiceMetaDataInterceptor = new AddOnServiceMetaDataInterceptor();
         return addOnServiceMetaDataInterceptor;
     }
+    
+    @Bean
+    public UserNamespaceInterceptor userNamespaceInterceptor() {
+        UserNamespaceInterceptor userNamespaceInterceptor = new UserNamespaceInterceptor();
+        return userNamespaceInterceptor;
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(addOnServiceMetaDataInterceptor())
-            .addPathPatterns(new String[] {"/*", "/**/*"})
-            .excludePathPatterns(new String[] {"/static/**", "/error/**"});
+        registry.addInterceptor(addOnServiceMetaDataInterceptor()).addPathPatterns(new String[] {"/*", "/**/*"}).excludePathPatterns(new String[] {"/static/**", "/error/**"});
+        registry.addInterceptor(userNamespaceInterceptor()).addPathPatterns(new String[] {"/my/*", "/", "/main"}).excludePathPatterns(new String[] {"/static/**", "/error/**"});
     }
     
     @Override

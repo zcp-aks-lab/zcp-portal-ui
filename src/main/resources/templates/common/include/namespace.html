@@ -12,9 +12,9 @@
         <div class="locations-area">
             <div class="prj-list">
                 <strong>Namespace : </strong>
-                <button class="Dropdownbutton namespace" th:text="${#authentication.principal.defaultNamespace}">ONM</button>
+                <button class="Dropdownbutton namespace" th:text="${userDefaultNamespace}">ONM</button>
                 <ul class="dropmenu-list">
-                    <th:block th:each="namespace, iterStat : ${#authentication.principal.namespaces}">
+                    <th:block th:each="namespace, iterStat : ${userNamespaces}">
                         <li th:text="${namespace}"><a>ONM (Default)</a></li>
                     </th:block>
                 </ul>
