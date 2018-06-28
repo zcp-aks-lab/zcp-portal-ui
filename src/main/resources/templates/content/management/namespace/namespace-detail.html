@@ -48,11 +48,12 @@
 					$('#input_namespace').val(data.namespace)
 				}
 				var maxCnt = 1000;
-				
-				var cpuRq = Number(quota.status.used["requests.cpu"]) / Number(quota.status.hard["requests.cpu"]) *100;
-				var cpuLm = Number(quota.status.used["limits.cpu"]) / Number(quota.status.hard["limits.cpu"]) *100;
-				var memRm = Number(quota.status.used["requests.memory"]) / Number(quota.status.hard["requests.memory"]) *100;
-				var memLm = Number(quota.status.used["limits.memory"]) / Number(quota.status.hard["limits.memory"]) *100;
+				getNumber(quota.status, "requests.cpu");
+				//quota.status.used["requests.cpu"] = quota.status.used["requests.cpu"].indexOf('m') > -1 : quota.status.used["requests.cpu"].indexOf('m').replace
+				var cpuRq = getNumber(quota.status, "requests.cpu");
+				var cpuLm = getNumber(quota.status, "limits.cpu");
+				var memRm = getNumber(quota.status, "requests.memory");
+				var memLm = getNumber(quota.status, "limits.memory");
 				var pods =  Number(quota.status.hard.pods) / maxCnt *100;
 				var services =  Number(quota.status.hard.services) / maxCnt *100;
 				var secrets =  Number(quota.status.hard.secrets) / maxCnt *100;
@@ -117,6 +118,33 @@
 			function selected(id, value, unit){
 				if(value && value.indexOf(unit) > -1) 
 					$('#select_'+id).setSelected(unit)
+			}
+			
+			function getNumber(data, type){
+				var used = eval('data.used["'+type+'"]');
+				var hard = eval('data.hard["'+type+'"]');
+				if(used.indexOf('m') > -1) 
+					used = used.replace('m', '');
+				else if(used.indexOf('Mi') > -1) 
+					used = used.replace('Mi', '');
+				else if(used.indexOf('Gi') > -1) {
+					used = used.replace('Gi', '');
+					used = used*1000;
+				}else{
+					used = used*1000;
+				}
+				if(hard.indexOf('m') > -1) 
+					hard = hard.replace('m', '');
+				else if(hard.indexOf('Mi') > -1) 
+					hard = hard.replace('Mi', '');
+				else if(hard.indexOf('Gi') > -1) {
+					hard = hard.replace('Gi', '');
+					hard = hard*1000;
+				}else{
+					hard = hard*1000;
+				}
+				
+				return used / hard * 100;
 			}
 		}
 	
@@ -515,6 +543,11 @@
 		function addLabel(){
 			var namespace = /*[[${namespace}]]*/;
 			var label = $('#input_label').val();
+			var regex = /[a-z][a-z0-9\/\-]*[=]{1}[a-zA-Z0-9\/\-]+/
+			if(!regex.test(label)){
+				alert('형식이 올바르지 않습니다.');
+				return ;
+			}
 			ajaxCall('/management/namespace/addLabel', {namespace : namespace, label : label}).done(function(data){
 				location.reload();
 			});
