@@ -6,6 +6,10 @@ $a.setup({
            }
        }
    }
+
+});
+$a.setup('datepicker', {
+    showbottom: true,
 });
 $a.page(function(){
 	//search ux
@@ -105,10 +109,12 @@ $a.page(function(){
 		    });
 		});
 
+		//dateinput 
+		$('#dateinput03')
+
 		//fileuploader
 		var uploadObj2 = $('#fileuploader').setOptions({
 		   showCancel : false
 		});
-
 	}
 });
