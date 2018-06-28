@@ -246,8 +246,9 @@
 			return true;
 		}
 		/////////////////////////////////////  member management /////////////////////////////////////
+		var g_namespaceMember = null; 
 		function gridInitMember(data){
-			
+			g_namespaceMember = data;
 			AlopexGrid.setup({
 	    		fitTableWidth : true 
 	    	});
@@ -327,7 +328,7 @@
 	    				key : 'country',
 	    				align : 'center',
 	    				title : '관리',
-	    				width : '100px',
+	    				width : '50px',
 	    				render : function(value, data, render, mapping){
 	    					var namespace = /*[[${namespace}]]*/;
 	    					var apply = {namespace:namespace, clusterRole : data.namespacedRole, username : data.username}
@@ -341,7 +342,13 @@
 	    
 		function gridInitUser(data){ 
 	    	//user
-	    	
+	    	function initData(data){
+	    		$.each(data, function(idx, row){
+	    			row.namespacedRole = 'view';
+	    		});
+	    		return data;
+	    	}
+	    	data = initData(data);
 	    	$('#grid_user').alopexGrid({
 	    		cellInlineEdit: true,
 	    		
@@ -388,31 +395,21 @@
 	    				render : {
 	    		            type : "select",
 	    		            rule : [
-	    		            	{text:"none"},
-	    		            	{value:"view",text:"view"},
+	    		            	{value:"view",text:"view", attr : {selected : "selected"}},
     		                    {value:"admin",text:"admin"},
     		                    {value:"edit",text:"edit"},
     		                    {value:"cluster-admin",text:"cluster-admin"}
-    		                    ],
-	    		            styleclass : "group-select",
-	    		            attr : {
-	    		            	selected : "none"
-	    		            }        
+    		                    ]
+    		                
 	    		        },
 	    				editable : {
 	    		            type : "select",
 	    		            rule : [
-	    		            	{text:"none"},
-	    		            	{value:"view",text:"view"},
+	    		            	{value:"view",text:"view",  attr : {selected : "selected"}},
     		                    {value:"admin",text:"admin"},
     		                    {value:"edit",text:"edit"},
     		                    {value:"cluster-admin",text:"cluster-admin"}
-    		                    
-    		                    ],
-	    		            styleclass : "group-select",
-	    		            attr : {
-	    		            	selected : "none"
-	    		            }        
+    		                    ]
 	    		        }
 	    			}, {
 	    				align : 'center',
@@ -473,6 +470,12 @@
 				alert('네임스페이스 권한이 필요합니다.'); 
 				return ;
 			}
+			var isDup = isDupMemberCheck(data.username);
+			if(isDup) {
+				alert('이미 추가된 사용자 입니다.');
+				return ;
+			}
+			if(!confirm('추가 하시겠습니까?')) return ;
 			var user = {
 				"username" : data.username
 				,"namespace" : namespace 
@@ -483,6 +486,15 @@
 				gridInitMember(data.items);
 				showMember();
 			});
+		}
+		
+		function isDupMemberCheck(username){
+			var rtn = false;
+			$.each(g_namespaceMember, function(idx, member){
+				if(member.username == username)
+					rtn = true;
+			});
+			return rtn;
 		}
 		
 		function modifyNamespaceRole(data){
@@ -506,11 +518,14 @@
 					,"clusterRole" : data.namespacedRole
 	  				,"id" : data.id
 				};
-			ajaxCall('/management/namespace/delRole', user).done(function(data){
-				//gridInitMember(data.items);
-				alert('정상처리되었습니다.');
-				showMember();
-			});
+			if(confirm('삭제 하시겠습니까?')){
+				ajaxCall('/management/namespace/delRole', user).done(function(data){
+					//gridInitMember(data.items);
+					alert('정상처리되었습니다.');
+					showMember();
+				});	
+			}
+			
 		}
 		
 		function search1(){
@@ -851,12 +866,6 @@
 																    <span></span>
 																</div>
 															</div>
-															<div class="name-pro_position">
-																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="0" id="div_pod_cpu_requests"></div>
-																</div>
-																<span class="name-pro__num" id="span_pod_cpu_requests"></span>
-															</div>
 														</div>
 													</td>
 												</tr>
@@ -873,12 +882,6 @@
 																    </select>
 																    <span></span>
 																</div>
-															</div>
-															<div class="name-pro_position">
-																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typeb" data-default="0" id="div_pod_cpu_limits"></div>
-																</div>
-																<span class="name-pro__num" id="span_pod_cpu_limits"></span>
 															</div>
 														</div>
 													</td>
@@ -897,12 +900,6 @@
 																    <span></span>
 																</div>
 															</div>
-															<div class="name-pro_position">
-																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typec" data-default="0" id="div_pod_memory_requests"></div>
-																</div>
-																<span class="name-pro__num" id="span_pod_memory_requests"></span>
-															</div>
 														</div>
 													</td>
 												</tr>
@@ -919,12 +916,6 @@
 																    </select>
 																    <span></span>
 																</div>
-															</div>
-															<div class="name-pro_position">
-																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typed" data-default="0" id="div_pod_memory_limits"></div>
-																</div>
-																<span class="name-pro__num" id="span_pod_memory_limits"></span>
 															</div>
 														</div>
 													</td>

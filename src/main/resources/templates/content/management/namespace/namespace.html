@@ -165,13 +165,13 @@
     		renderMapping : {
     			cpu_bar: {
     				renderer : function(value, data, render, mapping) {
-    					return data.status.used["requests.cpu"] + "/" + data.status.hard["requests.cpu"]
+    					return '<span class="name-pro__info">' + data.status.used["requests.cpu"] + "/" + data.status.hard["requests.cpu"] +'</span>'
     						+'<div class="Progressbar name-typea" attr="data-default="' +data.usedCpuRate + '"></div>';
 	    			}
 	    		},
 	    		memory_bar: {
     				renderer : function(value, data, render, mapping) {
-    					return data.status.used["requests.cpu"] + "/" + data.status.hard["requests.cpu"]
+    					return '<span class="name-pro__info">' +data.status.used["requests.cpu"] + "/" + data.status.hard["requests.cpu"] +'</span>'
     					+'<div class="Progressbar name-typea" attr="data-default="' +data.usedMemoryRate + '"></div>';
 	    			}
 	    		}
@@ -237,7 +237,7 @@
     				title : '관리',
     				width : '50px',
     				render : function(value, data, render, mapping){
-    					return "<button class=\"btn-ico btn-delnamespace\" onclick=\"deleteNamespace('" + data.namespace + "')\"></button>";
+    					return "<button class=\"btn-ico del\" onclick=\"deleteNamespace('" + data.namespace + "')\"></button>";
     				}
     			}
     		],
