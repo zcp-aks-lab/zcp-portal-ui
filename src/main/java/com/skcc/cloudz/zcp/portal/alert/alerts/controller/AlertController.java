@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,6 +25,9 @@ import com.skcc.cloudz.zcp.portal.alert.alerts.vo.NodeNotReadyVo;
 public class AlertController {
 
 	static final String RESOURCE_PATH = "/alert";
+
+	@Value("${props.alertmanager.baseUrl}")
+	private String baseUrl;
 
 	@Autowired
 	private AlertService alertService;
@@ -78,7 +81,8 @@ public class AlertController {
 	@ResponseBody
 	public Map<String, Object> alertHistoryList(@RequestParam Map<String, Object> params) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if(params.get("time") == null) params.put("time", "1");
+		if (params.get("time") == null)
+			params.put("time", "1");
 		try {
 			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
 			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());

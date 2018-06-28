@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skcc.cloudz.zcp.portal.alert.alerts.vo.AlertCountVo;
 import com.skcc.cloudz.zcp.portal.alert.alerts.vo.AlertHistoryVo;
@@ -23,11 +25,15 @@ import com.skcc.cloudz.zcp.portal.alert.alerts.vo.NodeNotReadyVo;
 
 @Service
 public class AlertService {
+	private static Logger logger = Logger.getLogger(AlertService.class);
 
 	@Value("${props.alertmanager.baseUrl}")
 	private String baseUrl;
 
 	public AlertCountVo getActiveCount() {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/activeCount").toString();
+		logger.info(url);
+
 		HttpHeaders headers = new HttpHeaders();
 
 		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
@@ -36,9 +42,8 @@ public class AlertService {
 		HttpEntity<AlertCountVo> entity = new HttpEntity<AlertCountVo>(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		System.out.println("# URL: "+baseUrl);
-		ResponseEntity<AlertCountVo> response = restTemplate.exchange(baseUrl + "/activeCount", HttpMethod.GET, entity,
-				AlertCountVo.class);
+		System.out.println("# URL: " + baseUrl);
+		ResponseEntity<AlertCountVo> response = restTemplate.exchange(url, HttpMethod.GET, entity, AlertCountVo.class);
 
 		HttpStatus statusCode = response.getStatusCode();
 
@@ -51,6 +56,9 @@ public class AlertService {
 	}
 
 	public ApiServerVo getApiServer() {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/apiServer").toString();
+		logger.info(url);
+
 		HttpHeaders headers = new HttpHeaders();
 
 		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
@@ -59,8 +67,7 @@ public class AlertService {
 		HttpEntity<ApiServerVo> entity = new HttpEntity<ApiServerVo>(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<ApiServerVo> response = restTemplate.exchange(baseUrl + "/apiServer", HttpMethod.GET, entity,
-				ApiServerVo.class);
+		ResponseEntity<ApiServerVo> response = restTemplate.exchange(url, HttpMethod.GET, entity, ApiServerVo.class);
 
 		HttpStatus statusCode = response.getStatusCode();
 
@@ -73,6 +80,9 @@ public class AlertService {
 	}
 
 	public NodeNotReadyVo getNodeNotReady() {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/nodeNotReady").toString();
+		logger.info(url);
+
 		HttpHeaders headers = new HttpHeaders();
 
 		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
@@ -81,8 +91,8 @@ public class AlertService {
 		HttpEntity<NodeNotReadyVo> entity = new HttpEntity<NodeNotReadyVo>(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<NodeNotReadyVo> response = restTemplate.exchange(baseUrl + "/nodeNotReady", HttpMethod.GET,
-				entity, NodeNotReadyVo.class);
+		ResponseEntity<NodeNotReadyVo> response = restTemplate.exchange(url, HttpMethod.GET, entity,
+				NodeNotReadyVo.class);
 
 		HttpStatus statusCode = response.getStatusCode();
 
@@ -95,6 +105,9 @@ public class AlertService {
 	}
 
 	public NodeDownVo getNodeDown() {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/nodeDown").toString();
+		logger.info(url);
+
 		HttpHeaders headers = new HttpHeaders();
 
 		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
@@ -103,8 +116,7 @@ public class AlertService {
 		HttpEntity<NodeDownVo> entity = new HttpEntity<NodeDownVo>(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<NodeDownVo> response = restTemplate.exchange(baseUrl + "/nodeDown", HttpMethod.GET, entity,
-				NodeDownVo.class);
+		ResponseEntity<NodeDownVo> response = restTemplate.exchange(url, HttpMethod.GET, entity, NodeDownVo.class);
 
 		HttpStatus statusCode = response.getStatusCode();
 
@@ -117,6 +129,9 @@ public class AlertService {
 	}
 
 	public AlertVo[] getAlertList() {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/alertList").toString();
+		logger.info(url);
+
 		HttpHeaders headers = new HttpHeaders();
 
 		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
@@ -125,8 +140,7 @@ public class AlertService {
 		HttpEntity<AlertVo[]> entity = new HttpEntity<AlertVo[]>(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<AlertVo[]> response = restTemplate.exchange(baseUrl + "/alertList", HttpMethod.GET, entity,
-				AlertVo[].class);
+		ResponseEntity<AlertVo[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, AlertVo[].class);
 
 		HttpStatus statusCode = response.getStatusCode();
 
@@ -140,6 +154,10 @@ public class AlertService {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public AlertHistoryVo[] getAlertHistoryList(String time) {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/alertHistory/{time}").buildAndExpand(time)
+				.toString();
+		logger.info(url);
+
 		HttpHeaders headers = new HttpHeaders();
 		Map params = new HashMap();
 		params.put("time", time);
@@ -150,8 +168,8 @@ public class AlertService {
 		HttpEntity<AlertHistoryVo[]> entity = new HttpEntity<AlertHistoryVo[]>(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<AlertHistoryVo[]> response = restTemplate.exchange(baseUrl + "/alertHistory/{time}",
-				HttpMethod.GET, entity, AlertHistoryVo[].class, params);
+		ResponseEntity<AlertHistoryVo[]> response = restTemplate.exchange(url, HttpMethod.GET, entity,
+				AlertHistoryVo[].class, params);
 
 		HttpStatus statusCode = response.getStatusCode();
 
