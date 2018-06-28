@@ -179,15 +179,12 @@ public class AlertService {
 		return alertVo;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public AlertHistoryVo[] getAlertHistoryList(String time) {
 		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/alertHistory/{time}").buildAndExpand(time)
 				.toString();
 		logger.info(url);
 
 		HttpHeaders headers = new HttpHeaders();
-		Map params = new HashMap();
-		params.put("time", time);
 
 		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -196,7 +193,7 @@ public class AlertService {
 
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<AlertHistoryVo[]> response = restTemplate.exchange(url, HttpMethod.GET, entity,
-				AlertHistoryVo[].class, params);
+				AlertHistoryVo[].class);
 
 		HttpStatus statusCode = response.getStatusCode();
 
