@@ -104,6 +104,7 @@
                                     <td>
                                         <input type="text" th:name="id" th:id="id" th:value="${zcpUser.id}" class="Textinput Width-60" readonly="readonly" />
                                         <button class="btn-ico btn-copy" id="btnCopy">복사</button>
+                                        <div class="Tooltip">클립보드로 복사합니다.</div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -140,6 +141,7 @@
                                     <td>
                                         <div class="Divselect" style="width: 200px">
                                             <select th:name="defaultNamespace" th:id="defaultNamespace">
+                                                <option value="">선택</option>
                                                 <option th:each="namespace : ${zcpUser.namespaces}" th:value="${namespace}" th:text="${namespace}" th:selected="(${namespace} == *{zcpUser.defaultNamespace})" ></option>
                                             </select>
                                             <span></span>
