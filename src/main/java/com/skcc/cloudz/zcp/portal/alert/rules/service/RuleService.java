@@ -1,8 +1,11 @@
 package com.skcc.cloudz.zcp.portal.alert.rules.service;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.skcc.cloudz.zcp.common.util.Message;
 import com.skcc.cloudz.zcp.portal.alert.rules.vo.RuleVo;
 
 @Service
@@ -23,6 +27,9 @@ public class RuleService {
 
 	@Value("${props.alertmanager.baseUrl}")
 	private String baseUrl;
+	
+	@Autowired
+	Message message;
 
 	public RuleVo[] getRuleList() {
 		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/rule").build().toString();
@@ -49,6 +56,10 @@ public class RuleService {
 	}
 
 	public RuleVo deleteRule(RuleVo params) {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/rule/{id}").buildAndExpand(params.getId())
+				.toString();
+		logger.info(url);
+
 		HttpHeaders headers = new HttpHeaders();
 
 		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
@@ -57,8 +68,48 @@ public class RuleService {
 		HttpEntity<RuleVo> entity = new HttpEntity<RuleVo>(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<RuleVo> response = restTemplate.exchange(baseUrl + "/rule/{id}", HttpMethod.DELETE, entity,
-				RuleVo.class, params.getId());
+		ResponseEntity<RuleVo> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, RuleVo.class);
+
+		HttpStatus statusCode = response.getStatusCode();
+
+		RuleVo ruleVo = null;
+		if (statusCode == HttpStatus.OK) {
+			ruleVo = response.getBody();
+		}
+
+		return ruleVo;
+	}
+
+	public RuleVo createRule(Map<String, Object> params) {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/rule").build().toString();
+		logger.info(url);
+		
+		RuleVo ruleParam = new RuleVo();
+		
+		ruleParam.setChannel(params.get("channel").toString());
+		ruleParam.setDuration(params.get("").toString());
+		ruleParam.setSeverity(params.get("severity").toString());
+		ruleParam.setType(params.get("type").toString());
+		
+		if("NodeDown".equals(params.get("type"))) {
+			ruleParam.setValue1(message.get("NodeDown"));	
+			ruleParam.setCondition("=");
+			ruleParam.setValue2("0");
+		} else {
+			ruleParam.setValue1("");
+			ruleParam.setCondition(params.get("condition").toString());
+			ruleParam.setValue2(params.get("value2").toString());	
+		}
+		
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<RuleVo> entity = new HttpEntity<RuleVo>(headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<RuleVo> response = restTemplate.exchange(url, HttpMethod.POST, entity, RuleVo.class, ruleParam);
 
 		HttpStatus statusCode = response.getStatusCode();
 

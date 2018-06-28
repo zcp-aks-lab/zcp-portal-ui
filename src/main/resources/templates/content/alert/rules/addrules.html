@@ -22,7 +22,7 @@
 					return false;
 				}
 
-				$a.request('/alert/addRule', {
+				$a.request('/alert/createRule', {
 					method : 'post',
 					data : $('#form').serializeObject(),
 					success : function(res) {
@@ -33,7 +33,7 @@
 						}
 
 						alert('저장되었습니다.');
-						location.href = '/alert/ruleList';
+						location.href = '/alert/rules';
 					},
 					error : function(errObject) {
 						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -43,8 +43,10 @@
 			validation : function() {
 				var type = $('#type').validate();
 				var condition = $('#condition').validate();
+				var value2 = $('#value2').validate();
+				var channel = $('#channel').validate();
 
-				if (!type || !condition) {
+				if (!type || !condition || !value2 || !channel) {
 					return false;
 				} else {
 					return true;
@@ -92,7 +94,7 @@
 						</div>
 					</div>
 					<!-- add rule table-->
-					<form>
+					<form th:id="form" onsubmit="return false;">
 						<fieldset>
 							<table class="Table Form-type topline">
 								<colgroup>
@@ -111,25 +113,14 @@
 													<option value="NodeDown">NodeDown</option>
 													<option value="NodeCPUUsage">NodeCPUUsage</option>
 													<option value="NodeLoadAverage5">NodeLoadAverage5</option>
-													<option value="NodeSwapUsage">NodeSwapUsage</option>
 													<option value="NodeMemoryUsage">NodeMemoryUsage</option>
 													<option value="NodeLowRootDisk">NodeLowRootDisk</option>
 													<option value="ApiserverDown">ApiserverDown</option>
-													<option value="APIServerLatencyHigh">APIServerLatencyHigh</option>
-													<option value="APIServerErrorsHigh">APIServerErrorsHigh</option>
 													<option value="K8SNodeNotReady">K8SNodeNotReady</option>
-													<option value="K8SKubeletDown">K8SKubeletDown</option>
-													<option value="ETCD_Down">ETCD_Down</option>
-													<option value="ETCD_NoLeader">ETCD_NoLeader</option>
-													<option value="ETCD_InsufficientMembers">ETCD_InsufficientMembers</option>
-													<option value="ETCD_HighNumberOfLeaderChanges">ETCD_HighNumberOfLeaderChanges</option>
 													<option value="PodFrequentlyRestarting">PodFrequentlyRestarting</option>
-													<option value="PrometheusConfigReloadFailed">PrometheusConfigReloadFailed</option>
-													<option value="PrometheusErrorSendingAlerts">PrometheusErrorSendingAlerts</option>
-													<option value="AlertmanagerFailedReload">AlertmanagerFailedReload</option>
-													<option value="ZCPMonitoringDown">ZCPMonitoringDown</option>
 												</select> <span></span>
 											</div>
+											<p class="info-text" data-for="type"></p>
 										</td>
 									</tr>
 									<tr>
@@ -159,11 +150,11 @@
 									<tr>
 										<th>심각도<strong class="astertisk">*</strong></th>
 										<td><label class="ImageRadio"> <input
-												class="Radio" name="severity" id="" value="warning"
-												checked="checked" />Warning
+												class="Radio" th:name="severity" th:id="severity"
+												value="warning" checked="checked" />Warning
 										</label> <label class="ImageRadio Margin-left-40"> <input
-												class="Radio" data-disabled="false" name="severity"
-												id="critical" value="value2" />Critical
+												class="Radio" data-disabled="false" th:name="severity"
+												th:id="severity" value="critical" />Critical
 										</label>
 											<p class="info-text">이미 등록된 심각도는 추가할 수 없습니다.</p></td>
 									</tr>
@@ -172,30 +163,28 @@
 										<td>
 											<div class="Divselect">
 												<select th:name="condition" th:id="condition">
-													<option value="greaterthan">&gt;</option>
-													<option value="lessthan">&lt;</option>
+													<option value="&gt;">&gt;</option>
+													<option value="&lt;">&lt;</option>
 												</select> <span></span>
-											</div> <!-- <div class="Divselect">
-										    <select>
-										        <option value="korea">1</option>
-										        <option value="usa">2</option>
-										        <option value="japan">3</option>
-										    </select>
-										    <span></span>
-										</div> --> <input class="Textinput" th:name="value2"
-											th:id="value2" />
+											</div>
+											<input class="Textinput" th:name="value2" th:id="value2"
+											data-validation-rule="{required:true}"
+											data-validation-message="{required:'임계치를 선택해주세요.'}" />
+											<p class="info-text" data-for="value2"></p>
 										</td>
 									</tr>
 									<tr>
 										<th>채널<strong class="astertisk">*</strong></th>
 										<td>
 											<div class="Divselect" style="width: 300px;">
-												<select th:name="channel"
-											th:id="channel">
-													<option value="test">test-channel</option>
+												<select th:name="channel" th:id="channel"
+													data-validation-rule="{required:true}"
+													data-validation-message="{required:'채널을 선택해주세요.'}">
+													<option value="test-channel">test-channel</option>
 												</select> <span></span>
 											</div>
 											<button class="Button btn">신규 채널</button> <!-- <p class="Margin-top-5">Notification <span>3</span>개</p> -->
+											<p class="info-text" data-for="channel"></p>
 										</td>
 									</tr>
 								</tbody>

@@ -32,7 +32,7 @@ public class AlertService {
 	private String baseUrl;
 
 	public AlertCountVo getActiveCount() {
-		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/activeCount").build().toString();
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/alertList").build().toString();
 		logger.info(url);
 
 		HttpHeaders headers = new HttpHeaders();
@@ -40,19 +40,47 @@ public class AlertService {
 		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		HttpEntity<AlertCountVo> entity = new HttpEntity<AlertCountVo>(headers);
+		HttpEntity<AlertVo[]> entity = new HttpEntity<AlertVo[]>(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<AlertCountVo> response = restTemplate.exchange(url, HttpMethod.GET, entity, AlertCountVo.class);
+		ResponseEntity<AlertVo[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, AlertVo[].class);
 
 		HttpStatus statusCode = response.getStatusCode();
 
-		AlertCountVo alertCountVo = new AlertCountVo();
+		AlertVo[] alertVo = null;
 		if (statusCode == HttpStatus.OK) {
-			alertCountVo = response.getBody();
+			alertVo = response.getBody();
 		}
 
+		AlertCountVo alertCountVo = new AlertCountVo();
+		alertCountVo.setCount(alertVo.length + "");
+
 		return alertCountVo;
+
+		/*
+		 * String url =
+		 * UriComponentsBuilder.fromUriString(baseUrl).path("/activeCount").build().
+		 * toString(); logger.info(url);
+		 * 
+		 * HttpHeaders headers = new HttpHeaders();
+		 * 
+		 * headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON
+		 * })); headers.setContentType(MediaType.APPLICATION_JSON);
+		 * 
+		 * HttpEntity<AlertCountVo> entity = new HttpEntity<AlertCountVo>(headers);
+		 * 
+		 * RestTemplate restTemplate = new RestTemplate(); ResponseEntity<AlertCountVo>
+		 * response = restTemplate.exchange(url, HttpMethod.GET, entity,
+		 * AlertCountVo.class);
+		 * 
+		 * HttpStatus statusCode = response.getStatusCode();
+		 * 
+		 * AlertCountVo alertCountVo = new AlertCountVo(); if (statusCode ==
+		 * HttpStatus.OK) { alertCountVo = response.getBody(); }
+		 * 
+		 * return alertCountVo;
+		 */
+
 	}
 
 	public ApiServerVo getApiServer() {
@@ -148,7 +176,6 @@ public class AlertService {
 		if (statusCode == HttpStatus.OK) {
 			alertVo = response.getBody();
 		}
-
 		return alertVo;
 	}
 
