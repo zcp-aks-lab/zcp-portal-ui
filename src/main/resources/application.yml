@@ -25,11 +25,11 @@ spring:
     encoding: UTF-8
     mode: HTML5
     template-resolver-order: 2
-  messages:
-    encoding: UTF-8
-    cache-seconds: 5
-    fallback-to-system-locale: false
-    basename: i18n/messages
+#  messages:
+#    encoding: UTF-8
+#    cache-seconds: 5
+#    fallback-to-system-locale: false
+#    basename: i18n/messages
   http:
     encoding:
       charset: UTF-8 # the encoding of HTTP requests/responses
@@ -91,7 +91,8 @@ props:
   iam:
     baseUrl: https://zcp-iam.cloudzcp.io:443
   alertmanager:
-    baseUrl: https://alert.cloudzcp.io:443
+#    baseUrl: https://alert.cloudzcp.io:443
+    baseUrl: http://localhost:8080
 
 ---
 spring:

@@ -45,8 +45,9 @@
 				var condition = $('#condition').validate();
 				var value2 = $('#value2').validate();
 				var channel = $('#channel').validate();
+				var duration = $('#duration').validate();
 
-				if (!type || !condition || !value2 || !channel) {
+				if (!type || !condition || !value2 || !channel || !duration) {
 					return false;
 				} else {
 					return true;
@@ -129,22 +130,38 @@
 											<div class="Divselect" data-disabled="true"
 												style="width: 300px;">
 												<select>
-													<option value="korea">Namespace 선택</option>
+													<option value="">Namespace 선택</option>
 													<option value="usa">Namespace</option>
 												</select> <span></span>
 											</div>
 										</td>
 									</tr>
 									<tr>
-										<th>pod<strong class="astertisk">*</strong></th>
+										<th>Pod<strong class="astertisk">*</strong></th>
 										<td>
 											<div class="Divselect" data-disabled="true"
 												style="width: 300px;">
 												<select>
-													<option value="korea">pod 선택</option>
+													<option value="">Pod 선택</option>
 													<option value="usa">pod</option>
 												</select> <span></span>
 											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>Duration<strong class="astertisk">*</strong></th>
+										<td>
+											<div class="Divselect" style="width: 150px;">
+												<select th:name="duration" th:id="duration"
+													data-validation-rule="{required:true}"
+													data-validation-message="{required:'Duration을 선택해주세요.'}">
+													<option value="">Duration 선택</option>
+													<option value="2m">2m</option>
+													<option value="5m">5m</option>
+													<option value="10m">10m</option>
+												</select> <span></span>
+											</div>
+											<p class="info-text" data-for="duration"></p>
 										</td>
 									</tr>
 									<tr>
@@ -166,8 +183,7 @@
 													<option value="&gt;">&gt;</option>
 													<option value="&lt;">&lt;</option>
 												</select> <span></span>
-											</div>
-											<input class="Textinput" th:name="value2" th:id="value2"
+											</div> <input class="Textinput" th:name="value2" th:id="value2"
 											data-validation-rule="{required:true}"
 											data-validation-message="{required:'임계치를 선택해주세요.'}" />
 											<p class="info-text" data-for="value2"></p>

@@ -61,12 +61,11 @@ public class RuleController {
 	@PostMapping(value = "/createRule", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Map<String, Object> createRule(@RequestBody Map<String, Object> params) throws Exception {
-		System.out.println(params);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
 			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
 			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
-//			resultMap.put("resultData", ruleService.createRule(params));
+			resultMap.put("resultData", ruleService.createRule(params));
 		} catch (Exception e) {
 			e.printStackTrace();
 

@@ -87,7 +87,7 @@ public class RuleService {
 		RuleVo ruleParam = new RuleVo();
 		
 		ruleParam.setChannel(params.get("channel").toString());
-		ruleParam.setDuration(params.get("").toString());
+		ruleParam.setDuration(params.get("duration").toString());
 		ruleParam.setSeverity(params.get("severity").toString());
 		ruleParam.setType(params.get("type").toString());
 		
@@ -96,7 +96,7 @@ public class RuleService {
 			ruleParam.setCondition("=");
 			ruleParam.setValue2("0");
 		} else {
-			ruleParam.setValue1("");
+			ruleParam.setValue1(message.get(ruleParam.getType()));
 			ruleParam.setCondition(params.get("condition").toString());
 			ruleParam.setValue2(params.get("value2").toString());	
 		}
@@ -105,11 +105,11 @@ public class RuleService {
 
 		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
 		headers.setContentType(MediaType.APPLICATION_JSON);
-
-		HttpEntity<RuleVo> entity = new HttpEntity<RuleVo>(headers);
-
+		
+		HttpEntity<RuleVo> entity = new HttpEntity<RuleVo>(ruleParam, headers);
+		
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<RuleVo> response = restTemplate.exchange(url, HttpMethod.POST, entity, RuleVo.class, ruleParam);
+		ResponseEntity<RuleVo> response = restTemplate.exchange(url, HttpMethod.POST, entity, RuleVo.class);
 
 		HttpStatus statusCode = response.getStatusCode();
 
