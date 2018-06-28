@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,11 +22,7 @@ import com.skcc.cloudz.zcp.portal.alert.alerts.vo.NodeNotReadyVo;
 @Controller
 @RequestMapping(value = AlertController.RESOURCE_PATH)
 public class AlertController {
-
 	static final String RESOURCE_PATH = "/alert";
-
-	@Value("${props.alertmanager.baseUrl}")
-	private String baseUrl;
 
 	@Autowired
 	private AlertService alertService;
