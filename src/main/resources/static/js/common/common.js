@@ -55,3 +55,47 @@ function createOptions(id, data, selected, disabled) {
     	$('#' + id).append(option.join(''));
     } catch(e) {}
 }
+
+var commonPopup = {
+	default_opts: {
+        title: '알림',
+        message: '',
+        width: 550,
+        height: 450,
+        callback: function() {},
+        alias: 'popup'
+    },
+		
+	alert: function(opts) {
+		this.open(opts, 'alert');
+		
+	},
+	
+	confirm: function(opts) {
+		this.open(opts, 'confirm');
+	},
+	
+	open: function(opts, type) {
+		var _opts = $.extend({}, this.default_opts, opts);
+		
+		$a.popup({
+	        url: "/common/popup/popup",
+	        iframe: false,  // default 는 true
+	        width: _opts.width,
+	        height: _opts.height,
+	        title: _opts.title,
+	        data: {message : _opts.message, type: type},
+	        callback: function(data) {
+	            if (data === 'ok' && typeof(_opts.callback) === 'function') {
+	                _opts.callback();
+	            }
+	        },
+	        alias: _opts.alias,
+	        xButtonClickCallback : function(el) {
+	            if (el.alias === _opts.alias) {
+	                return true;
+	            }
+	        }
+	    });
+	}
+};

@@ -110,7 +110,7 @@
                                     align: 'center',
                                     sorting: false,
                                     render: function(value, data) {
-                                        return '<button class="btn-ico del" onclick="zcpPortalApp.data.userDelete(\'' + data.id + '\');" />';
+                                        return '<button class="btn-ico del" onclick="zcpPortalApp.data.userDelete(\'' + data.id + '\', \'' + data.username + '\');" />';
                                     }
                                 },
                                 {
@@ -149,24 +149,32 @@
                             }
                         })
                     },
-                    userDelete: function(id) {
+                    userDelete: function(id, username) {
                     	var data = {
                     		id: id	
                     	};
-                        
-                        if (!confirm('사용자를 삭제하시겠습니까?')) return false;
-                        
-                        $a.request('/management/user/deleteUser', {
-                            method: 'post',
-                            data: data, 
-                            success : function(res) {
-                                alert('정상처리 되었습니다.');
-                                location.reload();
-                            },
-                            error : function(errObject) {
-                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                    	
+                    	commonPopup.confirm({
+                            title: '사용자 삭제',
+                            message: '사용자 ' + username + ' 을(를) 삭제하시겠습니까?',
+                            callback: function() {
+                                $a.request('/management/user/deleteUser', {
+                                    method: 'post',
+                                    data: data, 
+                                    success : function(res) {
+                                        commonPopup.alert({
+                                            message: '정상처리 되었습니다.',
+                                            callback: function() {
+                                                location.reload();
+                                            }
+                                        });
+                                    },
+                                    error : function(errObject) {
+                                        //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                    }
+                                })
                             }
-                        })
+                        });
                     },
                     userDetail: function(id) {
                     	location.href = '/management/user/' + id;

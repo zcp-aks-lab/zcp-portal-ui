@@ -73,8 +73,12 @@
                             method: 'post',
                             data: data, 
                             success : function(res) {
-                                alert('저장되었습니다.');
-                                location.reload();
+                            	commonPopup.alert({
+                                    message: '정상처리 되었습니다.',
+                                    callback: function() {
+                                        location.reload();
+                                    }
+                                });
                             },
                             error : function(errObject) {
                                 //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -94,18 +98,22 @@
                         data.temporary =  $('#temporary').hasClass('btn-on') ? true : false;
                         data.id = $('#id').val();
 
-                        if (!confirm('비밀번호를 재설정 하시겠습니까?')) return false;
-
-                        $a.request('/management/user/resetPassword', {
-                            method: 'post',
-                            data: data, 
-                            success : function(res) {
-                                alert('비밀번호가 재설정 되었습니다.');
-                            },
-                            error : function(errObject) {
-                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                        commonPopup.confirm({
+                            title: '비밀번호 재설정',
+                            message: '비밀번호를 재설정 하시겠습니까?',
+                            callback: function() {
+                                $a.request('/management/user/resetPassword', {
+                                    method: 'post',
+                                    data: data, 
+                                    success : function(res) {
+                                    	commonPopup.alert({message: '비밀번호가 재설정 되었습니다.'});
+                                    },
+                                    error : function(errObject) {
+                                        //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                    }
+                                })
                             }
-                        })
+                        });
                     },
 
                     resetCredentials: function() {
@@ -126,38 +134,50 @@
                         data.id = $('#id').val();
                         data.actions = actions;
 
-                        if (!confirm('Credentials초기화를 하시겠습니까?')) return false;
-
-                        $a.request('/management/user/resetCredentials', {
-                            method: 'post',
-                            data: data, 
-                            success : function(res) {
-                                alert('Credentials 설정 메일이 발송 되었습니다.');
-                            },
-                            error : function(errObject) {
-                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                        commonPopup.confirm({
+                            title: 'Credentials 초기화',
+                            message: 'Credentials초기화를 하시겠습니까?',
+                            callback: function() {
+                            	$a.request('/management/user/resetCredentials', {
+                                    method: 'post',
+                                    data: data, 
+                                    success : function(res) {
+                                    	commonPopup.alert({message: 'Credentials 설정 메일이 발송 되었습니다.'});
+                                    },
+                                    error : function(errObject) {
+                                        //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                    }
+                                })
                             }
-                        })
+                        });
                     },
 
                     deleteUser: function() {
                     	var data = {
                     		id: $('#id').val()
                         };
-                        
-                    	if (!confirm('사용자 ' + $('#username').val()+ ' 을 삭제하시겠습니까?')) return false;
-                        
-                        $a.request('/management/user/deleteUser', {
-                            method: 'post',
-                            data: data, 
-                            success : function(res) {
-                                alert('정상처리 되었습니다.');
-                                location.href = '/management/users';
-                            },
-                            error : function(errObject) {
-                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+
+                    	commonPopup.confirm({
+                            title: '사용자 삭제',
+                            message: '사용자 ' + $('#username').val() + ' 을(를) 삭제하시겠습니까?',
+                            callback: function() {
+                            	$a.request('/management/user/deleteUser', {
+                                    method: 'post',
+                                    data: data, 
+                                    success : function(res) {
+                                    	commonPopup.alert({
+                                            message: '정상처리 되었습니다.',
+                                            callback: function() {
+                                            	location.href = '/management/users';
+                                            }
+                                        });
+                                    },
+                                    error : function(errObject) {
+                                        //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                    }
+                                })
                             }
-                        })
+                        });
                     },
 
                     updateClusterRoleBinding: function() {
@@ -165,20 +185,28 @@
                             id: $('#id').val(),
                             clusterRole: $('#clusterRole').val()
                         };
-                        
-                        if (!confirm('클러스터 권한을 변경하시겠습니까?')) return false;
-                        
-                        $a.request('/management/user/updateClusterRoleBinding', {
-                            method: 'post',
-                            data: data, 
-                            success : function(res) {
-                                alert('클러스터 권한이 변경되었습니다.');
-                                location.reload();
-                            },
-                            error : function(errObject) {
-                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+
+                        commonPopup.confirm({
+                            title: 'Cluster 권한',
+                            message: '클러스터 권한을 변경하시겠습니까?',
+                            callback: function() {
+                            	$a.request('/management/user/updateClusterRoleBinding', {
+                                    method: 'post',
+                                    data: data, 
+                                    success : function(res) {
+                                    	commonPopup.alert({
+                                            message: '클러스터 권한이 변경되었습니다.',
+                                            callback: function() {
+                                            	location.reload();
+                                            }
+                                        });
+                                    },
+                                    error : function(errObject) {
+                                        //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                    }
+                                })
                             }
-                        })
+                        });
                     },
 
                     namespaceRoleBinding: function(idx, mode) {
@@ -204,34 +232,46 @@
                             namespace: $('#namespace_' + idx).val()
                         };
 
-                        if (!confirm(msg)) return false;
-                        
-                        $a.request('/management/user/roleBinding/' + mode, {
-                            method: 'post',
-                            data: data, 
-                            success : function(res) {
-                                switch(mode) {
-                                case 'create':
-                                	alert('네임스페이스의 권한이 등록 되었습니다.');
-
-                                	var html =''
-                                    html += '        <button class="Button btn-ico btn-config__save" onclick="zcpPortalApp.data.namespaceRoleBinding(\'' + idx + '\', \'update\');">수정</button>';
-                                    html += '        <button class="btn-ico del" onclick="zcpPortalApp.data.namespaceRoleBinding(\'' + idx + '\', \'delete\');">삭제</button>';
-                                	$('#namespaceBtn_' + idx).html(html);
-                                    break
-                                case 'update':
-                                    alert('네임스페이스의 권한이 수정 되었습니다.');
-                                    break
-                                case 'delete':
-                                	alert('네임스페이스의 권한이 삭제 되었습니다.');
-                                	$('#namespaceRow_' + idx).remove();
-                                    break
-                                }
-                            },
-                            error : function(errObject) {
-                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                        commonPopup.confirm({
+                            title: 'Namespace 권한',
+                            message: msg,
+                            callback: function() {
+                            	$a.request('/management/user/roleBinding/' + mode, {
+                                    method: 'post',
+                                    data: data, 
+                                    success : function(res) {
+                                        switch(mode) {
+                                        case 'create':
+                                        	commonPopup.alert({
+                                                message: '네임스페이스의 권한이 등록 되었습니다.',
+                                                callback: function() {
+                                                	var html =''
+                                                    html += '        <button class="Button btn-ico btn-config__save" onclick="zcpPortalApp.data.namespaceRoleBinding(\'' + idx + '\', \'update\');">수정</button>';
+                                                    html += '        <button class="btn-ico del" onclick="zcpPortalApp.data.namespaceRoleBinding(\'' + idx + '\', \'delete\');">삭제</button>';
+                                                    $('#namespaceBtn_' + idx).html(html);
+                                                }
+                                            });
+                                            
+                                            break
+                                        case 'update':
+                                        	commonPopup.alert({message: '네임스페이스의 권한이 수정 되었습니다.'});
+                                            break
+                                        case 'delete':
+                                        	commonPopup.alert({
+                                                message: '네임스페이스의 권한이 삭제 되었습니다.',
+                                                callback: function() {
+                                                	$('#namespaceRow_' + idx).remove();        
+                                                }
+                                            });
+                                            break
+                                        }
+                                    },
+                                    error : function(errObject) {
+                                        //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                    }
+                                })
                             }
-                        })
+                        });
                     }
                 },
                 event: {

@@ -47,5 +47,6 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 		registry.addViewController("/management/namespace/pop/popNamespaceDel.html").setViewName("content/management/namespace/pop/popNamespaceDel");
 	    registry.addViewController("/management/namespace/create").setViewName("content/management/namespace/namespace-add");
 	      
+	    registry.addViewController("/common/popup/popup").setViewName("common/popup/popup");
 	}
 }

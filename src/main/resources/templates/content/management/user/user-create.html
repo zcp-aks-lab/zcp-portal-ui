@@ -29,8 +29,12 @@
                             method: 'post',
                             data: $('#form').serializeObject(), 
                             success : function(res) {
-                                alert('저장되었습니다.');
-                                location.href = '/management/users';
+                            	commonPopup.alert({
+                                    message: '저장되었습니다.',
+                                    callback: function() {
+                                    	location.href = '/management/users';
+                                    }
+                                });
                             },
                             error : function(errObject) {
                                 //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');

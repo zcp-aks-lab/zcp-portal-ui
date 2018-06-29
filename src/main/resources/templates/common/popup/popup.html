@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" >
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    </head>
+    <body>
+        <div class="popup-wrap">
+            <div class="popup-contents">
+                <div class="popup-text" id="popMessage"></div>
+            </div>
+            <!--button-->
+            <div class="popup-btn__wrap">
+                <button class="Button btn bg-red" id="popOk">확인</button>
+                <button class="Button btn" id="popCancel">취소</button>
+            </div>
+            <!--//button-->
+        </div>
+        
+        <script type="text/javascript">
+            $a.page(function() {
+                this.init = function(id, param) {
+                    var type = param['type'];
+                    if (type === 'alert') {
+                        $('#popCancel').hide();
+                    }
+                    
+                    var message = param['message'];
+                    $('#popMessage').text(message);
+                    
+                    $('#popCancel').on('click', function() {
+                        $a.close('cancel');
+                    });
+    
+                    $('#popOk').on('click', function() {
+                        $a.close('ok');
+                    });
+                }
+            });
+        </script>
+    </body>
+</html>
