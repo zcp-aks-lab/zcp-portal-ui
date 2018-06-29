@@ -1,6 +1,7 @@
 package com.skcc.cloudz.zcp.portal.management.namespace.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
 import com.skcc.cloudz.zcp.portal.management.namespace.service.NamespaceService;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.EnquryNamespaceVO;
+import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
 
 
 @Controller
@@ -30,6 +33,9 @@ public class NamespaceController {
 	
     @Autowired
     private NamespaceService namespaceService;
+    
+    @Autowired
+    private UserService userService;
     
     @GetMapping(value = "/namespaces", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String cardNamespace(Model model, @ModelAttribute EnquryNamespaceVO vo) throws Exception {
@@ -110,6 +116,17 @@ public class NamespaceController {
     @ResponseBody 
     public void delLableOfNamespace(@RequestBody HashMap<String, Object> data) throws Exception {
     	namespaceService.delLableOfNamespace(data);
+    }
+    
+    @PostMapping(value = "/namespace/clusterRoles", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody 
+    public List<String> getClusterRole() throws Exception {
+    	return userService.getClusterRoles();
+    }
+    
+    @GetMapping(value = "/namespace/create", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+    public String goNamespacePage() throws Exception {
+    	return "content/management/namespace/namespace-add";
     }
     
 }
