@@ -57,7 +57,12 @@
 		event : {
 			init : function() {
 				$('#btnCreate').on('click', function() {
-					zcpPortalApp.data.createRule();
+					var check = confirm("저장하시겠습니까?");
+					if (check) {
+						zcpPortalApp.data.createRule();
+					} else {
+						return false;
+					}
 				});
 
 				$('#btnCancel').on('click', function() {

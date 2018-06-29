@@ -11,8 +11,66 @@
 	$.alopex.page(function() {
 		this.init = function(id, param) {
 			zcpPortalGrid1.pageInit();
+			zcpPortalApp.pageInit();
 		};
 	});
+
+	var zcpPortalApp = {
+		pageInit : function() {
+			'use strict';
+			this.data.init();
+			this.event.init();
+		},
+		data : {
+			init : function() {
+			},
+			updateRepeat : function() {
+				if (!this.validation()) {
+					return false;
+				}
+
+				$a.request('/alert/updateRepeat', {
+					method : 'post',
+					data : $('#form').serializeObject(),
+					success : function(res) {
+						if (res.resultCd !== '200') {
+							if (res.resultMsg)
+								alert(res.resultMsg);
+							return false;
+						}
+
+						alert('저장되었습니다.');
+						location.href = '/alert/rules';
+					},
+					error : function(errObject) {
+						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+					}
+				})
+			},
+			validation : function() {
+				var type = $('#repeat').validate();
+
+				if (!type) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		},
+		event : {
+			init : function() {
+				$('#btnUpdate').on('click', function() {
+					var check = confirm("저장하시겠습니까?");
+					if (check) {
+						zcpPortalApp.data.updateRepeat();
+					} else {
+						return false;
+					}
+
+				});
+			}
+		}
+	}
 
 	var zcpPortalGrid1 = {
 		pageInit : function() {
@@ -29,6 +87,12 @@
 								{
 									pager : true,
 									fitTableWidth : true,
+									filteringHeader : false,
+									filter : {
+										movable : true,
+										saveFilterSize : true,
+										title : true
+									},
 									paging : {
 										perPage : 5,
 										pagerCount : 5,
@@ -156,27 +220,60 @@
 				})
 			}
 		},
-		event: {
-            init: function() {
-            	/* $('#btnSearch').on('click', function() {
-            		zcpPortalApp.grid.search();
-                });
-            	$('#keyword').on('keydown', function(e) {
-                    if (e.keyCode === 13) {
-                    	zcpPortalApp.grid.search();
-                    }
-                }); */
-            	$('#btnAdd').on('click', function() {
-                    location.href = '/alert/addRule';
-                });
-            }
-        }
+		event : {
+			init : function() {
+				$('#btnSearch').on(
+						'click',
+						function() {
+							var customFilter = null;
+							try {
+								customFilter = eval("("
+										+ $("#customFunction").val() + ")");
+							} catch (e) {
+							}
+							if (!customFilter || !$.isFunction(customFilter)) {
+								alert("올바르지 않은 필터함수 입니다.");
+								return;
+							}
+							$("#rule-grid").alopexGrid('setFilter',
+									'customFilter', customFilter);
+						});
+				$('#keyword')
+						.on(
+								'keydown',
+								function(e) {
+									if (e.keyCode === 13) {
+										var customFilter = null;
+										try {
+											customFilter = eval("("
+													+ $("#customFunction")
+															.val() + ")");
+										} catch (e) {
+										}
+										if (!customFilter
+												|| !$.isFunction(customFilter)) {
+											alert("올바르지 않은 필터함수 입니다.");
+											return;
+										}
+										$("#rule-grid").alopexGrid('setFilter',
+												'customFilter', customFilter);
+									}
+								});
+				$('#btnAdd').on('click', function() {
+					location.href = '/alert/addRule';
+				});
+			}
+		}
 	}
 </script>
 </head>
 <body>
 	<th:block layout:fragment="content">
-
+		<textarea id="customFunction" style="display: none;">
+			function(data) {
+				return data['type'] == $("#keyword").val();
+			}
+		</textarea>
 		<!-- main-contents -->
 		<div class="cp-container">
 			<!-- contents -->
@@ -194,7 +291,7 @@
 							<div class="Tooltip" data-position="left">Rule추가</div>
 						</div>
 					</div>
-					<form>
+					<form th:id="form" onsubmit="return false;">
 						<fieldset>
 							<table class="Table Form-type topline">
 								<colgroup>
@@ -204,9 +301,13 @@
 								<tbody>
 									<tr>
 										<th>Repeat interval</th>
-										<td><input class="Textinput" placeholder="100" /><span
+										<td><input class="Textinput" th:name="repeat"
+											th:id="repeat" th:value="${repeatInterval}"
+											data-validation-rule="{required:true}"
+											data-validation-message="{required:'Repeat Interval을 입력해주세요.'}" /><span
 											class="Padding-left-10 Padding-right-10">분</span>
-											<button class="Button btn">저장</button></td>
+											<button class="Button btn" id="btnUpdate">저장</button>
+											<p class="info-text" data-for="repeat"></p></td>
 									</tr>
 								</tbody>
 							</table>
@@ -214,8 +315,9 @@
 					</form>
 					<!-- search-wrap-->
 					<div class="search-wrap Margin-top-40">
-						<input class="Textinput srcinput" placeholder="검색어를 입력하세요." />
-						<button class="Button btn-search">검색</button>
+						<input class="Textinput srcinput" name="keyword" id="keyword"
+							placeholder="검색어를 입력하세요." />
+						<button class="Button btn-search" id="btnSearch">검색</button>
 					</div>
 					<div class="grid-line__wrap">
 						<div id="rule-grid"></div>
