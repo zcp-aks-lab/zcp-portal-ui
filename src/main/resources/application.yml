@@ -60,7 +60,7 @@ props:
       clientSecret: 944eb586-e550-4577-8081-93f91a22b248
       accessTokenUri: http://localhost:8080/auth/realms/zcp/protocol/openid-connect/token
       userAuthorizationUri: http://localhost:8080/auth/realms/zcp/protocol/openid-connect/auth
-      redirectUri: ${HOME_URL:http://localhost:8181}/k8s-login
+      redirectUri: ${HOME_URL:http://localhost:8181}/login
   iam:
     baseUrl: https://zcp-iam.cloudzcp.io:443
   alertmanager:
@@ -86,8 +86,7 @@ props:
       clientSecret: 0227b024-6483-4e96-827b-3bc4dd73637e
       accessTokenUri: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/token
       userAuthorizationUri: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/auth
-#      redirectUri: https://console.cloudzcp.io/k8s-login
-      redirectUri: ${HOME_URL:http://localhost:8181}/k8s-login
+      redirectUri: ${HOME_URL:http://localhost:8181}/login
   iam:
     baseUrl: https://zcp-iam.cloudzcp.io:443
   alertmanager:
@@ -114,7 +113,7 @@ props:
       clientSecret: 0227b024-6483-4e96-827b-3bc4dd73637e
       accessTokenUri: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/token
       userAuthorizationUri: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/auth
-      redirectUri: https://console.cloudzcp.io/k8s-login
+      redirectUri: https://console.cloudzcp.io/login
   iam:
     baseUrl: http://zcp-iam:80
   alertmanager:
