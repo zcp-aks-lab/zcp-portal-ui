@@ -29,8 +29,12 @@
                         	method: 'post',
                             data: $('#form').serializeObject(), 
                             success : function(res) {
-                            	alert('저장되었습니다.');
-                                location.reload();
+                            	commonPopup.alert({
+                                    message: '저장 되었습니다.',
+                                    callback: function() {
+                                        location.reload();
+                                    }
+                                });
                             },
                             error: function(errObject) {
                                 //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -151,7 +155,6 @@
                             </tbody>
                         </table>
                         <div class="btn-wrap">
-                            <!-- <div class="btn-left"><button class="Button btn">취소</button></div> -->
                             <div class="btn-right"><button class="Button btn bg-red" id="btnUpdate">변경</button></div>
                         </div>
                     </fieldset>

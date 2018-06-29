@@ -35,18 +35,28 @@
                     	if (!this.validation()) {
                             return false;
                         }
-                    	
-                        $a.request('/my/updatedPassword', {
-                            method: 'post',
-                            data: $('#form').serializeObject(), 
-                            success: function(res) {
-                                alert('저장되었습니다.');
-                                location.reload();
-                            },
-                            error: function(errObject) {
-                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+
+                    	commonPopup.confirm({
+                            title: '비밀번호 변경',
+                            message: '비밀번호를 변경 하시겠습니까?',
+                            callback: function() {
+                            	$a.request('/my/updatedPassword', {
+                                    method: 'post',
+                                    data: $('#form').serializeObject(), 
+                                    success: function(res) {
+                                    	commonPopup.alert({
+                                            message: '비밀번호가 변경되었습니다.',
+                                            callback: function() {
+                                            	$("#form")[0].reset();
+                                            }
+                                        });
+                                    },
+                                    error: function(errObject) {
+                                        //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                    }
+                                }) 
                             }
-                        })
+                        });
                     },
                     validation: function() {
                     	var currentPasswordValid = $('#currentPassword').validate();

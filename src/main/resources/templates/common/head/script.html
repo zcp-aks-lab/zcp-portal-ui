@@ -34,13 +34,12 @@ $a.request.setup({
     },
     error: function(errObject) {
     	console.log(JSON.stringify(errObject));
-
         var responseText = JSON.parse(errObject.responseText);
 
         var status = errObject.status;
         switch(status) {
         case 500:
-            alert(responseText.message);
+            commonPopup.alert({message: responseText.message});
             break;
         }
     }
