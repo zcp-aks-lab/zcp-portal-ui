@@ -1,3 +1,4 @@
+<<<<<<< Upstream, based on origin/develop
 package com.skcc.cloudz.zcp.configuration.web;
 
 import org.springframework.context.annotation.Bean;
@@ -50,3 +51,57 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 	    registry.addViewController("/common/popup/popup").setViewName("common/popup/popup");
 	}
 }
+=======
+package com.skcc.cloudz.zcp.configuration.web;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import com.skcc.cloudz.zcp.configuration.web.interceptor.AddOnServiceMetaDataInterceptor;
+import com.skcc.cloudz.zcp.configuration.web.interceptor.UserNamespaceInterceptor;
+
+@Configuration
+public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
+
+    @Bean
+    public AddOnServiceMetaDataInterceptor addOnServiceMetaDataInterceptor() {
+        AddOnServiceMetaDataInterceptor addOnServiceMetaDataInterceptor = new AddOnServiceMetaDataInterceptor();
+        return addOnServiceMetaDataInterceptor;
+    }
+    
+    @Bean
+    public UserNamespaceInterceptor userNamespaceInterceptor() {
+        UserNamespaceInterceptor userNamespaceInterceptor = new UserNamespaceInterceptor();
+        return userNamespaceInterceptor;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(addOnServiceMetaDataInterceptor()).addPathPatterns(new String[] {"/*", "/**/*"}).excludePathPatterns(new String[] {"/static/**", "/error/**"});
+        registry.addInterceptor(userNamespaceInterceptor()).addPathPatterns(new String[] {"/my/*", "/", "/main"}).excludePathPatterns(new String[] {"/static/**", "/error/**"});
+    }
+    
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+      registry
+          .addMapping("/*")
+          .allowedOrigins("*")
+          .allowedMethods("GET, POST, PUT, DELETE")
+          .allowedHeaders("Content-Type")
+          .allowCredentials(false)
+          .maxAge(3600);
+    }
+    
+	@Override
+	public void addViewControllers(ViewControllerRegistry registry) {
+		registry.addViewController("/management/namespace/pop/popNamespaceDel.html").setViewName("content/management/namespace/pop/popNamespaceDel");
+	    //registry.addViewController("/management/namespace/create").setViewName("content/management/namespace/namespace-add");
+	      
+	    registry.addViewController("/common/popup/popup").setViewName("common/popup/popup");
+	}
+}
+>>>>>>> a18fb81 merge
