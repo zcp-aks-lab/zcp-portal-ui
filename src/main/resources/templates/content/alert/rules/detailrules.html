@@ -1,100 +1,204 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-default">
-    <head>
-        <title>알림</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        
-    </head>
-    <body>
-        <th:block layout:fragment="content">
-        
-	<!-- main-contents -->
-	<div class="cp-container">
-		<!-- contents -->
-		<div class="contents-wrap">
-			<div class="locations-area">
-				<div class="back-list"><a href="#"><span>목록으로 돌아가기</span></a></div>
-			</div>
-			<div class="contents-box">
-				<!-- rule info area-->
-				<div class="top-area">
-                    <h2 class="title">Rules 정보</h2>
-                    <div class="tag-wrap">
-                    	<span class="tag">Rule 정보를 조회 및 수정합니다.</span>
-                    </div>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	layout:decorator="layout/template-default">
+<head>
+<title>알림</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript">
+	var zcpPortalApp = {
+		pageInit : function() {
+			'use strict';
+			this.data.init();
+			this.event.init();
+		},
+		data : {
+			init : function() {
+			},
+			updateRule : function() {
+				if (!this.validation()) {
+					return false;
+				}
+
+				var check = confirm("저장하시겠습니까?");
+				if (check) {
+					$a.request('/alert/updateRule', {
+						method : 'post',
+						data : $('#form').serializeObject(),
+						success : function(res) {
+							if (res.resultCd !== '200') {
+								if (res.resultMsg)
+									alert(res.resultMsg);
+								return false;
+							}
+
+							alert('저장되었습니다.');
+							location.href = '/alert/rules';
+						},
+						error : function(errObject) {
+							alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+						}
+					})
+				} else {
+					return false;
+				}
+			},
+			validation : function() {
+				var typeVal = $("#type").val();
+
+				if (typeVal == 'NodeDown' || typeVal == 'ApiserverDown'
+						|| typeVal == 'K8SNodeNotReady') {
+					return true;
+				} else if (typeVal == 'PodFrequentlyRestarting') {
+					return true;
+				} else {
+					var value2 = $('#value2').validate();
+					if (!value2) {
+						return false;
+					} else {
+						return true;
+					}
+				}
+			}
+		},
+		event : {
+			init : function() {
+				$("#podTr").css("display", "none");
+				if ($('#type').val() == 'NodeDown'
+						|| $('#type').val() == 'ApiserverDown'
+						|| $('#type').val() == 'K8SNodeNotReady'
+						|| $('#type').val() == 'PodFrequentlyRestarting') {
+					$("#exprTr").css("display", "none");
+				}
+				if ($('#type').val() == 'PodFrequentlyRestarting') {
+					$("#podTr").css("display", "");
+				}
+				$('#btnUpdate').on('click', function() {
+					zcpPortalApp.data.updateRule();
+				});
+
+				$('#btnCancel').on('click', function() {
+					location.href = '/alert/rules';
+				});
+			}
+		}
+	}
+
+	$.alopex.page(function() {
+		this.init = function(id, param) {
+			zcpPortalApp.pageInit();
+		};
+	});
+</script>
+</head>
+<body>
+	<th:block layout:fragment="content">
+
+		<!-- main-contents -->
+		<div class="cp-container">
+			<!-- contents -->
+			<div class="contents-wrap">
+				<div class="locations-area">
+					<div class="back-list">
+						<a href="/alert/rules"><span>목록으로 돌아가기</span></a>
+					</div>
 				</div>
-				<!-- add rule table-->
-				<form>
-					<fieldset>
-						<table class="Table Form-type topline">
-							<colgroup>
-								<col style="width: 200px;"/>
-								<col/>
-							</colgroup>
-							<tbody>
-								<tr>
-									<th>Rule 종류<strong class="astertisk">*</strong></th>
-									<td>Node Down</td>
-								</tr>
-								<tr>
-									<th>Namespace / Pod<strong class="astertisk">*</strong></th>
-									<td>Namespace1 / Pod1</td>
-								</tr>
-								<tr>
-									<th>심각도<strong class="astertisk">*</strong></th>
-									<td>Warning</td>
-								</tr>
-								<tr>
-									<th>임계치<strong class="astertisk">*</strong></th>
-									<td>
-										<div class="Divselect">
-										    <select>
-										        <option value="korea">선택</option>
-										        <option value="usa">선택2</option>
-										        <option value="japan">선택3</option>
-										    </select>
-										    <span></span>
-										</div>
-										<div class="Divselect">
-										    <select>
-										        <option value="korea">1</option>
-										        <option value="usa">2</option>
-										        <option value="japan">3</option>
-										    </select>
-										    <span></span>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th>채널<strong class="astertisk">*</strong></th>
-									<td>
-										<div class="Divselect" style="width: 300px;">
-										    <select>
-										        <option value="korea">Slack Admin</option>
-										        <option value="usa">Admin</option>
-										        <option value="japan">Slack</option>
-										    </select>
-										    <span></span>
-										</div>
-										<button class="Button btn">신규 채널</button>
-										<p class="Margin-top-5">Notification <span>3</span>개</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</fieldset>
-				</form>
-				<div class="btn-wrap">
-					<div class="btn-left"><button class="Button btn">취소</button></div>
-					<div class="btn-right"><button class="Button btn bg-red" data-disabled="true">저장</button></div>
+				<div class="contents-box">
+					<!-- rule info area-->
+					<div class="top-area">
+						<h2 class="title">Rules 정보</h2>
+						<div class="tag-wrap">
+							<span class="tag">Rule 정보를 조회 및 수정합니다.</span>
+						</div>
+					</div>
+					<!-- add rule table-->
+					<form th:id="form" onsubmit="return false;">
+						<fieldset>
+							<table class="Table Form-type topline">
+								<colgroup>
+									<col style="width: 200px;" />
+									<col />
+								</colgroup>
+								<tbody>
+									<tr>
+										<th>Rule 종류<strong class="astertisk">*</strong></th>
+										<td>
+											<div th:text="${type}"></div>
+											<div><input type="hidden" th:id="id" th:name="id" th:value="${id}" /></div> 
+											<div><input type="hidden" th:id="type" th:name="type" th:value="${type}" /></div>
+										</td>
+									</tr>
+									<tr th:id="podTr">
+										<th>Pod<strong class="astertisk">*</strong></th>
+										<td>
+											<div th:text="${value}"></div>
+											<div><input type="hidden" th:id="pod" th:name="pod" th:value="${value}" /></div>
+										</td>
+									</tr>
+									<tr>
+										<th>Duration<strong class="astertisk">*</strong></th>
+										<td>
+											<div th:text="${duration}"></div>
+											<div><input type="hidden" th:id="duration" th:name="duration" th:value="${duration}" /></div>
+										</td>
+									</tr>
+									<tr>
+										<th>심각도<strong class="astertisk">*</strong></th>
+										<td>
+											<div th:text="${severity}"></div>
+											<div><input type="hidden" th:id="severity" th:name="severity" th:value="${severity}" /></div>
+										</td>
+									</tr>
+									<tr id="exprTr">
+										<th>임계치<strong class="astertisk">*</strong></th>
+										<td>
+											<div class="Divselect" id="conditionDiv">
+												<select th:name="condition" th:id="condition">
+													<option value="&gt;" th:selected="${condition == '&gt;'}">&gt;</option>
+													<option value="&lt;" th:selected="${condition == '&lt;'}">&lt;</option>
+												</select> <span></span>
+											</div> <input class="Textinput" th:name="value2" th:id="value2"
+											th:value="${value2}" data-validation-rule="{required:true}"
+											data-validation-message="{required:'임계치를 입력해주세요.'}" />
+											<p class="info-text" data-for="value2"></p>
+										</td>
+									</tr>
+									<tr>
+										<th>채널<strong class="astertisk">*</strong></th>
+										<td>
+											<div class="Divselect" style="width: 300px;">
+												<select th:name="channel" th:id="channel"
+													data-validation-rule="{required:true}"
+													data-validation-message="{required:'채널을 선택해주세요.'}">
+													<option th:value="${channel}" th:text="${channel}"></option>
+												</select> <span></span>
+											</div> <!-- <button class="Button btn">신규 채널</button> -->
+											<p class="info-text" data-for="channel"></p> <!-- <p class="Margin-top-5">
+												Notification <span>3</span>개
+											</p> -->
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</fieldset>
+					</form>
+					<div class="btn-wrap">
+						<div class="btn-left">
+							<button class="Button btn" id="btnCancel">취소</button>
+						</div>
+						<div class="btn-right">
+							<!-- <button class="Button btn bg-red" id="btnUpdate" data-disabled="true">저장</button> -->
+							<button class="Button btn bg-red" id="btnUpdate">저장</button>
+						</div>
+					</div>
 				</div>
 			</div>
+			<!-- //contents -->
 		</div>
-		<!-- //contents -->
-	</div>
-	<!-- //main-contents -->
-	
-        </th:block>
-    </body>
-</html>	
+		<!-- //main-contents -->
+
+	</th:block>
+</body>
+</html>

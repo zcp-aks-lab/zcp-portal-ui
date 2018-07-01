@@ -9,9 +9,11 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
@@ -85,9 +87,37 @@ public class RuleController {
 		return resultMap;
 	}
 
-	@GetMapping(value = "/detailRule", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public String detailRule(Model model) throws Exception {
+	@GetMapping(value = "/detailRule/{id}", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+	public String detailRule(Model model, @PathVariable("id") String id) throws Exception {
+		RuleVo ruleDtl = ruleService.getRuleDtl(id);
+        model.addAttribute("type", ruleDtl.getType());
+        model.addAttribute("duration", ruleDtl.getDuration());
+        model.addAttribute("severity", ruleDtl.getSeverity());
+        model.addAttribute("channel", ruleDtl.getChannel());
+        model.addAttribute("condition", ruleDtl.getCondition());
+        model.addAttribute("value2", ruleDtl.getValue2());
+        model.addAttribute("value", ruleDtl.getValue());
+        
 		return "content/alert/rules/detailrules";
+	}
+	
+	@PostMapping(value = "/updateRule", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String, Object> updateRule(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+
+		try {
+			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
+			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
+			resultMap.put("resultData", ruleService.updateRule(params));
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			resultMap.put("resultCd", ApiResult.FAIL.getCode());
+			resultMap.put("resultMsg", e.getMessage());
+		}
+
+		return resultMap;
 	}
 
 	@PostMapping(value = "/deleteRule", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

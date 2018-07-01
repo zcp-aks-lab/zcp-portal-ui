@@ -123,7 +123,10 @@
 												key : 'type',
 												title : 'Rule 종류',
 												width : '200px',
-												align : 'left'
+												align : 'left',
+												render: function(value, data) {
+			                                        return '<a href="javascript:zcpPortalGrid1.data.detailRule(\'' + data.id + '\');" style="font-size:15px;">' + data.type + '</a>';
+			                                    }
 											},
 											{
 												key : 'severity',
@@ -217,7 +220,10 @@
 						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
 					}
 				})
-			}
+			},
+			detailRule: function(id) {
+            	location.href = '/alert/detailRule/' + id;
+            }
 		},
 		event : {
 			init : function() {

@@ -110,9 +110,10 @@ public class RuleService {
 			ruleParam.setValue1(message.get("K8SNodeNotReady"));
 			ruleParam.setCondition("=");
 			ruleParam.setValue2("0");
-			
+
 		} else if ("PodFrequentlyRestarting".equals(params.get("type"))) {
-			String expr = "increase(kube_pod_container_status_restarts_total{pod=~\""+params.get("pod").toString()+".*\"}[1h])";
+			String expr = "increase(kube_pod_container_status_restarts_total{pod=~\"" + params.get("pod").toString()
+					+ ".*\"}[1h])";
 			ruleParam.setValue1(expr);
 			ruleParam.setCondition("");
 			ruleParam.setValue2("");
@@ -220,6 +221,89 @@ public class RuleService {
 		}
 
 		return namespaceList;
+	}
+
+	public RuleVo getRuleDtl(String id) {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/rule/{id}").buildAndExpand(id).toString();
+		logger.info(url);
+
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<RuleVo> entity = new HttpEntity<RuleVo>(headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<RuleVo> response = restTemplate.exchange(url, HttpMethod.GET, entity, RuleVo.class);
+
+		HttpStatus statusCode = response.getStatusCode();
+
+		RuleVo ruleVo = null;
+		if (statusCode == HttpStatus.OK) {
+			ruleVo = response.getBody();
+		}
+
+		return ruleVo;
+	}
+	
+	public RuleVo updateRule(Map<String, Object> params) {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/rule/{id}").buildAndExpand(params.get("id")).toString();
+		logger.info(url);
+		
+		RuleVo ruleParam = new RuleVo();
+		
+		ruleParam.setChannel(params.get("channel").toString());
+		ruleParam.setDuration(params.get("duration").toString());
+		ruleParam.setSeverity(params.get("severity").toString());
+		ruleParam.setType(params.get("type").toString());
+
+		if ("NodeDown".equals(params.get("type"))) {
+			ruleParam.setValue1(message.get("NodeDown"));
+			ruleParam.setCondition("=");
+			ruleParam.setValue2("0");
+
+		} else if ("ApiserverDown".equals(params.get("type"))) {
+			ruleParam.setValue1(message.get("ApiserverDown"));
+			ruleParam.setCondition("=");
+			ruleParam.setValue2("0");
+
+		} else if ("K8SNodeNotReady".equals(params.get("type"))) {
+			ruleParam.setValue1(message.get("K8SNodeNotReady"));
+			ruleParam.setCondition("=");
+			ruleParam.setValue2("0");
+
+		} else if ("PodFrequentlyRestarting".equals(params.get("type"))) {
+			String expr = "increase(kube_pod_container_status_restarts_total{pod=~\"" + params.get("pod").toString()
+					+ ".*\"}[1h])";
+			ruleParam.setValue1(expr);
+			ruleParam.setCondition("");
+			ruleParam.setValue2("");
+
+		} else {
+			ruleParam.setValue1(message.get(ruleParam.getType()));
+			ruleParam.setCondition(params.get("condition").toString());
+			ruleParam.setValue2(params.get("value2").toString());
+		}
+		
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<RuleVo> entity = new HttpEntity<RuleVo>(ruleParam, headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<RuleVo> response = restTemplate.exchange(url, HttpMethod.PUT, entity, RuleVo.class);
+
+		HttpStatus statusCode = response.getStatusCode();
+
+		RuleVo ruleVo = null;
+		if (statusCode == HttpStatus.OK) {
+			ruleVo = response.getBody();
+		}
+
+		return ruleVo;
 	}
 
 }
