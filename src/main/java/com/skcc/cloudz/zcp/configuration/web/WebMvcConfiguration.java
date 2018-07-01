@@ -13,40 +13,38 @@ import com.skcc.cloudz.zcp.configuration.web.interceptor.UserNamespaceIntercepto
 @Configuration
 public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 
-    @Bean
-    public AddOnServiceMetaDataInterceptor addOnServiceMetaDataInterceptor() {
-        AddOnServiceMetaDataInterceptor addOnServiceMetaDataInterceptor = new AddOnServiceMetaDataInterceptor();
-        return addOnServiceMetaDataInterceptor;
-    }
-    
-    @Bean
-    public UserNamespaceInterceptor userNamespaceInterceptor() {
-        UserNamespaceInterceptor userNamespaceInterceptor = new UserNamespaceInterceptor();
-        return userNamespaceInterceptor;
-    }
+	@Bean
+	public AddOnServiceMetaDataInterceptor addOnServiceMetaDataInterceptor() {
+		AddOnServiceMetaDataInterceptor addOnServiceMetaDataInterceptor = new AddOnServiceMetaDataInterceptor();
+		return addOnServiceMetaDataInterceptor;
+	}
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(addOnServiceMetaDataInterceptor()).addPathPatterns(new String[] {"/*", "/**/*"}).excludePathPatterns(new String[] {"/static/**", "/error/**"});
-        registry.addInterceptor(userNamespaceInterceptor()).addPathPatterns(new String[] {"/my/*", "/", "/main"}).excludePathPatterns(new String[] {"/static/**", "/error/**"});
-    }
-    
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-      registry
-          .addMapping("/*")
-          .allowedOrigins("*")
-          .allowedMethods("GET, POST, PUT, DELETE")
-          .allowedHeaders("Content-Type")
-          .allowCredentials(false)
-          .maxAge(3600);
-    }
-    
+	@Bean
+	public UserNamespaceInterceptor userNamespaceInterceptor() {
+		UserNamespaceInterceptor userNamespaceInterceptor = new UserNamespaceInterceptor();
+		return userNamespaceInterceptor;
+	}
+
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(addOnServiceMetaDataInterceptor()).addPathPatterns(new String[] { "/*", "/**/*" })
+				.excludePathPatterns(new String[] { "/static/**", "/error/**" });
+		registry.addInterceptor(userNamespaceInterceptor()).addPathPatterns(new String[] { "/my/*", "/", "/main" })
+				.excludePathPatterns(new String[] { "/static/**", "/error/**" });
+	}
+
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/*").allowedOrigins("*").allowedMethods("GET, POST, PUT, DELETE")
+				.allowedHeaders("Content-Type").allowCredentials(false).maxAge(3600);
+	}
+
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addViewController("/management/namespace/pop/popNamespaceDel.html").setViewName("content/management/namespace/pop/popNamespaceDel");
-	    //registry.addViewController("/management/namespace/create").setViewName("content/management/namespace/namespace-add");
-	      
-	    registry.addViewController("/common/popup/popup").setViewName("common/popup/popup");
+		registry.addViewController("/management/namespace/pop/popNamespaceDel.html")
+				.setViewName("content/management/namespace/pop/popNamespaceDel");
+		// registry.addViewController("/management/namespace/create").setViewName("content/management/namespace/namespace-add");
+
+		registry.addViewController("/common/popup/popup").setViewName("common/popup/popup");
 	}
 }

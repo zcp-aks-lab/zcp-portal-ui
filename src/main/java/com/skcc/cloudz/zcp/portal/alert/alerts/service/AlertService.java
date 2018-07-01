@@ -1,8 +1,6 @@
 package com.skcc.cloudz.zcp.portal.alert.alerts.service;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
