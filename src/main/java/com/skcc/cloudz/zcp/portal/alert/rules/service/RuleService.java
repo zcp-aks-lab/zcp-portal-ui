@@ -1,10 +1,18 @@
 package com.skcc.cloudz.zcp.portal.alert.rules.service;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -14,11 +22,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.common.constants.ApiResult;
+import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
 import com.skcc.cloudz.zcp.common.util.Message;
 import com.skcc.cloudz.zcp.portal.alert.alerts.vo.ApiServerVo;
+import com.skcc.cloudz.zcp.portal.alert.rules.vo.NamespaceVo;
 import com.skcc.cloudz.zcp.portal.alert.rules.vo.RepeatVo;
 import com.skcc.cloudz.zcp.portal.alert.rules.vo.RuleVo;
 
@@ -29,6 +42,9 @@ public class RuleService {
 
 	@Value("${props.alertmanager.baseUrl}")
 	private String baseUrl;
+
+	@Value("${props.iam.baseUrl}")
+	private String iamBaseUrl;
 
 	@Autowired
 	Message message;
@@ -97,6 +113,17 @@ public class RuleService {
 			ruleParam.setValue1(message.get("NodeDown"));
 			ruleParam.setCondition("=");
 			ruleParam.setValue2("0");
+
+		} else if ("ApiserverDown".equals(params.get("type"))) {
+			ruleParam.setValue1(message.get("ApiserverDown"));
+			ruleParam.setCondition("=");
+			ruleParam.setValue2("0");
+
+		} else if ("K8SNodeNotReady".equals(params.get("type"))) {
+			ruleParam.setValue1(message.get("K8SNodeNotReady"));
+			ruleParam.setCondition("=");
+			ruleParam.setValue2("0");
+
 		} else {
 			ruleParam.setValue1(message.get(ruleParam.getType()));
 			ruleParam.setCondition(params.get("condition").toString());
@@ -172,6 +199,56 @@ public class RuleService {
 		}
 
 		return repeatVo;
+	}
+
+	public List<String> getNamespace() throws Exception {
+		ApiResponseVo apiResponseVo = new ApiResponseVo();
+
+		try {
+			String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path("/iam/namespaces").build().toString();
+
+			HttpEntity<String> requestEntity = null;
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			requestEntity = new HttpEntity<String>(headers);
+
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<ApiResponseVo> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,
+					ApiResponseVo.class);
+
+			if (responseEntity != null && responseEntity.getStatusCode() == HttpStatus.OK) {
+				apiResponseVo.setCode(responseEntity.getBody().getCode());
+				apiResponseVo.setMsg(responseEntity.getBody().getMsg());
+				apiResponseVo.setData(responseEntity.getBody().getData());
+			
+				System.out.println(responseEntity.getBody().getData());
+				
+//				JSONObject jsonObj = new JSONObject();
+//				JSONParser jsonParser = new JSONParser();
+//				
+//				jsonObj = (JSONObject) jsonParser.parse(responseEntity.getBody().getData().toString());
+//				
+//				System.out.println(jsonObj);
+			}
+			
+
+			
+
+		} catch (RestClientException e) {
+			e.printStackTrace();
+		}
+
+		// Map<String, Object> data = apiResponseVo.getData();
+		// List<HashMap<String, Object>> items = (List<HashMap<String, Object>>)
+		// data.get("items");
+		//
+		// for (HashMap<String, Object> item : items) {
+		// clusterRoles.add(((HashMap<String, Object>)
+		// item.get("metadata")).get("name").toString());
+		// }
+
+		return null;
 	}
 
 }

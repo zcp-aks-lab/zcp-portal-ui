@@ -1,6 +1,7 @@
 package com.skcc.cloudz.zcp.portal.alert.rules.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,9 @@ public class RuleController {
 
 	@GetMapping(value = "/addRule", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String addRule(Model model) throws Exception {
+		List<String> namespace = ruleService.getNamespace();
+        model.addAttribute("namespace", namespace);
+        
 		return "content/alert/rules/addrules";
 	}
 

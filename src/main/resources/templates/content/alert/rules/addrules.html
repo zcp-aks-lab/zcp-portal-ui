@@ -46,16 +46,43 @@
 				}
 			},
 			validation : function() {
-				var type = $('#type').validate();
-				var condition = $('#condition').validate();
-				var value2 = $('#value2').validate();
-				var channel = $('#channel').validate();
-				var duration = $('#duration').validate();
+				var typeVal = $("#type option:selected").val();
 
-				if (!type || !condition || !value2 || !channel || !duration) {
-					return false;
+				if (typeVal == 'NodeDown' || typeVal == 'ApiserverDown'
+						|| typeVal == 'K8SNodeNotReady') {
+					var type = $('#type').validate();
+					var condition = $('#condition').validate();
+					var channel = $('#channel').validate();
+					var duration = $('#duration').validate();
+					if (!type || !condition || !channel || !duration) {
+						return false;
+					} else {
+						return true;
+					}
+
+				} else if (typeVal == 'PodFrequentlyRestarting') {
+					var type = $('#type').validate();
+					var namespace = $('#namespace').validate();
+					var pod = $('#pod').validate();
+					var channel = $('#channel').validate();
+					var duration = $('#duration').validate();
+					if (!type || !namespace || !pod || !channel || !duration) {
+						return false;
+					} else {
+						return true;
+					}
+
 				} else {
-					return true;
+					var type = $('#type').validate();
+					var condition = $('#condition').validate();
+					var value2 = $('#value2').validate();
+					var channel = $('#channel').validate();
+					var duration = $('#duration').validate();
+					if (!type || !condition || !value2 || !channel || !duration) {
+						return false;
+					} else {
+						return true;
+					}
 				}
 			}
 		},
@@ -95,25 +122,116 @@
 			$('#value2').attr('class', 'Textinput af-disabled Disabled');
 			$('#value2').attr('disabled', true);
 
-			$('#type').change(function(e) {
-				var type = $("#type option:selected").val();
-				if (type == 'NodeDown') {
-					/* $('#conditionDiv').attr('class',
-							'Divselect af-disabled Disabled');
-					$('#conditionDiv').attr('data-disabled', 'true');
-					$('#condition').attr('class',
-							'af-disabled Disabled');
-					$('#condition').attr('disabled', true);
-					$('#value2').attr('class',
-							'Textinput af-disabled Disabled');
-					$('#value2').attr('disabled', true); */
-				} else if (type == 'PodFrequentlyRestarting') {
-					$('#namespaceDiv').attr('class', 'Divselect');
-					$('#namespaceDiv').removeAttr('data-disabled');
-					$('#namespace').removeAttr('class')
-					$('#namespace').attr('disabled', false);
-				}
-			});
+			$('#type').change(
+					function(e) {
+						var type = $("#type option:selected").val();
+						if (type == 'NodeDown') {
+							$('#namespaceDiv').attr('class',
+									'Divselect af-disabled Disabled');
+							$('#namespaceDiv').attr('data-disabled', 'true');
+							$('#namespace').attr('disabled', true);
+
+							$('#pod').attr('class',
+									'Textinput af-disabled Disabled');
+							$('#pod').attr('data-disabled', 'true');
+							$('#pod').attr('disabled', true);
+
+							$('#conditionDiv').attr('class',
+									'Divselect af-disabled Disabled');
+							$('#conditionDiv').attr('data-disabled', 'true');
+							$('#condition').attr('class',
+									'af-disabled Disabled');
+							$('#condition').attr('disabled', true);
+
+							$('#value2').attr('class',
+									'Textinput af-disabled Disabled');
+							$('#value2').attr('disabled', true);
+
+						} else if (type == 'ApiserverDown') {
+							$('#namespaceDiv').attr('class',
+									'Divselect af-disabled Disabled');
+							$('#namespaceDiv').attr('data-disabled', 'true');
+							$('#namespace').attr('disabled', true);
+
+							$('#pod').attr('class',
+									'Textinput af-disabled Disabled');
+							$('#pod').attr('data-disabled', 'true');
+							$('#pod').attr('disabled', true);
+
+							$('#conditionDiv').attr('class',
+									'Divselect af-disabled Disabled');
+							$('#conditionDiv').attr('data-disabled', 'true');
+							$('#condition').attr('class',
+									'af-disabled Disabled');
+							$('#condition').attr('disabled', true);
+
+							$('#value2').attr('class',
+									'Textinput af-disabled Disabled');
+							$('#value2').attr('disabled', true);
+
+						} else if (type == 'K8SNodeNotReady') {
+							$('#namespaceDiv').attr('class',
+									'Divselect af-disabled Disabled');
+							$('#namespaceDiv').attr('data-disabled', 'true');
+							$('#namespace').attr('disabled', true);
+
+							$('#pod').attr('class',
+									'Textinput af-disabled Disabled');
+							$('#pod').attr('data-disabled', 'true');
+							$('#pod').attr('disabled', true);
+
+							$('#conditionDiv').attr('class',
+									'Divselect af-disabled Disabled');
+							$('#conditionDiv').attr('data-disabled', 'true');
+							$('#condition').attr('class',
+									'af-disabled Disabled');
+							$('#condition').attr('disabled', true);
+
+							$('#value2').attr('class',
+									'Textinput af-disabled Disabled');
+							$('#value2').attr('disabled', true);
+
+						} else if (type == 'PodFrequentlyRestarting') {
+							$('#namespaceDiv').attr('class', 'Divselect');
+							$('#namespaceDiv').removeAttr('data-disabled');
+							$('#namespace').removeAttr('class')
+							$('#namespace').attr('disabled', false);
+
+							$('#pod').attr('class', 'Textinput');
+							$('#pod').removeAttr('data-disabled');
+							$('#pod').attr('disabled', false);
+
+							$('#conditionDiv').attr('class',
+									'Divselect af-disabled Disabled');
+							$('#conditionDiv').attr('data-disabled', 'true');
+							$('#condition').attr('class',
+									'af-disabled Disabled');
+							$('#condition').attr('disabled', true);
+
+							$('#value2').attr('class',
+									'Textinput af-disabled Disabled');
+							$('#value2').attr('disabled', true);
+
+						} else {
+							$('#namespaceDiv').attr('class',
+									'Divselect af-disabled Disabled');
+							$('#namespaceDiv').attr('data-disabled', 'true');
+							$('#namespace').attr('disabled', true);
+
+							$('#pod').attr('class',
+									'Textinput af-disabled Disabled');
+							$('#pod').attr('data-disabled', 'true');
+							$('#pod').attr('disabled', true);
+
+							$('#conditionDiv').attr('class', 'Divselect');
+							$('#conditionDiv').removeAttr('data-disabled');
+							$('#condition').removeAttr('class');
+							$('#condition').attr('disabled', false);
+
+							$('#value2').attr('class', 'Textinput');
+							$('#value2').attr('disabled', false);
+						}
+					});
 			zcpPortalApp.pageInit();
 		};
 	});
@@ -174,10 +292,14 @@
 										<td>
 											<div class="Divselect" id="namespaceDiv" data-disabled="true"
 												style="width: 300px;">
-												<select th:name="namespace" th:id="namespace">
+												<select th:name="namespace" th:id="namespace"
+													data-validation-rule="{required:true}"
+													data-validation-message="{required:'Namespace를 선택해주세요.'}">
 													<option value="">Namespace 선택</option>
+													<option th:each="namespace : ${namespace}" th:value="${namespace}" th:text="${namespace}"></option>
 												</select> <span></span>
 											</div>
+											<p class="info-text" data-for="namespace"></p>
 										</td>
 									</tr>
 									<tr>
