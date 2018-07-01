@@ -110,6 +110,12 @@ public class RuleService {
 			ruleParam.setValue1(message.get("K8SNodeNotReady"));
 			ruleParam.setCondition("=");
 			ruleParam.setValue2("0");
+			
+		} else if ("PodFrequentlyRestarting".equals(params.get("type"))) {
+			String expr = "increase(kube_pod_container_status_restarts_total{pod=~\""+params.get("pod").toString()+".*\"}[1h])";
+			ruleParam.setValue1(expr);
+			ruleParam.setCondition("");
+			ruleParam.setValue2("");
 
 		} else {
 			ruleParam.setValue1(message.get(ruleParam.getType()));
