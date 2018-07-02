@@ -117,16 +117,20 @@
 												title : 'id',
 												width : '100px',
 												align : 'center',
-												hidden : true
+												hidden : false
 											},
 											{
 												key : 'type',
 												title : 'Rule 종류',
 												width : '200px',
 												align : 'left',
-												render: function(value, data) {
-			                                        return '<a href="javascript:zcpPortalGrid1.data.detailRule(\'' + data.id + '\');" style="font-size:15px;">' + data.type + '</a>';
-			                                    }
+												render : function(value, data) {
+													return '<a href="javascript:zcpPortalGrid1.data.detailRule(\''
+															+ data.id
+															+ '\');" style="font-size:15px;">'
+															+ data.type
+															+ '</a>';
+												}
 											},
 											{
 												key : 'severity',
@@ -227,9 +231,9 @@
 					}
 				})
 			},
-			detailRule: function(id) {
-            	location.href = '/alert/detailRule/' + id;
-            }
+			detailRule : function(id) {
+				location.href = '/alert/detailRule/' + id;
+			}
 		},
 		event : {
 			init : function() {
@@ -282,7 +286,7 @@
 	<th:block layout:fragment="content">
 		<textarea id="customFunction" style="display: none;">
 			function(data) {
-				return data['type'] == $("#keyword").val();
+				return data['type'].toLowerCase().indexOf($("#keyword").val().toLowerCase()) >= 0;
 			}
 		</textarea>
 		<!-- main-contents -->
