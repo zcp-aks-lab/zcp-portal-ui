@@ -246,13 +246,14 @@ public class RuleService {
 
 		return ruleVo;
 	}
-	
+
 	public RuleVo updateRule(Map<String, Object> params) {
-		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/rule/{id}").buildAndExpand(params.get("id")).toString();
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/rule/{id}").buildAndExpand(params.get("id"))
+				.toString();
 		logger.info(url);
-		
+
 		RuleVo ruleParam = new RuleVo();
-		
+
 		ruleParam.setChannel(params.get("channel").toString());
 		ruleParam.setDuration(params.get("duration").toString());
 		ruleParam.setSeverity(params.get("severity").toString());
@@ -285,7 +286,7 @@ public class RuleService {
 			ruleParam.setCondition(params.get("condition").toString());
 			ruleParam.setValue2(params.get("value2").toString());
 		}
-		
+
 		HttpHeaders headers = new HttpHeaders();
 
 		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));

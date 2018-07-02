@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
@@ -63,8 +62,8 @@ public class RuleController {
 	@GetMapping(value = "/addRule", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String addRule(Model model) throws Exception {
 		List<String> namespace = ruleService.getNamespace();
-        model.addAttribute("namespace", namespace);
-        
+		model.addAttribute("namespace", namespace);
+
 		return "content/alert/rules/addrules";
 	}
 
@@ -90,17 +89,20 @@ public class RuleController {
 	@GetMapping(value = "/detailRule/{id}", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String detailRule(Model model, @PathVariable("id") String id) throws Exception {
 		RuleVo ruleDtl = ruleService.getRuleDtl(id);
-        model.addAttribute("type", ruleDtl.getType());
-        model.addAttribute("duration", ruleDtl.getDuration());
-        model.addAttribute("severity", ruleDtl.getSeverity());
-        model.addAttribute("channel", ruleDtl.getChannel());
-        model.addAttribute("condition", ruleDtl.getCondition());
-        model.addAttribute("value2", ruleDtl.getValue2());
-        model.addAttribute("value", ruleDtl.getValue());
-        
+
+		if (ruleDtl != null) {
+			model.addAttribute("type", ruleDtl.getType());
+			model.addAttribute("duration", ruleDtl.getDuration());
+			model.addAttribute("severity", ruleDtl.getSeverity());
+			model.addAttribute("channel", ruleDtl.getChannel());
+			model.addAttribute("condition", ruleDtl.getCondition());
+			model.addAttribute("value2", ruleDtl.getValue2());
+			model.addAttribute("value", ruleDtl.getValue());
+		}
+
 		return "content/alert/rules/detailrules";
 	}
-	
+
 	@PostMapping(value = "/updateRule", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Map<String, Object> updateRule(@RequestBody Map<String, Object> params) throws Exception {

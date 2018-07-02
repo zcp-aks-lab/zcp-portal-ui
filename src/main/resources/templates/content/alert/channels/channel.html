@@ -1,242 +1,646 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-default">
-    <head>
-        <title>알림</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        
-    </head>
-    <body>
-        <th:block layout:fragment="content">
-        
-	<!-- main-contents -->
-	<div class="cp-container">
-		<!-- contents -->
-		<div class="contents-wrap">
-			<div class="locations-area"></div>
-			<div class="contents-box">
-				<!-- service top area-->
-				<div class="top-area">
-                    <h2 class="title">채널</h2>
-                    <div class="tag-wrap">
-                    	<span class="tag">Alert의 실시간 알림을 위한 채널 정보를 관리합니다.</span>
-                    </div>
-				</div>
-				<!-- channel detail -->
-				<div class="channel-wrap">
-					<div class="lay-item__box">
-						<!-- left table-->
-						<div class="lay-item__left">
-							<div class="form-btn__wrap">
-								<h3 class="form-title">채널 목록</h3>
-								<div class="btn-wrap__right">
-				                    <button class="Button btn-ico__typeb btn-addchannel">채널 추가</button>
-				                    <div class="Tooltip" data-position="left">채널 추가</div>
-				                </div>
-				            </div>
-				            <!-- search-wrap-->
-							<div class="search-wrap">
-								<input class="Textinput srcinput" placeholder="검색어를 입력하세요."/><button class="Button btn-search">검색</button>
-							</div>
-							<div id="gr"></div>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	layout:decorator="layout/template-default">
+<head>
+<title>알림</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript">
+	$.alopex.page(function() {
+		this.init = function(id, param) {
+			zcpPortalGrid.pageInit();
+			/* zcpPortalApp.pageInit(); */
+		};
+	});
+
+	/* var zcpPortalApp = {
+		pageInit : function() {
+			'use strict';
+			this.data.init();
+			this.event.init();
+		},
+		data : {
+			init : function() {
+			},
+			updateRepeat : function() {
+				if (!this.validation()) {
+					return false;
+				}
+
+				var check = confirm("저장하시겠습니까?");
+				if (check) {
+					$a.request('/alert/updateRepeat', {
+						method : 'post',
+						data : $('#form').serializeObject(),
+						success : function(res) {
+							if (res.resultCd !== '200') {
+								if (res.resultMsg)
+									alert(res.resultMsg);
+								return false;
+							}
+
+							alert('저장되었습니다.');
+							location.href = '/alert/rules';
+						},
+						error : function(errObject) {
+							alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+						}
+					})
+				} else {
+					return false;
+				}
+			},
+			validation : function() {
+				var type = $('#repeat').validate();
+
+				if (!type) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		},
+		event : {
+			init : function() {
+				$('#btnUpdate').on('click', function() {
+					zcpPortalApp.data.updateRepeat();
+				});
+			}
+		}
+	} */
+
+	var zcpPortalGrid = {
+		pageInit : function() {
+			'use strict';
+			this.grid.init();
+			this.data.init();
+			this.event.init();
+		},
+		grid : {
+			init : function() {
+				$("#channel-grid").removeAlopexGrid();
+				$('#channel-grid')
+						.alopexGrid(
+								{
+									pager : true,
+									fitTableWidth : true,
+									filteringHeader : false,
+									filter : {
+										movable : true,
+										saveFilterSize : true,
+										title : true
+									},
+									paging : {
+										perPage : 5,
+										pagerCount : 5,
+										pagerSelect : true,
+										pagerTotal : true
+									},
+									defaultSorting : {
+										sortingColumn : 'id',
+										sortingDirection : 'desc'
+									},
+									defaultColumnMapping : {
+										sorting : true,
+										resizing : true
+									},
+									message : {
+										nodata : '데이타가 없습니다.'
+									},
+									enableDefaultContextMenu : false,
+									autoColumnIndex : true,
+									columnMapping : [
+											{
+												key : 'id',
+												title : 'id',
+												width : '100px',
+												align : 'center',
+												hidden : true
+											},
+											{
+												key : 'channel',
+												title : '채널',
+												width : '200px',
+												align : 'left',
+												render : function(value, data) {
+													return '<a href="javascript:zcpPortalGrid.data.detailChannel(\''
+															+ data.id
+															+ '\');" style="font-size:15px;">'
+															+ data.channel
+															+ '</a>';
+												}
+											},
+											{
+												key : 'notifications',
+												title : 'Notifications',
+												width : '120px',
+												align : 'center'
+											},
+											/* {
+												selectorColumn : true,
+												key : 'use',
+												title : '사용',
+												width : '100px',
+												align : 'center',
+												hidden : false
+											}, */
+											{
+												key : 'delete',
+												title : '관리',
+												width : '100px',
+												align : 'center',
+												render : function(value, data) {
+													return '<button class="btn-ico del" onclick="zcpPortalGrid.data.deleteChannel(\''
+															+ data.id
+															+ '\');" />';
+												}
+											} ],
+								});
+			},
+		},
+		data : {
+			init : function() {
+				this.getList();
+			},
+			getList : function() {
+				$a.request('/alert/channelList', {
+					method : 'get',
+					data : null,
+					success : function(res) {
+						if (res.resultCd !== '200') {
+							if (res.resultMsg)
+								alert(res.resultMsg);
+							return false;
+						}
+
+						$('#channel-grid')
+								.alopexGrid('dataSet', res.resultData);
+					},
+					error : function(errObject) {
+						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+					}
+				})
+			},
+			deleteChannel : function(id) {
+				var data = {
+					id : id
+				};
+
+				if (!confirm('삭제하시겠습니까?'))
+					return false;
+				$a.request('/alert/deleteChannel', {
+					method : 'post',
+					data : data,
+					success : function(res) {
+						if (res.resultCd !== '200') {
+							if (res.resultMsg)
+								alert(res.resultMsg);
+							return false;
+						}
+
+						alert('정상처리 되었습니다.');
+						location.reload();
+					},
+					error : function(errObject) {
+						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+					}
+				})
+			},
+			detailChannel : function(id) {
+				var test = {
+					id : id
+				};
+				
+				$('#channel').val('');
+				$('#notifications').val('');
+				$('#email_to').val('');
+				$('#slack_api_url').val('');
+				$('#hipchat_api_url').val('');
+				$('#hipchat_room_id').val('');
+				$('#hipchat_auth_token').val('');
+				$('#hipchat_notify').val('');
+				$('#webhook_url').val('');
+
+				$a.request('/alert/channelDtl', {
+					method : 'post',
+					data : test,
+					success : function(res) {
+						if (res.resultCd !== '200') {
+							if (res.resultMsg)
+								alert(res.resultMsg);
+							return false;
+						}
+
+						$('#channel').val(res.resultData.channel);
+						$('#notifications').text(res.resultData.notifications);
+
+						if (res.resultData.email_to == null) {
+							$('#emailDiv').css('display', 'none');
+						} else {
+							$('#emailDiv').css('display', '');
+							$('#email_to').val(res.resultData.email_to);
+						}
+
+						if (res.resultData.slack_api_url == null) {
+							$('#slackDiv').css('display', 'none');
+						} else {
+							$('#slackDiv').css('display', '');
+							$('#slack_api_url').val(
+									res.resultData.slack_api_url);
+						}
+
+						if (res.resultData.hipchat_api_url == null) {
+							$('#hipchatDiv').css('display', 'none');
+						} else {
+							$('#hipchatDiv').css('display', '');
+							$('#hipchat_api_url').val(
+									res.resultData.hipchat_api_url);
+							$('#hipchat_room_id').val(
+									res.resultData.hipchat_room_id);
+							$('#hipchat_auth_token').val(
+									res.resultData.hipchat_auth_token);
+							$('#hipchat_notify').val(
+									res.resultData.hipchat_notify);
+						}
+
+						if (res.resultData.webhook_url == null) {
+							$('#webhookDiv').css('display', 'none');
+						} else {
+							$('#webhookDiv').css('display', '');
+							$('#webhook_url').val(res.resultData.webhook_url);
+						}
+					},
+					error : function(errObject) {
+						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+					}
+				});
+				$('#defaultDiv').css('display', 'none');
+				$('#rightDiv').css('display', '');
+			}
+		},
+		event : {
+			init : function() {
+				$('#btnSearch').on(
+						'click',
+						function() {
+							var customFilter = null;
+							try {
+								customFilter = eval("("
+										+ $("#customFunction").val() + ")");
+							} catch (e) {
+							}
+							if (!customFilter || !$.isFunction(customFilter)) {
+								alert("올바르지 않은 필터함수 입니다.");
+								return;
+							}
+							$("#channel-grid").alopexGrid('setFilter',
+									'customFilter', customFilter);
+						});
+
+				$('#keyword')
+						.on(
+								'keydown',
+								function(e) {
+									if (e.keyCode === 13) {
+										var customFilter = null;
+										try {
+											customFilter = eval("("
+													+ $("#customFunction")
+															.val() + ")");
+										} catch (e) {
+										}
+										if (!customFilter
+												|| !$.isFunction(customFilter)) {
+											alert("올바르지 않은 필터함수 입니다.");
+											return;
+										}
+										$("#channel-grid").alopexGrid(
+												'setFilter', 'customFilter',
+												customFilter);
+									}
+								});
+
+				$('#btnAdd').on('click', function() {
+					/* location.href = '/alert/addRule'; */
+				});
+
+				$('#gubun').change(function() {
+					var gubunVal = $("#gubun option:selected").val();
+
+					if (gubunVal == '') {
+						if ($('#email_to').val() != '')
+							$('#emailDiv').css('display', '');
+						if ($('#slack_api_url').val() != '')
+							$('#slackDiv').css('display', '');
+						if ($('#hipchat_api_url').val() != '')
+							$('#hipchatDiv').css('display', '');
+						if ($('#webhook_url').val() != '')
+							$('#webhookDiv').css('display', '');
+
+					} else if (gubunVal == 'email') {
+						if ($('#email_to').val() != '')
+							$('#emailDiv').css('display', '');
+						$('#slackDiv').css('display', 'none');
+						$('#hipchatDiv').css('display', 'none');
+						$('#webhookDiv').css('display', 'none');
+
+					} else if (gubunVal == 'slack') {
+						$('#emailDiv').css('display', 'none');
+						if ($('#slack_api_url').val() != '')
+							$('#slackDiv').css('display', '');
+						$('#hipchatDiv').css('display', 'none');
+						$('#webhookDiv').css('display', 'none');
+
+					} else if (gubunVal == 'hipchat') {
+						$('#emailDiv').css('display', 'none');
+						$('#slackDiv').css('display', 'none');
+						if ($('#hipchat_api_url').val() != '')
+							$('#hipchatDiv').css('display', '');
+						$('#webhookDiv').css('display', 'none');
+
+					} else if (gubunVal == 'webhook') {
+						$('#emailDiv').css('display', 'none');
+						$('#slackDiv').css('display', 'none');
+						$('#hipchatDiv').css('display', 'none');
+						if ($('#webhook_url').val() != '')
+							$('#webhookDiv').css('display', '');
+					}
+				});
+			}
+		}
+	}
+</script>
+</head>
+<body>
+	<th:block layout:fragment="content">
+		<textarea id="customFunction" style="display: none;">
+			function(data) {
+				return data['channel'].toLowerCase().indexOf($("#keyword").val().toLowerCase()) >= 0;
+			}
+		</textarea>
+		<!-- main-contents -->
+		<div class="cp-container">
+			<!-- contents -->
+			<div class="contents-wrap">
+				<div class="locations-area"></div>
+				<div class="contents-box">
+					<!-- service top area-->
+					<div class="top-area">
+						<h2 class="title">채널</h2>
+						<div class="tag-wrap">
+							<span class="tag">Alert의 실시간 알림을 위한 채널 정보를 관리합니다.</span>
 						</div>
-						<!--right table-->
-						<div class="lay-item__right">
-							<h3 class="form-title">채널상세</h3>
-							<!-- channel form table first-->
-							<form>
-								<fieldset>
-									<table class="Table Form-type">
-										<colgroup>
-											<col style="width: 200px;"/>
-											<col/>
-										</colgroup>
-										<tbody>
-											<tr>
-												<th>채널명</th>
-												<td>
-													<input class="Textinput"/>
-													<button class="Button btn">저장</button>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</fieldset>
-							</form>
-							<!-- channel noti detail-->
-							<div class="channel-noti">
-								<div class="channel-noti__left">
-									Notifications 연결 : 총<span>30</span>개
-								</div>
-								<div class="channel-noti__right">
-									<div class="Divselect">
-									    <select>
-									        <option value="korea">전체</option>
-									        <option value="usa">CPU(core)</option>
-									        <option value="japan">CPU(core)</option>
-									        <option value="china">CPU(core)</option>
-									    </select>
-									    <span></span>
+					</div>
+					<!-- channel detail -->
+					<div class="channel-wrap">
+						<div class="lay-item__box">
+							<!-- left table-->
+							<div class="lay-item__left">
+								<div class="form-btn__wrap">
+									<h3 class="form-title">채널 목록</h3>
+									<div class="btn-wrap__right">
+										<button class="Button btn-ico__typeb btn-addchannel">채널
+											추가</button>
+										<div class="Tooltip" data-position="left">채널 추가</div>
 									</div>
-									<button class="Button btn">Notification 추가</button>
+								</div>
+								<!-- search-wrap-->
+								<div class="search-wrap">
+									<input class="Textinput srcinput" name="keyword" id="keyword"
+										placeholder="검색어를 입력하세요." />
+									<button class="Button btn-search" id="btnSearch">검색</button>
+								</div>
+								<div class="grid-line__wrap">
+									<div id="channel-grid"></div>
 								</div>
 							</div>
-							<!-- channel form table second-->
-							<div class="form-btn__wrap">
-								<h3 class="form-subtitle">Email</h3>
-								<div class="btn-wrap__right">
-									<label class="ImageCheckbox" id="checkTest03">
-									    <input class="Checkbox" type="checkbox" name="chk1" value = "check1" checked="checked"/>
-									</label>
-				                    <button class="btn-ico channel-del">삭제</button>
-				                </div>
-				            </div>
-							<form>
-								<fieldset>
-									<table class="Table Form-type channel-line">
-										<colgroup>
-											<col style="width: 200px;"/>
-											<col/>
-										</colgroup>
-										<tbody>
-											<tr>
-												<th class="Valign-top">Email addresses</th>
-												<td>
-													<textarea class="Textarea Width-100" rows="4"></textarea>
-													<p class="info-text Margin-bottom-5">이메일 형식 오류입니다.</p>
-													<button class="Button btn">테스트</button>
-													<button class="Button btn">저장</button>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</fieldset>
-							</form>
-							<!-- channel form table third-->
-							<div class="form-btn__wrap">
-								<h3 class="form-subtitle">Slack</h3>
-								<div class="btn-wrap__right">
-									<label class="ImageCheckbox" id="checkTest03">
-									    <input class="Checkbox" type="checkbox" name="chk1" value = "check1" checked="checked"/>
-									</label>
-				                    <button class="btn-ico channel-del">삭제</button>
-				                </div>
-				            </div>
-							<form>
-								<fieldset>
-									<table class="Table Form-type channel-line">
-										<colgroup>
-											<col style="width: 200px;"/>
-											<col/>
-										</colgroup>
-										<tbody>
-											<tr>
-												<th class="Valign-top">URL</th>
-												<td>
-													<input class="Textinput Width-100"/>
-													<div class="Margin-top-5">
-														<button class="Button btn">테스트</button>
-														<button class="Button btn">저장</button>
-													</div>
-													<p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해 주세요.</p>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</fieldset>
-							</form>
-							<!-- channel form table forth-->
-							<div class="form-btn__wrap">
-								<h3 class="form-subtitle">Hipchat</h3>
-								<div class="btn-wrap__right">
-									<label class="ImageCheckbox" id="checkTest03">
-									    <input class="Checkbox" type="checkbox" name="chk1" value = "check1" checked="checked"/>
-									</label>
-				                    <button class="btn-ico channel-del">삭제</button>
-				                </div>
-				            </div>
-							<form>
-								<fieldset>
-									<table class="Table Form-type channel-line">
-										<colgroup>
-											<col style="width: 200px;"/>
-											<col/>
-										</colgroup>
-										<tbody>
-											<tr>
-												<th>URL</th>
-												<td><input class="Textinput Width-100"/></td>
-											</tr>
-											<tr>
-												<th>Room ID</th>
-												<td><input class="Textinput Width-100"/></td>
-											</tr>
-											<tr>
-												<th>Token</th>
-												<td><input class="Textinput Width-100"/></td>
-											</tr>
-											<tr>
-												<th class="Valign-top">Notify</th>
-												<td>
-													<label class="ImageRadio">
-													    <input class="Radio" name="radio2" value="value1"/>True
-													</label>
-													<label class="ImageRadio Margin-left-80">
-													    <input class="Radio" name="radio2" value="value1" checked="checked"/>False
-													</label>
-													<div class="Margin-top-15">
-														<button class="Button btn">테스트</button>
-														<button class="Button btn">저장</button>
-													</div>
-													<p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해 주세요.</p>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</fieldset>
-							</form>
-							<!-- channel form table fifth-->
-							<div class="form-btn__wrap">
-								<h3 class="form-subtitle">Webhook</h3>
-								<div class="btn-wrap__right">
-									<label class="ImageCheckbox" id="checkTest03">
-									    <input class="Checkbox" type="checkbox" name="chk1" value = "check1" checked="checked"/>
-									</label>
-				                    <button class="btn-ico channel-del">삭제</button>
-				                </div>
-				            </div>
-							<form>
-								<fieldset>
-									<table class="Table Form-type channel-line">
-										<colgroup>
-											<col style="width: 200px;"/>
-											<col/>
-										</colgroup>
-										<tbody>
-											<tr>
-												<th class="Valign-top">URL</th>
-												<td>
-													<input class="Textinput Width-100"/>
-													<div class="Margin-top-5">
-														<button class="Button btn">테스트</button>
-														<button class="Button btn">저장</button>
-													</div>
-													<p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해 주세요.</p>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</fieldset>
-							</form>
+							<!--right table-->
+							<div class="lay-item__right">
+								<h3 class="form-title">채널상세</h3>
+								<!-- channel form table first-->
+								<div id="defaultDiv">
+									<fieldset>
+										<table class="Table Form-type">
+											<colgroup>
+												<col />
+											</colgroup>
+											<tbody>
+												<tr height="317px">
+													<td style="text-align: center;">왼쪽 목록에서 채널을 선택하세요.</td>
+												</tr>
+											</tbody>
+										</table>
+									</fieldset>
+								</div>
+								<div id="rightDiv" style="display: none;">
+									<form th:id="form" onsubmit="return false;">
+										<fieldset>
+											<table class="Table Form-type">
+												<colgroup>
+													<col style="width: 200px;" />
+													<col />
+												</colgroup>
+												<tbody>
+													<tr>
+														<th>채널명</th>
+														<td><input class="Textinput" th:id="channel"
+															th:name="channel" />
+															<button class="Button btn">저장</button></td>
+													</tr>
+												</tbody>
+											</table>
+										</fieldset>
+									</form>
+									<!-- channel noti detail-->
+									<div class="channel-noti">
+										<div class="channel-noti__left">
+											Notifications 연결 : 총 <span id="notifications"></span>개
+										</div>
+										<div class="channel-noti__right">
+											<div class="Divselect">
+												<select th:id="gubun" th:name="gubun">
+													<option value="">전체</option>
+													<option value="email">Email</option>
+													<option value="slack">Slack</option>
+													<option value="hipchat">Hipchat</option>
+													<option value="webhook">Webhook</option>
+												</select> <span></span>
+											</div>
+											<button class="Button btn">Notification 추가</button>
+										</div>
+									</div>
+									<!-- channel form table second-->
+									<div id="emailDiv" style="display: none;">
+										<div class="form-btn__wrap">
+											<h3 class="form-subtitle">Email</h3>
+											<div class="btn-wrap__right">
+												<!-- <label class="ImageCheckbox" id="checkTest03"> <input
+												class="Checkbox" type="checkbox" name="chk1" value="check1"
+												checked="checked" />
+											</label> -->
+												<button class="btn-ico channel-del">삭제</button>
+											</div>
+										</div>
+										<form th:id="emailForm" onsubmit="return false;">
+											<fieldset>
+												<table class="Table Form-type channel-line">
+													<colgroup>
+														<col style="width: 200px;" />
+														<col />
+													</colgroup>
+													<tbody>
+														<tr>
+															<th class="Valign-top">Email addresses</th>
+															<td><textarea class="Textarea Width-100" rows="4"
+																	th:id="email_to" th:name="email_to"></textarea>
+																<p class="info-text Margin-bottom-5">이메일 형식 오류입니다.</p> <!-- <button class="Button btn">테스트</button> -->
+																<button class="Button btn">저장</button></td>
+														</tr>
+													</tbody>
+												</table>
+											</fieldset>
+										</form>
+									</div>
+									<!-- channel form table third-->
+									<div id="slackDiv" style="display: none;">
+										<div class="form-btn__wrap">
+											<h3 class="form-subtitle">Slack</h3>
+											<div class="btn-wrap__right">
+												<!-- <label class="ImageCheckbox" id="checkTest03"> <input
+												class="Checkbox" type="checkbox" name="chk1" value="check1"
+												checked="checked" />
+											</label> -->
+												<button class="btn-ico channel-del">삭제</button>
+											</div>
+										</div>
+										<form th:id="slackForm" onsubmit="return false;">
+											<fieldset>
+												<table class="Table Form-type channel-line">
+													<colgroup>
+														<col style="width: 200px;" />
+														<col />
+													</colgroup>
+													<tbody>
+														<tr>
+															<th class="Valign-top">URL</th>
+															<td><input class="Textinput Width-100"
+																th:id="slack_api_url" th:name="slack_api_url" />
+																<div class="Margin-top-5">
+																	<!-- <button class="Button btn">테스트</button> -->
+																	<button class="Button btn">저장</button>
+																</div>
+																<p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
+																	주세요.</p></td>
+														</tr>
+													</tbody>
+												</table>
+											</fieldset>
+										</form>
+									</div>
+									<!-- channel form table forth-->
+									<div id="hipchatDiv" style="display: none;">
+										<div class="form-btn__wrap">
+											<h3 class="form-subtitle">Hipchat</h3>
+											<div class="btn-wrap__right">
+												<!-- <label class="ImageCheckbox" id="checkTest03"> <input
+												class="Checkbox" type="checkbox" name="chk1" value="check1"
+												checked="checked" />
+											</label> -->
+												<button class="btn-ico channel-del">삭제</button>
+											</div>
+										</div>
+										<form th:id="hipchatForm" onsubmit="return false;">
+											<fieldset>
+												<table class="Table Form-type channel-line">
+													<colgroup>
+														<col style="width: 200px;" />
+														<col />
+													</colgroup>
+													<tbody>
+														<tr>
+															<th>URL</th>
+															<td><input class="Textinput Width-100"
+																th:id="hipchat_api_url" th:name="hipchat_api_url" /></td>
+														</tr>
+														<tr>
+															<th>Room ID</th>
+															<td><input class="Textinput Width-100"
+																th:id="hipchat_room_id" th:name="hipchat_room_id" /></td>
+														</tr>
+														<tr>
+															<th>Token</th>
+															<td><input class="Textinput Width-100"
+																th:id="hipchat_auth_token" th:name="hipchat_auth_token" /></td>
+														</tr>
+														<tr>
+															<th class="Valign-top">Notify</th>
+															<td><label class="ImageRadio"> <input
+																	class="Radio" th:id="hipchat_notify"
+																	th:name="hipchat_notify" />True
+															</label> <label class="ImageRadio Margin-left-80"> <input
+																	class="Radio" th:id="hipchat_notify"
+																	th:name="hipchat_notify" checked="checked" />False
+															</label>
+																<div class="Margin-top-15">
+																	<!-- <button class="Button btn">테스트</button> -->
+																	<button class="Button btn">저장</button>
+																</div>
+																<p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
+																	주세요.</p></td>
+														</tr>
+													</tbody>
+												</table>
+											</fieldset>
+										</form>
+									</div>
+									<!-- channel form table fifth-->
+									<div id="webhookDiv" style="display: none;">
+										<div class="form-btn__wrap">
+											<h3 class="form-subtitle">Webhook</h3>
+											<div class="btn-wrap__right">
+												<!-- <label class="ImageCheckbox" id="checkTest03"> <input
+												class="Checkbox" type="checkbox" name="chk1" value="check1"
+												checked="checked" />
+											</label> -->
+												<button class="btn-ico channel-del">삭제</button>
+											</div>
+										</div>
+										<form th:id="webhookForm" onsubmit="return false;">
+											<fieldset>
+												<table class="Table Form-type channel-line">
+													<colgroup>
+														<col style="width: 200px;" />
+														<col />
+													</colgroup>
+													<tbody>
+														<tr>
+															<th class="Valign-top">URL</th>
+															<td><input class="Textinput Width-100"
+																th:id="webhook_url" th:name="webhook_url" />
+																<div class="Margin-top-5">
+																	<!-- <button class="Button btn">테스트</button> -->
+																	<button class="Button btn">저장</button>
+																</div>
+																<p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
+																	주세요.</p></td>
+														</tr>
+													</tbody>
+												</table>
+											</fieldset>
+										</form>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<!-- //contents -->
 		</div>
-		<!-- //contents -->
-	</div>
-	<!-- //main-contents -->
+		<!-- //main-contents -->
 
-        </th:block>
-    </body>
-</html>		
+	</th:block>
+</body>
+</html>
