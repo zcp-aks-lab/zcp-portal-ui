@@ -1189,19 +1189,12 @@ a.blank-link {
 	border-radius: 0;
 }
 .Panel.service-panel {height: 150px;}
-.Panel.namespace-panel, .Panel.dash-panel {height: 230px;}
+.Panel.dash-panel {height: 230px;}
+.Panel.namespace-panel {height: 240px;}
 .Panel.service-panel.make-box, .Panel.namespace-panel.make-box {border-color: #eeeeee;}
 .Panel.service-panel .Panel-content, 
 .Panel.namespace-panel .Panel-content {padding: 16px 20px 20px;}
 .Panel.dash-panel .Panel-content {padding: 10px 16px;}
-.new-make {
-	display: block;
-	width: 100%;
-	height: 200px;
-	padding-top: 80px;
-	text-align: center;
-	font-size: 1.13rem;
-}
 .Icon.ico-cloudz.make-plus {
 	margin-left: 4px;
 	background: url("../images/ico-common.png") no-repeat -238px 0;
@@ -1214,8 +1207,8 @@ a.blank-link {
 }
 .namespace-info {
 	position: relative;
-	padding: 10px 0 20px;
-	margin-bottom: 20px;
+	padding: 10px 0 0;
+	margin-bottom: 10px;
 	border-bottom: 1px solid #dddddd;
 }
 .service-info dt,
@@ -1306,7 +1299,7 @@ a.blank-link {
 .namespace-btn__wrap {
 	position: absolute;
 	right: 0;
-	bottom: 16px;
+	bottom: 10px;
 }
 .vline {
 	display: inline-block;
@@ -1324,17 +1317,17 @@ a.blank-link {
 }
 .name-progress__wrap li {
 	float: left;
-	padding-right: 2%;
-	width: 43%;
+	position: relative;
+	width: 50%;
+	margin-bottom: 10px;
 }
-.name-progress__wrap li:last-child {
-	width: 14%;
-	padding-right: 0;
-}
-.name-progress__wrap li:last-child .name-pro__title {text-align: center;}
 .name-pro__title {
+	display: block;
 	margin-bottom: 10px;
 	font-size: 0.87rem;
+}
+.name-progress__wrap .Progressbar {
+	width: calc(100% - 100px);
 }
 .Progressbar.name-typea,
 .Progressbar.name-typeb,
@@ -1355,16 +1348,28 @@ a.blank-link {
 .Progressbar.name-typed div {background: #169bd5;}
 .Progressbar.name-typee div {background: #ea0530;}
 .name-pro__info {
-	float: left;
-	position: relative;
-	top: -4px;
+	position: absolute;
+	top: 23px;
+	right: 0;
+	width: 100px;
+	padding-left: 10px;
 	font-size: 0.73rem;
-	margin-right: 10px;
 }
 .name-user__info {
-	display: block;
 	text-align: center;
 	margin-top: -4px;
+}
+.new-make {
+	display: block;
+	width: 100%;
+	height: 200px;
+	padding-top: 80px;
+	text-align: center;
+	font-size: 17px;
+}
+.Panel.service-panel.make-box .new-make {
+	height: 150px;
+	padding-top: 45px;
 }
 /* form layout common */
 .lay-item__box {
@@ -1933,14 +1938,6 @@ a.view-detail:active {
 .ico-cloudz.make-plus {
 	margin-left: 4px;
 	background-position: -238px 0;
-}
-.new-make {
-	display: block;
-	width: 100%;
-	height: 100px;
-	padding-top: 40px;
-	text-align: center;
-	font-size: 17px;
 }
 .contents-box.info-box {padding: 0;}
 .top-area.info-area {

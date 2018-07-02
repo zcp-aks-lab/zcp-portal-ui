@@ -8,11 +8,11 @@
  * You shall not disclose such confidential information and shall use it only in
  * accordance with the terms of the license agreement you entered into with SK Holdings C&C.
  * 
- * Date : 2018-04-19 12:38:08 GMT+0900 (대한민국 표준시)
+ * Date : 2018-04-19 12:38:08 GMT+0900 (���븳誘쇨뎅 �몴以��떆)
  **/
 @charset "UTF-8";
 .Css-version {
-	/* css version 확인을 위한 css입니다. 삭제하거나 변경하지 마세요. */
+	/* css version �솗�씤�쓣 �쐞�븳 css�엯�땲�떎. �궘�젣�븯嫄곕굹 蹂�寃쏀븯吏� 留덉꽭�슂. */
 }
 
 .Accordion, .Accordion *,
@@ -63,7 +63,7 @@
 .Combobox, .Combobox *,
 .Flexbox, .Flexbox * {
 	box-sizing: border-box;
-	font-family: Arial, "돋움", "돋움체", dotum, sans-serif;
+	font-family: Arial, "�룍��", "�룍��泥�", dotum, sans-serif;
 }
 
 ::-ms-clear {
@@ -1685,8 +1685,8 @@
 }
 
 /* 
-	//ie와의 호환성 관련 
-	ie에서는 space-around와 space-evenly에 대한 property가 없어 비슷한 justify로 대체함
+	//ie���쓽 �샇�솚�꽦 愿��젴 
+	ie�뿉�꽌�뒗 space-around�� space-evenly�뿉 ���븳 property媛� �뾾�뼱 鍮꾩듂�븳 justify濡� ��泥댄븿
 
 */
 .Flexbox-space-around {
@@ -3520,13 +3520,13 @@
 	color: #ffffff;
 }
 
-/* 대 메뉴 바로 아래 sub menu */
+/* �� 硫붾돱 諛붾줈 �븘�옒 sub menu */
 .Hierarchical > li > ul {
 	top: 25px;
 	left: 20px;
 }
 
-/* 3 depth 이상 sub menu */
+/* 3 depth �씠�긽 sub menu */
 .Hierarchical ul {
 	position: absolute;
 	top: 10px;
@@ -3745,13 +3745,13 @@
 	color: #ffffff;
 }
 
-/* 대 메뉴 바로 아래 sub menu */
+/* �� 硫붾돱 諛붾줈 �븘�옒 sub menu */
 .Navmenu > li > ul {
 	top: 100%;
 	left: 0%;
 }
 
-/* 3 depth 이상 sub menu */
+/* 3 depth �씠�긽 sub menu */
 .Navmenu ul {
 	position: absolute;
 	top: 3px;
@@ -4327,6 +4327,7 @@
 	-moz-border-radius: 4px;
 	-ms-border-radius: 4px;
 	border-radius: 4px;
+	width : 100px;
 }
 
 .Progressbar div {

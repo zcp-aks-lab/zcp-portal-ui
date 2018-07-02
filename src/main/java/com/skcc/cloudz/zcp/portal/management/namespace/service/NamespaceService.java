@@ -30,7 +30,7 @@ public class NamespaceService {
     public Map<String, Object> getResourceQuota(EnquryNamespaceVO vo) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
-        ApiResponseVo response = client.request("/iam/resourceQuotas", vo);
+        ApiResponseVo response = client.request("/iam/metrics/namespaces", vo);
         if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(response.getMsg());
         }

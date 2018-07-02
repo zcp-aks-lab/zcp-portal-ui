@@ -1,6 +1,6 @@
 .alopexgrid .wrapper {
 	border: 0;
-	border-bottom: 1px solid #cccccc;
+	border-bottom: 1px solid #eeeeee;
 }
 .alopexgrid .headercell, 
 .alopexgrid .headercell.cell-header-lastrow.cell-header-firstrow {
@@ -8,7 +8,7 @@
 	padding-top: 6px;
 	color: #444444;
 	font-weight: bold;
-	border-top: 1px solid #cccccc;
+	border-top: 1px solid #eeeeee;
 	background: #ffffff;
 }
 .alopexgrid .cell {

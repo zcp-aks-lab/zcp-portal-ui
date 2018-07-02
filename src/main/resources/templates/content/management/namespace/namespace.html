@@ -160,19 +160,32 @@
     	AlopexGrid.setup({
     		fitTableWidth : true // 테이블의 너비를 그리드 너비에 맞춰 확장시키는 옵션
     	});
-    	data = objToString(data);
+    	//data = objToString(data);
     	$('#grid').alopexGrid({
     		renderMapping : {
-    			cpu_bar: {
+    			cpu_request_bar: {
     				renderer : function(value, data, render, mapping) {
-    					return '<span class="name-pro__info">' + data.status.used["requests.cpu"] + "/" + data.status.hard["requests.cpu"] +'</span>'
-    						+'<div class="Progressbar name-typea" attr="data-default="' +data.usedCpuRate + '"></div>';
+    					return '<span class="name-pro__info">' + data.usedCpuRequests + "/" + data.hardCpuRequests +'</span>' +
+    					'<div class="Progressbar name-typea" data-default="' +data.cpuRequestsPercentage + '" width="100px"></div>'
+    					
 	    			}
 	    		},
-	    		memory_bar: {
+	    		cpu_limits_bar: {
     				renderer : function(value, data, render, mapping) {
-    					return '<span class="name-pro__info">' +data.status.used["requests.cpu"] + "/" + data.status.hard["requests.cpu"] +'</span>'
-    					+'<div class="Progressbar name-typea" attr="data-default="' +data.usedMemoryRate + '"></div>';
+    					return '<div class="Progressbar name-typea" data-default="' +data.cpuLimitsPercentage + '" width="100px"></div>'
+    					+'<span class="name-pro__info">' + data.usedCpuLimits + "/" + data.hardCpuLimits +'</span>'
+	    			}
+	    		},
+	    		memory_request_bar: {
+    				renderer : function(value, data, render, mapping) {
+    					return '<div class="Progressbar name-typea" data-default="' +data.memoryRequestsPercentage + '" width="100px""></div>'
+    					+ '<span class="name-pro__info">' +data.usedMemoryRequests + "/" + data.hardMemoryRequests +'</span>'
+	    			}
+	    		},
+	    		memory_limit_bar: {
+    				renderer : function(value, data, render, mapping) {
+    					return '<div class="Progressbar name-typea" data-default="' +data.memoryLimitsPercentage + '" width="100px""></div>'
+    					+ '<span class="name-pro__info">' +data.usedMemoryLimits + "/" + data.hardMemoryLimits +'</span>'
 	    			}
 	    		}
     		},
@@ -194,24 +207,32 @@
     		columnMapping : [
     			{
     				align : 'center',
-    				key : 'namespace',
+    				key : 'name',
     				title : '네임스페이스',
     				width : '100px',
     				render : function(value, data){
     					return '<a href="/management/namespace/'+value+'">' +value+ '</a>';
     				}
     			}, {
-    				key : 'status',
-    				title : 'CPU Req/Limit',
-    				width : '200px',
+    				title : 'CPU Request',
+    				width : '150px',
     				align : 'center',
-    				render : {type:"cpu_bar"}  
+    				render : {type:"cpu_request_bar"}  
     			}, {
     				align : 'center',
-    				key : 'status',
-    				title : 'Memory Req/Limit',
-    				width : '200px',
-    				render : {type:"memory_bar"}
+    				title : 'CPU Limit',
+    				width : '150px',
+    				render : {type:"cpu_limits_bar"}
+    			}, {
+    				title : 'Memory Request',
+    				width : '150px',
+    				align : 'center',
+    				render : {type:"memory_request_bar"}  
+    			}, {
+    				align : 'center',
+    				title : 'Memory Limit',
+    				width : '150px',
+    				render : {type:"memory_limit_bar"}
     			}, {
     				align : 'center',
     				key : 'userCount',
@@ -219,16 +240,16 @@
     				width : '100px'
     			}, {
     				align : 'center',
-    				key : 'active',
+    				key : 'status',
     				title : '상태',
     				width : '100px'
     			}, {
     				align : 'center',
-    				key : 'creationTimestamp',
+    				key : 'creationDate',
     				title : '생성일시',
     				width : '100px',
     				render : function(value, data, render, mapping){
-    					var dt = new Date(Number(data.creationTimestamp));
+    					var dt = new Date(Number(data.creationDate));
     					return  dt.customFormat( "#YYYY#/#MM#/#DD# #hh#:#mm#:#ss#" )
     				}
     			}, {
@@ -266,6 +287,7 @@
 	   		});
 		}
 	}
+	
 	 /*]]>*/
     </script>
 </head>
@@ -325,37 +347,43 @@
 						<!-- name space panel-->
 						<div class="Panel namespace-panel" th:each="namespace : ${namespace.items} ">
 		                	<div class="Panel-content">
-		                		<span th:class="'state ' + ${namespace.active}">active</span>
+		                		<span th:class="'state ' + ${namespace.status}">active</span>
 		                		<dl class="namespace-info">
-		                			<dt><a th:href="'/management/namespace/' + ${namespace.namespace}"  th:text="${namespace.namespace}"></a></dt>
-		                			<dd>
-		                				<div class="tag-wrap">
-		                					&nbsp;
+		                			<dt><a th:href="'/management/namespace/' + ${namespace.name}"  th:text="${namespace.name}"></a></dt>
+		                			<dd class="time-info">
+		                				<strong>생성일시</strong> : <span th:text="${#dates.format(namespace.creationDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+		                				<div class="name-pro__title">
+		                					사용자 : <span class="name-user__info" th:text="${namespace.userCount}"></span>
 		                				</div>
 		                			</dd>
-		                			<dd class="time-info"><strong>생성일시</strong> : <span>5시간 전 </span></dd>
 		                			<dd>
 		                				<div class="namespace-btn__wrap">
-				                			<button class="btn-ico btn-viewdash" th:onclick="'location.href=\'/?namespace=' + ${namespace.namespace} + '\';'">대쉬보드보기</button>
+				                			<button class="btn-ico btn-viewdash" th:onclick="'location.href=\'/?namespace=' + ${namespace.name} + '\';'">대쉬보드보기</button>
 				                			<span class="vline"></span>
-				                			<button class="btn-ico btn-delnamespace" th:onclick="'deleteNamespace(\'' + ${namespace.namespace} + '\')'">삭제</button>
+				                			<button class="btn-ico btn-delnamespace" th:onclick="'deleteNamespace(\'' + ${namespace.name} + '\')'">삭제</button>
 				                		</div>
 				                	</dd>
 		                		</dl>
 	                			<ul class="name-progress__wrap">
 	                				<li>
-	                					<p class="name-pro__title">CPU Reg./Limit</p>
-	                					<span class="name-pro__info" th:text="${namespace.status.used['requests.cpu']} + '/' + ${namespace.status.hard['limits.cpu']}"></span>
-	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.usedCpuRate}"></div>
+	                					<p class="name-pro__title">CPU Request</p>
+	                					<span class="name-pro__info" th:text="${namespace.usedCpuRequests} + '/' + ${namespace.hardCpuRequests}"></span>
+	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.cpuRequestsPercentage}"></div>
 	                				</li>
 	                				<li>
-	                					<p class="name-pro__title">Memory Reg./Limit</p>
-	                					<span class="name-pro__info" th:text="${namespace.status.used['requests.memory']} + '/' + ${namespace.status.hard['limits.memory']}"></span>
-	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.usedMemoryRate}"></div>
+	                					<p class="name-pro__title">Memory Request</p>
+	                					<span class="name-pro__info" th:text="${namespace.usedMemoryRequests} + '/' + ${namespace.hardMemoryRequests}"></span>
+	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.memoryRequestsPercentage}"></div>
 	                				</li>
 	                				<li>
-	                					<p class="name-pro__title">사용자</p>
-	                					<span class="name-user__info" th:text="${namespace.userCount}">10</span>
+	                					<p class="name-pro__title">CPU Limit</p>
+	                					<span class="name-pro__info" th:text="${namespace.usedCpuLimits} + '/' + ${namespace.hardCpuLimits}"></span>
+	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.cpuLimitsPercentage}"></div>
+	                				</li>
+	                				<li>
+	                					<p class="name-pro__title">Memory Limit</p>
+	                					<span class="name-pro__info" th:text="${namespace.usedMemoryLimits} + '/' + ${namespace.hardMemoryLimits}"></span>
+	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.memoryLimitsPercentage}"></div>
 	                				</li>
 	                			</ul>
 		                	</div>
