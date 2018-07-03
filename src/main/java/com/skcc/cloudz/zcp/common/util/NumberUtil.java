@@ -1,5 +1,7 @@
 package com.skcc.cloudz.zcp.common.util;
 
+import java.math.BigDecimal;
+
 import com.skcc.cloudz.zcp.common.exception.InvalidRequestException;
 
 public class NumberUtil {
@@ -37,4 +39,22 @@ public class NumberUtil {
     public Long nvlLong(Long objData, int nTrans) {
         return (objData == null) ? nTrans : objData;
     }
+    
+    public static int compare(double a, double b) {
+		if (a == b)
+			return 0;
+		if (a > b)
+			return 1;
+		else
+			return -1;
+	}
+    
+	public static int compare(int a, int b) {
+		if (a == b)
+			return 0;
+		if (a > b)
+			return 1;
+		else
+			return -1;
+	}
 }

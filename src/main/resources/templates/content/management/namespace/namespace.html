@@ -23,11 +23,22 @@
 	        callback : function(data){
 	        	if(data==name){
 	        		ajaxCall('/management/namespace/delete', {namespace:name}).done(function(data){
-		    	   		alert('삭제  되었습니다.');
-		    	   		location.reload();
+		    	   		//alert('삭제  되었습니다.');
+		    	   		commonPopup.alert({
+		                    message: '삭제  되었습니다.',
+		                    callback: function() {
+		                    	location.reload();
+		                    }
+		                });
 	    	   		});		
 	        	}else if(data){
-	        		alert('네임스페이스명이 다릅니다.');
+	        		//alert('네임스페이스명이 다릅니다.');
+	        		commonPopup.alert({
+	                    message: '삭제  되었습니다.',
+	                    callback: function() {
+	                    	location.reload();
+	                    }
+	                });
 	        	}
 	        },
 	        alias: "flag1",
@@ -337,8 +348,10 @@
 							</div>
 							<ul class="sort-list" id="sort">
 								<li id="namespace" onclick="orderby('namespace', this)">Namespace</li>
-								<li id="cpu" onclick="orderby('cpu', this)">CPU Req/Limit</li>
-								<li id="memory" onclick="orderby('memory', this)">Memory Req/Limit</li>
+								<li id="cpu" onclick="orderby('cpuR', this)">CPU Request</li>
+								<li id="cpu" onclick="orderby('cpuL', this)">CPU Limit</li>
+								<li id="memory" onclick="orderby('memoryR', this)">Memory Request</li>
+								<li id="memory" onclick="orderby('memoryL', this)">Memory Limit</li>
 								<li id="user" onclick="orderby('user', this)">사용자</li>
 								<li id="status" onclick="orderby('status',  this)">상태</li>
 								<li id="createTime" onclick="orderby('createTime', this)">생성일시</li>
@@ -367,22 +380,22 @@
 	                			<ul class="name-progress__wrap">
 	                				<li>
 	                					<p class="name-pro__title">CPU Request</p>
-	                					<span class="name-pro__info" th:text="${namespace.usedCpuRequests} + '/' + ${namespace.hardCpuRequests}"></span>
+	                					<span class="name-pro__info" th:text="${namespace.usedCpuRequestsString} + '/' + ${namespace.hardCpuRequestsString}"></span>
 	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.cpuRequestsPercentage}"></div>
 	                				</li>
 	                				<li>
 	                					<p class="name-pro__title">Memory Request</p>
-	                					<span class="name-pro__info" th:text="${namespace.usedMemoryRequests} + '/' + ${namespace.hardMemoryRequests}"></span>
+	                					<span class="name-pro__info" th:text="${namespace.usedMemoryRequestsString} + '/' + ${namespace.hardMemoryRequestsString}"></span>
 	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.memoryRequestsPercentage}"></div>
 	                				</li>
 	                				<li>
 	                					<p class="name-pro__title">CPU Limit</p>
-	                					<span class="name-pro__info" th:text="${namespace.usedCpuLimits} + '/' + ${namespace.hardCpuLimits}"></span>
+	                					<span class="name-pro__info" th:text="${namespace.usedCpuLimitsString} + '/' + ${namespace.hardCpuLimitsString}"></span>
 	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.cpuLimitsPercentage}"></div>
 	                				</li>
 	                				<li>
 	                					<p class="name-pro__title">Memory Limit</p>
-	                					<span class="name-pro__info" th:text="${namespace.usedMemoryLimits} + '/' + ${namespace.hardMemoryLimits}"></span>
+	                					<span class="name-pro__info" th:text="${namespace.usedMemoryLimitsString} + '/' + ${namespace.hardMemoryLimitsString}"></span>
 	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.memoryLimitsPercentage}"></div>
 	                				</li>
 	                			</ul>

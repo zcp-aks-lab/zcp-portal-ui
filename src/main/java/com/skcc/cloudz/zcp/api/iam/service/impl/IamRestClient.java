@@ -79,17 +79,12 @@ public class IamRestClient {
         ApiResponseVo apiResponseVo = new ApiResponseVo();
         
         try {
-            String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path(targetUrl)
-            		.queryParam("namespace", data.getNamespace())
-                    .queryParam("sortItem", data.getSortItem())
-                    .queryParam("sortOrder", data.isSortOrder())
-                    .queryParam("label", data.getLabel())
-            		.build().toString();
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path(targetUrl).build().toString();
             log.info("===> Request Url : {}", url);
-            ObjectMapper oMapper = new ObjectMapper();
+            //ObjectMapper oMapper = new ObjectMapper();
             HttpHeaders httpHeaders = new HttpHeaders();
             HttpEntity<?> httpEntity  = new HttpEntity<>(httpHeaders); 
-            Map<String, String> params = oMapper.convertValue(data, Map.class);
+            //Map<String, String> params = oMapper.convertValue(data, Map.class);
             ResponseEntity<ApiResponseVo> responseEntity =restTemplate.exchange(url, HttpMethod.GET, httpEntity,ApiResponseVo.class);
             
             

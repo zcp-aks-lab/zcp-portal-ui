@@ -1,11 +1,11 @@
 package com.skcc.cloudz.zcp.portal.management.namespace.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -14,10 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
 import com.skcc.cloudz.zcp.api.iam.service.impl.IamRestClient;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
+import com.skcc.cloudz.zcp.common.util.NumberUtil;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.EnquryNamespaceVO;
+import com.skcc.cloudz.zcp.portal.management.user.vo.ZcpNamespace;
+import com.skcc.cloudz.zcp.portal.management.user.vo.ZcpNamespaceList;
 
 @Service
 public class NamespaceService {
@@ -27,17 +31,82 @@ public class NamespaceService {
 	@Autowired
     private IamRestClient client;
 	
-    public Map<String, Object> getResourceQuota(EnquryNamespaceVO vo) throws Exception {
+    public Object getResourceQuota(EnquryNamespaceVO vo) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        
-        ApiResponseVo response = client.request("/iam/metrics/namespaces", vo);
+        ApiResponseVo response = client.request("/iam/metrics/namespaces", null);
         if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(response.getMsg());
         }
         
-        resultMap.putAll(response.getData());
-    
-        return resultMap;
+        ObjectMapper mapper = new ObjectMapper(); 
+        ZcpNamespaceList namespaceList = mapper.convertValue(response.getData(), ZcpNamespaceList.class);
+        List<ZcpNamespace> listQuotas = namespaceList.getItems();
+        Stream<ZcpNamespace> stream = null;
+		
+        if (!StringUtils.isEmpty(vo.getSortItem())) {
+			stream = namespaceList.getItems().stream();
+			switch (vo.getSortItem()) {
+			case "namespace":
+				if (vo.isSortOrder())
+					stream = stream.sorted((a, b) -> a.getName().compareTo(b.getName()));// asc
+				else
+					stream = stream.sorted((a, b) -> b.getName().compareTo(a.getName()));
+				break;
+			case "cpuR":
+				if (vo.isSortOrder())
+					stream = stream.sorted((a, b) -> a.getUsedCpuRequests().compareTo(b.getUsedCpuRequests()));
+				else
+					stream = stream.sorted((a, b) -> b.getUsedCpuRequests().compareTo(a.getUsedCpuRequests()));
+				break;
+			case "cpuL":
+				if (vo.isSortOrder())
+					stream = stream.sorted((a, b) -> a.getUsedCpuLimits().compareTo(b.getUsedCpuLimits()));
+				else
+					stream = stream.sorted((a, b) -> b.getUsedCpuLimits().compareTo(a.getUsedCpuLimits()));
+				break;
+			case "memoryR":
+				if (vo.isSortOrder())
+					stream = stream.sorted((a, b) -> a.getUsedMemoryRequests().compareTo(b.getUsedMemoryRequests()));
+				else
+					stream = stream.sorted((a, b) -> a.getUsedMemoryRequests().compareTo(b.getUsedMemoryRequests()));
+				break;
+			case "memoryL":
+				if (vo.isSortOrder())
+					stream = stream.sorted((a, b) -> a.getUsedMemoryLimits().compareTo(b.getUsedMemoryLimits()));
+				else
+					stream = stream.sorted((a, b) -> a.getUsedMemoryLimits().compareTo(b.getUsedMemoryLimits()));
+				break;
+			case "user":
+				if (vo.isSortOrder())
+					stream = stream.sorted((a, b) -> NumberUtil.compare(a.getUserCount(), b.getUserCount()));
+				else
+					stream = stream.sorted((a, b) -> NumberUtil.compare(b.getUserCount(), a.getUserCount()));
+				break;
+			case "status":
+				if (vo.isSortOrder())
+					stream = stream.sorted((a, b) -> a.getStatus().compareTo(b.getStatus()));
+				else
+					stream = stream.sorted((a, b) -> b.getStatus().compareTo(a.getStatus()));
+				break;
+			case "createTime":
+				if (vo.isSortOrder())
+					stream = stream.sorted((a, b) -> a.getCreationDate().compareTo(b.getCreationDate()));
+				else
+					stream = stream.sorted((a, b) -> b.getCreationDate().compareTo(a.getCreationDate()));
+				break;
+			}
+		}
+		
+		if (!StringUtils.isEmpty(vo.getNamespace())) {
+			stream = stream.filter(namespace -> namespace.getName().indexOf(vo.getNamespace()) > -1);
+		}
+
+
+		if (stream != null)
+			listQuotas = stream.collect(Collectors.toList());
+
+		namespaceList.setItems(listQuotas);
+		return namespaceList;
     }
     
     public Map<String, Object> getResourceLabel() throws Exception {

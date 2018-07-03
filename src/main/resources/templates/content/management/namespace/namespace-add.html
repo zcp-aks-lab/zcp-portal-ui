@@ -15,56 +15,66 @@
 			if(!validate()) return ;
 			
 			var data={
-				resourceQuota : {
-					spec :{
-						hard : {
-							"requests.cpu" : $('#input_cpu_requests').val() + ''
-							,"limits.cpu" : $('#input_cpu_limits').val() + ''
-							,"requests.memory" : $('#input_memory_requests').val() + ''
-							,"limits.memory" : $('#input_memory_limits').val() + ''
-							,"pods" : $('#input_pods').val() ? $('#input_pods').val() + '': "0" 
-							,"services" : $('#input_services').val() ? $('#input_services').val() + '': "0"
-							,"secrets" : $('#input_secrets').val() ? $('#input_secrets').val()+ '' : "0"
-							,"configmaps" : $('#input_config_maps').val() ? $('#input_config_maps').val()+ '' : "0"
-							,"persistentvolumeclaims" : $('#input_pesistent_volumne').val() ? $('#input_pesistent_volumne').val()+ '' : "0"
-							,"services.loadbalancers" : $('#input_persistent_service_load').val() ? $('#input_persistent_service_load').val()+ '' : "0"
-						}
+					namespace : $('#input_namespace').val()
+					,resourceQuota : {
+						"cpuRequests" : $('#input_cpu_requests').val() 
+						,"cpuRequestsUnit" : $('#select_cpu_requests option:selected').val()
+						,"cpuLimits" : $('#input_cpu_limits').val() 
+						,"cpuLimitsUnit" : $('#select_cpu_limits option:selected').val()
+						,"memoryRequests" : $('#input_memory_requests').val() 
+						,"memoryRequestsUnit" : $('#select_memory_requests option:selected').val()
+						,"memoryLimits" : $('#input_memory_limits').val() 
+						,"memoryLimitsUnit": $('#select_memory_limits option:selected').val()
+						,"pods" : $('#input_pods').val() ? $('#input_pods').val() + '': "0" 
+						,"services" : $('#input_services').val() ? $('#input_services').val() + '': "0"
+						,"secrets" : $('#input_secrets').val() ? $('#input_secrets').val()+ '' : "0"
+						,"configmaps" : $('#input_config_maps').val() ? $('#input_config_maps').val()+ '' : "0"
+						,"persistentvolumeclaims" : $('#input_persistent_volumne').val() ? $('#input_persistent_volumne').val()+ '' : "0"
+						,"servicesLoadbalancers" : $('#input_load_balancers').val() ? $('#input_load_balancers').val()+ '' : "0"
+					},
+					limitRange : {
+						cpuRequests : $('#input_pod_cpu_requests').val() 
+						,cpuRequestsUnit :  $('#select_pod_cpu_requests option:selected').val()
+						,memoryRequests:  $('#input_pod_memory_requests').val() 
+						,memoryRequestsUnit : $('#select_pod_memory_requests option:selected').val()
+						,cpuLimits :  $('#input_pod_cpu_limits').val() 
+						,cpuLimitsUnit : $('#select_pod_cpu_limits option:selected').val()
+						,memoryLimits : $('#input_pod_memory_limits').val() 
+						,memoryLimitsUnit : $('#select_pod_memory_limits option:selected').val()
 					}
-				},
-				limitRange : {
-					spec : {
-						limits : [{
-							defaultRequest : {
-								cpu : $('#input_pod_cpu_requests').val()
-								,memory :  $('#input_pod_memory_requests').val()
-							},
-							default : {
-								cpu :  $('#input_pod_cpu_limits').val()
-								,memory : $('#input_pod_memory_limits').val()
-							},
-							type: "Container"
-						}]
-					}
-				},
-				namespace :  $('#input_namespace').val()
-			};
+				};
 			var url = "/management/namespace/createAndEdit";
 			
 			ajaxCall(url, data).done(function(data){
-				alert('정상처리되었습니다.');
-				location.href='/management/namespaces';
+				commonPopup.alert({
+                    message: '정상처리 되었습니다.',
+                    callback: function() {
+                    	location.href='/management/namespaces';
+                    }
+                });
+				
 			});
 		}
 		
 		function validate(){
 			var regex_namespace = /^[a-zA-Z][0-9a-zA-z\-]{5,11}$/;
 			if(!regex_namespace.test($('#input_namespace').val())){
-				alert('허용하지 않는 문자입니다.');
+				//alert('허용하지 않는 문자입니다.');
+				commonPopup.alert({
+                    message: '허용하지 않는 문자입니다.',
+                    callback: function() {
+                    }
+                });
 				return false;
 			}
 			if(!$('#input_cpu_requests').val()) {
 				$('#input_cpu_requests').focus();
-				alert('필수값 입니다.');
+				//alert('필수값 입니다.');
+				commonPopup.alert({
+                    message: '필수값 입니다.',
+                    callback: function() {
+                    }
+                });
 				return false;
 			}
 			if(!$('#input_cpu_limits').val()) return false;
@@ -135,10 +145,10 @@
 											<th>CPU Requests</th>
 											<td>
 												<input class="Textinput" id="input_cpu_requests"/>
-												<div class="Divselect" style="width: 150px">
+												<div class="Divselect" id="select_cpu_requests">
 												    <select>
-												        <option value="k">CPU(core)</option>
-												        <option value="m">m(core)</option>
+												        <option value="Core">CPU(core)</option>
+												        <option value="MilliCore">m(core)</option>
 												    </select>
 												    <span></span>
 												</div>
@@ -148,10 +158,10 @@
 											<th>CPU Limits</th>
 											<td>
 												<input class="Textinput" id="input_cpu_limits"/>
-												<div class="Divselect" style="width: 150px">
+												<div class="Divselect"  id="select_cpu_limits">
 												    <select>
-												        <option value="k">CPU(core)</option>
-												        <option value="m">m(core)</option>
+												        <option value="Core">CPU(core)</option>
+												        <option value="MilliCore">m(core)</option>
 												    </select>
 												    <span></span>
 												</div>
@@ -161,7 +171,7 @@
 											<th>Memory Requests</th>
 											<td>
 												<input class="Textinput" id="input_memory_requests"/>
-												<div class="Divselect" style="width: 150px">
+												<div class="Divselect" id="select_memory_requests">
 												    <select>
 												        <option value="Gi">Gi</option>
 												        <option value="mi">mi</option>
@@ -174,7 +184,7 @@
 											<th>Memory Limits</th>
 											<td>
 												<input class="Textinput" id="input_memory_limits"/>
-												<div class="Divselect" style="width: 150px">
+												<div class="Divselect" id="select_memory_limits">
 												    <select>
 												        <option value="Gi">Gi</option>
 												        <option value="mi">mi</option>
@@ -237,10 +247,10 @@
 											<th>CPU Requests</th>
 											<td>
 												<input class="Textinput" id="input_pod_cpu_requests"/>
-												<div class="Divselect" style="width: 150px">
+												<div class="Divselect" id="select_pod_cpu_requests">
 												    <select>
-												        <option value="k">CPU(core)</option>
-												        <option value="m">m(core)</option>
+												        <option value="Core">CPU(core)</option>
+												        <option value="MilliCore">m(core)</option>
 												    </select>
 												    <span></span>
 												</div>
@@ -250,10 +260,10 @@
 											<th>CPU Limits</th>
 											<td>
 												<input class="Textinput" id="input_pod_cpu_limits"/>
-												<div class="Divselect" style="width: 150px">
+												<div class="Divselect" id="select_pod_cpu_limits">
 												    <select>
-												        <option value="k">CPU(core)</option>
-												        <option value="m">m(core)</option>
+												        <option value="Core">CPU(core)</option>
+												        <option value="MilliCore">m(core)</option>
 												    </select>
 												    <span></span>
 												</div>
@@ -263,7 +273,7 @@
 											<th>Memory Requests</th>
 											<td>
 												<input class="Textinput" id="input_pod_memory_requests"/>
-												<div class="Divselect" style="width: 150px">
+												<div class="Divselect" id="select_pod_memory_requests">
 												    <select>
 												        <option value="Gi">Gi</option>
 												        <option value="mi">mi</option>
@@ -277,7 +287,7 @@
 											<th class="Valign-top" style="height: 410px;">Memory Limits</th> 
 											<td class="Valign-top">
 												<input class="Textinput" id="input_pod_memory_limits"/>
-												<div class="Divselect" style="width: 150px">
+												<div class="Divselect" id="select_pod_memory_limits">
 												    <select>
 												        <option value="Gi">Gi</option>
 												        <option value="mi">mi</option>

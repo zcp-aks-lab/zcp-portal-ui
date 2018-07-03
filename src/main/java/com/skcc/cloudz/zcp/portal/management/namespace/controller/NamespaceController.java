@@ -46,7 +46,7 @@ public class NamespaceController {
     
     @PostMapping(value = "/namespace/list", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public Map<String, Object> getNamespace(Model model, @ModelAttribute EnquryNamespaceVO vo) throws Exception {
+    public Object getNamespace(Model model, @ModelAttribute EnquryNamespaceVO vo) throws Exception {
     	return namespaceService.getResourceQuota(vo);
     }
     

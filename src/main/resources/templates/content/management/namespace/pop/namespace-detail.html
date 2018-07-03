@@ -11,7 +11,7 @@
 		function initNamespace(namespace){
 			var url = "/management/namespace/getNamespaceResource";
 			ajaxCall(url, {"namespace" : namespace}).done(function(data){
-				var quota = data.hard;
+				var quota = data.resourceQuota;
 				var limit = data.limitRange;
 				var cpu_requeset, cpu_limit, memory_request, memory_limit;
 				if(quota){
@@ -24,13 +24,17 @@
 					$('#input_secrets').val(quota.secrets);
 					$('#input_config_maps').val(quota.configmaps);
 					$('#input_pesistent_volumne').val(quota.persistentvolumeclaims);
-					$('#input_load_balancers').val(quota.servicesLoadbalancers);
+					$('#input_load_balancers').val(quota.servicesloadbalancers);
 					selected('cpu_requests', quota.cpuRequestsUnit, 'm');
 					selected('cpu_limits', quota.cpuLimitsUnit, 'm');
 					selected('memory_requests', quota.memoryRequestsUnit, 'Gi');
 					selected('memory_limits', quota.memoryLimitsUnit, 'Gi');
 				}
 				if(limit){
+					//cpu_requeset = limit.cpuRequests ? limit.cpuRequests : 0;
+					//cpu_limit = limit.spec.limits[0].default.cpu ? limit.spec.limits[0].default.cpu.number : 0;
+					//memory_request = limit.spec.limits[0].defaultRequest.memory ? limit.spec.limits[0].defaultRequest.memory.number : 0;
+					//memory_limit = limit.spec.limits[0].default.memory ? limit.spec.limits[0].default.memory.number : 0;
 					$('#input_pod_cpu_requests').val(limit.cpuRequests);
 					$('#input_pod_cpu_limits').val(limit.cpuLimits);
 					$('#input_pod_memory_requests').val(limit.memoryRequests);
@@ -44,6 +48,8 @@
 					$('#input_namespace').val(data.namespace)
 				}
 				var maxCnt = 1000;
+				getNumber(quota.status, "requests.cpu");
+				//quota.status.used["requests.cpu"] = quota.status.used["requests.cpu"].indexOf('m') > -1 : quota.status.used["requests.cpu"].indexOf('m').replace
 				var cpuRq = getNumber(quota.status, "requests.cpu");
 				var cpuLm = getNumber(quota.status, "limits.cpu");
 				var memRm = getNumber(quota.status, "requests.memory");
@@ -59,7 +65,7 @@
 				var memRmPod = Number(memory_request) / Number(memory_limit) *100;
 				//var memLmPod = Number(quota.status.used["limits.memory"]) / Number(quota.status.hard["limits.memory"]) *100;
 				
-				setGraph('cpu_requests', quota.cpuRequests);
+				setGraph('cpu_requests', cpuRq);
 				setGraph('cpu_limits', cpuLm);
 				setGraph('memory_requests', memRm);
 				setGraph('memory_limits', memLm);
@@ -73,6 +79,7 @@
 				setGraphPod('cpu_limits', 0);
 				setGraphPod('memory_requests', memRmPod);
 				setGraphPod('memory_limits', 0);
+				
 				
 			});
 			url = "/management/namespace/labels";
@@ -211,29 +218,21 @@
 				commonPopup.alert({
                     message: '정상처리 되었습니다.',
                     callback: function() {
+                    	location.href = '/management/users';
                     }
                 });
-				//location.href='/management/namespaces';
 			});
 		}
 		
 		function validate(){
 			var regex_namespace = /^[a-zA-Z][0-9a-zA-z\-]{5,11}$/;
 			if(!regex_namespace.test($('#input_namespace').val())){
-				commonPopup.alert({
-                    message: '허용하지 않는 문자입니다.',
-                    callback: function() {
-                    }
-                });
+				alert('허용하지 않는 문자입니다.');
 				return false;
 			}
 			if(!$('#input_cpu_requests').val()) {
 				$('#input_cpu_requests').focus();
-				commonPopup.alert({
-                    message: '필수값 입니다.',
-                    callback: function() {
-                    }
-                });
+				alert('필수값 입니다.');
 				return false;
 			}
 			if(!$('#input_cpu_limits').val()) return false;
@@ -460,51 +459,29 @@
 		function addUser(data){
 			var namespace = /*[[${namespace}]]*/;
 			if(!data.clusterRole){
-				//alert('Cluster 권한이 필요합니다.');
-				commonPopup.alert({
-                    message: 'Cluster 권한이 필요합니다.',
-                    callback: function() {
-                    }
-                });
+				alert('Cluster 권한이 필요합니다.'); 
 				return ;
 			}
 			if(!data.namespacedRole) {
-				//alert('네임스페이스 권한이 필요합니다.');
-				commonPopup.alert({
-                    message: '네임스페이스 권한이 필요합니다.',
-                    callback: function() {
-                    }
-                });
+				alert('네임스페이스 권한이 필요합니다.'); 
 				return ;
 			}
 			var isDup = isDupMemberCheck(data.username);
 			if(isDup) {
-				//alert('이미 추가된 사용자 입니다.');
-				commonPopup.alert({
-                    message: '이미 추가된 사용자 입니다.',
-                    callback: function() {
-                    }
-                });
+				alert('이미 추가된 사용자 입니다.');
 				return ;
 			}
-			//if(!confirm('추가 하시겠습니까?')) return ;
-			commonPopup.confirm({
-                //title: '비밀번호 재설정',
-                message: '추가 하시겠습니까?',
-                callback: function() {
-                	var user = {
-           				"username" : data.username
-           				,"namespace" : namespace 
-           				,"clusterRole" : data.namespacedRole
-             				,"id" : data.id
-           			};
-           			ajaxCall('/management/namespace/saveRole', user).done(function(data){
-           				gridInitMember(data.items);
-           				showMember();
-           			});        
-                }
-            });
-			
+			if(!confirm('추가 하시겠습니까?')) return ;
+			var user = {
+				"username" : data.username
+				,"namespace" : namespace 
+				,"clusterRole" : data.namespacedRole
+  				,"id" : data.id
+			};
+			ajaxCall('/management/namespace/saveRole', user).done(function(data){
+				gridInitMember(data.items);
+				showMember();
+			});
 		}
 		
 		function isDupMemberCheck(username){
@@ -518,22 +495,14 @@
 		
 		function modifyNamespaceRole(data){
 			if(!data.clusterRole) {
-				//alert('네임스페이스 권한이 필요합니다.');
-				commonPopup.alert({
-                    message: '네임스페이스 권한이 필요합니다.',
-                    callback: function() {
-                    }
-                });
+				alert('네임스페이스 권한이 필요합니다.'); 
 				return ;
 			}
 			var namespace = /*[[${namespace}]]*/;
 			ajaxCall('/management/namespace/modifyRole', data).done(function(data){
-				//alert('정상처리되었습니다.');
-				commonPopup.alert({
-                    message: '정상처리되었습니다.',
-                    callback: function() {
-                    }
-                });
+				//gridInitMember(data.items);
+				alert('정상처리되었습니다.');
+				//showMember();
 			});
 		}
 		
@@ -547,12 +516,8 @@
 				};
 			if(confirm('삭제 하시겠습니까?')){
 				ajaxCall('/management/namespace/delRole', user).done(function(data){
-					//alert('정상처리되었습니다.');
-					commonPopup.alert({
-	                    message: '정상처리되었습니다.',
-	                    callback: function() {
-	                    }
-	                });
+					//gridInitMember(data.items);
+					alert('정상처리되었습니다.');
 					showMember();
 				});	
 			}
@@ -591,12 +556,7 @@
 			var label = $('#input_label').val();
 			var regex = /[a-z][a-z0-9\/\-]*[=]{1}[a-zA-Z0-9\/\-]+/
 			if(!regex.test(label)){
-				//alert('형식이 올바르지 않습니다.');
-				commonPopup.alert({
-                    message: '형식이 올바르지 않습니다.',
-                    callback: function() {
-                    }
-                });
+				alert('형식이 올바르지 않습니다.');
 				return ;
 			}
 			ajaxCall('/management/namespace/addLabel', {namespace : namespace, label : label}).done(function(data){
@@ -605,14 +565,6 @@
 		}
 		
 		function delLabel(label){
-			if(label.indexOf('cloudzcp.io/zcp-system') > -1){
-				//alert('삭제 할수 없습니다.');
-				commonPopup.alert({
-                    message: '삭제 할수 없습니다.',
-                    callback: function() {
-                    }
-                });
-			}
 			var namespace = /*[[${namespace}]]*/;
 			ajaxCall('/management/namespace/delLabel', {namespace : namespace, label : label}).done(function(data){
 				location.reload();
@@ -700,8 +652,8 @@
 															<div class="left">
 																<div class="Divselect" id="select_cpu_requests">
 																    <select >
-																        <option value="Core">CPU(core)</option>
-												        				<option value="MilliCore">m(core)</option>
+																        <option value="">CPU(core)</option>
+												        				<option value="m">m(core)</option>
 																    </select>
 																    <span></span>
 																</div>
@@ -723,8 +675,8 @@
 																<input class="Textinput" id="input_cpu_limits"/>
 																<div class="Divselect"  id="select_cpu_limits">
 																    <select>
-																        <option value="Core">CPU(core)</option>
-												        				<option value="MilliCore">m(core)</option>
+																        <option value="">CPU(core)</option>
+												        				<option value="m">m(core)</option>
 																    </select>
 																    <span></span>
 																</div>
@@ -904,8 +856,8 @@
 																<input class="Textinput" id="input_pod_cpu_requests"/>
 																<div class="Divselect" id="select_pod_cpu_requests">
 																    <select >
-																        <option value="Core">CPU(core)</option>
-												        				<option value="MilliCore">m(core)</option>
+																        <option value="">CPU(core)</option>
+												        				<option value="m">m(core)</option>
 																    </select>
 																    <span></span>
 																</div>
@@ -921,8 +873,8 @@
 																<input class="Textinput" id="input_pod_cpu_limits"/>
 																<div class="Divselect"  id="select_pod_cpu_limits">
 																    <select>
-																        <option value="Core">CPU(core)</option>
-												        				<option value="MilliCore">m(core)</option>
+																        <option value="">CPU(core)</option>
+												        				<option value="m">m(core)</option>
 																    </select>
 																    <span></span>
 																</div>
