@@ -71,6 +71,100 @@
 		}
 	} */
 
+	var alertPopup = {
+		default_opts : {
+			title : '알림',
+			message : '',
+			width : 550,
+			height : 450,
+			callback : function() {
+			},
+			alias : 'popup'
+		},
+
+		alert : function(opts) {
+			this.open(opts, 'alert');
+		},
+
+		confirm : function(opts) {
+			this.open(opts, 'confirm');
+		},
+
+		open : function(opts, type) {
+			var _opts = $.extend({}, this.default_opts, opts);
+
+			$a.popup({
+				url : "/alert/popCommon",
+				iframe : false, // default 는 true
+				width : _opts.width,
+				height : _opts.height,
+				title : _opts.title,
+				data : {
+					message : _opts.message,
+					type : type
+				},
+				callback : function(data) {
+					_opts.callback();
+					//location.reload();
+				},
+				alias : _opts.alias,
+				xButtonClickCallback : function(el) {
+					if (el.alias === _opts.alias) {
+						return true;
+					}
+				}
+			});
+		}
+	};
+
+	var channelPopup = {
+		default_opts : {
+			title : '신규 채널',
+			message : '',
+			width : 550,
+			height : 350,
+			callback : function() {
+			},
+			alias : 'popup'
+		},
+
+		pop : function(opts) {
+			this.open(opts);
+		},
+
+		open : function(opts) {
+			var _opts = $.extend({}, this.default_opts, opts);
+
+			$a.popup({
+				url : "/alert/popChannelAdd",
+				iframe : false,
+				width : _opts.width,
+				height : _opts.height,
+				title : _opts.title,
+				data : null,
+				callback : function(data) {
+					if (data == 'ok') {
+						alertPopup.alert({
+							width : 400,
+							height : 250,
+							message : '저장되었습니다.',
+							callback : function() {
+								location.reload();
+							}
+						});
+					} else {
+					}
+				},
+				alias : _opts.alias,
+				xButtonClickCallback : function(el) {
+					if (el.alias == _opts.alias) {
+						return true;
+					}
+				}
+			});
+		}
+	};
+
 	var zcpPortalGrid = {
 		pageInit : function() {
 			'use strict';
@@ -117,6 +211,7 @@
 												title : 'id',
 												width : '100px',
 												align : 'center',
+												sorting : 'number',
 												hidden : true
 											},
 											{
@@ -212,7 +307,7 @@
 				var test = {
 					id : id
 				};
-				
+
 				$('#channel').val('');
 				$('#notifications').val('');
 				$('#email_to').val('');
@@ -323,7 +418,11 @@
 								});
 
 				$('#btnAdd').on('click', function() {
-					/* location.href = '/alert/addRule'; */
+					channelPopup.pop({
+						callback : function() {
+							location.reload();
+						}
+					});
 				});
 
 				$('#gubun').change(function() {
@@ -401,8 +500,8 @@
 								<div class="form-btn__wrap">
 									<h3 class="form-title">채널 목록</h3>
 									<div class="btn-wrap__right">
-										<button class="Button btn-ico__typeb btn-addchannel">채널
-											추가</button>
+										<button class="Button btn-ico__typeb btn-addchannel"
+											id="btnAdd">채널 추가</button>
 										<div class="Tooltip" data-position="left">채널 추가</div>
 									</div>
 								</div>
@@ -494,9 +593,13 @@
 														<tr>
 															<th class="Valign-top">Email addresses</th>
 															<td><textarea class="Textarea Width-100" rows="4"
-																	th:id="email_to" th:name="email_to"></textarea>
-																<p class="info-text Margin-bottom-5">이메일 형식 오류입니다.</p> <!-- <button class="Button btn">테스트</button> -->
-																<button class="Button btn">저장</button></td>
+																	th:id="email_to" th:name="email_to"
+																	style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666"></textarea>
+																<!-- <p class="info-text Margin-bottom-5">이메일 형식 오류입니다.</p> -->
+																<!-- <button class="Button btn">테스트</button> -->
+																<div class="Margin-top-5">
+																	<button class="Button btn">저장</button>
+																</div></td>
 														</tr>
 													</tbody>
 												</table>
@@ -530,9 +633,8 @@
 																<div class="Margin-top-5">
 																	<!-- <button class="Button btn">테스트</button> -->
 																	<button class="Button btn">저장</button>
-																</div>
-																<p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
-																	주세요.</p></td>
+																</div> <!-- <p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
+																	주세요.</p> --></td>
 														</tr>
 													</tbody>
 												</table>
@@ -586,9 +688,8 @@
 																<div class="Margin-top-15">
 																	<!-- <button class="Button btn">테스트</button> -->
 																	<button class="Button btn">저장</button>
-																</div>
-																<p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
-																	주세요.</p></td>
+																</div> <!-- <p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
+																	주세요.</p> --></td>
 														</tr>
 													</tbody>
 												</table>
@@ -622,9 +723,8 @@
 																<div class="Margin-top-5">
 																	<!-- <button class="Button btn">테스트</button> -->
 																	<button class="Button btn">저장</button>
-																</div>
-																<p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
-																	주세요.</p></td>
+																</div> <!-- <p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
+																	주세요.</p> --></td>
 														</tr>
 													</tbody>
 												</table>
