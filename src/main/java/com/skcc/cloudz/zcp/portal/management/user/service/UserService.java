@@ -194,5 +194,19 @@ public class UserService {
             throw new ZcpPortalException(apiResponseVo);
         }
     }
+    
+    public void updateOtpPassword(String id) throws Exception {
+        ApiResponseVo apiResponseVo = iamApiService.updateOtpPassword(id);
+        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new ZcpPortalException(apiResponseVo);
+        }
+    }
+    
+    public void deleteOtpPassword(String id) throws Exception {
+        ApiResponseVo apiResponseVo = iamApiService.deleteOtpPassword(id);
+        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new ZcpPortalException(apiResponseVo);
+        }
+    }
 
 }

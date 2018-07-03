@@ -43,5 +43,9 @@ public interface IamApiService {
     ApiResponseVo updateRoleBinding(String namespace, HashMap<String, Object> reqMap);
     
     ApiResponseVo deleteRoleBinding(String namespace, HashMap<String, Object> reqMap);
+    
+    ApiResponseVo updateOtpPassword(String id);
+    
+    ApiResponseVo deleteOtpPassword(String id);
 
 }

@@ -16,10 +16,13 @@ public class ZcpUserVo {
     private Date createdDate;
     private Boolean enabled;
     private Boolean emailVerified;
+    private Boolean totp;
     private String clusterRole;
     private List<String> namespaces;
     private String defaultNamespace;
     private int usedNamespace;
+    private List<String> requiredActions;
+    private String namespacedRole;
     
     public ZcpUserVo() {
         super();
@@ -127,5 +130,29 @@ public class ZcpUserVo {
 
     public void setEmailVerified(Boolean emailVerified) {
         this.emailVerified = emailVerified;
+    }
+
+    public Boolean getTotp() {
+        return totp;
+    }
+
+    public void setTotp(Boolean totp) {
+        this.totp = totp;
+    }
+
+    public List<String> getRequiredActions() {
+        return requiredActions;
+    }
+
+    public void setRequiredActions(List<String> requiredActions) {
+        this.requiredActions = requiredActions;
+    }
+
+    public String getNamespacedRole() {
+        return namespacedRole;
+    }
+
+    public void setNamespacedRole(String namespacedRole) {
+        this.namespacedRole = namespacedRole;
     }
 }

@@ -9,6 +9,7 @@
         /*<![CDATA[*/
         var namespaces = /*[[${namespaces}]]*/;
         var clusterRoles = /*[[${clusterRoles}]]*/;
+        var userTotp = /*[[${zcpUser.totp}]]*/;
         /*]]>*/
         </script>
         
@@ -272,6 +273,50 @@
                                 })
                             }
                         });
+                    },
+
+                    optPassword: function() {
+                    	var data = {
+                            id: $('#id').val(),
+                            totp: userTotp ? false : true
+                        };
+
+                        if (userTotp) {
+                        	$('#btnTotp').removeClass('btn-off').addClass('btn-on');
+                        	$('#btnTotp').text('ON');
+                        } else {
+                        	$('#btnTotp').removeClass('btn-on').addClass('btn-off');
+                        	$('#btnTotp').text('OFF');
+                        }
+
+                        var msg = userTotp ? '이중 로그인 보안을 해제 하시겠습니까?' : '이중 로그인 보안을 설정 하시겠습니까?';
+                        var mode = userTotp ? 'delete' : 'update';
+            
+                        commonPopup.confirm({
+                            title: '이중 로그인 보안 설정',
+                            message: msg,
+                            callback: function() {
+                                $a.request('/management/user/otpPassword/' + mode, {
+                                    method: 'post',
+                                    data: data, 
+                                    success : function(res) {
+                                        if (userTotp) {
+                                        	commonPopup.alert({
+                                                message: '이중 로그인 보안 설정이 해제 되었습니다.',
+                                                callback: function() {
+                                                    location.reload();
+                                                }
+                                            });
+                                        } else {
+                                        	commonPopup.alert({message: '이중 로그인 보안 설정이 등록되었습니다.<br/>(사용자가 로그인시 OTP설정을 해야만 상태가 변경됩니다.)'});
+                                        }
+                                    },
+                                    error : function(errObject) {
+                                        //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                    }
+                                })
+                            }
+                        });
                     }
                 },
                 event: {
@@ -309,6 +354,10 @@
                         
                         $('#btnNamespaceRoleAdd').on('click', function() {
                         	zcpPortalApp.event.addNamespaceRole();
+                        });
+
+                        $('#btnTotp').on('click', function() {
+                            zcpPortalApp.data.optPassword();
                         });
                     },
 
@@ -496,7 +545,7 @@
                                 </div>
                             </li>
                             <li>
-                                <a>이중 보그인 보안 설정</a>
+                                <a>이중 로그인 보안 설정</a>
                                 <div class="accor-contents__wrap">
                                     <table class="Table Form-type">
                                         <colgroup>
@@ -507,7 +556,10 @@
                                             <tr>
                                                 <th>모바일 인증</th>
                                                 <td>
-                                                    <div class="onoff-wrap"><button class="Button btn-on">ON</button></div>
+                                                    <div class="onoff-wrap" th:switch="${zcpUser.totp}">
+                                                        <button th:case="true" class="Button btn-on" id="btnTotp">ON</button>
+                                                        <button th:case="false" class="Button btn-off" id="btnTotp">OFF</button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </tbody>

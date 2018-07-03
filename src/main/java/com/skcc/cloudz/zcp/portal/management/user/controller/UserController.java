@@ -106,5 +106,15 @@ public class UserController {
             userService.deleteRoleBinding(userVo);
         } 
     }
+    
+    @PostMapping(value = "/user/otpPassword/{mode}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody 
+    public void otpPassword(@PathVariable("mode") String mode, @RequestBody UserVo userVo) throws Exception {
+        if (mode.equals("update")) {
+            userService.updateOtpPassword(userVo.getId());
+        } else if (mode.equals("delete")) {
+            userService.deleteOtpPassword(userVo.getId());
+        }
+    }
 
 }

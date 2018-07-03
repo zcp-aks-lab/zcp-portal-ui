@@ -16,6 +16,7 @@ public class UserVo {
     private String clusterRole;
     private String namespace;
     private String keyword;
+    private Boolean totp;
     
     public String getId() {
         return id;
@@ -95,4 +96,11 @@ public class UserVo {
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
+    public Boolean getTotp() {
+        return totp;
+    }
+    public void setTotp(Boolean totp) {
+        this.totp = totp;
+    }
+    
 }

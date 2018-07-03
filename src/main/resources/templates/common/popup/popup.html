@@ -27,7 +27,7 @@
                     }
                     
                     var message = param['message'];
-                    $('#popMessage').text(message);
+                    $('#popMessage').html(message);
                     
                     $('#popCancel').on('click', function() {
                         $a.close('cancel');
