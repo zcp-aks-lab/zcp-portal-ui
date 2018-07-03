@@ -79,7 +79,7 @@ public class ChannelController {
 	
 	@GetMapping(value = "/popCommon", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String popCommon(Model model) throws Exception {
-		return "content/alert/channels/pop/popup";
+		return "content/alert/common/alertPopup";
 	}
 
 	@PostMapping(value = "/createChannel", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

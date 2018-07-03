@@ -22,28 +22,39 @@
 					return false;
 				}
 
-				var check = confirm("저장하시겠습니까?");
-				if (check) {
-					$a.request('/alert/createRule', {
-						method : 'post',
-						data : $('#form').serializeObject(),
-						success : function(res) {
-							if (res.resultCd !== '200') {
-								if (res.resultMsg)
-									alert(res.resultMsg);
-								return false;
-							}
-
-							alert('저장되었습니다.');
-							location.href = '/alert/rules';
-						},
-						error : function(errObject) {
-							alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+				var check = alertPopup.confirm({
+					width : 400,
+					height : 250,
+					message : '저장하시겠습니까?',
+					callback : function(data) {
+						if (data == 'ok') {
+							$a.request('/alert/createRule', {
+								method : 'post',
+								data : $('#form').serializeObject(),
+								success : function(res) {
+									if (res.resultCd !== '200') {
+										if (res.resultMsg)
+											alert(res.resultMsg);
+										return false;
+									}
+									alertPopup.alert({
+										width : 400,
+										height : 250,
+										message : '저장되었습니다.',
+										callback : function() {
+											location.href = '/alert/rules';
+										}
+									});
+								},
+								error : function(errObject) {
+									alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+								}
+							})
+						} else {
+							return false;
 						}
-					})
-				} else {
-					return false;
-				}
+					}
+				});
 			},
 			validation : function() {
 				var typeVal = $("#type option:selected").val();
@@ -296,7 +307,8 @@
 													data-validation-rule="{required:true}"
 													data-validation-message="{required:'Namespace를 선택해주세요.'}">
 													<option value="">Namespace 선택</option>
-													<option th:each="namespace : ${namespace}" th:value="${namespace}" th:text="${namespace}"></option>
+													<option th:each="namespace : ${namespace}"
+														th:value="${namespace}" th:text="${namespace}"></option>
 												</select> <span></span>
 											</div>
 											<p class="info-text" data-for="namespace"></p>
