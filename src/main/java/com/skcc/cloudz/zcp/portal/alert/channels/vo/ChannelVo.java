@@ -2,14 +2,14 @@ package com.skcc.cloudz.zcp.portal.alert.channels.vo;
 
 public class ChannelVo {
 
-	private String id;
+	private Integer id;
 	private String channel;
 	private String notifications;
 
 	/**
 	 * @return the id
 	 */
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
 
@@ -17,7 +17,7 @@ public class ChannelVo {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
