@@ -22,7 +22,41 @@
 					return false;
 				}
 
-				var check = confirm("저장하시겠습니까?");
+				var check = alertPopup.confirm({
+					width : 400,
+					height : 250,
+					message : '저장하시겠습니까?',
+					callback : function(data) {
+						if (data == 'ok') {
+							$a.request('/alert/updateRule', {
+								method : 'post',
+								data : $('#form').serializeObject(),
+								success : function(res) {
+									if (res.resultCd !== '200') {
+										if (res.resultMsg)
+											alert(res.resultMsg);
+										return false;
+									}
+									alertPopup.alert({
+										width : 400,
+										height : 250,
+										message : '저장되었습니다.',
+										callback : function() {
+											location.href = '/alert/rules';
+										}
+									});
+								},
+								error : function(errObject) {
+									alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+								}
+							})
+						} else {
+							return false;
+						}
+					}
+				});
+
+				/* var check = confirm("저장하시겠습니까?");
 				if (check) {
 					$a.request('/alert/updateRule', {
 						method : 'post',
@@ -43,7 +77,7 @@
 					})
 				} else {
 					return false;
-				}
+				} */
 			},
 			validation : function() {
 				var typeVal = $("#type").val();
@@ -126,29 +160,44 @@
 										<th>Rule 종류<strong class="astertisk">*</strong></th>
 										<td>
 											<div th:text="${type}"></div>
-											<div><input type="hidden" th:id="id" th:name="id" th:value="${id}" /></div> 
-											<div><input type="hidden" th:id="type" th:name="type" th:value="${type}" /></div>
+											<div>
+												<input type="hidden" th:id="id" th:name="id"
+													th:value="${id}" />
+											</div>
+											<div>
+												<input type="hidden" th:id="type" th:name="type"
+													th:value="${type}" />
+											</div>
 										</td>
 									</tr>
 									<tr th:id="podTr">
 										<th>Pod<strong class="astertisk">*</strong></th>
 										<td>
 											<div th:text="${value}"></div>
-											<div><input type="hidden" th:id="pod" th:name="pod" th:value="${value}" /></div>
+											<div>
+												<input type="hidden" th:id="pod" th:name="pod"
+													th:value="${value}" />
+											</div>
 										</td>
 									</tr>
 									<tr>
 										<th>Duration<strong class="astertisk">*</strong></th>
 										<td>
 											<div th:text="${duration}"></div>
-											<div><input type="hidden" th:id="duration" th:name="duration" th:value="${duration}" /></div>
+											<div>
+												<input type="hidden" th:id="duration" th:name="duration"
+													th:value="${duration}" />
+											</div>
 										</td>
 									</tr>
 									<tr>
 										<th>심각도<strong class="astertisk">*</strong></th>
 										<td>
 											<div th:text="${severity}"></div>
-											<div><input type="hidden" th:id="severity" th:name="severity" th:value="${severity}" /></div>
+											<div>
+												<input type="hidden" th:id="severity" th:name="severity"
+													th:value="${severity}" />
+											</div>
 										</td>
 									</tr>
 									<tr id="exprTr">

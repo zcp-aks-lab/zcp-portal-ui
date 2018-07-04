@@ -57,7 +57,7 @@ public class ChannelController {
 	@ResponseBody
 	public Map<String, Object> getChannelDtl(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
+
 		try {
 			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
 			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
@@ -69,7 +69,36 @@ public class ChannelController {
 			resultMap.put("resultMsg", e.getMessage());
 		}
 
-		 return resultMap;
+		return resultMap;
+	}
+
+	@GetMapping(value = "/popChannelAdd", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+	public String popChannelAdd(Model model) throws Exception {
+		return "content/alert/channels/pop/popChannelAdd";
+	}
+	
+	@GetMapping(value = "/popCommon", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+	public String popCommon(Model model) throws Exception {
+		return "content/alert/common/alertPopup";
+	}
+
+	@PostMapping(value = "/createChannel", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String, Object> createChannel(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		System.out.println(params);
+		try {
+			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
+			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
+			resultMap.put("resultData", channelService.createChannel(params));
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			resultMap.put("resultCd", ApiResult.FAIL.getCode());
+			resultMap.put("resultMsg", e.getMessage());
+		}
+
+		return resultMap;
 	}
 
 }

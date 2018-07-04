@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript">
+	$.alopex.page(function() {
+		this.init = function(id, param) {
+			zcpPortalApp.pageInit();
+		};
+	});
+
+	var zcpPortalApp = {
+		pageInit : function() {
+			'use strict';
+			this.data.init();
+			this.event.init();
+		},
+		data : {
+			init : function() {
+			},
+			createChannel : function() {
+				if (!this.validation()) {
+					$('#valid01').css('display', 'none');
+					$('#valid02').css('display', 'none');
+					$('#valid03').css('display', '');
+					return false;
+				}
+
+				/* var check = confirm("저장하시겠습니까?");
+				if (check) { */
+				$a.request('/alert/createChannel', {
+					method : 'post',
+					data : $('#popForm').serializeObject(),
+					success : function(res) {
+						if (res.resultCd !== '200') {
+							if (res.resultMsg)
+								alert(res.resultMsg);
+							return false;
+						}
+						$a.close('ok');
+					},
+					error : function(errObject) {
+						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+					}
+				})
+				/* } else {
+					return false;
+				} */
+			},
+			validation : function() {
+				var valid = $('#newChannel').validate();
+
+				if (!valid) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		},
+		event : {
+			init : function() {
+				$('#newChannel').focus();
+				$('#popCancel').on('click', function() {
+					$a.close('cancel');
+				});
+				$('#popOk').on('click', function() {
+					zcpPortalApp.data.createChannel();
+				});
+				$('#newChannel').on('keydown', function(e) {
+					if (e.keyCode === 13) {
+						zcpPortalApp.data.createChannel();
+					}
+				});
+			}
+		}
+	}
+</script>
+</head>
+<body>
+	<div class="popup-wrap">
+		<div class="popup-contents"
+			style="background: #ffffff; height: 200px;">
+			<div class="popup-text" id="popMessage">
+				<fieldset>
+					<form th:id="popForm" onsubmit="return false;">
+						<table class="Table Form-type">
+							<colgroup>
+								<col style="width: 150px;" />
+								<col />
+							</colgroup>
+							<tbody>
+								<tr>
+									<th style="text-align: center;">채널명</th>
+									<td><input class="Textinput" th:id="newChannel"
+										th:name="newChannel" style="min-width: 300px;"
+										data-validation-rule="{required:true}"
+										data-validation-message="{required:'채널명을 입력해주세요.'}" />
+										<p id="valid01" class="info-text" style="height: 22px;">채널명은
+											알파벳과 숫자로 구성된 6~12자리로 입력하세요.</p>
+										<p id="valid02" class="info-text"
+											style="height: 22px; display: none;">이미 존재하는 채널명입니다. 다른
+											이름으로 입력해 주세요.</p>
+										<p id="valid03" class="info-text" data-for="newChannel" style="height: 22px; display:none;"></p></td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+				</fieldset>
+			</div>
+		</div>
+		<!--button-->
+		<div class="popup-btn__wrap" style="background: #ffffff;">
+			<button class="Button btn bg-red" id="popOk">확인</button>
+			<button class="Button btn" id="popCancel">취소</button>
+		</div>
+		<!--//button-->
+	</div>
+
+	<!-- <script type="text/javascript">
+		$a.page(function() {
+			this.init = function(id) {
+				$('#popCancel').on('click', function() {
+					$a.close('cancel');
+				});
+
+				$('#popOk').on('click', function() {
+					//$a.close('ok');
+					
+				});
+			}
+		});
+	</script> -->
+</body>
+</html>

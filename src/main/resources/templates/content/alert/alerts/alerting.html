@@ -78,27 +78,82 @@
 						key : 'time',
 						title : '발생 일시',
 						width : '140px',
-						align : 'center'
+						align : 'center',
+						render : function(value, data) {
+							if(data.severity == 'critical') {
+								return '<div style="font-size:15px; color:#dc143c;">'
+								+ data.time
+								+ '</div>';	
+							} else {
+								return '<div style="font-size:15px;">'
+								+ data.time
+								+ '</div>';
+							}
+						}
 					}, {
 						key : 'severity',
 						title : '심각도',
 						width : '80px',
-						align : 'left'
+						align : 'left',
+						render : function(value, data) {
+							if(data.severity == 'critical') {
+								return '<div style="font-size:15px; color:#dc143c;">'
+								+ data.severity
+								+ '</div>';	
+							} else {
+								return '<div style="font-size:15px;">'
+								+ data.severity
+								+ '</div>';
+							}
+						}
 					}, {
 						key : 'type',
 						title : 'Rule 종류',
 						width : '150px',
-						align : 'left'
+						align : 'left',
+						render : function(value, data) {
+							if(data.severity == 'critical') {
+								return '<div style="font-size:15px; color:#dc143c;">'
+								+ data.type
+								+ '</div>';	
+							} else {
+								return '<div style="font-size:15px;">'
+								+ data.type
+								+ '</div>';
+							}
+						}
 					}, {
 						key : 'receiver',
 						title : '채널',
 						width : '120px',
-						align : 'left'
+						align : 'left',
+						render : function(value, data) {
+							if(data.severity == 'critical') {
+								return '<div style="font-size:15px; color:#dc143c;">'
+								+ data.receiver
+								+ '</div>';	
+							} else {
+								return '<div style="font-size:15px;">'
+								+ data.receiver
+								+ '</div>';
+							}
+						}
 					}, {
 						key : 'description',
 						title : '설명',
 						width : '300px',
-						align : 'left'
+						align : 'left',
+						render : function(value, data) {
+							if(data.severity == 'critical') {
+								return '<div style="font-size:15px; color:#dc143c;">'
+								+ data.description
+								+ '</div>';	
+							} else {
+								return '<div style="font-size:15px;">'
+								+ data.description
+								+ '</div>';
+							}
+						}
 					} ],
 				});
 			},

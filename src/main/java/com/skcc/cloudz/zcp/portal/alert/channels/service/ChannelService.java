@@ -1,6 +1,7 @@
 package com.skcc.cloudz.zcp.portal.alert.channels.service;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.skcc.cloudz.zcp.common.util.Message;
 import com.skcc.cloudz.zcp.portal.alert.channels.vo.ChannelDtlVo;
 import com.skcc.cloudz.zcp.portal.alert.channels.vo.ChannelVo;
-import com.skcc.cloudz.zcp.portal.alert.rules.vo.RuleVo;
 
 @Service
 public class ChannelService {
@@ -57,7 +57,7 @@ public class ChannelService {
 
 		return channelVo;
 	}
-	
+
 	public ChannelDtlVo getChannelDtl(String id) {
 		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/channel/{id}").buildAndExpand(id).toString();
 		logger.info(url);
@@ -80,5 +80,32 @@ public class ChannelService {
 		}
 
 		return channelDtlVo;
+	}
+
+	public ChannelVo createChannel(Map<String, Object> params) {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/channel").build().toString();
+		logger.info(url);
+
+		ChannelVo channelParam = new ChannelVo();
+		channelParam.setChannel(params.get("newChannel").toString());
+
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<ChannelVo> entity = new HttpEntity<ChannelVo>(channelParam, headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<ChannelVo> response = restTemplate.exchange(url, HttpMethod.POST, entity, ChannelVo.class);
+
+		HttpStatus statusCode = response.getStatusCode();
+
+		ChannelVo channelVo = null;
+		if (statusCode == HttpStatus.OK) {
+			channelVo = response.getBody();
+		}
+
+		return channelVo;
 	}
 }
