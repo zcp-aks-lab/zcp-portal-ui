@@ -158,8 +158,12 @@
 	function changeRed(){
 		$.each($('.Progressbar'), function(idx, data){
 			var value = $(this).data('default');
-			if(Number(value) > 80) 
+			if(Number(value) > 90) 
 				$(this).removeClass('name-typea').addClass('name-typee');	
+			else if(Number(value) > 60) 
+				$(this).removeClass('name-typea').addClass('name-typeb');
+			else if(Number(value) > 30) 
+				$(this).removeClass('name-typea').addClass('name-typec');
 		});
 	}
 	
@@ -356,14 +360,14 @@
 								<button class="Button btn-ico__typeb btn-listview" onclick="showPage('listType');">목록형으로 보기</button>
 							</div>
 							<ul class="sort-list" id="sort">
-								<li id="namespace" onclick="orderby('namespace', this)">Namespace</li>
-								<li id="cpu" onclick="orderby('cpuR', this)">CPU Request</li>
-								<li id="cpu" onclick="orderby('cpuL', this)">CPU Limit</li>
-								<li id="memory" onclick="orderby('memoryR', this)">Memory Request</li>
-								<li id="memory" onclick="orderby('memoryL', this)">Memory Limit</li>
-								<li id="user" onclick="orderby('user', this)">사용자</li>
-								<li id="status" onclick="orderby('status',  this)">상태</li>
-								<li id="createTime" onclick="orderby('createTime', this)">생성일시</li>
+								<li class="dsc" id="namespace" onclick="orderby('namespace', this)">Namespace</li>
+								<li class="dsc" id="cpuR" onclick="orderby('cpuR', this)">CPU Request</li>
+								<li class="dsc" id="cpuL" onclick="orderby('cpuL', this)">CPU Limit</li>
+								<li class="dsc" id="memoryR" onclick="orderby('memoryR', this)">Memory Request</li>
+								<li class="dsc" id="memoryL" onclick="orderby('memoryL', this)">Memory Limit</li>
+								<li class="dsc" id="user" onclick="orderby('user', this)">사용자</li>
+								<li class="dsc" id="status" onclick="orderby('status',  this)">상태</li>
+								<li class="dsc" id="createTime" onclick="orderby('createTime', this)">생성일시</li>
 							</ul>
 						</div>
 						<!-- name space panel-->

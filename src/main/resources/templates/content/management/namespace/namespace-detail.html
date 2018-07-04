@@ -90,6 +90,10 @@
 				if(Number(used) > 80){
 					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typee');
 				}
+				else if(Number(value) > 60) 
+					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typeb');
+				else if(Number(value) > 30) 
+					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typec');
 			}
 			
 			function selected(id, value, unit){
@@ -605,6 +609,7 @@
                     callback: function() {
                     }
                 });
+				return ;
 			}
 			var namespace = /*[[${namespace}]]*/;
 			ajaxCall('/management/namespace/delLabel', {namespace : namespace, label : label}).done(function(data){

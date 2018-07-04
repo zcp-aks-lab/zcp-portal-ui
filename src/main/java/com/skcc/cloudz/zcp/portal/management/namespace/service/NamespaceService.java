@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
 import com.skcc.cloudz.zcp.api.iam.service.impl.IamRestClient;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
+import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.common.util.NumberUtil;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.EnquryNamespaceVO;
 import com.skcc.cloudz.zcp.portal.management.user.vo.ZcpNamespace;
@@ -31,9 +32,19 @@ public class NamespaceService {
 	@Autowired
     private IamRestClient client;
 	
+	@Autowired
+    private SecurityService securityService;
+	
     public Object getResourceQuota(EnquryNamespaceVO vo) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        ApiResponseVo response = client.request("/iam/metrics/namespaces", null);
+        String param = "userId="+ securityService.getUserDetails().getUserId();
+        ApiResponseVo response = client.request("/iam/metrics/namespaces?"+param, null);
+        if(response.getCode().equals("ZCP-0001")) {
+        	logger.debug(response.getMsg());
+        	List<Object> empty = new ArrayList<>();
+        	resultMap.put("items", empty);
+        	return resultMap;
+        }
         if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(response.getMsg());
         }
