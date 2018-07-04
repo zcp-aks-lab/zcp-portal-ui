@@ -44,20 +44,16 @@
 					$('#input_namespace').val(data.namespace)
 				}
 				var maxCnt = 1000;
-				var cpuRq = getNumber(quota.status, "requests.cpu");
-				var cpuLm = getNumber(quota.status, "limits.cpu");
-				var memRm = getNumber(quota.status, "requests.memory");
-				var memLm = getNumber(quota.status, "limits.memory");
-				var pods =  Number(quota.status.hard.pods) / maxCnt *100;
-				var services =  Number(quota.status.hard.services) / maxCnt *100;
-				var secrets =  Number(quota.status.hard.secrets) / maxCnt *100;
-				var configMaps =  Number(quota.status.hard.secrets) / maxCnt *100;
-				var persistentVolumne =  Number(quota.status.hard.persistentvolumeclaims) / maxCnt *100;
-				var loadbalancers =  Number(quota.status.hard["services.loadbalancers"]) / maxCnt *100;
-				var cpuRqPod = Number(limit.spec.limits[0].defaultRequest.cpu.number) / Number(limit.spec.limits[0].default.cpu.number) *100;
-				//var cpuLmPod = Number(quota.status.used["limits.cpu"]) / Number(quota.status.hard["limits.cpu"]) *100;
-				var memRmPod = Number(memory_request) / Number(memory_limit) *100;
-				//var memLmPod = Number(quota.status.used["limits.memory"]) / Number(quota.status.hard["limits.memory"]) *100;
+				var cpuRq = data.used.cpuRequests / data.hard.cpuRequests * 100;
+				var cpuLm = data.used.cpuLimits / data.hard.cpuLimits * 100;
+				var memRm = data.used.memoryRequests / data.hard.memoryRequests * 100;
+				var memLm = data.used.memoryLimits / data.hard.memoryLimits * 100;
+				var pods =  data.used.pods / data.hard.pods *100;
+				var services = data.used.pods / data.hard.pods *100;
+				var secrets = data.used.secrets / data.hard.secrets *100;
+				var configMaps = data.used.configMaps / data.hard.configMaps *100;
+				var persistentVolumne = data.used.persistentvolumeclaims / data.hard.persistentvolumeclaims *100;
+				var loadbalancers = data.used.servicesLoadbalancers / data.hard.servicesLoadbalancers *100; 
 				
 				setGraph('cpu_requests', quota.cpuRequests);
 				setGraph('cpu_limits', cpuLm);
@@ -69,10 +65,6 @@
 				setGraph('config_maps', configMaps);
 				setGraph('persistent_volumne', persistentVolumne);
 				setGraph('load_balancers', loadbalancers);
-				setGraphPod('cpu_requests', cpuRqPod);
-				setGraphPod('cpu_limits', 0);
-				setGraphPod('memory_requests', memRmPod);
-				setGraphPod('memory_limits', 0);
 				
 			});
 			url = "/management/namespace/labels";
@@ -248,6 +240,7 @@
 		/////////////////////////////////////  member management /////////////////////////////////////
 		var g_namespaceMember = null; 
 		var g_listCount = 5;
+		
 		function gridInitMember(data){
 			g_namespaceMember = data;
 			
@@ -260,8 +253,8 @@
 	    		rowInlineEdit: true,
 	    		pager: true,
 	    		paging: {
-	    			perPage: 5,
-	    			pagerCount: g_listCount,
+	    			perPage: g_listCount,
+	    			pagerCount: 5,
 	    			pagerSelect: true,
 	                pagerTotal: true
 	    		},
@@ -332,6 +325,9 @@
 	    		],
 	    		data: data
 	    	});
+	    	$("#grid_member").on( "perPageChange" , function(grid, pageinfo){
+				g_listCount = grid.alopexgrid.perPage;
+			});
 		}
 	    
 		function gridInitUser(data){ 
@@ -343,9 +339,9 @@
 	    		return data;
 	    	}
 	    	data = initData(data);
+	    	$('#div_grid_user').show();
 	    	$('#grid_user').alopexGrid({
 	    		cellInlineEdit: true,
-	    		
 	    		pager: true,
 	    		paging: {
 	    			perPage: 5,
@@ -500,6 +496,11 @@
            			};
            			ajaxCall('/management/namespace/saveRole', user).done(function(data){
            				gridInitMember(data.items);
+           				commonPopup.alert({
+                            message: '정상처리 되었습니다.',
+                            callback: function() {
+                            }
+                        });
            				showMember();
            			});        
                 }
@@ -984,15 +985,18 @@
 						</div>
 						<h3 class="form-title">멤버</h3>
 		            	<div id="grid_member"></div>
-		            	<p>
+		            	
 						<div class="btn-wrap">
 							<div class="btn-left"><button class="Button btn" onclick="showSearch2()">멤버추가</button></div>
 							<div class="btn-right" style="display:none" id="div_search2">
 								<input class="Textinput srcinput" id="searchWord2"  placeholder="검색어를 입력하세요."/><button class="Button btn-search" onclick="search2()">검색</button>
 							</div>
 						</div>
-						</p>
-						<div id="grid_user"></div>
+						<br/>
+						<div id="div_grid_user" style="display:none">
+							<h3 class="form-title">멤버 추가</h3>
+							<div id="grid_user"></div>
+						</div>
 				    </div>
 				</div>
 			</div>
