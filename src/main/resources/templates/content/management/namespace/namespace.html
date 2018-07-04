@@ -189,27 +189,22 @@
     		renderMapping : {
     			cpu_request_bar: {
     				renderer : function(value, data, render, mapping) {
-    					return '<span class="name-pro__info">' + data.usedCpuRequests + "/" + data.hardCpuRequests +'</span>' +
-    					'<div class="Progressbar name-typea" data-default="' +data.cpuRequestsPercentage + '" width="100px"></div>'
-    					
+    					return '<div class="Progressbar name-typea" data-default="' +data.cpuRequestsPercentage + '"></div>';
 	    			}
 	    		},
 	    		cpu_limits_bar: {
     				renderer : function(value, data, render, mapping) {
-    					return '<div class="Progressbar name-typea" data-default="' +data.cpuLimitsPercentage + '" width="100px"></div>'
-    					+'<span class="name-pro__info">' + data.usedCpuLimits + "/" + data.hardCpuLimits +'</span>'
+    					return '<div class="Progressbar name-typea" data-default="' +data.cpuLimitsPercentage + '"></div>';
 	    			}
 	    		},
 	    		memory_request_bar: {
     				renderer : function(value, data, render, mapping) {
-    					return '<div class="Progressbar name-typea" data-default="' +data.memoryRequestsPercentage + '" width="100px""></div>'
-    					+ '<span class="name-pro__info">' +data.usedMemoryRequests + "/" + data.hardMemoryRequests +'</span>'
+    					return '<div class="Progressbar name-typea" data-default="' +data.memoryRequestsPercentage + '" ></div>';
 	    			}
 	    		},
 	    		memory_limit_bar: {
     				renderer : function(value, data, render, mapping) {
-    					return '<div class="Progressbar name-typea" data-default="' +data.memoryLimitsPercentage + '" width="100px""></div>'
-    					+ '<span class="name-pro__info">' +data.usedMemoryLimits + "/" + data.hardMemoryLimits +'</span>'
+    					return '<div class="Progressbar name-typea" data-default="' +data.memoryLimitsPercentage + '"></div>';
 	    			}
 	    		}
     		},
@@ -224,10 +219,17 @@
     			clickSelect: true
     		}, */
             defaultColumnMapping : {
-                sorting:true
+                sorting:true,
+                resizing : true
             },
             enableDefaultContextMenu: false,
     		autoColumnIndex: true,
+    		headerGroup: [
+    			{fromIndex:1, toIndex:2, title:"CPU Request"},
+    			{fromIndex:3, toIndex:4, title:"CPU Limit"},
+    			{fromIndex:5, toIndex:6, title:"Memory Request"},
+    			{fromIndex:7, toIndex:8, title:"Memory Limit"}
+    		],
     		columnMapping : [
     			{
     				align : 'center',
@@ -239,24 +241,53 @@
     				}
     			}, {
     				title : 'CPU Request',
-    				width : '150px',
+    				width : '100px',
     				align : 'center',
     				render : {type:"cpu_request_bar"}  
+    			},{
+    				title : 'Unit',
+    				width : '70px',
+    				align : 'center',
+    				sorting:true,
+    				render : function(value, data){
+    					return data.usedCpuRequests + "/" + data.hardCpuRequests
+    				}  
     			}, {
     				align : 'center',
     				title : 'CPU Limit',
-    				width : '150px',
+    				width : '100px',
     				render : {type:"cpu_limits_bar"}
     			}, {
+    				title : 'Unit',
+    				width : '70px',
+    				align : 'center',
+    				render : function(value, data){
+    					return data.usedCpuLimits + "/" + data.hardCpuLimits 
+    				}  
+    			}, {
     				title : 'Memory Request',
-    				width : '150px',
+    				width : '100px',
     				align : 'center',
     				render : {type:"memory_request_bar"}  
     			}, {
+    				title : 'Unit',
+    				width : '70px',
+    				align : 'center',
+    				render : function(value, data){
+    					return data.usedMemoryRequests + "/" + data.hardMemoryRequests
+    				}  
+    			}, {
     				align : 'center',
     				title : 'Memory Limit',
-    				width : '150px',
+    				width : '100px',
     				render : {type:"memory_limit_bar"}
+    			}, {
+    				title : 'Unit',
+    				width : '70px',
+    				align : 'center',
+    				render : function(value, data){
+    					return data.usedMemoryLimits + "/" + data.hardMemoryLimits
+    				}  
     			}, {
     				align : 'center',
     				key : 'userCount',
