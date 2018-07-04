@@ -10,6 +10,7 @@
         var namespaces = /*[[${namespaces}]]*/;
         var clusterRoles = /*[[${clusterRoles}]]*/;
         var userTotp = /*[[${zcpUser.totp}]]*/;
+        var requiredActions = /*[[${zcpUser.requiredActions}]]*/;
         /*]]>*/
         </script>
         
@@ -45,6 +46,14 @@
                         if ($('#tbody_namespaces tr').length === 0) {
                         	zcpPortalApp.event.addNamespaceRole();
                         } 
+
+                        if (Array.isArray(requiredActions)) {
+                        	$.each(requiredActions, function (key, value) {
+                                if (value === 'UPDATE_PASSWORD') $("#userUpdatePassword").setChecked(true); 
+                                if (value === 'CONFIGURE_TOTP') $("#userConfigureOtp").setChecked(true);
+                                if (value === 'UPDATE_PROFILE') $("#userUpdateProfile").setChecked(true); 
+                            });
+                        }
                     },
 
                     validate: function() {
@@ -65,11 +74,18 @@
                         
                         if (!emaildValid || !firstNameValid) {
                             return false;
-                        } 
+                        }
+
+                        var requiredActions = [];
+                        if ($('#userUpdatePassword').is(":checked")) requiredActions.push($('#userUpdatePassword').val());
+                        if ($('#userConfigureOtp').is(":checked")) requiredActions.push($('#userConfigureOtp').val());
+                        if ($('#userUpdateProfile').is(":checked")) requiredActions.push($('#userUpdateProfile').val());
 
                         var data = $('#infoform').serializeObject();
-                        data.enabled =  $('#enabled').hasClass('btn-on') ? true : false;
-                        
+                        data.enabled =  $('#btnEnabled').hasClass('btn-on') ? true : false;
+                        data.emailVerified =  $('#btnEmailVerified').hasClass('btn-on') ? true : false;
+                        data.actions = requiredActions;
+
                         $a.request('/management/user/updateUser', {
                             method: 'post',
                             data: data, 
@@ -469,7 +485,6 @@
                                             <td>
                                                 <input type="text" th:name="email" th:id="email" th:value="${zcpUser.email}" class="Textinput" data-validation-rule="{required:true, email:true}" data-validation-message="{required:'이메일을 입력해 주세요.'}" />
                                                 <p class="info-text" data-for="email"></p>
-                                                <button class="Button btn-ico btn-config__save" th:attrappend="data-disabled=${!zcpUser.emailVerified ? true : false}">Email Verified</button>
                                             </td>
                                         </tr>
                                         <tr>
@@ -483,10 +498,38 @@
                                             <th>사용자 Enabled</th>
                                             <td>
                                                 <div class="onoff-wrap" th:switch="${zcpUser.enabled}">
-                                                    <button th:case="true" class="Button btn-on" id="enabled">ON</button>
-                                                    <button th:case="false" class="Button btn-off" id="enabled">OFF</button>
+                                                    <button th:case="true" class="Button btn-on" id="btnEnabled">ON</button>
+                                                    <button th:case="false" class="Button btn-off" id="btnEnabled">OFF</button>
                                                 </div>
                                                 <p class="form-infotxt">'OFF'로 설정 시, 로그인 할 수 없습니다.</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Email Verified</th>
+                                            <td>
+                                                <div class="onoff-wrap" th:switch="${zcpUser.emailVerified}">
+                                                    <button th:case="true" class="Button btn-on" id="btnEmailVerified">ON</button>
+                                                    <button th:case="false" class="Button btn-off" id="btnEmailVerified">OFF</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Required Action</th>
+                                            <td>
+                                                <div class="check-wrap">
+                                                    <label class="ImageCheckbox" id="checkTest03">
+                                                        <input class="Checkbox" type="checkbox" th:id="userUpdatePassword" th:name="requiredAction" value="UPDATE_PASSWORD"/>
+                                                        비밀번호
+                                                    </label>
+                                                    <label class="ImageCheckbox" id="checkTest03">
+                                                        <input class="Checkbox" type="checkbox" th:id="userConfigureOtp" th:name="requiredAction" value="CONFIGURE_TOTP" />
+                                                        모바일 인증
+                                                    </label>
+                                                    <label class="ImageCheckbox" id="checkTest03">
+                                                        <input class="Checkbox" type="checkbox" th:id="userUpdateProfile" th:name="requiredAction" value="UPDATE_PROFILE"/>
+                                                        프로필
+                                                    </label>
+                                                </div>
                                             </td>
                                         </tr>
                                     </tbody>

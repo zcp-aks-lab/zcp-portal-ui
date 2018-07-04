@@ -63,6 +63,8 @@ public class UserService {
         reqMap.put("email", userVo.getEmail());
         reqMap.put("firstName", userVo.getFirstName());
         reqMap.put("enabled", userVo.getEnabled());
+        reqMap.put("emailVerified", userVo.getEmailVerified());
+        reqMap.put("requiredActions", userVo.getActions());
         reqMap.put("username", userVo.getUsername());
         
         ApiResponseVo apiResponseVo = iamApiService.updateUser(userVo.getId(), reqMap);
