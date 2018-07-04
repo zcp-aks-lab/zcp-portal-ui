@@ -91,14 +91,6 @@
 					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typee');
 				}
 			}
-			function setGraphPod(obj_id, used){
-				used = ntrim(used);
-				$('#div_pod_' +obj_id).find('div').css('width', used + 'px');
-				$('#span_pod_'+ obj_id).text(used + '%');
-				if(Number(used) > 80){
-					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typee');
-				}
-			}
 			
 			function selected(id, value, unit){
 				if(value && value.indexOf(unit) > -1) 

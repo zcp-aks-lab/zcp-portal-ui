@@ -152,7 +152,16 @@
 		else
 			$('#div_label').find('span').eq(0).removeClass('white').addClass('Default');
 		//registEvent();
+		changeRed();
 	});
+	
+	function changeRed(){
+		$.each($('.Progressbar'), function(idx, data){
+			var value = $(this).data('default');
+			if(Number(value) > 80) 
+				$(this).removeClass('name-typea').addClass('name-typee');	
+		});
+	}
 	
 	function registEvent(){
 		$('#grid').on('dataSelect', function(rowData , select ){
