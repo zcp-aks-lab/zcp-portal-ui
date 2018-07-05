@@ -55,7 +55,7 @@
 				var persistentVolumne = data.used.persistentvolumeclaims / data.hard.persistentvolumeclaims *100;
 				var loadbalancers = data.used.servicesLoadbalancers / data.hard.servicesLoadbalancers *100; 
 				
-				setGraph('cpu_requests', quota.cpuRequests);
+				setGraph('cpu_requests', cpuRq);
 				setGraph('cpu_limits', cpuLm);
 				setGraph('memory_requests', memRm);
 				setGraph('memory_limits', memLm);
@@ -86,13 +86,20 @@
 			function setGraph(obj_id, used){
 				used = ntrim(used);
 				$('#div_' +obj_id).find('div').css('width', used + 'px');
+				var div = used % 1;
+				if(isNaN(div))
+					used = 0;
+				if(div < 1 && div > 0) 
+					used = Number(used).toFixed(2);
+				
+				
 				$('#span_'+ obj_id).text(used + '%');
 				if(Number(used) > 80){
 					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typee');
 				}
-				else if(Number(value) > 60) 
+				else if(Number(used) > 60) 
 					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typeb');
-				else if(Number(value) > 30) 
+				else if(Number(used) > 30) 
 					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typec');
 			}
 			
