@@ -190,22 +190,34 @@
     			cpu_request_bar: {
     				renderer : function(value, data, render, mapping) {
     					return '<div class="Progressbar name-typea" data-default="' +data.cpuRequestsPercentage + '"></div>';
-	    			}
+	    			},
+	    			postRender: function(cell, value, data, render, mapping, grid){
+	                    $a.convert($(cell));
+	                }
 	    		},
 	    		cpu_limits_bar: {
     				renderer : function(value, data, render, mapping) {
     					return '<div class="Progressbar name-typea" data-default="' +data.cpuLimitsPercentage + '"></div>';
-	    			}
+	    			},
+	    			postRender: function(cell, value, data, render, mapping, grid){
+	                    $a.convert($(cell));
+	                }
 	    		},
 	    		memory_request_bar: {
     				renderer : function(value, data, render, mapping) {
     					return '<div class="Progressbar name-typea" data-default="' +data.memoryRequestsPercentage + '" ></div>';
-	    			}
+	    			},
+	    			postRender: function(cell, value, data, render, mapping, grid){
+	                    $a.convert($(cell));
+	                }
 	    		},
 	    		memory_limit_bar: {
     				renderer : function(value, data, render, mapping) {
     					return '<div class="Progressbar name-typea" data-default="' +data.memoryLimitsPercentage + '"></div>';
-	    			}
+	    			},
+	    			postRender: function(cell, value, data, render, mapping, grid){
+	                    $a.convert($(cell));
+	                }
 	    		}
     		},
     		pager: true,
@@ -319,6 +331,8 @@
     		],
     		data: data
     	});
+    	
+    	changeRed();
 	}
 	
 	function showPage(type){
