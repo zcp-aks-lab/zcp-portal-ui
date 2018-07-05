@@ -454,6 +454,7 @@
 		
 		function showSearch2(){
 			$('#div_search2').show();
+			gridInitUser();
 		}
 		
 		function addUser(data){
@@ -990,17 +991,19 @@
 						<h3 class="form-title">멤버</h3>
 		            	<div id="grid_member"></div>
 		            	
-						<div class="btn-wrap">
-							<div class="btn-left"><button class="Button btn" onclick="showSearch2()">멤버추가</button></div>
-							<div class="btn-right" style="display:none" id="div_search2">
-								<input class="Textinput srcinput" id="searchWord2"  placeholder="검색어를 입력하세요."/><button class="Button btn-search" onclick="search2()">검색</button>
+		            	
+							<div class="btn-wrap">
+								<div class="btn-left"><button class="Button btn" onclick="showSearch2()">멤버추가</button></div>
+								<div class="btn-right" id="div_search2" style="display:none" >
+									<input class="Textinput srcinput" id="searchWord2"  placeholder="검색어를 입력하세요."/><button class="Button btn-search" onclick="search2()">검색</button>
+								</div>
 							</div>
-						</div>
-						<br/>
-						<div id="div_grid_user" style="display:none">
-							<h3 class="form-title">멤버 추가</h3>
-							<div id="grid_user"></div>
-						</div>
+							<br/>
+							<div id="div_grid_user" style="display:none">
+								<h3 class="form-title">멤버 추가</h3>
+								<div id="grid_user"></div>
+							</div>
+						
 				    </div>
 				</div>
 			</div>
