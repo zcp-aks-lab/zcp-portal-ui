@@ -42,5 +42,10 @@ public class SecurityService {
         
         return jwtIdTokenVo;
     }
+    
+    public static String getUserId() {
+        OpenIdConnectUserDetailsVo userDetailsVo = (OpenIdConnectUserDetailsVo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userDetailsVo.getUserId();
+    }
 
 }

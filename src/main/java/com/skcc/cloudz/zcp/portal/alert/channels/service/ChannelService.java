@@ -19,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.skcc.cloudz.zcp.common.util.Message;
 import com.skcc.cloudz.zcp.portal.alert.channels.vo.ChannelDtlVo;
 import com.skcc.cloudz.zcp.portal.alert.channels.vo.ChannelVo;
+import com.skcc.cloudz.zcp.portal.alert.rules.vo.RuleVo;
 
 @Service
 public class ChannelService {
@@ -98,6 +99,31 @@ public class ChannelService {
 
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<ChannelVo> response = restTemplate.exchange(url, HttpMethod.POST, entity, ChannelVo.class);
+
+		HttpStatus statusCode = response.getStatusCode();
+
+		ChannelVo channelVo = null;
+		if (statusCode == HttpStatus.OK) {
+			channelVo = response.getBody();
+		}
+
+		return channelVo;
+	}
+	
+	public ChannelVo deleteChannel(ChannelVo params) {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/channel/{id}").buildAndExpand(params.getId())
+				.toString();
+		logger.info(url);
+
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<ChannelVo> entity = new HttpEntity<ChannelVo>(headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<ChannelVo> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, ChannelVo.class);
 
 		HttpStatus statusCode = response.getStatusCode();
 

@@ -9,6 +9,7 @@ public class UserVo {
     private String password;
     private String firstName;
     private Boolean enabled;
+    private Boolean emailVerified;
     private Boolean temporary;
     private String period;
     private String type;
@@ -101,6 +102,12 @@ public class UserVo {
     }
     public void setTotp(Boolean totp) {
         this.totp = totp;
+    }
+    public Boolean getEmailVerified() {
+        return emailVerified;
+    }
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
     
 }

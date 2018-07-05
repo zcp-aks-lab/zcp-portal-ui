@@ -208,6 +208,40 @@
 						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
 					}
 				})
+
+				/* alertPopup.confirm({
+								width : 400,
+								height : 250,
+								message : '삭제하시겠습니까?',
+								callback : function(data) {
+									if (data == 'ok') {
+										$a.request('/alert/deleteChannel', {
+											method : 'post',
+											data : data,
+											success : function(res) {
+												if (res.resultCd !== '200') {
+													if (res.resultMsg)
+														alert(res.resultMsg);
+													return false;
+												}
+												alertPopup.alert({
+													width : 400,
+													height : 250,
+													message : '정상처리 되었습니다.',
+													callback : function() {
+														location.reload();
+													}
+												});
+											},
+											error : function(errObject) {
+												alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+											}
+										})
+									} else {
+										return false;
+									}
+								}
+							}); */
 			},
 			detailChannel : function(id) {
 				var test = {
@@ -451,7 +485,8 @@
 													<tr>
 														<th>채널명</th>
 														<td><input class="Textinput" th:id="channel"
-															th:name="channel" /><button class="Button btn">저장</button></td>
+															th:name="channel" />
+															<button class="Button btn">저장</button></td>
 													</tr>
 												</tbody>
 											</table>

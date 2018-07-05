@@ -221,6 +221,40 @@
 				var data = {
 					id : id
 				};
+				
+				/* alertPopup.confirm({
+					width : 400,
+					height : 250,
+					message : '삭제하시겠습니까?',
+					callback : function(data) {
+						if (data == 'ok') {
+							$a.request('/alert/deleteRule', {
+								method : 'post',
+								data : data,
+								success : function(res) {
+									if (res.resultCd !== '200') {
+										if (res.resultMsg)
+											alert(res.resultMsg);
+										return false;
+									}
+									alertPopup.alert({
+										width : 400,
+										height : 250,
+										message : '정상처리 되었습니다.',
+										callback : function() {
+											location.reload();
+										}
+									});
+								},
+								error : function(errObject) {
+									alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+								}
+							})
+						} else {
+							return false;
+						}
+					}
+				}); */
 
 				if (!confirm('삭제하시겠습니까?'))
 					return false;
