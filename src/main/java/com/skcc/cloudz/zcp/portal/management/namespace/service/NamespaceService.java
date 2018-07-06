@@ -39,14 +39,16 @@ public class NamespaceService {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         String param = "userId="+ securityService.getUserDetails().getUserId();
         ApiResponseVo response = client.request("/iam/metrics/namespaces?"+param, null);
-        if(response.getCode().equals("ZCP-0001")) {
-        	logger.debug(response.getMsg());
-        	List<Object> empty = new ArrayList<>();
-        	resultMap.put("items", empty);
-        	return resultMap;
-        }
+        
         if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new Exception(response.getMsg());
+        	//if(response.getCode().equals("ZCP-0001")) {
+            	logger.debug(response.getMsg());
+            	List<Object> empty = new ArrayList<>();
+            	resultMap.put("items", empty);
+            	resultMap.put("errorMsg", response.getMsg());
+            	return resultMap;
+            //}
+            //throw new Exception(response.getMsg());
         }
         
         ObjectMapper mapper = new ObjectMapper(); 
@@ -112,7 +114,6 @@ public class NamespaceService {
 			stream = stream.filter(namespace -> namespace.getName().indexOf(vo.getNamespace()) > -1);
 		}
 
-
 		if (stream != null)
 			listQuotas = stream.collect(Collectors.toList());
 
@@ -143,7 +144,8 @@ public class NamespaceService {
     public Map<String, Object> getNamespaceResource(String namespace) throws Exception {
     	if(StringUtils.isEmpty(namespace)) return null;
     	Map<String, Object> resultMap = new HashMap<String, Object>();
-        String url = "/iam/namespace/{namespace}/resource";
+    	String param = "userId="+ securityService.getUserDetails().getUserId();
+        String url = "/iam/namespace/{namespace}/resource?"+param;
         ApiResponseVo response = client.request(HttpMethod.GET, url.replace("{namespace}", namespace), null);
         if(!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(response.getMsg());

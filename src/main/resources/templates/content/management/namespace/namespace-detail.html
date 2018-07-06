@@ -15,10 +15,10 @@
 				var limit = data.limitRange;
 				var cpu_requeset, cpu_limit, memory_request, memory_limit;
 				if(quota){
-					$('#input_cpu_requests').val(ntrim(quota.cpuRequests));
-					$('#input_cpu_limits').val(ntrim(quota.cpuLimits));
-					$('#input_memory_requests').val(ntrim(quota.memoryRequests));
-					$('#input_memory_limits').val(ntrim(quota.memoryLimits));
+					$('#input_cpu_requests').val(quota.cpuRequests);
+					$('#input_cpu_limits').val(quota.cpuLimits);
+					$('#input_memory_requests').val(quota.memoryRequests);
+					$('#input_memory_limits').val(quota.memoryLimits);
 					$('#input_pods').val(quota.pods);
 					$('#input_services').val(quota.services);
 					$('#input_secrets').val(quota.secrets);
@@ -35,10 +35,10 @@
 					$('#input_pod_cpu_limits').val(limit.cpuLimits);
 					$('#input_pod_memory_requests').val(limit.memoryRequests);
 					$('#input_pod_memory_limits').val(limit.memoryLimits);
-					selected('pod_cpu_requests', ntrim(limit.cpuRequestsUnit), 'm');
-					selected('pod_cpu_limits', ntrim(limit.cpuLimitsUnit), 'm');
-					selected('pod_memory_requests', ntrim(limit.memoryRequestsUnit), 'Gi');
-					selected('pod_memory_limits', ntrim(limit.memoryLimitsUnit), 'Gi');
+					selected('pod_cpu_requests', limit.cpuRequestsUnit, 'm');
+					selected('pod_cpu_limits', limit.cpuLimitsUnit, 'm');
+					selected('pod_memory_requests', limit.memoryRequestsUnit, 'Gi');
+					selected('pod_memory_limits', limit.memoryLimitsUnit, 'Gi');
 				}
 				if(data.namespace){
 					$('#input_namespace').val(data.namespace)
@@ -92,7 +92,6 @@
 				if(div < 1 && div > 0) 
 					used = Number(used).toFixed(2);
 				
-				
 				$('#span_'+ obj_id).text(used + '%');
 				if(Number(used) > 80){
 					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typee');
@@ -108,32 +107,6 @@
 					$('#select_'+id).setSelected(unit)
 			}
 			
-			function getNumber(data, type){
-				var used = eval('data.used["'+type+'"]');
-				var hard = eval('data.hard["'+type+'"]');
-				if(used.indexOf('m') > -1) 
-					used = used.replace('m', '');
-				else if(used.indexOf('Mi') > -1) 
-					used = used.replace('Mi', '');
-				else if(used.indexOf('Gi') > -1) {
-					used = used.replace('Gi', '');
-					used = used*1000;
-				}else{
-					used = used*1000;
-				}
-				if(hard.indexOf('m') > -1) 
-					hard = hard.replace('m', '');
-				else if(hard.indexOf('Mi') > -1) 
-					hard = hard.replace('Mi', '');
-				else if(hard.indexOf('Gi') > -1) {
-					hard = hard.replace('Gi', '');
-					hard = hard*1000;
-				}else{
-					hard = hard*1000;
-				}
-				
-				return used / hard * 100;
-			}
 		}
 	
 		function ntrim(data){
@@ -158,30 +131,19 @@
 		});
 		
 		function addNamespace(){
-			function getCpu(id){
-				var v = $('#'+id + " :selected" ).val();
-				if(v == 'm') return "m";
-				return "";
-			}
-			function getMemory(id){
-				var v = $('#'+id + " :selected" ).val();
-				if(v == 'Gi') return "Gi";
-				return "";
-			}
-			
 			if(!validate()) return ;
 			
 			var data={
 				namespace : /*[[${namespace}]]*/
 				,resourceQuota : {
-					"cpuRequests" : $('#input_cpu_requests').val() 
+					"cpuRequests" : $('#input_cpu_requests').val() ? $('#input_cpu_requests').val() + '': "0"
 					,"cpuRequestsUnit" : $('#select_cpu_requests option:selected').val()
-					,"cpuLimits" : $('#input_cpu_limits').val() 
-					,"cpuLimitsUnit" : $('#select_cpu_limits option:selected').val()
-					,"memoryRequests" : $('#input_memory_requests').val() 
+					,"cpuLimits" : $('#input_cpu_limits').val() ? $('#input_cpu_limits').val() + '': "0"
+					,"cpuLimitsUnit" : $('#select_cpu_limits option:selected').val() 
+					,"memoryRequests" : $('#input_memory_requests').val() ? $('#input_memory_requests').val() + '': "0"
 					,"memoryRequestsUnit" : $('#select_memory_requests option:selected').val()
-					,"memoryLimits" : $('#input_memory_limits').val() 
-					,"memoryLimitsUnit": $('#select_memory_limits option:selected').val()
+					,"memoryLimits" : $('#input_memory_limits').val() ? $('#input_memory_limits').val() + '': "0"
+					,"memoryLimitsUnit": $('#select_memory_limits option:selected').val() 
 					,"pods" : $('#input_pods').val() ? $('#input_pods').val() + '': "0" 
 					,"services" : $('#input_services').val() ? $('#input_services').val() + '': "0"
 					,"secrets" : $('#input_secrets').val() ? $('#input_secrets').val()+ '' : "0"
@@ -190,13 +152,13 @@
 					,"servicesLoadbalancers" : $('#input_load_balancers').val() ? $('#input_load_balancers').val()+ '' : "0"
 				},
 				limitRange : {
-					cpuRequests : $('#input_pod_cpu_requests').val() 
+					cpuRequests : $('#input_pod_cpu_requests').val() ? $('#input_pod_cpu_requests').val() + '': "0"
 					,cpuRequestsUnit :  $('#select_pod_cpu_requests option:selected').val()
-					,memoryRequests:  $('#input_pod_memory_requests').val() 
+					,memoryRequests:  $('#input_pod_memory_requests').val() ? $('#input_pod_memory_requests').val() + '': "0"
 					,memoryRequestsUnit : $('#select_pod_memory_requests option:selected').val()
-					,cpuLimits :  $('#input_pod_cpu_limits').val() 
+					,cpuLimits :  $('#input_pod_cpu_limits').val() ? $('#input_pod_cpu_limits').val() + '': "0"
 					,cpuLimitsUnit : $('#select_pod_cpu_limits option:selected').val()
-					,memoryLimits : $('#input_pod_memory_limits').val() 
+					,memoryLimits : $('#input_pod_memory_limits').val() ? $('#input_pod_memory_limits').val() + '': "0"
 					,memoryLimitsUnit : $('#select_pod_memory_limits option:selected').val()
 				}
 			};
@@ -222,22 +184,7 @@
                 });
 				return false;
 			}
-			if(!$('#input_cpu_requests').val()) {
-				$('#input_cpu_requests').focus();
-				commonPopup.alert({
-                    message: '필수값 입니다.',
-                    callback: function() {
-                    }
-                });
-				return false;
-			}
-			if(!$('#input_cpu_limits').val()) return false;
-			if(!$('#input_memory_requests').val()) return false;
-			if(!$('#input_memory_limits').val()) return false;
-			if(!$('#input_pod_cpu_requests').val()) return false;
-			if(!$('#input_pod_cpu_limits').val()) return false;
-			if(!$('#input_pod_memory_requests').val()) return false;
-			if(!$('#input_pod_memory_limits').val()) return false;
+			
 			return true;
 		}
 		/////////////////////////////////////  member management /////////////////////////////////////

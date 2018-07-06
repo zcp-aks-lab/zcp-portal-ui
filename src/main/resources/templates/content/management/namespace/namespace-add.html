@@ -67,23 +67,7 @@
                 });
 				return false;
 			}
-			if(!$('#input_cpu_requests').val()) {
-				$('#input_cpu_requests').focus();
-				//alert('필수값 입니다.');
-				commonPopup.alert({
-                    message: '필수값 입니다.',
-                    callback: function() {
-                    }
-                });
-				return false;
-			}
-			if(!$('#input_cpu_limits').val()) return false;
-			if(!$('#input_memory_requests').val()) return false;
-			if(!$('#input_memory_limits').val()) return false;
-			if(!$('#input_pod_cpu_requests').val()) return false;
-			if(!$('#input_pod_cpu_limits').val()) return false;
-			if(!$('#input_pod_memory_requests').val()) return false;
-			if(!$('#input_pod_memory_limits').val()) return false;
+			
 			return true;
 		}
 		
