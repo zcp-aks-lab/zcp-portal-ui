@@ -55,16 +55,16 @@
 				var persistentVolumne = data.used.persistentvolumeclaims / data.hard.persistentvolumeclaims *100;
 				var loadbalancers = data.used.servicesLoadbalancers / data.hard.servicesLoadbalancers *100; 
 				
-				setGraph('cpu_requests', cpuRq);
-				setGraph('cpu_limits', cpuLm);
-				setGraph('memory_requests', memRm);
-				setGraph('memory_limits', memLm);
-				setGraph('pods', pods);
-				setGraph('services', services);
-				setGraph('secrets', secrets);
-				setGraph('config_maps', configMaps);
-				setGraph('persistent_volumne', persistentVolumne);
-				setGraph('load_balancers', loadbalancers);
+				setGraph('cpu_requests', data.usage.cpuRequestsUsage);
+				setGraph('cpu_limits', data.usage.cpuLimitsUsage);
+				setGraph('memory_requests', data.usage.memoryRequestsUsage);
+				setGraph('memory_limits', data.usage.memoryLimitsUsage);
+				setGraph('pods', data.usage.podsUsage);
+				setGraph('services', data.usage.servicesUsage);
+				setGraph('secrets', data.usage.secretsUsage);
+				setGraph('config_maps', data.usage.cpuRequestsUsage);
+				setGraph('persistent_volumne', data.usage.persistentvolumeclaimsUsage);
+				setGraph('load_balancers', data.usage.servicesLoadbalancersUsage);
 				
 			});
 			url = "/management/namespace/labels";
@@ -84,7 +84,7 @@
 			});
 			
 			function setGraph(obj_id, used){
-				used = ntrim(used);
+				used = Number(used);
 				$('#div_' +obj_id).find('div').css('width', used + 'px');
 				var div = used % 1;
 				if(isNaN(div))
