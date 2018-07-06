@@ -364,11 +364,78 @@
 						}
 					});
 				});
+				
+				$('#btnNotiAdd').on('click', function() {
+					notificationPopup.pop({
+						width : 580,
+						height : 500,
+						callback : function() {
+							location.reload();
+						}
+					});
+				});
 
-				$('#gubun').change(function() {
-					var gubunVal = $("#gubun option:selected").val();
+				/* $('#btnNotiAdd').on('click', function() {
+					var divisionVal = $("#division option:selected").val();
 
-					if (gubunVal == '') {
+					if (divisionVal == '') {
+						alertPopup.alert({
+							width : 400,
+							height : 250,
+							message : 'Notification을 선택해주세요.',
+							callback : function() {
+							}
+						});
+					} else if (divisionVal == 'email') {
+						$('#emailDiv').css('display', '');
+					} else if (divisionVal == 'slack') {
+						$('#slackDiv').css('display', '');
+					} else if (divisionVal == 'hipchat') {
+						$('#hipchatDiv').css('display', '');
+					} else if (divisionVal == 'webhook') {
+						$('#webhookDiv').css('display', '');
+					}
+				}); */
+
+				$('#btnEmailDel').on('click', function() {
+					alertPopup.confirm({
+						width : 400,
+						height : 250,
+						message : 'Email을 삭제하시겠습니까?',
+						callback : function(data) {
+							if (data == 'ok') {
+								/* $a.request('/alert/deleteChannel', {
+									method : 'post',
+									data : data,
+									success : function(res) {
+										if (res.resultCd !== '200') {
+											if (res.resultMsg)
+												alert(res.resultMsg);
+											return false;
+										} else {
+											alertPopup.alert({
+												width : 400,
+												height : 250,
+												message : '정상처리되었습니다.',
+												callback : function() {
+													location.reload();
+												}
+											});
+										}
+									},
+									error : function(errObject) {
+										alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+									}
+								}); */
+							}
+						}
+					});
+				});
+				
+				$('#division').change(function() {
+					var divisionVal = $("#division option:selected").val();
+
+					if (divisionVal == '') {
 						if ($('#email_to').val() != '')
 							$('#emailDiv').css('display', '');
 						if ($('#slack_api_url').val() != '')
@@ -378,28 +445,28 @@
 						if ($('#webhook_url').val() != '')
 							$('#webhookDiv').css('display', '');
 
-					} else if (gubunVal == 'email') {
+					} else if (divisionVal == 'email') {
 						if ($('#email_to').val() != '')
 							$('#emailDiv').css('display', '');
 						$('#slackDiv').css('display', 'none');
 						$('#hipchatDiv').css('display', 'none');
 						$('#webhookDiv').css('display', 'none');
 
-					} else if (gubunVal == 'slack') {
+					} else if (divisionVal == 'slack') {
 						$('#emailDiv').css('display', 'none');
 						if ($('#slack_api_url').val() != '')
 							$('#slackDiv').css('display', '');
 						$('#hipchatDiv').css('display', 'none');
 						$('#webhookDiv').css('display', 'none');
 
-					} else if (gubunVal == 'hipchat') {
+					} else if (divisionVal == 'hipchat') {
 						$('#emailDiv').css('display', 'none');
 						$('#slackDiv').css('display', 'none');
 						if ($('#hipchat_api_url').val() != '')
 							$('#hipchatDiv').css('display', '');
 						$('#webhookDiv').css('display', 'none');
 
-					} else if (gubunVal == 'webhook') {
+					} else if (divisionVal == 'webhook') {
 						$('#emailDiv').css('display', 'none');
 						$('#slackDiv').css('display', 'none');
 						$('#hipchatDiv').css('display', 'none');
@@ -499,7 +566,7 @@
 										</div>
 										<div class="channel-noti__right">
 											<div class="Divselect">
-												<select th:id="gubun" th:name="gubun">
+												<select th:id="division" th:name="division">
 													<option value="">전체</option>
 													<option value="email">Email</option>
 													<option value="slack">Slack</option>
@@ -507,7 +574,8 @@
 													<option value="webhook">Webhook</option>
 												</select> <span></span>
 											</div>
-											<button class="Button btn">Notification 추가</button>
+											<button class="Button btn" th:id="btnNotiAdd">Notification
+												추가</button>
 										</div>
 									</div>
 									<!-- channel form table second-->
@@ -519,7 +587,7 @@
 												class="Checkbox" type="checkbox" name="chk1" value="check1"
 												checked="checked" />
 											</label> -->
-												<button class="btn-ico channel-del">삭제</button>
+												<button class="btn-ico channel-del" th:id="btnEmailDel">삭제</button>
 											</div>
 										</div>
 										<form th:id="emailForm" onsubmit="return false;">
@@ -555,7 +623,7 @@
 												class="Checkbox" type="checkbox" name="chk1" value="check1"
 												checked="checked" />
 											</label> -->
-												<button class="btn-ico channel-del">삭제</button>
+												<button class="btn-ico channel-del" th:id="btnSlackDel">삭제</button>
 											</div>
 										</div>
 										<form th:id="slackForm" onsubmit="return false;">
@@ -590,7 +658,7 @@
 												class="Checkbox" type="checkbox" name="chk1" value="check1"
 												checked="checked" />
 											</label> -->
-												<button class="btn-ico channel-del">삭제</button>
+												<button class="btn-ico channel-del" th:id="btnHipchatDel">삭제</button>
 											</div>
 										</div>
 										<form th:id="hipchatForm" onsubmit="return false;">
@@ -645,7 +713,7 @@
 												class="Checkbox" type="checkbox" name="chk1" value="check1"
 												checked="checked" />
 											</label> -->
-												<button class="btn-ico channel-del">삭제</button>
+												<button class="btn-ico channel-del" th:id="btnWebhookDel">삭제</button>
 											</div>
 										</div>
 										<form th:id="webhookForm" onsubmit="return false;">

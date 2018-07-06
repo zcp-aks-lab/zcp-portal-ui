@@ -120,5 +120,10 @@ public class ChannelController {
 
 		return resultMap;
 	}
+	
+	@GetMapping(value = "/popNotificationAdd", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+	public String popNotificationAdd(Model model) throws Exception {
+		return "content/alert/channels/pop/popNotificationAdd";
+	}
 
 }

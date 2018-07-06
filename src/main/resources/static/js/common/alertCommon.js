@@ -93,3 +93,57 @@ var channelPopup = {
 		});
 	}
 };
+
+var notificationPopup = {
+		default_opts : {
+			title : '신규 Notification',
+			message : '',
+			width : 550,
+			height : 350,
+			callback : function(data) {
+				check.callback(data);
+			},
+			alias : 'popup'
+		},
+
+		pop : function(opts) {
+			this.open(opts);
+		},
+
+		open : function(opts) {
+			var _opts = $.extend({}, this.default_opts, opts);
+			
+			/*var data = {
+					id : id
+				};*/
+
+			$a.popup({
+				url : "/alert/popNotificationAdd",
+				iframe : false,
+				width : _opts.width,
+				height : _opts.height,
+				title : _opts.title,
+				data : _opts.data,
+				callback : function(data) {
+					if (data == 'ok') {
+						alertPopup.alert({
+							width : 400,
+							height : 250,
+							message : '저장되었습니다.',
+							callback : function() {
+								_opts.callback(data);
+								location.reload();
+							}
+						});
+					} else {
+					}
+				},
+				alias : _opts.alias,
+				xButtonClickCallback : function(el) {
+					if (el.alias == _opts.alias) {
+						return true;
+					}
+				}
+			});
+		}
+	};
