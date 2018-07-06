@@ -4,7 +4,325 @@
     <head>
         <title>메인</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link rel="stylesheet" href="css/amcharts/export.css" data-th-href="@{/css/amcharts/export.css}" />
+        <script src="js/lib/amcharts/amcharts.js" data-th-src="@{/js/lib/amcharts/amcharts.js}"></script>
+        <script src="js/lib/amcharts/pie.js" data-th-src="@{/js/lib/amcharts/pie.js}"></script>
+        <script src="js/lib/amcharts/themes/light.js" data-th-src="@{/js/lib/amcharts/themes/light.js}"></script>
         
+        <script type="text/javascript">
+            var zcpPortalApp = {
+                pageInit: function() {
+                    'use strict';
+                    
+                    // data init
+                    this.grid.init();
+                    
+                    // data init
+                    this.data.init();
+                    
+                    // event init
+                    this.event.init();
+                },
+
+                chart : {
+                    init: function() {
+                        // init
+                    },
+
+                    draw: function(renderId, props) {
+                        var chartProps = {
+                            "hideCredits": true,
+                            "type": "pie", // 차트 유형
+                            "startDuration": 0, // 차트를 바로 그릴지 아니면 애니메이션 효과를 줄지 체크
+                            "theme": "light", // 차트 테마
+                            "innerRadius": "50%", // 내경 여부
+                            "autoDisplay": true, // 자동 디스플레이
+                            "chartCursor": { // 커서의 형태를 결정
+                                "oneBalloonOnly": true
+                            },
+                            "borderAlpha": 0, // 차트 경계의 불투명도(0, 1)
+                            "gradientType": "radial", 
+                            "labelsEnabled": false, // 데이터 레이블의 표시 여부
+                            "legend": {
+                                "enabled": true, // 표시 여부
+                                "position": "right",    // 범례의 위치 ("bottom", "top", "left", "right" and "absolute")
+                                "marginRight": 40,
+                                "autoMargins": false
+                                //"markerLabelGap": 6,     // 범례 마커와 범례 텍스트 사이의 간격 
+                                //"markerSize": 9    // 범례 마커 크기
+                                //"maxColumns": 1,    // 범례의 최대 열 수
+                            },
+                            "defs": { // 추가 정보 설정
+                                "filter": [{
+                                    "id": "shadow",
+                                    "width": "200%",
+                                    "height": "200%",
+                                    "feOffset": {
+                                        "result": "offOut",
+                                        "in": "SourceAlpha",
+                                        "dx": 0,
+                                        "dy": 0
+                                    },
+                                    "feGaussianBlur": {
+                                        "result": "blurOut",
+                                        "in": "offOut",
+                                        "stdDeviation": 5
+                                    },
+                                    "feBlend": {
+                                        "in": "SourceGraphic",
+                                        "in2": "blurOut",
+                                        "mode": "normal"
+                                    }
+                                }]
+                            },
+                            "export": { 
+                                "enabled": false
+                            },
+                            "allLabels": [
+                                {
+                                    "text": props.mainStatus,
+                                    "bold": false,
+                                    "size": 12,
+                                    "align": "center",
+                                    "y": "44%"
+                                },
+                                {
+                                    "text": props.mainStatusPercentage,
+                                    "bold": false,
+                                    "size": 15,
+                                    "align": "center",
+                                    "y": "50%"
+                                },
+                                {
+                                    "text": props.title,
+                                    "bold": false,
+                                    "size": 15,
+                                    "x": 12,
+                                    "y": 16
+                                },
+                                {
+                                    "text": "Total :",
+                                    "bold": false,
+                                    "size": 14,
+                                    "x": 12,
+                                    "y": "88%"
+                                },
+                                {
+                                    "text": props.totalCount,
+                                    "bold": false,
+                                    "size": 14,
+                                    "x": 60,
+                                    "y": "88%"
+                                }
+                            ],
+                            "dataProvider": props.statuses,
+                            "valueField": "count",
+                            "titleField": "status"
+                        }
+                        
+                        AmCharts.makeChart(renderId, chartProps);
+                    }
+                },
+                
+                grid: {
+                    init: function() {
+                        $("#node-grid").removeAlopexGrid();
+                        $('#node-grid').alopexGrid({
+                        	renderMapping : {
+                                cpu_request_bar: {
+                                    renderer : function(value, data, render, mapping) {
+                                        return '<div class="Progressbar name-typea" data-default="' + data.cpuRequestsPercentage + '"></div>';
+                                    },
+                                    postRender: function(cell, value, data, render, mapping, grid){
+                                        $a.convert($(cell));
+                                    }
+                                },
+                                cpu_limits_bar: {
+                                    renderer : function(value, data, render, mapping) {
+                                        return '<div class="Progressbar name-typea" data-default="' + data.cpuLimitsPercentage + '"></div>';
+                                    },
+                                    postRender: function(cell, value, data, render, mapping, grid){
+                                        $a.convert($(cell));
+                                    }
+                                },
+                                memory_request_bar: {
+                                    renderer : function(value, data, render, mapping) {
+                                        return '<div class="Progressbar name-typea" data-default="' + data.memoryRequestsPercentage + '" ></div>';
+                                    },
+                                    postRender: function(cell, value, data, render, mapping, grid){
+                                        $a.convert($(cell));
+                                    }
+                                },
+                                memory_limit_bar: {
+                                    renderer : function(value, data, render, mapping) {
+                                        return '<div class="Progressbar name-typea" data-default="' + data.memoryLimitsPercentage + '"></div>';
+                                    },
+                                    postRender: function(cell, value, data, render, mapping, grid){
+                                        $a.convert($(cell));
+                                    }
+                                }
+                            },
+                            pager: true,
+                            paging: {
+                                perPage: 5,
+                                pagerCount: 5,
+                                pagerSelect: true,
+                                pagerTotal: true
+                            },
+                            defaultSorting:{
+                                sortingColumn: 'creationTime',
+                                sortingDirection: 'desc'
+                            },
+                            defaultColumnMapping : {
+                                sorting: true,
+                                resizing : true
+                            },
+                            /* message: {
+                                nodata: 'Nodes 데이터가 없습니다.'
+                            }, */
+                            autoColumnIndex: true,
+                            enableDefaultContextMenu: false,
+                            columnMapping: [
+                                {
+                                    key: 'nodeName',
+                                    title: 'Node',
+                                    width: '90px',
+                                    align: 'center'
+                                }, 
+                                {
+                                    key: 'status',
+                                    title: 'Status',
+                                    width: '70px',
+                                    align: 'center'
+                                },
+                                {
+                                    key: 'cpuRequests',
+                                    title: ' ',
+                                    width: '30px',
+                                    align: 'center'
+                                },
+                                {
+                                    key: 'cpuRequestsPercentage',
+                                    title: 'CPU Requests',
+                                    width: '100px',
+                                    align: 'center',
+                                    sorting: false,
+                                    render: {
+                                        type: 'cpu_request_bar'
+                                    }
+                                },
+                                {
+                                    key: 'cpuLimits',
+                                    title: ' ',
+                                    width: '30px',
+                                    align: 'center'
+                                },
+                                {
+                                    key: 'cpuLimitsPercentage',
+                                    title: 'CPU Limits',
+                                    width: '100px',
+                                    align: 'center',
+                                    sorting: false,
+                                    render: {
+                                        type: 'cpu_limits_bar'
+                                    }
+                                },
+                                {
+                                    key: 'memoryRequests',
+                                    title: ' ',
+                                    width: '30px',
+                                    align: 'right'
+                                },
+                                {
+                                    key: 'memoryRequestsPercentage',
+                                    title: 'Memory Requests',
+                                    width: '100px',
+                                    align: 'center',
+                                    sorting: false,
+                                    render: {
+                                        type: 'memory_request_bar'
+                                    }
+                                },
+                                {
+                                    key: 'memoryLimits',
+                                    title: ' ',
+                                    width: '30px',
+                                    align: 'right'
+                                },
+                                {
+                                    key: 'memoryLimitsPercentage',
+                                    title: 'Memory Limits',
+                                    width: '100px',
+                                    align: 'center',
+                                    sorting: false,
+                                    render: {
+                                        type: 'memory_limit_bar'
+                                    }
+                                },
+                                {
+                                    key: 'creationTime',
+                                    title: '생성일시',
+                                    width: '100px',
+                                    align: 'center'
+                                }
+                            ],
+                        });
+                    }
+                },
+                data: {
+                    init: function() {
+                        this.getNodes();
+                        this.getChartsData();
+                    },
+                    getNodes: function() {
+                        $a.request('/main/getNodes', {
+                            method: 'get',
+                            data: null, 
+                            success: function(res) {
+                                $('#node-grid').alopexGrid('dataSet', res);
+                            },
+                            error: function(errObject) {
+                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                            }
+                        })
+                    },
+                    getChartsData: function() {
+                        $a.request('/main/getChartsData', {
+                            method: 'post',
+                            data: null, 
+                            success: function(res) {
+                            	var nodesStatus = res.nodesStatus;
+                            	zcpPortalApp.chart.draw('nodesChart', nodesStatus);
+
+                                var deploymentsStatus = res.deploymentsStatus;
+                                zcpPortalApp.chart.draw('deploymentsChart', deploymentsStatus);
+
+                                var podsStatus = res.podsStatus;
+                                zcpPortalApp.chart.draw('podsChart', podsStatus);
+
+                                var cpuStatus = res.cpuStatus;
+                                //zcpPortalApp.chart.draw('cpuChart', cpuStatus);
+
+                                var memoryStatus = res.memoryStatus;
+                                //zcpPortalApp.chart.draw('memoryChart', memoryStatus);
+                            },
+                            error: function(errObject) {}
+                        })
+                    }
+                },
+                event: {
+                    init: function() {
+                        
+                    }
+                }
+            }
+            
+            $.alopex.page(function() {
+                this.init = function(id, param) { 
+                    zcpPortalApp.pageInit();
+                };
+            });
+        </script>
     </head>
     <body>
         <th:block layout:fragment="content">
@@ -13,66 +331,32 @@
             
             <div class="contents-box">
                 <!-- service top area-->
-                <div class="top-area">
-                    <h2 class="title">대시보드</h2>
-                    <div class="tag-wrap">
-                        <span class="tag">Namespace의 시스템 및 리소스 사용 현황을 일괄 조회합니다.</span>
-                    </div>
-                    <div class="btn-wrap__right">
-                        <button class="Button btn btn-dash"><span class="Icon btn-outlink" data-position="right"></span>대시보드</button>
-                    </div>
-                </div>
-                <!-- dashboard panel group-->
-                <div class="panel-line__wrap dash">
-                    <h3 class="dash-title">System Overview</h3>
-                    <!-- chart panel-->
-                    <div class="Panel dash-panel">
-                        <div class="Panel-content">
-                            <h4 class="chart-title">Nodes</h4>
-                            <div class="chart"><img src="images/chart-sample.png" data-th-src="@{/images/chart-sample.png}" /></div>
-                            <div class="chart-total"><strong>Total</strong> : <span>103.66GBM</span></div>
-                        </div>
-                    </div>
-                    <!-- chart panel-->
-                    <div class="Panel dash-panel">
-                        <div class="Panel-content">
-                            <h4 class="chart-title">Deployments</h4>
-                            <div class="chart"><img src="images/chart-sample.png" data-th-src="@{/images/chart-sample.png}" /></div>
-                            <div class="chart-total"><strong>Total</strong> : <span>103.66GBM</span></div>
-                        </div>
-                    </div>
-                    <!-- chart panel-->
-                    <div class="Panel dash-panel">
-                        <div class="Panel-content">
-                            <h4 class="chart-title">Pods</h4>
-                            <div class="chart"><img src="images/chart-sample.png" data-th-src="@{/images/chart-sample.png}" /></div>
-                            <div class="chart-total"><strong>Total</strong> : <span>103.66GBM</span></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- dashboard panel group-->
-                <div class="panel-line__wrap dash">
-                    <h3 class="dash-title">Resource Overview</h3>
-                    <!-- chart panel-->
-                    <div class="Panel dash-panel">
-                        <div class="Panel-content">
-                            <h4 class="chart-title">CPU</h4>
-                            <div class="chart"><img src="images/chart-sample.png" data-th-src="@{/images/chart-sample.png}" /></div>
-                            <div class="chart-total"><strong>Total</strong> : <span>103.66GBM</span></div>
-                        </div>
-                    </div>
-                    <!-- chart panel-->
-                    <div class="Panel dash-panel">
-                        <div class="Panel-content">
-                            <h4 class="chart-title">Memory</h4>
-                            <div class="chart"><img src="images/chart-sample.png" data-th-src="@{/images/chart-sample.png}" /></div>
-                            <div class="chart-total"><strong>Total</strong> : <span>103.66GBM</span></div>
-                        </div>
-                    </div>
-                </div>
+				<div class="top-area">
+				    <h2 class="title">대시보드</h2>
+				    <div class="tag-wrap">
+				        <span class="tag">Namespace의 시스템 및 리소스 사용 현황을 일괄 조회합니다.</span>
+				    </div>
+				    <div class="btn-wrap__right">
+				        <button class="Button btn btn-dash"><span class="Icon btn-outlink" data-position="right"></span>대시보드</button>
+				    </div>
+				</div>
+				<!-- dashboard panel group-->
+				<div class="panel-line__wrap dash">
+				    <h3 class="dash-title">System Overview</h3>
+				    <div class="Panel dash-panel" id="nodesChart"></div>
+				    <div class="Panel dash-panel" id="deploymentsChart"></div>
+				    <div class="Panel dash-panel" id="podsChart"></div>
+				</div>
+				<!-- dashboard panel group-->
+				<div class="panel-line__wrap dash">
+				    <h3 class="dash-title">Resource Overview</h3>
+				    <div class="Panel dash-panel" id="cpuChart"></div>
+				    <div class="Panel dash-panel" id="memoryChart"></div>
+				</div>
+                
                 <div class="grid-line__wrap dash">
                     <h3 class="dash-title">Nodes 목록</h3>
-                    <div id="gr"></div>
+                    <div id="node-grid"></div>
                 </div>
             </div>
         </th:block>

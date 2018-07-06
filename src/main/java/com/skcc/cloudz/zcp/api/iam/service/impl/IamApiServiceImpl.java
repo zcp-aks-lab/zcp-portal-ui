@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpNodeListVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserListVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
@@ -739,6 +740,208 @@ public class IamApiServiceImpl implements IamApiService {
         } catch (RestClientException e) {
             e.printStackTrace();
         } 
+        
+        return apiResponseVo;
+    }
+
+    @Override
+    public ZcpNodeListVo getNodes() {
+        ZcpNodeListVo zcpNodeListVo = new ZcpNodeListVo();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/metrics/nodes")
+                    .buildAndExpand()
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            HttpHeaders headers = new HttpHeaders();
+            HttpEntity<String> requestEntity = new HttpEntity<String>(headers); 
+            
+            ResponseEntity<ZcpNodeListVo> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, ZcpNodeListVo.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
+            log.info("===> Response body code : {}", responseEntity.getBody().getCode());
+            log.info("===> Response body data : {}", responseEntity.getBody().getData());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                zcpNodeListVo.setCode(responseEntity.getBody().getCode());
+                zcpNodeListVo.setMsg(responseEntity.getBody().getMsg());
+                zcpNodeListVo.setData(responseEntity.getBody().getData());    
+            }
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
+        
+        return zcpNodeListVo;
+        
+    }
+
+    @Override
+    public ApiResponseVo getDeploymentsStatus(String namespace) {
+        ApiResponseVo apiResponseVo = new ApiResponseVo();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/metrics/deployments/status")
+                    .queryParam("namespace", namespace)
+                    .buildAndExpand()
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            HttpHeaders headers = new HttpHeaders();
+            HttpEntity<String> requestEntity = new HttpEntity<String>(headers); 
+            
+            ResponseEntity<ApiResponseVo> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, ApiResponseVo.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
+            log.info("===> Response body code : {}", responseEntity.getBody().getCode());
+            log.info("===> Response body data : {}", responseEntity.getBody().getData());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                apiResponseVo.setCode(responseEntity.getBody().getCode());
+                apiResponseVo.setMsg(responseEntity.getBody().getMsg());
+                apiResponseVo.setData(responseEntity.getBody().getData());    
+            }
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
+        
+        return apiResponseVo;
+    }
+
+    @Override
+    public ApiResponseVo getNodesStatus(String namespace) {
+        ApiResponseVo apiResponseVo = new ApiResponseVo();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/metrics/nodes/status")
+                    .queryParam("namespace", namespace)
+                    .buildAndExpand()
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            HttpHeaders headers = new HttpHeaders();
+            HttpEntity<String> requestEntity = new HttpEntity<String>(headers); 
+            
+            ResponseEntity<ApiResponseVo> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, ApiResponseVo.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
+            log.info("===> Response body code : {}", responseEntity.getBody().getCode());
+            log.info("===> Response body data : {}", responseEntity.getBody().getData());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                apiResponseVo.setCode(responseEntity.getBody().getCode());
+                apiResponseVo.setMsg(responseEntity.getBody().getMsg());
+                apiResponseVo.setData(responseEntity.getBody().getData());    
+            }
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
+        
+        return apiResponseVo;
+    }
+
+    @Override
+    public ApiResponseVo getPodsStatus(String namespace) {
+        ApiResponseVo apiResponseVo = new ApiResponseVo();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/metrics/pods/status")
+                    .queryParam("namespace", namespace)
+                    .buildAndExpand()
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            HttpHeaders headers = new HttpHeaders();
+            HttpEntity<String> requestEntity = new HttpEntity<String>(headers); 
+            
+            ResponseEntity<ApiResponseVo> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, ApiResponseVo.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
+            log.info("===> Response body code : {}", responseEntity.getBody().getCode());
+            log.info("===> Response body data : {}", responseEntity.getBody().getData());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                apiResponseVo.setCode(responseEntity.getBody().getCode());
+                apiResponseVo.setMsg(responseEntity.getBody().getMsg());
+                apiResponseVo.setData(responseEntity.getBody().getData());    
+            }
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
+        
+        return apiResponseVo;
+    }
+
+    @Override
+    public ApiResponseVo getCpuStatus() {
+        ApiResponseVo apiResponseVo = new ApiResponseVo();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/metrics/cpu/status")
+                    .buildAndExpand()
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            HttpHeaders headers = new HttpHeaders();
+            HttpEntity<String> requestEntity = new HttpEntity<String>(headers); 
+            
+            ResponseEntity<ApiResponseVo> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, ApiResponseVo.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
+            log.info("===> Response body code : {}", responseEntity.getBody().getCode());
+            log.info("===> Response body data : {}", responseEntity.getBody().getData());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                apiResponseVo.setCode(responseEntity.getBody().getCode());
+                apiResponseVo.setMsg(responseEntity.getBody().getMsg());
+                apiResponseVo.setData(responseEntity.getBody().getData());    
+            }
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
+        
+        return apiResponseVo;
+    }
+
+    @Override
+    public ApiResponseVo getMemoryStatus() {
+        ApiResponseVo apiResponseVo = new ApiResponseVo();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+                    .path("/iam/metrics/memory/status")
+                    .buildAndExpand()
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            HttpHeaders headers = new HttpHeaders();
+            HttpEntity<String> requestEntity = new HttpEntity<String>(headers); 
+            
+            ResponseEntity<ApiResponseVo> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, ApiResponseVo.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body msg : {}", responseEntity.getBody().getMsg());
+            log.info("===> Response body code : {}", responseEntity.getBody().getCode());
+            log.info("===> Response body data : {}", responseEntity.getBody().getData());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                apiResponseVo.setCode(responseEntity.getBody().getCode());
+                apiResponseVo.setMsg(responseEntity.getBody().getMsg());
+                apiResponseVo.setData(responseEntity.getBody().getData());    
+            }
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
         
         return apiResponseVo;
     }

@@ -3,6 +3,7 @@ package com.skcc.cloudz.zcp.api.iam.service;
 import java.util.HashMap;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpNodeListVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserListVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
 
@@ -47,5 +48,17 @@ public interface IamApiService {
     ApiResponseVo updateOtpPassword(String id);
     
     ApiResponseVo deleteOtpPassword(String id);
+    
+    ZcpNodeListVo getNodes();
+    
+    ApiResponseVo getDeploymentsStatus(String namespace);
+    
+    ApiResponseVo getNodesStatus(String namespace);
+    
+    ApiResponseVo getPodsStatus(String namespace);
+    
+    ApiResponseVo getCpuStatus();
+    
+    ApiResponseVo getMemoryStatus();
 
 }
