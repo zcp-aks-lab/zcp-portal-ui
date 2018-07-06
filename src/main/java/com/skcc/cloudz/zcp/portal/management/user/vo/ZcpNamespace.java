@@ -56,7 +56,7 @@ public class ZcpNamespace {
 	private int memoryLimitsPercentage;
 
 	public enum NamespaceStatus {
-		ACTIVE("Active"), TERMINATING("Terminating");
+		active("Active"), inactive("Terminating");
 		private String status;
 
 		private NamespaceStatus(String status) {

@@ -40,22 +40,24 @@ public class NamespaceService {
         String param = "userId="+ securityService.getUserDetails().getUserId();
         ApiResponseVo response = client.request("/iam/metrics/namespaces?"+param, null);
         
+        if(response.getCode().equals("ZCP-0001")) {
+	    	logger.debug(response.getMsg());
+	    	List<Object> empty = new ArrayList<>();
+	    	resultMap.put("items", empty);
+	    	resultMap.put("errorMsg", response.getMsg());
+	    	return resultMap;
+	    }
+        
         if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
-        	//if(response.getCode().equals("ZCP-0001")) {
-            	logger.debug(response.getMsg());
-            	List<Object> empty = new ArrayList<>();
-            	resultMap.put("items", empty);
-            	resultMap.put("errorMsg", response.getMsg());
-            	return resultMap;
-            //}
-            //throw new Exception(response.getMsg());
+        	throw new Exception(response.getMsg());
         }
         
         ObjectMapper mapper = new ObjectMapper(); 
         ZcpNamespaceList namespaceList = mapper.convertValue(response.getData(), ZcpNamespaceList.class);
         List<ZcpNamespace> listQuotas = namespaceList.getItems();
         Stream<ZcpNamespace> stream = null;
-		
+        
+        
         if (!StringUtils.isEmpty(vo.getSortItem())) {
 			stream = namespaceList.getItems().stream();
 			switch (vo.getSortItem()) {
@@ -116,6 +118,9 @@ public class NamespaceService {
 
 		if (stream != null)
 			listQuotas = stream.collect(Collectors.toList());
+		
+		
+		
 
 		namespaceList.setItems(listQuotas);
 		return namespaceList;
