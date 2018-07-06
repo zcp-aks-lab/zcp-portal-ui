@@ -113,12 +113,8 @@ var notificationPopup = {
 		open : function(opts) {
 			var _opts = $.extend({}, this.default_opts, opts);
 			
-			/*var data = {
-					id : id
-				};*/
-
 			$a.popup({
-				url : "/alert/popNotificationAdd",
+				url : _opts.url,
 				iframe : false,
 				width : _opts.width,
 				height : _opts.height,

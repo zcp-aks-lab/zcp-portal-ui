@@ -22,15 +22,12 @@
 		data : {
 			init : function() {
 			},
-			createChannel : function() {
+			updateChannel : function() {
 				if (!this.validation()) {
-					$('#valid01').css('display', 'none');
-					$('#valid02').css('display', 'none');
-					$('#valid03').css('display', '');
 					return false;
 				}
 
-				$a.request('/alert/createChannel', {
+				$a.request('/alert/updateChannel', {
 					method : 'post',
 					data : $('#popForm').serializeObject(),
 					success : function(res) {
@@ -45,15 +42,47 @@
 					error : function(errObject) {
 						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
 					}
-				})
+				});
 			},
 			validation : function() {
-				var valid = $('#newChannel').validate();
+				var pDivision = $("#pDivision option:selected").val();
 
-				if (!valid) {
-					return false;
-				} else {
-					return true;
+				if (pDivision == 'email') {
+					var pEmail_to = $('#pEmail_to').validate();
+
+					if (!pEmail_to) {
+						return false;
+					} else {
+						return true;
+					}
+				} else if (pDivision == 'slack') {
+					var pSlack_api_url = $('#pSlack_api_url').validate();
+
+					if (!pSlack_api_url) {
+						return false;
+					} else {
+						return true;
+					}
+				} else if (pDivision == 'hipchat') {
+					var pHipchat_api_url = $('#pHipchat_api_url').validate();
+					var pHipchat_room_id = $('#pHipchat_room_id').validate();
+					var pHipchat_auth_token = $('#pHipchat_auth_token')
+							.validate();
+
+					if (!pHipchat_api_url || !pHipchat_room_id
+							|| !pHipchat_auth_token) {
+						return false;
+					} else {
+						return true;
+					}
+				} else if (pDivision == 'webhook') {
+					var pWebhook_url = $('#pWebhook_url').validate();
+
+					if (!pWebhook_url) {
+						return false;
+					} else {
+						return true;
+					}
 				}
 			}
 		},
@@ -63,11 +92,11 @@
 					$a.close('cancel');
 				});
 				$('#popOk').on('click', function() {
-					zcpPortalApp.data.createChannel();
+					zcpPortalApp.data.updateChannel();
 				});
 				$('#pDivision').change(function() {
 					var divisionVal = $("#pDivision option:selected").val();
-					
+
 					if (divisionVal == 'email') {
 						$('#pEmailDiv').css('display', '');
 						$('#pSlackDiv').css('display', 'none');
@@ -102,6 +131,9 @@
 			<div class="popup-text" id="popMessage">
 				<fieldset>
 					<form th:id="popForm" onsubmit="return false;">
+						<input type="hidden" th:id="id" th:name="id" th:value="${id}" />
+						<input type="hidden" th:id="channel" th:name="channel"
+							th:value="${channel}" />
 						<table class="Table Form-type">
 							<colgroup>
 								<col style="width: 200px;" />
@@ -114,7 +146,7 @@
 									<td>
 										<div class="channel-noti__right">
 											<div class="Divselect" style="width: 298px;">
-												<select th:id="pDivision" th:name="pDivision">
+												<select th:id="pDivision">
 													<option value="email">Email</option>
 													<option value="slack">Slack</option>
 													<option value="hipchat">Hipchat</option>
@@ -148,11 +180,16 @@
 									</colgroup>
 									<tbody>
 										<tr>
-											<th class="Valign-top">Email addresses</th>
+											<th class="Valign-top">Email address</th>
 											<td><textarea class="Textarea Width-100" rows="4"
-													th:id="email_to" th:name="email_to"
+													th:id="pEmail_to" th:name="pEmail_to"
+													data-validation-rule="{required:true}"
+													data-validation-message="{required:'Email address를 입력해주세요.'}"
 													style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666"></textarea>
-											</td>
+												<!-- <input class="Textinput Width-100" th:id="email_to"
+												th:name="email_to" data-validation-rule="{required:true}"
+												data-validation-message="{required:'Email address를 입력해주세요.'}" /> -->
+												<p class="info-text" data-for="pEmail_to"></p></td>
 										</tr>
 									</tbody>
 								</table>
@@ -173,8 +210,11 @@
 										<tr>
 											<th class="Valign-top">URL</th>
 											<td><input class="Textinput Width-100"
-												th:id="slack_api_url" th:name="slack_api_url" /> <!-- <p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
-																	주세요.</p> --></td>
+												th:id="pSlack_api_url" th:name="pSlack_api_url"
+												data-validation-rule="{required:true}"
+												data-validation-message="{required:'URL을 입력해주세요.'}" /> <!-- <p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
+																	주세요.</p> -->
+												<p class="info-text" data-for="pSlack_api_url"></p></td>
 										</tr>
 									</tbody>
 								</table>
@@ -195,26 +235,35 @@
 										<tr>
 											<th>URL</th>
 											<td><input class="Textinput Width-100"
-												th:id="hipchat_api_url" th:name="hipchat_api_url" /></td>
+												th:id="pHipchat_api_url" th:name="pHipchat_api_url"
+												data-validation-rule="{required:true}"
+												data-validation-message="{required:'URL을 입력해주세요.'}" />
+												<p class="info-text" data-for="pHipchat_api_url"></p></td>
 										</tr>
 										<tr>
 											<th>Room ID</th>
 											<td><input class="Textinput Width-100"
-												th:id="hipchat_room_id" th:name="hipchat_room_id" /></td>
+												th:id="pHipchat_room_id" th:name="pHipchat_room_id"
+												data-validation-rule="{required:true}"
+												data-validation-message="{required:'Room ID를 입력해주세요.'}" />
+												<p class="info-text" data-for="pHipchat_room_id"></p></td>
 										</tr>
 										<tr>
 											<th>Token</th>
 											<td><input class="Textinput Width-100"
-												th:id="hipchat_auth_token" th:name="hipchat_auth_token" /></td>
+												th:id="pHipchat_auth_token" th:name="pHipchat_auth_token"
+												data-validation-rule="{required:true}"
+												data-validation-message="{required:'Token을 입력해주세요.'}" />
+												<p class="info-text" data-for="pHipchat_auth_token"></p></td>
 										</tr>
 										<tr>
 											<th class="Valign-top">Notify</th>
 											<td><label class="ImageRadio"> <input
-													class="Radio" th:id="hipchat_notify"
-													th:name="hipchat_notify" />True
+													class="Radio" th:id="pHipchat_notify"
+													th:name="pHipchat_notify" th:value="true" checked="checked" />True
 											</label> <label class="ImageRadio Margin-left-80"> <input
-													class="Radio" th:id="hipchat_notify"
-													th:name="hipchat_notify" checked="checked" />False
+													class="Radio" th:id="pHipchat_notify"
+													th:name="pHipchat_notify" th:value="false" />False
 											</label></td>
 										</tr>
 									</tbody>
@@ -236,7 +285,10 @@
 										<tr>
 											<th class="Valign-top">URL</th>
 											<td><input class="Textinput Width-100"
-												th:id="webhook_url" th:name="webhook_url" /></td>
+												th:id="pWebhook_url" th:name="pWebhook_url"
+												data-validation-rule="{required:true}"
+												data-validation-message="{required:'URL을 입력해주세요.'}" />
+											<p class="info-text" data-for="pWebhook_url"></p></td>
 										</tr>
 									</tbody>
 								</table>

@@ -248,6 +248,7 @@
 					id : id
 				};
 
+				$('#id').val(id);
 				$('#channel').val('');
 				$('#notifications').val('');
 				$('#email_to').val('');
@@ -364,16 +365,21 @@
 						}
 					});
 				});
-				
-				$('#btnNotiAdd').on('click', function() {
-					notificationPopup.pop({
-						width : 580,
-						height : 500,
-						callback : function() {
-							location.reload();
-						}
-					});
-				});
+
+				$('#btnNotiAdd').on(
+						'click',
+						function() {
+							notificationPopup.pop({
+								url : "/alert/popNotificationAdd/"
+										+ $('#id').val() + "/"
+										+ $('#channel').val(),
+								width : 590,
+								height : 530,
+								callback : function() {
+									location.reload();
+								}
+							});
+						});
 
 				/* $('#btnNotiAdd').on('click', function() {
 					var divisionVal = $("#division option:selected").val();
@@ -431,7 +437,7 @@
 						}
 					});
 				});
-				
+
 				$('#division').change(function() {
 					var divisionVal = $("#division option:selected").val();
 
@@ -542,6 +548,7 @@
 								</div>
 								<div id="rightDiv" style="display: none;">
 									<form th:id="form" onsubmit="return false;">
+										<input type="hidden" th:id="id" th:name="id" />
 										<fieldset>
 											<table class="Table Form-type">
 												<colgroup>
@@ -603,6 +610,9 @@
 															<td><textarea class="Textarea Width-100" rows="4"
 																	th:id="email_to" th:name="email_to"
 																	style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666"></textarea>
+																<!-- <input class="Textinput Width-100" th:id="email_to"
+												th:name="email_to" data-validation-rule="{required:true}"
+												data-validation-message="{required:'Email address를 입력해주세요.'}" /> -->
 																<!-- <p class="info-text Margin-bottom-5">이메일 형식 오류입니다.</p> -->
 																<!-- <button class="Button btn">테스트</button> -->
 																<div class="Margin-top-5">

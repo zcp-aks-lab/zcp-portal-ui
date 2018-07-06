@@ -134,4 +134,44 @@ public class ChannelService {
 
 		return channelVo;
 	}
+	
+	public ChannelDtlVo updateChannel(Map<String, Object> params) {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/channel/{id}").buildAndExpand(params.get("id"))
+				.toString();
+		logger.info(url);
+
+		ChannelDtlVo channelParam = new ChannelDtlVo();
+
+		channelParam.setChannel(params.get("channel").toString());
+		channelParam.setEmail_to(params.get("pEmail_to").toString());
+		
+		channelParam.setSlack_api_url(params.get("pSlack_api_url").toString());
+		
+		channelParam.setHipchat_api_url(params.get("pHipchat_api_url").toString());
+		channelParam.setHipchat_room_id(params.get("pHipchat_room_id").toString());
+		channelParam.setHipchat_auth_token(params.get("pHipchat_auth_token").toString());
+		channelParam.setHipchat_notify(params.get("pHipchat_notify").toString());
+
+		channelParam.setWebhook_url(params.get("pWebhook_url").toString());
+
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<ChannelDtlVo> entity = new HttpEntity<ChannelDtlVo>(channelParam, headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<ChannelDtlVo> response = restTemplate.exchange(url, HttpMethod.PUT, entity, ChannelDtlVo.class);
+
+		HttpStatus statusCode = response.getStatusCode();
+
+		ChannelDtlVo channelDtlVo = null;
+		if (statusCode == HttpStatus.OK) {
+			channelDtlVo = response.getBody();
+		}
+
+		return channelDtlVo;
+	}
+	
 }
