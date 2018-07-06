@@ -17,14 +17,14 @@
 			var data={
 					namespace : $('#input_namespace').val()
 					,resourceQuota : {
-						"cpuRequests" : $('#input_cpu_requests').val() 
+						"cpuRequests" : $('#input_cpu_requests').val() ? $('#input_cpu_requests').val() + '': "0"
 						,"cpuRequestsUnit" : $('#select_cpu_requests option:selected').val()
-						,"cpuLimits" : $('#input_cpu_limits').val() 
-						,"cpuLimitsUnit" : $('#select_cpu_limits option:selected').val()
-						,"memoryRequests" : $('#input_memory_requests').val() 
+						,"cpuLimits" : $('#input_cpu_limits').val() ? $('#input_cpu_limits').val() + '': "0"
+						,"cpuLimitsUnit" : $('#select_cpu_limits option:selected').val() 
+						,"memoryRequests" : $('#input_memory_requests').val() ? $('#input_memory_requests').val() + '': "0"
 						,"memoryRequestsUnit" : $('#select_memory_requests option:selected').val()
-						,"memoryLimits" : $('#input_memory_limits').val() 
-						,"memoryLimitsUnit": $('#select_memory_limits option:selected').val()
+						,"memoryLimits" : $('#input_memory_limits').val() ? $('#input_memory_limits').val() + '': "0"
+						,"memoryLimitsUnit": $('#select_memory_limits option:selected').val() 
 						,"pods" : $('#input_pods').val() ? $('#input_pods').val() + '': "0" 
 						,"services" : $('#input_services').val() ? $('#input_services').val() + '': "0"
 						,"secrets" : $('#input_secrets').val() ? $('#input_secrets').val()+ '' : "0"
@@ -33,13 +33,13 @@
 						,"servicesLoadbalancers" : $('#input_load_balancers').val() ? $('#input_load_balancers').val()+ '' : "0"
 					},
 					limitRange : {
-						cpuRequests : $('#input_pod_cpu_requests').val() 
+						cpuRequests : $('#input_pod_cpu_requests').val() ? $('#input_pod_cpu_requests').val() + '': "0"
 						,cpuRequestsUnit :  $('#select_pod_cpu_requests option:selected').val()
-						,memoryRequests:  $('#input_pod_memory_requests').val() 
+						,memoryRequests:  $('#input_pod_memory_requests').val() ? $('#input_pod_memory_requests').val() + '': "0"
 						,memoryRequestsUnit : $('#select_pod_memory_requests option:selected').val()
-						,cpuLimits :  $('#input_pod_cpu_limits').val() 
+						,cpuLimits :  $('#input_pod_cpu_limits').val() ? $('#input_pod_cpu_limits').val() + '': "0"
 						,cpuLimitsUnit : $('#select_pod_cpu_limits option:selected').val()
-						,memoryLimits : $('#input_pod_memory_limits').val() 
+						,memoryLimits : $('#input_pod_memory_limits').val() ? $('#input_pod_memory_limits').val() + '': "0"
 						,memoryLimitsUnit : $('#select_pod_memory_limits option:selected').val()
 					}
 				};
