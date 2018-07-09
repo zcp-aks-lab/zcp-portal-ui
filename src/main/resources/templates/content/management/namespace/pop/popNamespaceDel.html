@@ -1,25 +1,32 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" >
 <div class="popup-wrap">
 	<div class="popup-contents">
 		<div class="popup-text">
 		<span id="span_text"></span><br/><br/>
-			<span>네임스페이스를 입력하세요: </span>
+			<span>Namespace를 입력하세요: </span>
 			<input type="text" id="input_namespace" length="30"/>
 		</div>
 	</div>
 	<!--button-->
 	<div class="popup-btn__wrap">
-		<button class="Button btn bg-gray" id="btn_closePop">확인</button>
-	</div>
+        <button class="Button btn bg-red" id="popOk">확인</button>
+        <button class="Button btn" id="popCancel">취소</button>
+    </div>
 	<!--//button-->
 </div>
 <script>
 $a.page(function() {
     this.init = function(id, param) {
     	 var namespace = param["namespace"];
-    	$('#span_text').text(namespace + ' 네임 스페이스를 삭제 하시겠습니까?');
+    	$('#span_text').text(namespace + ' Namespace를 삭제 하시겠습니까?');
         $('#btn_closePop').click( function(){ 
             $a.close($('#input_namespace').val()); 
+        });
+        $('#popCancel').click( function(){ 
+            $a.close('cancel'); 
         });
     }
 });
 </script>
+</html>

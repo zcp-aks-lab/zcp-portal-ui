@@ -11,13 +11,13 @@
 	<script th:inline="javascript" type="text/javascript">
 	/*<![CDATA[*/
 	var g_order= false;
-	var g_mode = "listType";
+	var g_mode = "cardType";
 	function deleteNamespace(name){
 	    $a.popup({
 	        url: "./namespace/pop/popNamespaceDel.html",
 	        iframe: false,  // default 는 true
-	        width: 826,
-	        height: 480,
+	        width: 550,
+	        height: 450,
 	        title : "Namespace 삭제",
 	        data : {namespace : name},
 	        callback : function(data){
@@ -25,35 +25,27 @@
 	        		ajaxCall('/management/namespace/delete', {namespace:name}).done(function(data){
 		    	   		//alert('삭제  되었습니다.');
 		    	   		commonPopup.alert({
-		                    message: '삭제  되었습니다.',
+		                    message: 'Namespace가 정상적으로 삭제 처리 되었습니다.',
 		                    callback: function() {
 		                    	location.reload();
 		                    }
 		                });
 	    	   		});		
+	        	}else if(data == 'cancel') {
+	        		
 	        	}else if(data){
-	        		//alert('네임스페이스명이 다릅니다.');
+	        		//alert('Namespace명이 다릅니다.');
 	        		commonPopup.alert({
-	                    message: '삭제  되었습니다.',
+	                    message: 'Namespace 명을 정확히 입력 하세요',
 	                    callback: function() {
 	                    	location.reload();
 	                    }
 	                });
 	        	}
 	        },
-	        alias: "flag1",
-	        xButtonClickCallback : function(el){  // 우측 상단 X 버튼으로 닫을 경우 동작하는 콜백
-	            if(el.alias === "flag1"){
-	                //if(confirm("저장되지 않은 데이터가 있습니다. 창을 닫으시겠습니까?")){
-	                    return true;
-	                //} else {
-	                //    return false;
-	                //}
-	            }
-	        }
+	        alias: "flag1"
 	    });
 	}
-	
 	
 	function search1(){
 		var param = {
@@ -151,8 +143,8 @@
 			});
 		else
 			$('#div_label').find('span').eq(0).removeClass('white').addClass('Default');
-		//registEvent();
 		changeRed();
+		registEvent();
 	});
 	
 	function changeRed(){
@@ -168,8 +160,10 @@
 	}
 	
 	function registEvent(){
-		$('#grid').on('dataSelect', function(rowData , select ){
-			location.href='/management/namespace/'+rowData.namespace;
+		$('#search').keypress(function(event){
+			if(event.which == 13){
+				search1();
+			} 
 		});
 	}
 	//////////////////////////////// grid /////////////////////////////////////////
@@ -189,7 +183,8 @@
     		renderMapping : {
     			cpu_request_bar: {
     				renderer : function(value, data, render, mapping) {
-    					return '<div class="Progressbar name-typea" data-default="' +data.cpuRequestsPercentage + '"></div>';
+    					return '<div class="Progressbar name-typea" data-default="' +data.cpuRequestsPercentage + '"></div>'
+							+'<span class="name-pro__info">' + data.usedCpuRequests + "/" + data.hardCpuRequests +'</span>';
 	    			},
 	    			postRender: function(cell, value, data, render, mapping, grid){
 	                    $a.convert($(cell));
@@ -197,7 +192,8 @@
 	    		},
 	    		cpu_limits_bar: {
     				renderer : function(value, data, render, mapping) {
-    					return '<div class="Progressbar name-typea" data-default="' +data.cpuLimitsPercentage + '"></div>';
+    					return '<div class="Progressbar name-typea" data-default="' +data.cpuLimitsPercentage + '"></div>'
+    					+'<span class="name-pro__info">' + data.usedCpuLimits + "/" + data.hardCpuLimits +'</span>';
 	    			},
 	    			postRender: function(cell, value, data, render, mapping, grid){
 	                    $a.convert($(cell));
@@ -205,7 +201,8 @@
 	    		},
 	    		memory_request_bar: {
     				renderer : function(value, data, render, mapping) {
-    					return '<div class="Progressbar name-typea" data-default="' +data.memoryRequestsPercentage + '" ></div>';
+    					return '<div class="Progressbar name-typea" data-default="' +data.memoryRequestsPercentage + '" ></div>'
+    					+ '<span class="name-pro__info">' +data.usedMemoryRequests + "/" + data.hardMemoryRequests +'</span>';
 	    			},
 	    			postRender: function(cell, value, data, render, mapping, grid){
 	                    $a.convert($(cell));
@@ -213,7 +210,8 @@
 	    		},
 	    		memory_limit_bar: {
     				renderer : function(value, data, render, mapping) {
-    					return '<div class="Progressbar name-typea" data-default="' +data.memoryLimitsPercentage + '"></div>';
+    					return '<div class="Progressbar name-typea" data-default="' +data.memoryLimitsPercentage + '"></div>'
+		    					+ '<span class="name-pro__info">' +data.usedMemoryLimits + "/" + data.hardMemoryLimits +'</span>'
 	    			},
 	    			postRender: function(cell, value, data, render, mapping, grid){
 	                    $a.convert($(cell));
@@ -236,17 +234,17 @@
             },
             enableDefaultContextMenu: false,
     		autoColumnIndex: true,
-    		headerGroup: [
+    		/* headerGroup: [
     			{fromIndex:1, toIndex:2, title:"CPU Request"},
     			{fromIndex:3, toIndex:4, title:"CPU Limit"},
     			{fromIndex:5, toIndex:6, title:"Memory Request"},
     			{fromIndex:7, toIndex:8, title:"Memory Limit"}
-    		],
+    		], */
     		columnMapping : [
     			{
     				align : 'center',
     				key : 'name',
-    				title : '네임스페이스',
+    				title : 'Namespace',
     				width : '100px',
     				render : function(value, data){
     					return '<a href="/management/namespace/'+value+'">' +value+ '</a>';
@@ -256,50 +254,21 @@
     				width : '100px',
     				align : 'center',
     				render : {type:"cpu_request_bar"}  
-    			},{
-    				title : 'Unit',
-    				width : '70px',
-    				align : 'center',
-    				sorting:true,
-    				render : function(value, data){
-    					return data.usedCpuRequests + "/" + data.hardCpuRequests
-    				}  
     			}, {
     				align : 'center',
     				title : 'CPU Limit',
     				width : '100px',
     				render : {type:"cpu_limits_bar"}
     			}, {
-    				title : 'Unit',
-    				width : '70px',
-    				align : 'center',
-    				render : function(value, data){
-    					return data.usedCpuLimits + "/" + data.hardCpuLimits 
-    				}  
-    			}, {
     				title : 'Memory Request',
     				width : '100px',
     				align : 'center',
     				render : {type:"memory_request_bar"}  
     			}, {
-    				title : 'Unit',
-    				width : '70px',
-    				align : 'center',
-    				render : function(value, data){
-    					return data.usedMemoryRequests + "/" + data.hardMemoryRequests
-    				}  
-    			}, {
     				align : 'center',
     				title : 'Memory Limit',
     				width : '100px',
     				render : {type:"memory_limit_bar"}
-    			}, {
-    				title : 'Unit',
-    				width : '70px',
-    				align : 'center',
-    				render : function(value, data){
-    					return data.usedMemoryLimits + "/" + data.hardMemoryLimits
-    				}  
     			}, {
     				align : 'center',
     				key : 'userCount',
@@ -325,7 +294,7 @@
     				title : '관리',
     				width : '50px',
     				render : function(value, data, render, mapping){
-    					return "<button class=\"btn-ico del\" onclick=\"deleteNamespace('" + data.namespace + "')\"></button>";
+    					return "<button class=\"btn-ico del\" onclick=\"deleteNamespace('" + data.name + "')\"></button>";
     				}
     			}
     		],
@@ -374,7 +343,8 @@
 				<!-- service top area-->
 				<div class="top-area">
                     <h2 class="title">Namespace</h2>
-                    <div class="tag-wrap" id="div_label">
+                    <div class="tag-wrap">
+                        <span class="tag">플랫폼의 Namespace Resource 를 관리 합니다.</span>
                     </div>
                     <div class="btn-wrap__right">
 	                    <button class="Button btn-ico__typeb btn-addnamepace" onclick="location.href='/management/namespace/create'">Namespace 추가</button>
@@ -388,16 +358,6 @@
 				
 				<!--name space detail view-->
 				<div class="panel-line__wrap">
-					<!-- name space sorting-->
-					<div id="listType" style="display:none">
-						<div class="namespace-sort">
-							<div class="sort-button">
-								<button class="Button btn-ico__typeb btn-cardview" onclick="showPage('cardType')">카드형으로 보기</button>
-								<button class="Button btn-ico__typeb btn-listview Checked" >목록형으로 보기</button>
-							</div>
-						</div>
-						<div id="grid"></div>
-					</div>
 					<div id="cardType">
 						<div class="namespace-sort">
 							<div class="sort-button">
@@ -466,6 +426,15 @@
 		                		<a href="/management/namespace/create" class="new-make"><span class="Icon ico-cloudz make-plus"></span>Namespace 추가</a>
 		                	</div>
 		                </div>
+					</div>
+					<div id="listType" style="display:none">
+						<div class="namespace-sort">
+							<div class="sort-button">
+								<button class="Button btn-ico__typeb btn-cardview" onclick="showPage('cardType')">카드형으로 보기</button>
+								<button class="Button btn-ico__typeb btn-listview Checked" >목록형으로 보기</button>
+							</div>
+						</div>
+						<div id="grid"></div>
 					</div>
 				</div><!-- id=cardType -->
 			</div>

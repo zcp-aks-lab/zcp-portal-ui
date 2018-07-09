@@ -55,11 +55,10 @@ public class NamespaceService {
         ObjectMapper mapper = new ObjectMapper(); 
         ZcpNamespaceList namespaceList = mapper.convertValue(response.getData(), ZcpNamespaceList.class);
         List<ZcpNamespace> listQuotas = namespaceList.getItems();
-        Stream<ZcpNamespace> stream = null;
+        Stream<ZcpNamespace> stream = namespaceList.getItems().stream();
         
         
         if (!StringUtils.isEmpty(vo.getSortItem())) {
-			stream = namespaceList.getItems().stream();
 			switch (vo.getSortItem()) {
 			case "namespace":
 				if (vo.isSortOrder())
@@ -113,7 +112,11 @@ public class NamespaceService {
 		}
 		
 		if (!StringUtils.isEmpty(vo.getNamespace())) {
-			stream = stream.filter(namespace -> namespace.getName().indexOf(vo.getNamespace()) > -1);
+			stream = stream.filter((namespace) -> {
+				if(namespace != null)
+					 return namespace.getName().indexOf(vo.getNamespace()) > -1;
+				 else return false;
+			});
 		}
 
 		if (stream != null)
@@ -140,7 +143,9 @@ public class NamespaceService {
     }
     
     public void deleteNamespace(String namespace) throws Exception {
-        ApiResponseVo response = client.request(HttpMethod.DELETE, "/iam/namespace/"+ namespace, null);
+    	Map<String, String> param = new HashMap<>();
+    	param.put("userId", securityService.getUserDetails().getUserId());
+        ApiResponseVo response = client.request(HttpMethod.DELETE, "/iam/namespace/"+ namespace, param);
         if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(response.getMsg());
         }

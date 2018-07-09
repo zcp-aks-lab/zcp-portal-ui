@@ -55,16 +55,16 @@
 				var persistentVolumne = data.used.persistentvolumeclaims / data.hard.persistentvolumeclaims *100;
 				var loadbalancers = data.used.servicesLoadbalancers / data.hard.servicesLoadbalancers *100; 
 				
-				setGraph('cpu_requests', data.usage.cpuRequestsUsage);
-				setGraph('cpu_limits', data.usage.cpuLimitsUsage);
-				setGraph('memory_requests', data.usage.memoryRequestsUsage);
-				setGraph('memory_limits', data.usage.memoryLimitsUsage);
-				setGraph('pods', data.usage.podsUsage);
-				setGraph('services', data.usage.servicesUsage);
-				setGraph('secrets', data.usage.secretsUsage);
-				setGraph('config_maps', data.usage.cpuRequestsUsage);
-				setGraph('persistent_volumne', data.usage.persistentvolumeclaimsUsage);
-				setGraph('load_balancers', data.usage.servicesLoadbalancersUsage);
+				setGraph('cpu_requests', data.usage.cpuRequestsUsage, cpuRq);
+				setGraph('cpu_limits', data.usage.cpuLimitsUsage, cpuLm);
+				setGraph('memory_requests', data.usage.memoryRequestsUsage, memRm);
+				setGraph('memory_limits', data.usage.memoryLimitsUsage, memLm);
+				setGraph('pods', data.usage.podsUsage, pods);
+				setGraph('services', data.usage.servicesUsage, services);
+				setGraph('secrets', data.usage.secretsUsage, secrets);
+				setGraph('config_maps', data.usage.configmapsUsage, configMaps);
+				setGraph('persistent_volumne', data.usage.persistentvolumeclaimsUsage, persistentVolumne);
+				setGraph('load_balancers', data.usage.servicesLoadbalancersUsage, loadbalancers);
 				
 			});
 			url = "/management/namespace/labels";
@@ -72,7 +72,8 @@
 				if(data.items){
 					var html='';
 					$.each(data.items, function(idx, data){
-						html +=makeHtmlLabel(data);	
+						if(!(data.indexOf('cloudzcp.io/zcp-system') > -1))
+							html +=makeHtmlLabel(data);	
 					});
 					$('#div_label').append(html);
 				}
@@ -83,12 +84,15 @@
 				}
 			});
 			
-			function setGraph(obj_id, used){
+			function setGraph(obj_id, used, c){
 				used = Number(used);
 				$('#div_' +obj_id).find('div').css('width', used + 'px');
 				var div = used % 1;
-				if(isNaN(div))
-					used = 0;
+				if(isNaN(c)){
+					$('#div_' +obj_id).hide();
+					$('#span_' +obj_id).hide();
+				}
+					
 				if(div < 1 && div > 0) 
 					used = Number(used).toFixed(2);
 				
@@ -128,7 +132,21 @@
 					$('.active').removeClass('active').addClass('inactive');
 			}
 			getClusterRole();
+			registEvent();
 		});
+		
+		function registEvent(){
+			$('#searchWord1').keypress(function(event){
+				if(event.which == 13){
+					search1();
+				} 
+			});
+			$('#searchWord2').keypress(function(event){
+				if(event.which == 13){
+					search2();
+				} 
+			});
+		}
 		
 		function addNamespace(){
 			if(!validate()) return ;
@@ -136,42 +154,51 @@
 			var data={
 				namespace : /*[[${namespace}]]*/
 				,resourceQuota : {
-					"cpuRequests" : $('#input_cpu_requests').val() ? $('#input_cpu_requests').val() + '': "0"
+					"cpuRequests" : $('#input_cpu_requests').val() ? $('#input_cpu_requests').val() + '': null
 					,"cpuRequestsUnit" : $('#select_cpu_requests option:selected').val()
-					,"cpuLimits" : $('#input_cpu_limits').val() ? $('#input_cpu_limits').val() + '': "0"
+					,"cpuLimits" : $('#input_cpu_limits').val() ? $('#input_cpu_limits').val() + '': null
 					,"cpuLimitsUnit" : $('#select_cpu_limits option:selected').val() 
-					,"memoryRequests" : $('#input_memory_requests').val() ? $('#input_memory_requests').val() + '': "0"
+					,"memoryRequests" : $('#input_memory_requests').val() ? $('#input_memory_requests').val() + '': null
 					,"memoryRequestsUnit" : $('#select_memory_requests option:selected').val()
-					,"memoryLimits" : $('#input_memory_limits').val() ? $('#input_memory_limits').val() + '': "0"
+					,"memoryLimits" : $('#input_memory_limits').val() ? $('#input_memory_limits').val() + '': null
 					,"memoryLimitsUnit": $('#select_memory_limits option:selected').val() 
-					,"pods" : $('#input_pods').val() ? $('#input_pods').val() + '': "0" 
-					,"services" : $('#input_services').val() ? $('#input_services').val() + '': "0"
-					,"secrets" : $('#input_secrets').val() ? $('#input_secrets').val()+ '' : "0"
-					,"configmaps" : $('#input_config_maps').val() ? $('#input_config_maps').val()+ '' : "0"
-					,"persistentvolumeclaims" : $('#input_persistent_volumne').val() ? $('#input_persistent_volumne').val()+ '' : "0"
-					,"servicesLoadbalancers" : $('#input_load_balancers').val() ? $('#input_load_balancers').val()+ '' : "0"
+					,"pods" : $('#input_pods').val() ? $('#input_pods').val() + '': null 
+					,"services" : $('#input_services').val() ? $('#input_services').val() + '': null
+					,"secrets" : $('#input_secrets').val() ? $('#input_secrets').val()+ '' : null
+					,"configmaps" : $('#input_config_maps').val() ? $('#input_config_maps').val()+ '' : null
+					,"persistentvolumeclaims" : $('#input_persistent_volumne').val() ? $('#input_persistent_volumne').val()+ '' : null
+					,"servicesLoadbalancers" : $('#input_load_balancers').val() ? $('#input_load_balancers').val()+ '' : null
 				},
 				limitRange : {
-					cpuRequests : $('#input_pod_cpu_requests').val() ? $('#input_pod_cpu_requests').val() + '': "0"
+					cpuRequests : $('#input_pod_cpu_requests').val() ? $('#input_pod_cpu_requests').val() + '': null
 					,cpuRequestsUnit :  $('#select_pod_cpu_requests option:selected').val()
-					,memoryRequests:  $('#input_pod_memory_requests').val() ? $('#input_pod_memory_requests').val() + '': "0"
+					,memoryRequests:  $('#input_pod_memory_requests').val() ? $('#input_pod_memory_requests').val() + '': null
 					,memoryRequestsUnit : $('#select_pod_memory_requests option:selected').val()
-					,cpuLimits :  $('#input_pod_cpu_limits').val() ? $('#input_pod_cpu_limits').val() + '': "0"
+					,cpuLimits :  $('#input_pod_cpu_limits').val() ? $('#input_pod_cpu_limits').val() + '': null
 					,cpuLimitsUnit : $('#select_pod_cpu_limits option:selected').val()
-					,memoryLimits : $('#input_pod_memory_limits').val() ? $('#input_pod_memory_limits').val() + '': "0"
+					,memoryLimits : $('#input_pod_memory_limits').val() ? $('#input_pod_memory_limits').val() + '': null
 					,memoryLimitsUnit : $('#select_pod_memory_limits option:selected').val()
 				}
 			};
-			var url = "/management/namespace/createAndEdit";
 			
-			ajaxCall(url, data).done(function(data){
-				commonPopup.alert({
-                    message: '정상처리 되었습니다.',
-                    callback: function() {
-                    }
-                });
-				//location.href='/management/namespaces';
-			});
+			commonPopup.confirm({
+                //title: '비밀번호 재설정',
+                message: 'Namespace 를 구성을 변경하시겠습니까?',
+                callback: function() {
+                	
+                	var url = "/management/namespace/createAndEdit";
+        			
+        			ajaxCall(url, data).done(function(data){
+        				commonPopup.alert({
+                            message: 'Namespace 구성 정보를 변경하였습니다.',
+                            callback: function() {
+                            }
+                        });
+        			});      
+                }
+            });
+			
+			
 		}
 		
 		function validate(){
@@ -232,7 +259,7 @@
 	    			}, {
 	    				align : 'center',
 	    				key : 'namespacedRole',
-	    				title : '네임스페이스 권한',
+	    				title : 'Namespace 권한',
 	    				width : '100px',
 	    				render : {
 	    		            type : "select",
@@ -330,7 +357,7 @@
 	    			},{
 	    				align : 'center',
 	    				key : 'namespacedRole',
-	    				title : '네임스페이스 권한',
+	    				title : 'Namespace 권한',
 	    				width : '100px',
 	    				render : {
 	    		            type : "select",
@@ -416,9 +443,9 @@
 				return ;
 			}
 			if(!data.namespacedRole) {
-				//alert('네임스페이스 권한이 필요합니다.');
+				//alert('Namespace 권한이 필요합니다.');
 				commonPopup.alert({
-                    message: '네임스페이스 권한이 필요합니다.',
+                    message: 'Namespace 권한이 필요합니다.',
                     callback: function() {
                     }
                 });
@@ -428,16 +455,16 @@
 			if(isDup) {
 				//alert('이미 추가된 사용자 입니다.');
 				commonPopup.alert({
-                    message: '이미 추가된 사용자 입니다.',
+                    message: '이미 추가된 멤버 입니다.',
                     callback: function() {
                     }
                 });
 				return ;
 			}
-			//if(!confirm('추가 하시겠습니까?')) return ;
+			var userName = data.username;
 			commonPopup.confirm({
                 //title: '비밀번호 재설정',
-                message: '추가 하시겠습니까?',
+                message: userName + '를 멤버로 추가하시겠습니까?',
                 callback: function() {
                 	var user = {
            				"username" : data.username
@@ -448,7 +475,7 @@
            			ajaxCall('/management/namespace/saveRole', user).done(function(data){
            				gridInitMember(data.items);
            				commonPopup.alert({
-                            message: '정상처리 되었습니다.',
+                            message: userName + '가 멤버로 추가되었습니다.',
                             callback: function() {
                             }
                         });
@@ -470,9 +497,9 @@
 		
 		function modifyNamespaceRole(data){
 			if(!data.clusterRole) {
-				//alert('네임스페이스 권한이 필요합니다.');
+				//alert('Namespace 권한이 필요합니다.');
 				commonPopup.alert({
-                    message: '네임스페이스 권한이 필요합니다.',
+                    message: 'Namespace 권한이 필요합니다.',
                     callback: function() {
                     }
                 });
@@ -513,7 +540,6 @@
 		
 		function search1(){
 			var word = $('#searchWord1').val();
-			if(!word) return;
 			var namespace = /*[[${namespace}]]*/;
 			var user = {
 					"namespace" : namespace 
@@ -527,7 +553,6 @@
 		
 		function search2(){
 			var word = $('#searchWord2').val();
-			if(!word) return;
 			var namespace = /*[[${namespace}]]*/;
 			var user = {
 					"searchWord" : word
@@ -542,18 +567,30 @@
 			var namespace = /*[[${namespace}]]*/;
 			var label = $('#input_label').val();
 			var regex = /[a-z][a-z0-9\/\-]*[=]{1}[a-zA-Z0-9\/\-]+/
-			if(!regex.test(label)){
-				//alert('형식이 올바르지 않습니다.');
-				commonPopup.alert({
-                    message: '형식이 올바르지 않습니다.',
-                    callback: function() {
-                    }
-                });
-				return ;
-			}
-			ajaxCall('/management/namespace/addLabel', {namespace : namespace, label : label}).done(function(data){
-				location.reload();
-			});
+			commonPopup.confirm({
+                //title: '비밀번호 재설정',
+                message: '라벨을 추가 하시겠습니까? ',
+                callback: function() {
+                	if(!regex.test(label)){
+        				//alert('형식이 올바르지 않습니다.');
+        				commonPopup.alert({
+                            message: '형식이 올바르지 않습니다.',
+                            callback: function() {
+                            }
+                        });
+        				return ;
+        			}
+        			ajaxCall('/management/namespace/addLabel', {namespace : namespace, label : label}).done(function(data){
+        				commonPopup.alert({
+                            message: '라벨이 추가되었습니다.',
+                            callback: function() {
+                            }
+                        });
+        				location.reload();
+        			});
+                }
+            });
+			
 		}
 		
 		function delLabel(label){
@@ -567,9 +604,21 @@
 				return ;
 			}
 			var namespace = /*[[${namespace}]]*/;
-			ajaxCall('/management/namespace/delLabel', {namespace : namespace, label : label}).done(function(data){
-				location.reload();
-			});
+			commonPopup.confirm({
+                //title: '비밀번호 재설정',
+                message: '라벨을 삭제 하시겠습니까?',
+                callback: function() {
+                	ajaxCall('/management/namespace/delLabel', {namespace : namespace, label : label}).done(function(data){
+                		commonPopup.alert({
+                            message: '라벨이 삭제되었습니다.',
+                            callback: function() {
+                            }
+                        });
+        				location.reload();
+        			});
+                }
+            });
+			
 		}
 		
 		function goMain(){
@@ -610,7 +659,7 @@
             		</dl>
             		<div class="btn-wrap__right">
 	                    <button class="Button btn-ico__typeb btn-godash" onclick='goMain()'>Dashoboard 보기</button>
-	                    <button class="Button btn-ico__typeb btn-adduser" onclick='goUser()'></button>
+	                    <!-- <button class="Button btn-ico__typeb btn-adduser" onclick='goUser()'></button> -->
 	                </div>
 				</div>
 				<!-- tab wrap -->
@@ -621,14 +670,14 @@
 				    </ul>
 				    <!-- Resource 구성 -->
 				    <div id="div_resource">
-				    	<p class="intab-txt">Namespace의 Resource 구성정보를 조회 및 변경합니다.<a href="#" class="view-detail">자세히 보기</a></p>
+				    	<p class="intab-txt">Namespace의 Resource 구성정보를 조회 및 변경합니다.</p>
 					    <!-- intab tag-->
 				    	<div class="intab-tag__wrap">
 				    		<h3 class="form-title">라벨</h3>
 				    		<div class="tag-wrap">
 					    		<div id="div_label">
 					    		</div>
-            					<input class="Autocomplete add-label__input" id="input_label"/>
+            					<input class="Autocomplete add-label__input" id="input_label"  style="width:300px"/>
             					<button class="Label add-label" onclick="addLabel()">추가</button>
             				</div>
 				    	</div>

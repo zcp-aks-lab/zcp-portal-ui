@@ -17,47 +17,53 @@
 			var data={
 					namespace : $('#input_namespace').val()
 					,resourceQuota : {
-						"cpuRequests" : $('#input_cpu_requests').val() ? $('#input_cpu_requests').val() + '': "0"
+						"cpuRequests" : $('#input_cpu_requests').val() ? $('#input_cpu_requests').val() + '': null
 						,"cpuRequestsUnit" : $('#select_cpu_requests option:selected').val()
-						,"cpuLimits" : $('#input_cpu_limits').val() ? $('#input_cpu_limits').val() + '': "0"
+						,"cpuLimits" : $('#input_cpu_limits').val() ? $('#input_cpu_limits').val() + '': null
 						,"cpuLimitsUnit" : $('#select_cpu_limits option:selected').val() 
-						,"memoryRequests" : $('#input_memory_requests').val() ? $('#input_memory_requests').val() + '': "0"
+						,"memoryRequests" : $('#input_memory_requests').val() ? $('#input_memory_requests').val() + '': null
 						,"memoryRequestsUnit" : $('#select_memory_requests option:selected').val()
-						,"memoryLimits" : $('#input_memory_limits').val() ? $('#input_memory_limits').val() + '': "0"
+						,"memoryLimits" : $('#input_memory_limits').val() ? $('#input_memory_limits').val() + '': null
 						,"memoryLimitsUnit": $('#select_memory_limits option:selected').val() 
-						,"pods" : $('#input_pods').val() ? $('#input_pods').val() + '': "0" 
-						,"services" : $('#input_services').val() ? $('#input_services').val() + '': "0"
-						,"secrets" : $('#input_secrets').val() ? $('#input_secrets').val()+ '' : "0"
-						,"configmaps" : $('#input_config_maps').val() ? $('#input_config_maps').val()+ '' : "0"
-						,"persistentvolumeclaims" : $('#input_persistent_volumne').val() ? $('#input_persistent_volumne').val()+ '' : "0"
-						,"servicesLoadbalancers" : $('#input_load_balancers').val() ? $('#input_load_balancers').val()+ '' : "0"
+						,"pods" : $('#input_pods').val() ? $('#input_pods').val() + '': null 
+						,"services" : $('#input_services').val() ? $('#input_services').val() + '': null
+						,"secrets" : $('#input_secrets').val() ? $('#input_secrets').val()+ '' : null
+						,"configmaps" : $('#input_config_maps').val() ? $('#input_config_maps').val()+ '' : null
+						,"persistentvolumeclaims" : $('#input_persistent_volumne').val() ? $('#input_persistent_volumne').val()+ '' : null
+						,"servicesLoadbalancers" : $('#input_load_balancers').val() ? $('#input_load_balancers').val()+ '' : null
 					},
 					limitRange : {
-						cpuRequests : $('#input_pod_cpu_requests').val() ? $('#input_pod_cpu_requests').val() + '': "0"
+						cpuRequests : $('#input_pod_cpu_requests').val() ? $('#input_pod_cpu_requests').val() + '': null
 						,cpuRequestsUnit :  $('#select_pod_cpu_requests option:selected').val()
-						,memoryRequests:  $('#input_pod_memory_requests').val() ? $('#input_pod_memory_requests').val() + '': "0"
+						,memoryRequests:  $('#input_pod_memory_requests').val() ? $('#input_pod_memory_requests').val() + '': null
 						,memoryRequestsUnit : $('#select_pod_memory_requests option:selected').val()
-						,cpuLimits :  $('#input_pod_cpu_limits').val() ? $('#input_pod_cpu_limits').val() + '': "0"
+						,cpuLimits :  $('#input_pod_cpu_limits').val() ? $('#input_pod_cpu_limits').val() + '': null
 						,cpuLimitsUnit : $('#select_pod_cpu_limits option:selected').val()
-						,memoryLimits : $('#input_pod_memory_limits').val() ? $('#input_pod_memory_limits').val() + '': "0"
+						,memoryLimits : $('#input_pod_memory_limits').val() ? $('#input_pod_memory_limits').val() + '': null
 						,memoryLimitsUnit : $('#select_pod_memory_limits option:selected').val()
 					}
 				};
-			var url = "/management/namespace/createAndEdit";
+			commonPopup.confirm({
+                //title: '비밀번호 재설정',
+                message: 'Namespce 를 추가하시겠습니까?',
+                callback: function() {
+        			var url = "/management/namespace/createAndEdit";
+        			
+        			ajaxCall(url, data).done(function(data){
+        				commonPopup.alert({
+                            message: 'Namespace 가 추가되었습니다.',
+                            callback: function() {
+                            	location.href='/management/namespaces';
+                            }
+                        });
+        			});    
+                }
+            });
 			
-			ajaxCall(url, data).done(function(data){
-				commonPopup.alert({
-                    message: '정상처리 되었습니다.',
-                    callback: function() {
-                    	location.href='/management/namespaces';
-                    }
-                });
-				
-			});
 		}
 		
 		function validate(){
-			var regex_namespace = /^[a-zA-Z][0-9a-zA-z\-]{5,11}$/;
+			var regex_namespace = /^[a-zA-Z][0-9a-zA-z\-\_\/]{2,29}$/;
 			if(!regex_namespace.test($('#input_namespace').val())){
 				//alert('허용하지 않는 문자입니다.');
 				commonPopup.alert({
@@ -287,7 +293,7 @@
 				</div>
 				<!-- button wrap-->
 				<div class="btn-wrap">
-					<div class="btn-left"><button class="Button btn">취소</button></div>
+					<div class="btn-left"><button class="Button btn" onclick="location.href='/management/namespaces'">취소</button></div>
 					<div class="btn-right"><button class="Button btn bg-red" onclick="addNamespace();">확인</button></div>
 		        </div>
 			</div>
