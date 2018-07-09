@@ -20,7 +20,7 @@ $a.page(function() {
     this.init = function(id, param) {
     	 var namespace = param["namespace"];
     	$('#span_text').text(namespace + ' Namespace를 삭제 하시겠습니까?');
-        $('#btn_closePop').click( function(){ 
+        $('#popOk').click( function(){ 
             $a.close($('#input_namespace').val()); 
         });
         $('#popCancel').click( function(){ 

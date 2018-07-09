@@ -143,9 +143,11 @@ public class NamespaceService {
     }
     
     public void deleteNamespace(String namespace) throws Exception {
-    	Map<String, String> param = new HashMap<>();
-    	param.put("userId", securityService.getUserDetails().getUserId());
-        ApiResponseVo response = client.request(HttpMethod.DELETE, "/iam/namespace/"+ namespace, param);
+//    	Map<String, String> param = new HashMap<>();
+//    	param.put("userId", securityService.getUserDetails().getUserId());
+    	String param = "?userId="+ securityService.getUserDetails().getUserId();
+    	String url = "/iam/namespace/"+ namespace + param;
+        ApiResponseVo response = client.request(HttpMethod.DELETE, url, null);
         if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(response.getMsg());
         }
