@@ -11,11 +11,11 @@
 	$.alopex.page(function() {
 		this.init = function(id, param) {
 			zcpPortalGrid.pageInit();
-			/* zcpPortalApp.pageInit(); */
+			zcpPortalApp.pageInit();
 		};
 	});
 
-	/* var zcpPortalApp = {
+	var zcpPortalApp = {
 		pageInit : function() {
 			'use strict';
 			this.data.init();
@@ -24,38 +24,56 @@
 		data : {
 			init : function() {
 			},
-			updateRepeat : function() {
-				if (!this.validation()) {
+			updateDtl : function() {
+				/* if (!this.validation()) {
 					return false;
-				}
+				} */
 
-				var check = confirm("저장하시겠습니까?");
-				if (check) {
-					$a.request('/alert/updateRepeat', {
-						method : 'post',
-						data : $('#form').serializeObject(),
-						success : function(res) {
-							if (res.resultCd !== '200') {
-								if (res.resultMsg)
-									alert(res.resultMsg);
-								return false;
-							}
-
-							alert('저장되었습니다.');
-							location.href = '/alert/rules';
-						},
-						error : function(errObject) {
-							alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+				var check = alertPopup.confirm({
+					width : 400,
+					height : 250,
+					message : '저장하시겠습니까?',
+					callback : function(data) {
+						if (data == 'ok') {
+							$a.request('/alert/updateChannelDtl', {
+								method : 'post',
+								data : $('#form').serializeObject(),
+								success : function(res) {
+									if (res.resultCd !== '200') {
+										if (res.resultMsg)
+											alert(res.resultMsg);
+										return false;
+									}
+									alertPopup.alert({
+										width : 400,
+										height : 250,
+										message : '저장되었습니다.',
+										callback : function() {
+											location.href = '/alert/channels';
+										}
+									});
+								},
+								error : function(errObject) {
+									alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+								}
+							})
+						} else {
+							return false;
 						}
-					})
-				} else {
-					return false;
-				}
+					}
+				});
 			},
 			validation : function() {
-				var type = $('#repeat').validate();
+				var email_to = $('#email_to').validate();
+				var slack_api_url = $('#slack_api_url').validate();
+				var hipchat_api_url = $('#hipchat_api_url').validate();
+				var hipchat_room_id = $('#hipchat_room_id').validate();
+				var hipchat_auth_token = $('#hipchat_auth_token').validate();
+				var webhook_url = $('#webhook_url').validate();
 
-				if (!type) {
+				if (!email_to || !slack_api_url || !hipchat_api_url
+						|| !hipchat_room_id || !hipchat_auth_token
+						|| !webhook_url) {
 					return false;
 				} else {
 					return true;
@@ -64,12 +82,21 @@
 		},
 		event : {
 			init : function() {
-				$('#btnUpdate').on('click', function() {
-					zcpPortalApp.data.updateRepeat();
+				$('#btnUpdateEmail').on('click', function() {
+					zcpPortalApp.data.updateDtl();
+				});
+				$('#btnUpdateSlack').on('click', function() {
+					zcpPortalApp.data.updateDtl();
+				});
+				$('#btnUpdateHipchat').on('click', function() {
+					zcpPortalApp.data.updateDtl();
+				});
+				$('#btnUpdateWebhook').on('click', function() {
+					zcpPortalApp.data.updateDtl();
 				});
 			}
 		}
-	} */
+	}
 
 	var zcpPortalGrid = {
 		pageInit : function() {
@@ -259,59 +286,92 @@
 				$('#hipchat_notify').val('');
 				$('#webhook_url').val('');
 
-				$a.request('/alert/channelDtl', {
-					method : 'post',
-					data : test,
-					success : function(res) {
-						if (res.resultCd !== '200') {
-							if (res.resultMsg)
-								alert(res.resultMsg);
-							return false;
-						}
+				$a
+						.request(
+								'/alert/channelDtl',
+								{
+									method : 'post',
+									data : test,
+									success : function(res) {
+										if (res.resultCd !== '200') {
+											if (res.resultMsg)
+												alert(res.resultMsg);
+											return false;
+										}
 
-						$('#channel').val(res.resultData.channel);
-						$('#notifications').text(res.resultData.notifications);
+										$('#channel').val(
+												res.resultData.channel);
+										$('#notifications').text(
+												res.resultData.notifications);
 
-						if (res.resultData.email_to == null) {
-							$('#emailDiv').css('display', 'none');
-						} else {
-							$('#emailDiv').css('display', '');
-							$('#email_to').val(res.resultData.email_to);
-						}
+										if (res.resultData.email_to == null) {
+											$('#emailDiv').css('display',
+													'none');
+										} else {
+											$('#emailDiv').css('display', '');
+											$('#email_to').val(
+													res.resultData.email_to);
+										}
 
-						if (res.resultData.slack_api_url == null) {
-							$('#slackDiv').css('display', 'none');
-						} else {
-							$('#slackDiv').css('display', '');
-							$('#slack_api_url').val(
-									res.resultData.slack_api_url);
-						}
+										if (res.resultData.slack_api_url == null) {
+											$('#slackDiv').css('display',
+													'none');
+										} else {
+											$('#slackDiv').css('display', '');
+											$('#slack_api_url')
+													.val(
+															res.resultData.slack_api_url);
+										}
 
-						if (res.resultData.hipchat_api_url == null) {
-							$('#hipchatDiv').css('display', 'none');
-						} else {
-							$('#hipchatDiv').css('display', '');
-							$('#hipchat_api_url').val(
-									res.resultData.hipchat_api_url);
-							$('#hipchat_room_id').val(
-									res.resultData.hipchat_room_id);
-							$('#hipchat_auth_token').val(
-									res.resultData.hipchat_auth_token);
-							$('#hipchat_notify').val(
-									res.resultData.hipchat_notify);
-						}
+										if (res.resultData.hipchat_api_url == null) {
+											$('#hipchatDiv').css('display',
+													'none');
+										} else {
+											$('#hipchatDiv').css('display', '');
+											$('#hipchat_api_url')
+													.val(
+															res.resultData.hipchat_api_url);
+											$('#hipchat_room_id')
+													.val(
+															res.resultData.hipchat_room_id);
+											$('#hipchat_auth_token')
+													.val(
+															res.resultData.hipchat_auth_token);
 
-						if (res.resultData.webhook_url == null) {
-							$('#webhookDiv').css('display', 'none');
-						} else {
-							$('#webhookDiv').css('display', '');
-							$('#webhook_url').val(res.resultData.webhook_url);
-						}
-					},
-					error : function(errObject) {
-						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
-					}
-				});
+											if (res.resultData.hipchat_notify == 'true') {
+												$('#notify_true')
+														.attr('class',
+																'ImageRadio af-radio-text Checked');
+												$('#notify_false')
+														.attr('class',
+																'ImageRadio Margin-left-80 af-radio-text');
+												$("#hipchat_notify_true").prop(
+														'checked', true);
+											} else {
+												$('#notify_false')
+														.attr('class',
+																'ImageRadio Margin-left-80 af-radio-text Checked');
+												$('#notify_true')
+														.attr('class',
+																'ImageRadio af-radio-text');
+												$("#hipchat_notify_false")
+														.prop('checked', true);
+											}
+										}
+
+										if (res.resultData.webhook_url == null) {
+											$('#webhookDiv').css('display',
+													'none');
+										} else {
+											$('#webhookDiv').css('display', '');
+											$('#webhook_url').val(
+													res.resultData.webhook_url);
+										}
+									},
+									error : function(errObject) {
+										alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+									}
+								});
 				$('#defaultDiv').css('display', 'none');
 				$('#rightDiv').css('display', '');
 			}
@@ -546,8 +606,8 @@
 										</table>
 									</fieldset>
 								</div>
-								<div id="rightDiv" style="display: none;">
-									<form th:id="form" onsubmit="return false;">
+								<form th:id="form" onsubmit="return false;">
+									<div id="rightDiv" style="display: none;">
 										<input type="hidden" th:id="id" th:name="id" />
 										<fieldset>
 											<table class="Table Form-type">
@@ -565,39 +625,37 @@
 												</tbody>
 											</table>
 										</fieldset>
-									</form>
-									<!-- channel noti detail-->
-									<div class="channel-noti">
-										<div class="channel-noti__left">
-											Notifications 연결 : 총 <span id="notifications"></span>개
-										</div>
-										<div class="channel-noti__right">
-											<div class="Divselect">
-												<select th:id="division" th:name="division">
-													<option value="">전체</option>
-													<option value="email">Email</option>
-													<option value="slack">Slack</option>
-													<option value="hipchat">Hipchat</option>
-													<option value="webhook">Webhook</option>
-												</select> <span></span>
+										<!-- channel noti detail-->
+										<div class="channel-noti">
+											<div class="channel-noti__left">
+												Notifications 연결 : 총 <span id="notifications"></span>개
 											</div>
-											<button class="Button btn" th:id="btnNotiAdd">Notification
-												추가</button>
+											<div class="channel-noti__right">
+												<div class="Divselect">
+													<select th:id="division" th:name="division">
+														<option value="">전체</option>
+														<option value="email">Email</option>
+														<option value="slack">Slack</option>
+														<option value="hipchat">Hipchat</option>
+														<option value="webhook">Webhook</option>
+													</select> <span></span>
+												</div>
+												<button class="Button btn" th:id="btnNotiAdd">Notification
+													추가</button>
+											</div>
 										</div>
-									</div>
-									<!-- channel form table second-->
-									<div id="emailDiv" style="display: none;">
-										<div class="form-btn__wrap">
-											<h3 class="form-subtitle">Email</h3>
-											<div class="btn-wrap__right">
-												<!-- <label class="ImageCheckbox" id="checkTest03"> <input
+										<!-- channel form table second-->
+										<div id="emailDiv" style="display: none;">
+											<div class="form-btn__wrap">
+												<h3 class="form-subtitle">Email</h3>
+												<div class="btn-wrap__right">
+													<!-- <label class="ImageCheckbox" id="checkTest03"> <input
 												class="Checkbox" type="checkbox" name="chk1" value="check1"
 												checked="checked" />
 											</label> -->
-												<button class="btn-ico channel-del" th:id="btnEmailDel">삭제</button>
+													<button class="btn-ico channel-del" th:id="btnEmailDel">삭제</button>
+												</div>
 											</div>
-										</div>
-										<form th:id="emailForm" onsubmit="return false;">
 											<fieldset>
 												<table class="Table Form-type channel-line">
 													<colgroup>
@@ -606,37 +664,37 @@
 													</colgroup>
 													<tbody>
 														<tr>
-															<th class="Valign-top">Email addresses</th>
+															<th class="Valign-top">Email address</th>
 															<td><textarea class="Textarea Width-100" rows="4"
 																	th:id="email_to" th:name="email_to"
+																	data-validation-rule="{required:true}"
+																	data-validation-message="{required:'Email address을 입력해주세요.'}"
 																	style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666"></textarea>
-																<!-- <input class="Textinput Width-100" th:id="email_to"
+																<p class="info-text" data-for="email_to"></p> <!-- <input class="Textinput Width-100" th:id="email_to"
 												th:name="email_to" data-validation-rule="{required:true}"
 												data-validation-message="{required:'Email address를 입력해주세요.'}" /> -->
 																<!-- <p class="info-text Margin-bottom-5">이메일 형식 오류입니다.</p> -->
 																<!-- <button class="Button btn">테스트</button> -->
 																<div class="Margin-top-5">
-																	<button class="Button btn">저장</button>
+																	<button class="Button btn" id="btnUpdateEmail">저장</button>
 																</div></td>
 														</tr>
 													</tbody>
 												</table>
 											</fieldset>
-										</form>
-									</div>
-									<!-- channel form table third-->
-									<div id="slackDiv" style="display: none;">
-										<div class="form-btn__wrap">
-											<h3 class="form-subtitle">Slack</h3>
-											<div class="btn-wrap__right">
-												<!-- <label class="ImageCheckbox" id="checkTest03"> <input
+										</div>
+										<!-- channel form table third-->
+										<div id="slackDiv" style="display: none;">
+											<div class="form-btn__wrap">
+												<h3 class="form-subtitle">Slack</h3>
+												<div class="btn-wrap__right">
+													<!-- <label class="ImageCheckbox" id="checkTest03"> <input
 												class="Checkbox" type="checkbox" name="chk1" value="check1"
 												checked="checked" />
 											</label> -->
-												<button class="btn-ico channel-del" th:id="btnSlackDel">삭제</button>
+													<button class="btn-ico channel-del" th:id="btnSlackDel">삭제</button>
+												</div>
 											</div>
-										</div>
-										<form th:id="slackForm" onsubmit="return false;">
 											<fieldset>
 												<table class="Table Form-type channel-line">
 													<colgroup>
@@ -647,31 +705,32 @@
 														<tr>
 															<th class="Valign-top">URL</th>
 															<td><input class="Textinput Width-100"
-																th:id="slack_api_url" th:name="slack_api_url" />
+																th:id="slack_api_url" th:name="slack_api_url"
+																data-validation-rule="{required:true}"
+																data-validation-message="{required:'URL을 입력해주세요.'}" />
+																<p class="info-text" data-for="slack_api_url"></p>
 																<div class="Margin-top-5">
 																	<!-- <button class="Button btn">테스트</button> -->
-																	<button class="Button btn">저장</button>
+																	<button class="Button btn" id="btnUpdateSlack">저장</button>
 																</div> <!-- <p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
 																	주세요.</p> --></td>
 														</tr>
 													</tbody>
 												</table>
 											</fieldset>
-										</form>
-									</div>
-									<!-- channel form table forth-->
-									<div id="hipchatDiv" style="display: none;">
-										<div class="form-btn__wrap">
-											<h3 class="form-subtitle">Hipchat</h3>
-											<div class="btn-wrap__right">
-												<!-- <label class="ImageCheckbox" id="checkTest03"> <input
+										</div>
+										<!-- channel form table forth-->
+										<div id="hipchatDiv" style="display: none;">
+											<div class="form-btn__wrap">
+												<h3 class="form-subtitle">Hipchat</h3>
+												<div class="btn-wrap__right">
+													<!-- <label class="ImageCheckbox" id="checkTest03"> <input
 												class="Checkbox" type="checkbox" name="chk1" value="check1"
 												checked="checked" />
 											</label> -->
-												<button class="btn-ico channel-del" th:id="btnHipchatDel">삭제</button>
+													<button class="btn-ico channel-del" th:id="btnHipchatDel">삭제</button>
+												</div>
 											</div>
-										</div>
-										<form th:id="hipchatForm" onsubmit="return false;">
 											<fieldset>
 												<table class="Table Form-type channel-line">
 													<colgroup>
@@ -682,51 +741,59 @@
 														<tr>
 															<th>URL</th>
 															<td><input class="Textinput Width-100"
-																th:id="hipchat_api_url" th:name="hipchat_api_url" /></td>
+																th:id="hipchat_api_url" th:name="hipchat_api_url"
+																data-validation-rule="{required:true}"
+																data-validation-message="{required:'URL을 입력해주세요.'}" />
+																<p class="info-text" data-for="hipchat_api_url"></p></td>
 														</tr>
 														<tr>
 															<th>Room ID</th>
 															<td><input class="Textinput Width-100"
-																th:id="hipchat_room_id" th:name="hipchat_room_id" /></td>
+																th:id="hipchat_room_id" th:name="hipchat_room_id"
+																data-validation-rule="{required:true}"
+																data-validation-message="{required:'Room ID를 입력해주세요.'}" />
+																<p class="info-text" data-for="hipchat_room_id"></p></td>
 														</tr>
 														<tr>
 															<th>Token</th>
 															<td><input class="Textinput Width-100"
-																th:id="hipchat_auth_token" th:name="hipchat_auth_token" /></td>
+																th:id="hipchat_auth_token" th:name="hipchat_auth_token"
+																data-validation-rule="{required:true}"
+																data-validation-message="{required:'Token을 입력해주세요.'}" />
+																<p class="info-text" data-for="hipchat_auth_token"></p></td>
 														</tr>
 														<tr>
 															<th class="Valign-top">Notify</th>
-															<td><label class="ImageRadio"> <input
-																	class="Radio" th:id="hipchat_notify"
-																	th:name="hipchat_notify" />True
-															</label> <label class="ImageRadio Margin-left-80"> <input
-																	class="Radio" th:id="hipchat_notify"
-																	th:name="hipchat_notify" checked="checked" />False
+															<td><label class="ImageRadio" th:id="notify_true">
+																	<input class="Radio" th:id="hipchat_notify_true"
+																	th:name="hipchat_notify" th:value="true" />True
+															</label> <label class="ImageRadio Margin-left-80"
+																th:id="notify_false"> <input class="Radio"
+																	th:id="hipchat_notify_false" th:name="hipchat_notify"
+																	th:value="false" />False
 															</label>
 																<div class="Margin-top-15">
 																	<!-- <button class="Button btn">테스트</button> -->
-																	<button class="Button btn">저장</button>
+																	<button class="Button btn" id="btnUpdateHipchat">저장</button>
 																</div> <!-- <p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
 																	주세요.</p> --></td>
 														</tr>
 													</tbody>
 												</table>
 											</fieldset>
-										</form>
-									</div>
-									<!-- channel form table fifth-->
-									<div id="webhookDiv" style="display: none;">
-										<div class="form-btn__wrap">
-											<h3 class="form-subtitle">Webhook</h3>
-											<div class="btn-wrap__right">
-												<!-- <label class="ImageCheckbox" id="checkTest03"> <input
+										</div>
+										<!-- channel form table fifth-->
+										<div id="webhookDiv" style="display: none;">
+											<div class="form-btn__wrap">
+												<h3 class="form-subtitle">Webhook</h3>
+												<div class="btn-wrap__right">
+													<!-- <label class="ImageCheckbox" id="checkTest03"> <input
 												class="Checkbox" type="checkbox" name="chk1" value="check1"
 												checked="checked" />
 											</label> -->
-												<button class="btn-ico channel-del" th:id="btnWebhookDel">삭제</button>
+													<button class="btn-ico channel-del" th:id="btnWebhookDel">삭제</button>
+												</div>
 											</div>
-										</div>
-										<form th:id="webhookForm" onsubmit="return false;">
 											<fieldset>
 												<table class="Table Form-type channel-line">
 													<colgroup>
@@ -737,19 +804,22 @@
 														<tr>
 															<th class="Valign-top">URL</th>
 															<td><input class="Textinput Width-100"
-																th:id="webhook_url" th:name="webhook_url" />
+																th:id="webhook_url" th:name="webhook_url"
+																data-validation-rule="{required:true}"
+																data-validation-message="{required:'URL을 입력해주세요.'}" />
+																<p class="info-text" data-for="webhook_url"></p>
 																<div class="Margin-top-5">
 																	<!-- <button class="Button btn">테스트</button> -->
-																	<button class="Button btn">저장</button>
+																	<button class="Button btn" id="btnUpdateWebhook">저장</button>
 																</div> <!-- <p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
 																	주세요.</p> --></td>
 														</tr>
 													</tbody>
 												</table>
 											</fieldset>
-										</form>
+										</div>
 									</div>
-								</div>
+								</form>
 							</div>
 						</div>
 					</div>

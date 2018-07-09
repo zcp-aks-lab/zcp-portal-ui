@@ -51,21 +51,21 @@
         "enable": true
       },
       {
-        "id": "rules",
-        "name": "Rules",
+        "id": "channel",
+        "name": "Channel",
         "order": 2,
-        "url": "/alert/rules",
+        "url": "/alert/channels",
         "target": "self",
         "enable": true
       },
       {
-        "id": "channel",
-        "name": "Channel",
+        "id": "rules",
+        "name": "Rules",
         "order": 3,
-        "url": "/alert/channels",
+        "url": "/alert/rules",
         "target": "self",
         "enable": true
-      }
+      }      
     ],
     "accessRoles": [
       "cluster-admin",

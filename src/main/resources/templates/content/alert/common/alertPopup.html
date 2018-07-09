@@ -36,6 +36,12 @@
                     $('#popOk').on('click', function() {
                         $a.close('ok');
                     });
+                    
+                    $(document).on('keydown', function(e) {
+    					if (e.keyCode === 13) {
+    						$a.close('ok');
+    					}
+    				});
                 }
             });
         </script>

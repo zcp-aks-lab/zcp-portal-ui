@@ -132,11 +132,28 @@ public class ChannelController {
 	@ResponseBody
 	public Map<String, Object> updateChannel(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		System.out.println(params);
 		try {
 			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
 			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
 			resultMap.put("resultData", channelService.updateChannel(params));
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			resultMap.put("resultCd", ApiResult.FAIL.getCode());
+			resultMap.put("resultMsg", e.getMessage());
+		}
+
+		return resultMap;
+	}
+	
+	@PostMapping(value = "/updateChannelDtl", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String, Object> updateChannelDtl(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		try {
+			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
+			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
+			resultMap.put("resultData", channelService.updateChannelDtl(params));
 		} catch (Exception e) {
 			e.printStackTrace();
 
