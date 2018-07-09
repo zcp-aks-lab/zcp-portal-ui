@@ -12,10 +12,11 @@
         <div class="locations-area">
             <div class="prj-list">
                 <strong>Namespace : </strong>
-                <button class="Dropdownbutton namespace" th:text="${userDefaultNamespace}">ONM</button>
+                <button class="Dropdownbutton namespace" th:text="${selectedNamespace != null ? selectedNamespace : '전체'}">ONM</button>
                 <ul class="dropmenu-list">
+                    <li><a th:href="@{/}">전체</a></li>
                     <th:block th:each="namespace, iterStat : ${userNamespaces}">
-                        <li th:text="${namespace}"><a>ONM (Default)</a></li>
+                        <li><a th:href="@{/(namespace=${namespace})}" th:text="${namespace}"></a></li>
                     </th:block>
                 </ul>
             </div>

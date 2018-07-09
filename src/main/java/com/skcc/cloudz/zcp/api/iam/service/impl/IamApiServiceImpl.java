@@ -881,13 +881,13 @@ public class IamApiServiceImpl implements IamApiService {
     }
 
     @Override
-    public ApiResponseVo getCpuStatus() {
+    public ApiResponseVo getClusterStatus(String type) {
         ApiResponseVo apiResponseVo = new ApiResponseVo();
         
         try {
             String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
-                    .path("/iam/metrics/cpu/status")
-                    .buildAndExpand()
+                    .path("/iam/metrics/cluster/{type}/status/")
+                    .buildAndExpand(type)
                     .toString();
             log.info("===> Request Url : {}", url);
             
@@ -914,12 +914,13 @@ public class IamApiServiceImpl implements IamApiService {
     }
 
     @Override
-    public ApiResponseVo getMemoryStatus() {
+    public ApiResponseVo getUsersStatus(String namespace) {
         ApiResponseVo apiResponseVo = new ApiResponseVo();
         
         try {
             String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
-                    .path("/iam/metrics/memory/status")
+                    .path("/iam/metrics/users/status")
+                    .queryParam("namespace", namespace)
                     .buildAndExpand()
                     .toString();
             log.info("===> Request Url : {}", url);
@@ -945,6 +946,5 @@ public class IamApiServiceImpl implements IamApiService {
         
         return apiResponseVo;
     }
-    
 
 }

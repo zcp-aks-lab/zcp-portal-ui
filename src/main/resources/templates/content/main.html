@@ -9,6 +9,12 @@
         <script src="js/lib/amcharts/pie.js" data-th-src="@{/js/lib/amcharts/pie.js}"></script>
         <script src="js/lib/amcharts/themes/light.js" data-th-src="@{/js/lib/amcharts/themes/light.js}"></script>
         
+        <script th:inline="javascript">
+        /*<![CDATA[*/
+        var selectedNamespace = /*[[${selectedNamespace}]]*/;
+        /*]]>*/
+        </script>
+        
         <script type="text/javascript">
             var zcpPortalApp = {
                 pageInit: function() {
@@ -80,14 +86,14 @@
                             },
                             "allLabels": [
                                 {
-                                    "text": props.mainStatus,
+                                    "text": props.mainTitle,
                                     "bold": false,
                                     "size": 12,
                                     "align": "center",
                                     "y": "44%"
                                 },
                                 {
-                                    "text": props.mainStatusPercentage,
+                                    "text": props.mainValue,
                                     "bold": false,
                                     "size": 15,
                                     "align": "center",
@@ -115,9 +121,9 @@
                                     "y": "88%"
                                 }
                             ],
-                            "dataProvider": props.statuses,
-                            "valueField": "count",
-                            "titleField": "status"
+                            "dataProvider": props.dataProvider,
+                            "valueField": props.valueField,
+                            "titleField": props.titleField
                         }
                         
                         AmCharts.makeChart(renderId, chartProps);
@@ -199,7 +205,7 @@
                                     key: 'cpuRequests',
                                     title: ' ',
                                     width: '30px',
-                                    align: 'center'
+                                    align: 'right'
                                 },
                                 {
                                     key: 'cpuRequestsPercentage',
@@ -215,7 +221,7 @@
                                     key: 'cpuLimits',
                                     title: ' ',
                                     width: '30px',
-                                    align: 'center'
+                                    align: 'right'
                                 },
                                 {
                                     key: 'cpuLimitsPercentage',
@@ -288,26 +294,104 @@
                     },
                     getChartsData: function() {
                         $a.request('/main/getChartsData', {
-                            method: 'post',
-                            data: null, 
+                            method: 'get',
+                            data: {'namespace': selectedNamespace}, 
                             success: function(res) {
-                            	var nodesStatus = res.nodesStatus;
-                            	zcpPortalApp.chart.draw('nodesChart', nodesStatus);
-
-                                var deploymentsStatus = res.deploymentsStatus;
-                                zcpPortalApp.chart.draw('deploymentsChart', deploymentsStatus);
-
-                                var podsStatus = res.podsStatus;
-                                zcpPortalApp.chart.draw('podsChart', podsStatus);
-
-                                var cpuStatus = res.cpuStatus;
-                                //zcpPortalApp.chart.draw('cpuChart', cpuStatus);
-
-                                var memoryStatus = res.memoryStatus;
-                                //zcpPortalApp.chart.draw('memoryChart', memoryStatus);
+                            	zcpPortalApp.data.setChartsData(res);
                             },
                             error: function(errObject) {}
                         })
+                    },
+                    setChartsData: function(res) {
+                    	var nodesStatus = res.nodesStatus;
+                    	var props = {
+                            title: nodesStatus.title,
+                            mainTitle: nodesStatus.mainStatus,
+                            mainValue: nodesStatus.mainStatusPercentage,
+                            totalCount: nodesStatus.totalCount,
+                            dataProvider: nodesStatus.statuses,
+                            valueField: 'count',
+                            titleField: 'status'
+                        }
+                        zcpPortalApp.chart.draw('nodesChart', props);
+                        
+                        var deploymentsStatus = res.deploymentsStatus;
+                        var props = {
+                            title: deploymentsStatus.title,
+                            mainTitle: deploymentsStatus.mainStatus,
+                            mainValue: deploymentsStatus.mainStatusPercentage,
+                            totalCount: deploymentsStatus.totalCount,
+                            dataProvider: deploymentsStatus.statuses,
+                            valueField: 'count',
+                            titleField: 'status'
+                        }
+                        zcpPortalApp.chart.draw('deploymentsChart', props);
+
+                        var podsStatus = res.podsStatus;
+                        var props = {
+                            title: podsStatus.title,
+                            mainTitle: podsStatus.mainStatus,
+                            mainValue: podsStatus.mainStatusPercentage,
+                            totalCount: podsStatus.totalCount,
+                            dataProvider: podsStatus.statuses,
+                            valueField: 'count',
+                            titleField: 'status'
+                        }
+                        zcpPortalApp.chart.draw('podsChart', props);
+
+                        var cpuStatus = res.cpuStatus;
+                        var props = {
+                            title: cpuStatus.title,
+                            mainTitle: cpuStatus.utilizationTitle,
+                            mainValue: cpuStatus.utilizationPercentage,
+                            totalCount: cpuStatus.total,
+                            dataProvider: [
+                                {
+                                    title:  'available',
+                                    value:  cpuStatus.available
+                                },
+                                {
+                                    title:  'utilization',
+                                    value:  cpuStatus.utilization
+                                }
+                            ],
+                            valueField: 'value',
+                            titleField: 'title'
+                        }
+                        zcpPortalApp.chart.draw('cpuChart', props);
+
+                        var memoryStatus = res.memoryStatus;
+                        var props = {
+                            title: memoryStatus.title,
+                            mainTitle: memoryStatus.utilizationTitle,
+                            mainValue: memoryStatus.utilizationPercentage,
+                            totalCount: memoryStatus.total,
+                            dataProvider: [
+                                {
+                                    title:  'available',
+                                    value:  memoryStatus.available
+                                },
+                                {
+                                    title:  'utilization',
+                                    value:  memoryStatus.utilization
+                                }
+                            ],
+                            valueField: 'value',
+                            titleField: 'title'
+                        }
+                        zcpPortalApp.chart.draw('memoryChart', props);
+
+                        var usersStatus = res.usersStatus;
+                        var props = {
+                            title: usersStatus.title,
+                            mainTitle: usersStatus.mainRole,
+                            mainValue: usersStatus.mainRolePercentage,
+                            totalCount: usersStatus.totalCount,
+                            dataProvider: usersStatus.roles,
+                            valueField: 'count',
+                            titleField: 'role'
+                        }
+                        zcpPortalApp.chart.draw('usersChart', props);
                     }
                 },
                 event: {
@@ -344,14 +428,15 @@
 				<div class="panel-line__wrap dash">
 				    <h3 class="dash-title">System Overview</h3>
 				    <div class="Panel dash-panel" id="nodesChart"></div>
-				    <div class="Panel dash-panel" id="deploymentsChart"></div>
-				    <div class="Panel dash-panel" id="podsChart"></div>
+				    <div class="Panel dash-panel" id="cpuChart"></div>
+				    <div class="Panel dash-panel" id="memoryChart"></div>
 				</div>
 				<!-- dashboard panel group-->
 				<div class="panel-line__wrap dash">
-				    <h3 class="dash-title">Resource Overview</h3>
-				    <div class="Panel dash-panel" id="cpuChart"></div>
-				    <div class="Panel dash-panel" id="memoryChart"></div>
+				    <h3 class="dash-title">Cluster Overview</h3>
+				    <div class="Panel dash-panel" id="usersChart"></div>
+				    <div class="Panel dash-panel" id="deploymentsChart"></div>
+				    <div class="Panel dash-panel" id="podsChart"></div>
 				</div>
                 
                 <div class="grid-line__wrap dash">

@@ -33,10 +33,10 @@ public class MainService {
         return zcpNodeListVo.getData().getItems();
     }
     
-    public Map<String, Object> getDeploymentsStatus() throws Exception {
+    public Map<String, Object> getDeploymentsStatus(String namespace) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
-        ApiResponseVo apiResponseVo = iamApiService.getDeploymentsStatus("");
+        ApiResponseVo apiResponseVo = iamApiService.getDeploymentsStatus(namespace);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new ZcpPortalException(apiResponseVo);
         }
@@ -59,10 +59,10 @@ public class MainService {
         return resultMap;
     }
     
-    public Map<String, Object> getPodsStatus() throws Exception {
+    public Map<String, Object> getPodsStatus(String namespace) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
-        ApiResponseVo apiResponseVo = iamApiService.getPodsStatus("");
+        ApiResponseVo apiResponseVo = iamApiService.getPodsStatus(namespace);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new ZcpPortalException(apiResponseVo);
         }
@@ -75,7 +75,7 @@ public class MainService {
     public Map<String, Object> getMemoryStatus() throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
-        ApiResponseVo apiResponseVo = iamApiService.getMemoryStatus();
+        ApiResponseVo apiResponseVo = iamApiService.getClusterStatus("memory");
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new ZcpPortalException(apiResponseVo);
         }
@@ -88,7 +88,20 @@ public class MainService {
     public Map<String, Object> getCpuStatus() throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
-        ApiResponseVo apiResponseVo = iamApiService.getCpuStatus();
+        ApiResponseVo apiResponseVo = iamApiService.getClusterStatus("cpu");
+        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new ZcpPortalException(apiResponseVo);
+        }
+        
+        resultMap.putAll(apiResponseVo.getData());
+        
+        return resultMap;
+    }
+    
+    public Map<String, Object> getUsersStatus(String namespace) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        ApiResponseVo apiResponseVo = iamApiService.getUsersStatus(namespace);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new ZcpPortalException(apiResponseVo);
         }

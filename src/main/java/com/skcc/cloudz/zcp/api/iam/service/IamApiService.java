@@ -57,8 +57,8 @@ public interface IamApiService {
     
     ApiResponseVo getPodsStatus(String namespace);
     
-    ApiResponseVo getCpuStatus();
+    ApiResponseVo getClusterStatus(String type);
     
-    ApiResponseVo getMemoryStatus();
+    ApiResponseVo getUsersStatus(String namespace);
 
 }
