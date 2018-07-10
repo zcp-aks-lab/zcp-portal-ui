@@ -5,6 +5,12 @@
         <title>비밀번호 변경</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         
+        <script th:inline="javascript">
+        /*<![CDATA[*/
+        var userTotp = /*[[${zcpUser.totp}]]*/;
+        /*]]>*/
+        </script>
+        
         <script type="text/javascript">
             var zcpPortalApp = {
                 pageInit: function() {
@@ -68,12 +74,55 @@
                         } else {
                         	return true;
                         }
+                    },
+
+                    optPassword: function() {
+                        if (userTotp) {
+                            $('#btnTotp').removeClass('btn-off').addClass('btn-on');
+                            $('#btnTotp').text('ON');
+                        } else {
+                            $('#btnTotp').removeClass('btn-on').addClass('btn-off');
+                            $('#btnTotp').text('OFF');
+                        }
+
+                        var msg = userTotp ? '모바일 인증을 해제 하시겠습니까?' : '모바일 인증을 설정 하시겠습니까?';
+                        var mode = userTotp ? 'delete' : 'update';
+            
+                        commonPopup.confirm({
+                            title: '이중 로그인 보안 설정',
+                            message: msg,
+                            callback: function() {
+                                $a.request('/my/otpPassword/' + mode, {
+                                    method: 'post',
+                                    data: null, 
+                                    success : function(res) {
+                                        if (userTotp) {
+                                            commonPopup.alert({
+                                                message: '모바일 인증이 해제 되었습니다.',
+                                                callback: function() {
+                                                    location.reload();
+                                                }
+                                            });
+                                        } else {
+                                            commonPopup.alert({message: '모바일 인증이 설정 되었습니다.<br/> 다음 로그인 시 모바일 인증 설정을 해야 합니다.'});
+                                        }
+                                    },
+                                    error : function(errObject) {
+                                        //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                    }
+                                })
+                            }
+                        });
                     }
                 },
                 event: {
                     init: function() {
-                        $('#btnUpdate').on('click', function() {
+                        $('#btnUpdatePassword').on('click', function() {
                             zcpPortalApp.data.updatePassword();
+                        });
+
+                        $('#btnTotp').on('click', function() {
+                            zcpPortalApp.data.optPassword();
                         });
                     }
                 }
@@ -137,7 +186,7 @@
                                         </tbody>
                                     </table>
                                     <div class="btn-wrap__right">
-                                        <button class="Button btn bg-red" id="btnUpdate">확인</button>
+                                        <button class="Button btn bg-red" id="btnUpdatePassword">확인</button>
                                     </div>
                                 </fieldset>
                             </form>
@@ -155,10 +204,10 @@
                                     <tr>
                                         <th>모바일 인증</th>
                                         <td>
-                                            <label class="ImageCheckbox" id="checkTest03">
-                                                <input class="Checkbox" type="checkbox" name="chk1" value = "check1" checked="checked" />
-                                                사용함
-                                            </label>
+                                            <div class="onoff-wrap" th:switch="${zcpUser.totp}">
+                                                <button th:case="true" class="Button btn-on" id="btnTotp">ON</button>
+                                                <button th:case="false" class="Button btn-off" id="btnTotp">OFF</button>
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>

@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,7 @@ public class MyController {
     
     @GetMapping(value = "/pwd", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String myPwd(Model model) throws Exception {
+        model.addAttribute("zcpUser", myService.getMyUser());
         return "content/my/my-pwd";
     }
     
@@ -56,6 +58,16 @@ public class MyController {
     @ResponseBody
     public Map<String, Object> getZcpKubeConfig() throws Exception {
         return myService.getKubeConfig();
+    }
+    
+    @PostMapping(value = "/otpPassword/{mode}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody 
+    public void otpPassword(@PathVariable("mode") String mode) throws Exception {
+        if (mode.equals("update")) {
+            myService.updateOtpPassword();
+        } else if (mode.equals("delete")) {
+            myService.deleteOtpPassword();
+        }
     }
 
 }

@@ -24,13 +24,13 @@
 	                	if (!this.validation()) {
 	                		return false;
 	                	}
-                        
-                        $a.request('/my/updateMyProfile', {
-                        	method: 'post',
+
+	                	$a.request('/my/updateMyProfile', {
+                            method: 'post',
                             data: $('#form').serializeObject(), 
                             success : function(res) {
-                            	commonPopup.alert({
-                                    message: '저장 되었습니다.',
+                                commonPopup.alert({
+                                    message: '나의 정보가 변경 되었습니다.',
                                     callback: function() {
                                         location.reload();
                                     }
@@ -54,6 +54,8 @@
 	        	},
 	        	event: {
 	        		init: function() {
+	        			$a.keyfilter.addKeyUpRegexpRule("email", "a-zA-Z0-9@._-");
+		        		
 	        			$('#btnUpdate').on('click', function() {
 	        				zcpPortalApp.data.updateMyInfo();
 	                    });
@@ -104,9 +106,9 @@
                             </colgroup>
                             <tbody>
                                 <tr>
-                                    <th>Account</th>
+                                    <th>Account ID</th>
                                     <td>
-                                        <input type="text" th:name="id" th:id="id" th:value="${zcpUser.id}" class="Textinput Width-60" readonly="readonly" />
+                                        <input type="text" th:name="id" th:id="id" th:value="${zcpUser.id}" class="Textinput Width-35" data-disabled="true" />
                                         <button class="btn-ico btn-copy" id="btnCopy">복사</button>
                                         <div class="Tooltip">클립보드로 복사합니다.</div>
                                     </td>
@@ -118,21 +120,20 @@
                                 <tr>
                                     <th>사용자 ID</th>
                                     <td>
-                                        <input type="text" th:name="username" th:id="username" th:value="${zcpUser.username}" class="Textinput" readonly="readonly" /> 
+                                        <input type="text" th:name="username" th:id="username" th:value="${zcpUser.username}" class="Textinput Width-60" readonly="readonly" /> 
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>이메일<strong class="astertisk">*</strong></th>
                                     <td>
-                                        <input type="text" th:name="email" th:id="email" th:value="${zcpUser.email}" class="Textinput" data-validation-rule="{required:true, email:true}" data-validation-message="{required:'이메일을 입력해 주세요.'}" />
-                                        <!-- <button class="Button btn">이메일 발송</button> -->
+                                        <input type="text" th:name="email" th:id="email" th:value="${zcpUser.email}" class="Textinput Width-60" maxlength="100" data-keyfilter-rule="email" data-validation-rule="{required:true, email:true}" data-validation-message="{required:'이메일을 입력해 주세요.'}" />
                                         <p class="info-text" data-for="email"></p>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>이름<strong class="astertisk">*</strong></th>
                                     <td>
-                                        <input type="text" th:name="firstName" th:id="firstName" th:value="${zcpUser.firstName}" class="Textinput" data-validation-rule="{required:true}" data-validation-message="{required:'이름을 입력해 주세요.'}"/>
+                                        <input type="text" th:name="firstName" th:id="firstName" th:value="${zcpUser.firstName}" class="Textinput Width-60" maxlength="100" data-validation-rule="{required:true}" data-validation-message="{required:'이름을 입력해 주세요.'}"/>
                                         <p class="info-text" data-for="firstName"></p>
                                     </td>
                                 </tr>

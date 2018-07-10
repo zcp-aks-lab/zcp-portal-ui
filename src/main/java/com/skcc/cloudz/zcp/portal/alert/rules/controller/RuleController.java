@@ -19,6 +19,7 @@ import com.skcc.cloudz.zcp.common.constants.ApiResult;
 import com.skcc.cloudz.zcp.portal.alert.rules.service.RuleService;
 import com.skcc.cloudz.zcp.portal.alert.rules.vo.RepeatVo;
 import com.skcc.cloudz.zcp.portal.alert.rules.vo.RuleVo;
+import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
 
 @Controller
 @RequestMapping(value = RuleController.RESOURCE_PATH)
@@ -28,6 +29,9 @@ public class RuleController {
 
 	@Autowired
 	private RuleService ruleService;
+	
+	@Autowired
+	private UserService userService;
 
 	@GetMapping(value = "/rules", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String rules(Model model) throws Exception {
@@ -61,7 +65,7 @@ public class RuleController {
 
 	@GetMapping(value = "/addRule", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String addRule(Model model) throws Exception {
-		List<String> namespace = ruleService.getNamespace();
+		List<String> namespace = userService.getNamespaces();
 		model.addAttribute("namespace", namespace);
 
 		return "content/alert/rules/addrules";
