@@ -52,6 +52,7 @@
                                 if (value === 'UPDATE_PASSWORD') $("#userUpdatePassword").setChecked(true); 
                                 if (value === 'CONFIGURE_TOTP') $("#userConfigureOtp").setChecked(true);
                                 if (value === 'UPDATE_PROFILE') $("#userUpdateProfile").setChecked(true); 
+                                if (value === 'VERIFY_EMAIL') $("#userVerifyEmail").setChecked(true);
                             });
                         }
                     },
@@ -80,27 +81,34 @@
                         if ($('#userUpdatePassword').is(":checked")) requiredActions.push($('#userUpdatePassword').val());
                         if ($('#userConfigureOtp').is(":checked")) requiredActions.push($('#userConfigureOtp').val());
                         if ($('#userUpdateProfile').is(":checked")) requiredActions.push($('#userUpdateProfile').val());
+                        if ($('#userVerifyEmail').is(":checked")) requiredActions.push($('#userVerifyEmail').val());
 
                         var data = $('#infoform').serializeObject();
                         data.enabled =  $('#btnEnabled').hasClass('btn-on') ? true : false;
                         data.emailVerified =  $('#btnEmailVerified').hasClass('btn-on') ? true : false;
                         data.actions = requiredActions;
 
-                        $a.request('/management/user/updateUser', {
-                            method: 'post',
-                            data: data, 
-                            success : function(res) {
-                            	commonPopup.alert({
-                                    message: '정상처리 되었습니다.',
-                                    callback: function() {
-                                        location.reload();
+                        commonPopup.confirm({
+                            title: '사용자 정보 변경',
+                            message: '사용자 정보를 변경 하시겠습니까?',
+                            callback: function() {
+                            	$a.request('/management/user/updateUser', {
+                                    method: 'post',
+                                    data: data, 
+                                    success : function(res) {
+                                        commonPopup.alert({
+                                            message: '사용자 정보가 변경 되었습니다.',
+                                            callback: function() {
+                                                location.reload();
+                                            }
+                                        });
+                                    },
+                                    error : function(errObject) {
+                                        //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
                                     }
-                                });
-                            },
-                            error : function(errObject) {
-                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                })
                             }
-                        })
+                        });
                     },
 
                     resetPassword: function() {
@@ -183,7 +191,7 @@
                                     data: data, 
                                     success : function(res) {
                                     	commonPopup.alert({
-                                            message: '정상처리 되었습니다.',
+                                            message: '사용자가 삭제 되었습니다.',
                                             callback: function() {
                                             	location.href = '/management/users';
                                             }
@@ -198,6 +206,11 @@
                     },
 
                     updateClusterRoleBinding: function() {
+                    	var clusterRoleValid = $('#clusterRole').validate();
+                        if (!clusterRoleValid) {
+                            return false;
+                        }
+                    	
                         var data = {
                             id: $('#id').val(),
                             clusterRole: $('#clusterRole').val()
@@ -230,13 +243,13 @@
                         var msg = '';
                         switch(mode) {
                         case 'create':
-                        	msg = '네임스페이스의 권한을 등록 하시겠습니까?';
+                        	msg = 'Namespace 권한을 등록 하시겠습니까?';
                             break
                         case 'update':
-                        	msg = '네임스페이스의 권한을 수정 하시겠습니까?';
+                        	msg = 'Namespace 권한을 수정 하시겠습니까?';
                             break
                         case 'delete':
-                        	msg = '네임스페이스의 권한을 삭제 하시겠습니까?';
+                        	msg = 'Namespace 권한을 삭제 하시겠습니까?';
                             break
                         case 'rowDelete':
                         	$('#namespaceRow_' + idx).remove();
@@ -260,7 +273,7 @@
                                         switch(mode) {
                                         case 'create':
                                         	commonPopup.alert({
-                                                message: '네임스페이스의 권한이 등록 되었습니다.',
+                                                message: 'Namespace 권한이 등록 되었습니다.',
                                                 callback: function() {
                                                 	var html =''
                                                     html += '        <button class="Button btn-ico btn-config__save" onclick="zcpPortalApp.data.namespaceRoleBinding(\'' + idx + '\', \'update\');">수정</button>';
@@ -271,11 +284,11 @@
                                             
                                             break
                                         case 'update':
-                                        	commonPopup.alert({message: '네임스페이스의 권한이 수정 되었습니다.'});
+                                        	commonPopup.alert({message: 'Namespace 권한이 수정 되었습니다.'});
                                             break
                                         case 'delete':
                                         	commonPopup.alert({
-                                                message: '네임스페이스의 권한이 삭제 되었습니다.',
+                                                message: 'Namespace 권한이 삭제 되었습니다.',
                                                 callback: function() {
                                                 	$('#namespaceRow_' + idx).remove();        
                                                 }
@@ -305,7 +318,7 @@
                         	$('#btnTotp').text('OFF');
                         }
 
-                        var msg = userTotp ? '이중 로그인 보안을 해제 하시겠습니까?' : '이중 로그인 보안을 설정 하시겠습니까?';
+                        var msg = userTotp ? '모바일 인증을 해제 하시겠습니까?' : '모바일 인증을 설정 하시겠습니까?';
                         var mode = userTotp ? 'delete' : 'update';
             
                         commonPopup.confirm({
@@ -318,13 +331,13 @@
                                     success : function(res) {
                                         if (userTotp) {
                                         	commonPopup.alert({
-                                                message: '이중 로그인 보안 설정이 해제 되었습니다.',
+                                                message: '모바일 인증이 해제 되었습니다.',
                                                 callback: function() {
                                                     location.reload();
                                                 }
                                             });
                                         } else {
-                                        	commonPopup.alert({message: '이중 로그인 보안 설정이 등록되었습니다.<br/>(사용자가 로그인시 OTP설정을 해야만 상태가 변경됩니다.)'});
+                                        	commonPopup.alert({message: '모바일 인증이 설정 되었습니다.<br/>사용자가 로그인시 모바일 인증 설정을 해야만 상태가 변경됩니다.'});
                                         }
                                     },
                                     error : function(errObject) {
@@ -338,6 +351,7 @@
                 event: {
                     init: function() {
                     	//$('#detailTab').setTabIndex(2);
+                    	$a.keyfilter.addKeyUpRegexpRule("email", "a-zA-Z0-9@._-");
                         
                         $('#btnUserUpdate').on('click', function() {
                         	zcpPortalApp.data.updateUser();
@@ -465,9 +479,9 @@
                                     </colgroup>
                                     <tbody>
                                         <tr>
-                                            <th>Account</th>
+                                            <th>Account ID</th>
                                             <td>
-                                                <input type="text" th:name="id" th:id="id" th:value="${zcpUser.id}" class="Textinput Width-60" readonly="readonly"/>
+                                                <input type="text" th:name="id" th:id="id" th:value="${zcpUser.id}" class="Textinput Width-30" data-disabled="true"/>
                                                 <button class="btn-ico btn-copy" id="btnCopy">복사</button>
                                                 <div class="Tooltip">클립보드로 복사합니다.</div>
                                             </td>
@@ -477,20 +491,20 @@
                                             <td th:text="${#dates.format(zcpUser.createdDate, 'yyyy/MM/dd HH:mm:ss')}">2018/05/30 12:00:00</td>
                                         </tr>
                                         <tr>
-                                            <th>사용자ID</th>
-                                            <td><input type="text" th:name="username" th:id="username" th:value="${zcpUser.username}" class="Textinput" readonly="readonly" /></td>
+                                            <th>사용자 ID</th>
+                                            <td><input type="text" th:name="username" th:id="username" th:value="${zcpUser.username}" class="Textinput Width-60" data-disabled="true" /></td>
                                         </tr>
                                         <tr>
                                             <th>이메일<strong class="astertisk">*</strong></th>
                                             <td>
-                                                <input type="text" th:name="email" th:id="email" th:value="${zcpUser.email}" class="Textinput" data-validation-rule="{required:true, email:true}" data-validation-message="{required:'이메일을 입력해 주세요.'}" />
+                                                <input type="text" th:name="email" th:id="email" th:value="${zcpUser.email}" class="Textinput Width-60" maxlength="100" data-keyfilter-rule="email" data-validation-rule="{required:true, email:true}" data-validation-message="{required:'이메일을 입력해 주세요.'}" />
                                                 <p class="info-text" data-for="email"></p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>이름<strong class="astertisk">*</strong></th>
                                             <td>
-                                                <input type="text" th:name="firstName" th:id="firstName" th:value="${zcpUser.firstName}" class="Textinput" data-validation-rule="{required:true}" data-validation-message="{required:'이름을 입력해 주세요.'}"/>
+                                                <input type="text" th:name="firstName" th:id="firstName" th:value="${zcpUser.firstName}" class="Textinput Width-60" maxlength="100" data-validation-rule="{required:true}" data-validation-message="{required:'이름을 입력해 주세요.'}"/>
                                                 <p class="info-text" data-for="firstName"></p>
                                             </td>
                                         </tr>
@@ -529,6 +543,10 @@
                                                         <input class="Checkbox" type="checkbox" th:id="userUpdateProfile" th:name="requiredAction" value="UPDATE_PROFILE"/>
                                                         프로필
                                                     </label>
+                                                    <label class="ImageCheckbox" id="checkTest03">
+                                                        <input class="Checkbox" type="checkbox" th:id="userVerifyEmail" th:name="requiredAction" value="VERIFY_EMAIL"/>
+                                                        Email Verified
+                                                    </label>
                                                 </div>
                                             </td>
                                         </tr>
@@ -560,14 +578,14 @@
                                                     <tr>
                                                         <th>비밀번호<strong class="astertisk">*</strong></th>
                                                         <td>
-                                                            <input type="password" th:name="password" th:id="password" class="Textinput" data-validation-rule="{required:true, rangelength:[6,12], numalpha:true}" data-validation-message="{required:'비밀번호를 입력해 주세요.'}" />
+                                                            <input type="password" th:name="password" th:id="password" class="Textinput" maxlength="12" data-validation-rule="{required:true, rangelength:[6,12], numalpha:true}" data-validation-message="{required:'비밀번호를 입력해 주세요.'}" />
                                                             <p class="info-text" data-for="password"></p>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <th>비밀번호 확인<strong class="astertisk">*</strong></th>
                                                         <td>
-                                                            <input type="password" th:name="passwordConfirm" th:id="passwordConfirm" class="Textinput" data-validation-rule="{required:true, passwordEqual:'testing'}"  data-validation-message="{required:'비밀번호 확인을 입력해 주세요.', passwordEqual:'두개의 비밀번호가 일치하지 않습니다.'}" />
+                                                            <input type="password" th:name="passwordConfirm" th:id="passwordConfirm" class="Textinput" maxlength="12"  data-validation-rule="{required:true, passwordEqual:'testing'}"  data-validation-message="{required:'비밀번호 확인을 입력해 주세요.', passwordEqual:'두개의 비밀번호가 일치하지 않습니다.'}" />
                                                             <p class="info-text" data-for="passwordConfirm"></p>
                                                         </td>
                                                     </tr>
@@ -691,11 +709,13 @@
                                                         <th>클러스터 권한</th>
                                                         <td>
                                                             <div class="Divselect" style="width: 300px">
-                                                                <select th:name="clusterRole" th:id="clusterRole">
+                                                                <select th:name="clusterRole" th:id="clusterRole" data-validation-rule="{required:true}" data-validation-message="{required:'클러스터 권한을 선택해주세요.'}">
+                                                                    <option value="">선택</option>
                                                                     <option th:each="clusterRole : ${clusterRoles}" th:value="${clusterRole}" th:text="${clusterRole}" th:selected="${clusterRole == zcpUser.clusterRole}"></option>
                                                                 </select>
                                                                 <span></span>
                                                             </div>
+                                                            <p class="info-text" data-for="clusterRole"></p>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -703,7 +723,6 @@
                                         </fieldset>
                                     </form>
                                     <div class="btn-wrap">
-                                        <!-- <div class="btn-left"><button class="Button btn">취소</button></div> -->
                                         <div class="btn-right"><button class="Button btn bg-red" id="btnClusterRoleBinding">확인</button></div>
                                     </div>
                                 </div>

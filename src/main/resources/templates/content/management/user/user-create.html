@@ -24,29 +24,36 @@
                         if (!this.validation()) {
                             return false;
                         }
-                        
-                        $a.request('/management/user/createUser', {
-                            method: 'post',
-                            data: $('#form').serializeObject(), 
-                            success : function(res) {
-                            	commonPopup.alert({
-                                    message: '저장되었습니다.',
-                                    callback: function() {
-                                    	location.href = '/management/users';
+
+                        commonPopup.confirm({
+                            title: '사용자 추가',
+                            message: '사용자를  추가 하시겠습니까?',
+                            callback: function() {
+                            	$a.request('/management/user/createUser', {
+                                    method: 'post',
+                                    data: $('#form').serializeObject(), 
+                                    success : function(res) {
+                                        commonPopup.alert({
+                                            message: '사용자가 추가 되었습니다.',
+                                            callback: function() {
+                                                location.href = '/management/users';
+                                            }
+                                        });
+                                    },
+                                    error : function(errObject) {
+                                        //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
                                     }
-                                });
-                            },
-                            error : function(errObject) {
-                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                })
                             }
-                        })
+                        });
                     },
                     validation: function() {
                         var usernameValid = $('#username').validate();
                         var emailValid = $('#email').validate();
                         var firstNameValid = $('#firstName').validate();
+                        var clusterRoleValid = $('#clusterRole').validate();
                         
-                        if (!usernameValid || !emailValid || !firstNameValid) {
+                        if (!usernameValid || !emailValid || !firstNameValid || !clusterRoleValid) {
                             return false;
                         } else {
                             return true;
@@ -55,6 +62,8 @@
                 },
                 event: {
                     init: function() {
+                    	$a.keyfilter.addKeyUpRegexpRule("email", "a-zA-Z0-9@._-");
+                        
                         $('#btnCreate').on('click', function() {
                             zcpPortalApp.data.createUser();
                         });
@@ -100,33 +109,35 @@
                                 <tr>
                                     <th>사용자 ID<strong class="astertisk">*</strong></th>
                                     <td>
-                                        <input th:name="username" th:id="username" class="Textinput Width-60" data-validation-rule="{required:true, numalpha:true}" data-validation-message="{required:'아이디를 입력해 주세요.'}" />
+                                        <input th:name="username" th:id="username" class="Textinput Width-60" maxlength="50" data-keyfilter-rule="digits|english" data-validation-rule="{required:true, numalpha:true}" data-validation-message="{required:'아이디를 입력해 주세요.'}" />
                                         <p class="info-text" data-for="username"></p>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>이메일<strong class="astertisk">*</strong></th>
                                     <td>
-                                        <input th:name="email" th:id="email" class="Textinput" data-validation-rule="{required:true, email:true}" data-validation-message="{required:'이메일을 입력해 주세요.'}" />
+                                        <input th:name="email" th:id="email" class="Textinput Width-60" maxlength="100" data-keyfilter-rule="email" data-validation-rule="{required:true, email:true}" data-validation-message="{required:'이메일을 입력해 주세요.'}" />
                                         <p class="info-text" data-for="email"></p>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>이름<strong class="astertisk">*</strong></th>
                                     <td>
-                                        <input th:name="firstName" th:id="firstName" class="Textinput" data-validation-rule="{required:true}" data-validation-message="{required:'이름을 입력해 주세요.'}" />
+                                        <input th:name="firstName" th:id="firstName" class="Textinput Width-60" maxlength="100" data-validation-rule="{required:true}" data-validation-message="{required:'이름을 입력해 주세요.'}" />
                                         <p class="info-text" data-for="firstName"></p>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>클러스터 권한</th>
+                                    <th>클러스터 권한<strong class="astertisk">*</strong></th>
                                     <td>
                                         <div class="Divselect" style="width: 200px">
-                                            <select th:name="clusterRole" th:id="clusterRole">
+                                            <select th:name="clusterRole" th:id="clusterRole" data-validation-rule="{required:true}" data-validation-message="{required:'클러스터 권한을 선택해주세요.'}">
+                                                <option value="">선택</option>
                                                 <option th:each="clusterRole : ${clusterRoles}" th:value="${clusterRole}" th:text="${clusterRole}"></option>
                                             </select>
                                             <span></span>
                                         </div>
+                                        <p class="info-text" data-for="clusterRole"></p>
                                     </td>
                                 </tr>
                             </tbody>

@@ -25,9 +25,9 @@ public class MyService {
     private SecurityService securityService;
     
     public ZcpUserVo getMyUser() throws Exception {
-        String userId = securityService.getUserDetails().getUserId();
+        String id = securityService.getUserDetails().getUserId();
         
-        ZcpUserResVo zcpUserResVo = iamApiService.getUser(userId);
+        ZcpUserResVo zcpUserResVo = iamApiService.getUser(id);
         if (!zcpUserResVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new ZcpPortalException(zcpUserResVo.getMsg());
         }
@@ -63,12 +63,30 @@ public class MyService {
         }
     }
     
+    public void updateOtpPassword() throws Exception {
+        String id = securityService.getUserDetails().getUserId();
+        
+        ApiResponseVo apiResponseVo = iamApiService.updateOtpPassword(id);
+        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new ZcpPortalException(apiResponseVo);
+        }
+    }
+    
+    public void deleteOtpPassword() throws Exception {
+        String id = securityService.getUserDetails().getUserId();
+        
+        ApiResponseVo apiResponseVo = iamApiService.deleteOtpPassword(id);
+        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new ZcpPortalException(apiResponseVo);
+        }
+    }
+    
     public Map<String, Object> getKubeConfig() throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         String namespace = securityService.getUserDetails().getDefaultNamespace();
-        String userId = securityService.getUserDetails().getUserId();
+        String id = securityService.getUserDetails().getUserId();
         
-        ApiResponseVo apiResponseVo = iamApiService.kubeconfig(userId, namespace);
+        ApiResponseVo apiResponseVo = iamApiService.kubeconfig(id, namespace);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new ZcpPortalException(apiResponseVo);
         }
