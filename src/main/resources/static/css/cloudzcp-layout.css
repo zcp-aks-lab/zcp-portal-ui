@@ -1451,6 +1451,7 @@ a.view-detail:active {
 	margin: -15px -40px 0 0;
 	font-size: 1.0rem;
 	color: #666666;
+	width: 160px; text-align: right;
 }
 .panel-line__wrap.dash, .grid-line__wrap.dash {margin-top: 25px;}
 .dash-title {

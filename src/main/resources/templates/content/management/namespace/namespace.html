@@ -176,6 +176,9 @@
 				search1();
 			} 
 		});
+		$("#grid").on( "pageSetEnd" , function(page, pageinfo){
+			changeRed()	
+		});
 	}
 	//////////////////////////////// grid /////////////////////////////////////////
 	function objToString(data){
@@ -194,8 +197,10 @@
     		renderMapping : {
     			cpu_request_bar: {
     				renderer : function(value, data, render, mapping) {
-    					return '<div class="Progressbar name-typea" data-default="' +data.cpuRequestsPercentage + '"></div>'
-							+'<span class="name-pro__info">' + data.usedCpuRequests + "/" + data.hardCpuRequests +'</span>';
+    					return '<div class="Float-left Margin-top-10"><div class="name-pro__wrap">'
+							+'<div class="Progressbar name-typea" data-default="' +data.cpuRequestsPercentage + '"></div>'
+							+'</div>'
+							+'<span class="name-pro__num" style="font-size:10px">'+ data.usedCpuRequests + "/" + data.hardCpuRequests +'</span></div>'
 	    			},
 	    			postRender: function(cell, value, data, render, mapping, grid){
 	                    $a.convert($(cell));
@@ -203,8 +208,11 @@
 	    		},
 	    		cpu_limits_bar: {
     				renderer : function(value, data, render, mapping) {
-    					return '<div class="Progressbar name-typea" data-default="' +data.cpuLimitsPercentage + '"></div>'
-    					+'<span class="name-pro__info">' + data.usedCpuLimits + "/" + data.hardCpuLimits +'</span>';
+    					return '<div class="Float-left Margin-top-10"><div class="name-pro__wrap">'
+						+'<div class="Progressbar name-typea" data-default="' +data.cpuLimitsPercentage + '"></div>'
+						+'</div>'
+						+'<span class="name-pro__num" style="font-size:10px">'+ data.usedCpuLimits + "/" + data.hardCpuLimits +'</span></div>'
+						
 	    			},
 	    			postRender: function(cell, value, data, render, mapping, grid){
 	                    $a.convert($(cell));
@@ -212,18 +220,23 @@
 	    		},
 	    		memory_request_bar: {
     				renderer : function(value, data, render, mapping) {
-    					return '<div class="Progressbar name-typea" data-default="' +data.memoryRequestsPercentage + '" ></div>'
-    					+ '<span class="name-pro__info">' +data.usedMemoryRequests + "/" + data.hardMemoryRequests +'</span>';
+    					return '<div class="Float-left Margin-top-10"><div class="name-pro__wrap">'
+						+'<div class="Progressbar name-typea" data-default="' +data.memoryRequestsPercentage + '"></div>'
+						+'</div>'
+						+'<span class="name-pro__num" style="font-size:10px">'+ data.usedMemoryRequests + "/" + data.hardMemoryRequests +'</span></div>'
+						
 	    			},
 	    			postRender: function(cell, value, data, render, mapping, grid){
 	                    $a.convert($(cell));
 	                }
 	    		},
 	    		memory_limit_bar: {
-    				renderer : function(value, data, render, mapping) {
-    					return '<div class="Progressbar name-typea" data-default="' +data.memoryLimitsPercentage + '"></div>'
-		    					+ '<span class="name-pro__info">' +data.usedMemoryLimits + "/" + data.hardMemoryLimits +'</span>'
-	    			},
+	    			renderer : function(value, data, render, mapping) {
+		    			return '<div class="Float-left Margin-top-10"><div class="name-pro__wrap">'
+						+'<div class="Progressbar name-typea" data-default="' +data.memoryLimitsPercentage + '"></div>'
+						+'</div>'
+						+'<span class="name-pro__num" style="font-size:10px">'+ data.usedMemoryLimits + "/" + data.hardMemoryLimits +'</span></div>'
+					},
 	    			postRender: function(cell, value, data, render, mapping, grid){
 	                    $a.convert($(cell));
 	                }
