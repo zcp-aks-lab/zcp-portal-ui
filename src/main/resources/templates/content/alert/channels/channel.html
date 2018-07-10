@@ -102,6 +102,61 @@
 					}
 				});
 			},
+			deleteEmailNotification : function() {
+				if (!confirm('Notification을 삭제하시겠습니까?'))
+					return false;
+				$a.request('/alert/deleteNotification', {
+					method : 'post',
+					data : $('#emailForm').serializeObject(),
+					success : function(res) {
+						if (res.resultCd !== '200') {
+							if (res.resultMsg)
+								alert(res.resultMsg);
+							return false;
+						}
+
+						alert('Notification이 삭제되었습니다.');
+						location.reload();
+					},
+					error : function(errObject) {
+						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+					}
+				});
+
+				/* alertPopup.confirm({
+								width : 400,
+								height : 250,
+								message : '삭제하시겠습니까?',
+								callback : function(data) {
+									if (data == 'ok') {
+										$a.request('/alert/deleteChannel', {
+											method : 'post',
+											data : data,
+											success : function(res) {
+												if (res.resultCd !== '200') {
+													if (res.resultMsg)
+														alert(res.resultMsg);
+													return false;
+												}
+												alertPopup.alert({
+													width : 400,
+													height : 250,
+													message : '정상처리 되었습니다.',
+													callback : function() {
+														location.reload();
+													}
+												});
+											},
+											error : function(errObject) {
+												alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+											}
+										})
+									} else {
+										return false;
+									}
+								}
+							}); */
+			},
 			validation : function() {
 				var channel = $('#channel').validate();
 
@@ -147,6 +202,9 @@
 					if (e.keyCode === 13) {
 						zcpPortalApp.data.updateChannelName();
 					}
+				});
+				$('#btnDeleteEmail').on('click', function() {
+					zcpPortalApp.data.deleteEmailNotification();
 				});
 			}
 		}
@@ -339,6 +397,8 @@
 				$('#hipchat_auth_token').val('');
 				$('#hipchat_notify').val('');
 				$('#webhook_url').val('');
+				
+				$('#emailId').val(id);
 
 				$a
 						.request(
@@ -662,7 +722,7 @@
 								</div>
 								<div id="rightDiv" style="display: none;">
 									<form th:id="channelForm" onsubmit="return false;">
-										<input type="hidden" th:id="id" th:name="id" />
+										<input type="text" th:id="id" th:name="id" />
 										<fieldset>
 											<table class="Table Form-type">
 												<colgroup>
@@ -702,6 +762,8 @@
 										</div>
 									</div>
 									<!-- channel form table second-->
+									<form th:id="emailForm" onsubmit="return false;">
+									<input type="text" th:id="emailId" th:name="id" />
 									<div id="emailDiv" style="display: none;">
 										<div class="form-btn__wrap">
 											<h3 class="form-subtitle">Email</h3>
@@ -710,7 +772,7 @@
 												class="Checkbox" type="checkbox" name="chk1" value="check1"
 												checked="checked" />
 											</label> -->
-												<button class="btn-ico channel-del" th:id="btnEmailDel">삭제</button>
+												<button class="btn-ico channel-del" th:id="btnDeleteEmail">삭제</button>
 											</div>
 										</div>
 										<fieldset>
@@ -740,6 +802,7 @@
 											</table>
 										</fieldset>
 									</div>
+									</form>
 									<!-- channel form table third-->
 									<div id="slackDiv" style="display: none;">
 										<div class="form-btn__wrap">
