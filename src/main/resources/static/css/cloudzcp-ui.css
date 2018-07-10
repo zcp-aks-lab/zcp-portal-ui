@@ -113,6 +113,21 @@
 	-ms-border-radius: 0;
 	border-radius: 0;
 }
+
+.Textinput2 {
+	height: 36px;
+	width: 50px;
+	padding: 0 5px;
+	font-size: 1.0rem;
+	line-height: 2.4rem;
+	border: 1px solid #cccccc;
+	color: #666666;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	-ms-border-radius: 0;
+	border-radius: 0;
+}
+
 .Textinput:hover, .Textinput:focus, .Textinput:active, 
 .Textarea, .Textarea:hover, .Textarea:focus, .Textarea:active {
 	border: 1px solid #888888;

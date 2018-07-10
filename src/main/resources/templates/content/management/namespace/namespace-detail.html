@@ -55,16 +55,16 @@
 				var persistentVolumne = data.used.persistentvolumeclaims / data.hard.persistentvolumeclaims *100;
 				var loadbalancers = data.used.servicesLoadbalancers / data.hard.servicesLoadbalancers *100; 
 				
-				setGraph('cpu_requests', data.usage.cpuRequestsUsage, cpuRq);
-				setGraph('cpu_limits', data.usage.cpuLimitsUsage, cpuLm);
-				setGraph('memory_requests', data.usage.memoryRequestsUsage, memRm);
-				setGraph('memory_limits', data.usage.memoryLimitsUsage, memLm);
-				setGraph('pods', data.usage.podsUsage, pods);
-				setGraph('services', data.usage.servicesUsage, services);
-				setGraph('secrets', data.usage.secretsUsage, secrets);
-				setGraph('config_maps', data.usage.configmapsUsage, configMaps);
-				setGraph('persistent_volumne', data.usage.persistentvolumeclaimsUsage, persistentVolumne);
-				setGraph('load_balancers', data.usage.servicesLoadbalancersUsage, loadbalancers);
+				setGraph('cpu_requests', data.usage.cpuRequestsUsage, quota.cpuRequests);
+				setGraph('cpu_limits', data.usage.cpuLimitsUsage, quota.cpuLimits);
+				setGraph('memory_requests', data.usage.memoryRequestsUsage, quota.memoryRequests);
+				setGraph('memory_limits', data.usage.memoryLimitsUsage, quota.memoryLimits);
+				setGraph('pods', data.usage.podsUsage, quota.pods);
+				setGraph('services', data.usage.servicesUsage, quota.services);
+				setGraph('secrets', data.usage.secretsUsage, quota.secrets);
+				setGraph('config_maps', data.usage.configmapsUsage, quota.configmaps);
+				setGraph('persistent_volumne', data.usage.persistentvolumeclaimsUsage, quota.persistentvolumeclaims);
+				setGraph('load_balancers', data.usage.servicesLoadbalancersUsage, quota.servicesLoadbalancers);
 				
 			});
 			url = "/management/namespace/labels";
@@ -72,14 +72,15 @@
 				if(data.items){
 					var html='';
 					$.each(data.items, function(idx, data){
-						if(!(data.indexOf('cloudzcp.io/zcp-system') > -1))
+						
 							html +=makeHtmlLabel(data);	
 					});
 					$('#div_label').append(html);
 				}
 				function makeHtmlLabel(name){
 					var html = '<span class="Label Default" >'+name+'</span>';
-					html +='<button class="btn-ico label-del" onclick="delLabel(\''+name+'\')">삭제</button>';
+					if(!(name.indexOf('cloudzcp.io/zcp-system') > -1))
+						html +='<button class="btn-ico label-del" onclick="delLabel(\''+name+'\')">삭제</button>';
 					return html;
 				}
 			});
@@ -88,9 +89,10 @@
 				used = Number(used);
 				$('#div_' +obj_id).find('div').css('width', used + 'px');
 				var div = used % 1;
-				if(isNaN(c)){
+				if(!c && c!=0){
 					$('#div_' +obj_id).hide();
 					$('#span_' +obj_id).hide();
+					return ;
 				}
 					
 				if(div < 1 && div > 0) 
@@ -524,18 +526,21 @@
 					,"clusterRole" : data.namespacedRole
 	  				,"id" : data.id
 				};
-			if(confirm('삭제 하시겠습니까?')){
-				ajaxCall('/management/namespace/delRole', user).done(function(data){
-					//alert('정상처리되었습니다.');
-					commonPopup.alert({
-	                    message: '정상처리되었습니다.',
-	                    callback: function() {
-	                    }
-	                });
-					showMember();
-				});	
-			}
-			
+			commonPopup.confirm({
+                //title: '비밀번호 재설정',
+                message: '멤버를 삭제하시겠습니까?',
+                callback: function() {
+                	ajaxCall('/management/namespace/delRole', user).done(function(data){
+    					//alert('정상처리되었습니다.');
+    					commonPopup.alert({
+    	                    message: '정상처리되었습니다.',
+    	                    callback: function() {
+    	                    }
+    	                });
+    					showMember();
+    				});	 
+                }
+            });
 		}
 		
 		function search1(){
@@ -584,9 +589,9 @@
         				commonPopup.alert({
                             message: '라벨이 추가되었습니다.',
                             callback: function() {
+                            	location.reload();
                             }
                         });
-        				location.reload();
         			});
                 }
             });
@@ -612,9 +617,9 @@
                 		commonPopup.alert({
                             message: '라벨이 삭제되었습니다.',
                             callback: function() {
+                            	location.reload();
                             }
                         });
-        				location.reload();
         			});
                 }
             });
@@ -698,12 +703,12 @@
 													<th>CPU Requests</th>
 													<td>
 														<div class="tbl-group__wrap">
-															<div class="left"><input class="Textinput" id="input_cpu_requests"/></div>
+															<div class="left"><input class="Textinput2" id="input_cpu_requests"/></div>
 															<div class="left">
-																<div class="Divselect" id="select_cpu_requests">
+																<div class="Divselect" id="select_cpu_requests" style="width:90px;min-width:90px">
 																    <select >
-																        <option value="Core">CPU(core)</option>
-												        				<option value="MilliCore">m(core)</option>
+																        <option value="Core">Core</option>
+												        				<option value="MilliCore">MilliCore</option>
 																    </select>
 																    <span></span>
 																</div>
@@ -722,11 +727,11 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput" id="input_cpu_limits"/>
-																<div class="Divselect"  id="select_cpu_limits">
+																<input class="Textinput2" id="input_cpu_limits"/>
+																<div class="Divselect"  id="select_cpu_limits" style="width:90px;min-width:90px">
 																    <select>
-																        <option value="Core">CPU(core)</option>
-												        				<option value="MilliCore">m(core)</option>
+																        <option value="Core">Core</option>
+												        				<option value="MilliCore">MilliCore</option>
 																    </select>
 																    <span></span>
 																</div>
@@ -745,8 +750,8 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput" id="input_memory_requests"/>
-																<div class="Divselect" id="select_memory_requests">
+																<input class="Textinput2" id="input_memory_requests"/>
+																<div class="Divselect" id="select_memory_requests" style="width:90px;min-width:90px">
 																    <select >
 																        <option value="Gi">Gi</option>
 												        				<option value="Mi">Mi</option>
@@ -768,8 +773,8 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput" id="input_memory_limits"/>
-																<div class="Divselect"  id="select_memory_limits">
+																<input class="Textinput2" id="input_memory_limits"/>
+																<div class="Divselect"  id="select_memory_limits" style="width:90px;min-width:90px">
 																    <select>
 																        <option value="Gi">Gi</option>
 												        				<option value="Mi">Mi</option>
@@ -791,7 +796,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput" id="input_pods"/><span class="num-txt">개</span>
+																<input class="Textinput2" id="input_pods"/><span class="num-txt">개</span>
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
@@ -807,7 +812,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput"  id="input_services"/><span class="num-txt">개</span>
+																<input class="Textinput2"  id="input_services"/><span class="num-txt">개</span>
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
@@ -823,7 +828,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput" id="input_secrets"/><span class="num-txt">개</span>
+																<input class="Textinput2" id="input_secrets"/><span class="num-txt">개</span>
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
@@ -839,7 +844,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput" id="input_config_maps"/><span class="num-txt">개</span>
+																<input class="Textinput2" id="input_config_maps"/><span class="num-txt">개</span>
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
@@ -855,7 +860,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput" id="input_pesistent_volumne"/><span class="num-txt">개</span>
+																<input class="Textinput2" id="input_pesistent_volumne"/><span class="num-txt">개</span>
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
@@ -871,7 +876,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput"  id="input_load_balancers"/><span class="num-txt">개</span>
+																<input class="Textinput2"  id="input_load_balancers"/><span class="num-txt">개</span>
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
@@ -903,11 +908,11 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput" id="input_pod_cpu_requests"/>
-																<div class="Divselect" id="select_pod_cpu_requests">
+																<input class="Textinput2" id="input_pod_cpu_requests"/>
+																<div class="Divselect" id="select_pod_cpu_requests" style="width:90px;min-width:90px">
 																    <select >
-																        <option value="Core">CPU(core)</option>
-												        				<option value="MilliCore">m(core)</option>
+																        <option value="Core">Core</option>
+												        				<option value="MilliCore">MilliCore</option>
 																    </select>
 																    <span></span>
 																</div>
@@ -920,11 +925,11 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput" id="input_pod_cpu_limits"/>
-																<div class="Divselect"  id="select_pod_cpu_limits">
+																<input class="Textinput2" id="input_pod_cpu_limits"/>
+																<div class="Divselect"  id="select_pod_cpu_limits" style="width:90px;min-width:90px">
 																    <select>
-																        <option value="Core">CPU(core)</option>
-												        				<option value="MilliCore">m(core)</option>
+																        <option value="Core">Core</option>
+												        				<option value="MilliCore">MilliCore</option>
 																    </select>
 																    <span></span>
 																</div>
@@ -937,8 +942,8 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput" id="input_pod_memory_requests"/>
-																<div class="Divselect"  id="select_pod_memory_requests">
+																<input class="Textinput2" id="input_pod_memory_requests"/>
+																<div class="Divselect"  id="select_pod_memory_requests" style="width:90px;min-width:90px">
 																    <select>
 																        <option value="Gi">Gi</option>
 												        				<option value="Mi">Mi</option>
@@ -954,8 +959,8 @@
 													<td class="Valign-top">
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput" id="input_pod_memory_limits"/>
-																<div class="Divselect"  id="select_pod_memory_limits">
+																<input class="Textinput2" id="input_pod_memory_limits"/>
+																<div class="Divselect"  id="select_pod_memory_limits" style="width:90px;min-width:90px">
 																   <select>
 																        <option value="Gi">Gi</option>
 												        				<option value="Mi">Mi</option>

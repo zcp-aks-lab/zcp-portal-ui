@@ -98,7 +98,7 @@
                     <h2 class="title">Namespace 추가</h2>
                     <div class="tag-wrap">
                     	<span class="tag">신규 namespace를 생성하고, namespace에서 사용할 Resource 정보를 설정합니다. </span>
-                    	<a href="#" class="view-detail">자세히 보기</a>
+                    	<!-- <a href="#" class="view-detail">자세히 보기</a> -->
                     </div>
 				</div>
 				<!-- namespace name -->
@@ -112,8 +112,8 @@
 								<tr>
 									<th>Namespace 명<strong class="astertisk">*</strong></th>
 									<td>
-										<input class="Textinput Width-70" id="input_namespace" placeholder="알파벳과 숫자로 구성된 6~12자리로 입력하세요" />
-										<p class="info-text">알파벳으로 시작하여 알파벳과 숫자로 구성된 6~12자리로 입력하세요.</p>
+										<input class="Textinput Width-25" id="input_namespace" />
+										<p class="info-text">알파벳으로 시작하여 알파벳과 숫자로 구성된 3~30자리로 입력하세요.</p>
 									</td>
 								</tr>
 							</tbody>
@@ -134,11 +134,11 @@
 										<tr>
 											<th>CPU Requests</th>
 											<td>
-												<input class="Textinput" id="input_cpu_requests"/>
+												<input class="Textinput2" id="input_cpu_requests"/>
 												<div class="Divselect" id="select_cpu_requests">
 												    <select>
-												        <option value="Core">CPU(core)</option>
-												        <option value="MilliCore">m(core)</option>
+												        <option value="Core">Core</option>
+												        <option value="MilliCore">MilliCore</option>
 												    </select>
 												    <span></span>
 												</div>
@@ -147,11 +147,11 @@
 										<tr>
 											<th>CPU Limits</th>
 											<td>
-												<input class="Textinput" id="input_cpu_limits"/>
+												<input class="Textinput2" id="input_cpu_limits"/>
 												<div class="Divselect"  id="select_cpu_limits">
 												    <select>
-												        <option value="Core">CPU(core)</option>
-												        <option value="MilliCore">m(core)</option>
+												        <option value="Core">Core</option>
+												        <option value="MilliCore">MilliCore</option>
 												    </select>
 												    <span></span>
 												</div>
@@ -160,7 +160,7 @@
 										<tr>
 											<th>Memory Requests</th>
 											<td>
-												<input class="Textinput" id="input_memory_requests"/>
+												<input class="Textinput2" id="input_memory_requests"/>
 												<div class="Divselect" id="select_memory_requests">
 												    <select>
 												        <option value="Gi">Gi</option>
@@ -173,7 +173,7 @@
 										<tr>
 											<th>Memory Limits</th>
 											<td>
-												<input class="Textinput" id="input_memory_limits"/>
+												<input class="Textinput2" id="input_memory_limits"/>
 												<div class="Divselect" id="select_memory_limits">
 												    <select>
 												        <option value="Gi">Gi</option>
@@ -186,37 +186,37 @@
 										<tr>
 											<th>Pods</th>
 											<td>
-												<input class="Textinput" id="input_pods"/><span class="num-txt">개</span>
+												<input class="Textinput2" id="input_pods"/><span class="num-txt">개</span>
 											</td>
 										</tr>
 										<tr>
 											<th>Services</th>
 											<td>
-												<input class="Textinput" id="input_services"/><span class="num-txt">개</span>
+												<input class="Textinput2" id="input_services"/><span class="num-txt">개</span>
 											</td>
 										</tr>
 										<tr>
 											<th>Secrets</th>
 											<td>
-												<input class="Textinput" id="input_secrets"/><span class="num-txt">개</span>
+												<input class="Textinput2" id="input_secrets"/><span class="num-txt">개</span>
 											</td>
 										</tr>
 										<tr>
 											<th>Config Maps</th>
 											<td>
-												<input class="Textinput" id="input_config_maps"/><span class="num-txt">개</span>
+												<input class="Textinput2" id="input_config_maps"/><span class="num-txt">개</span>
 											</td>
 										</tr>
 										<tr>
 											<th>Persistent Volume<br/>Claims</th>
 											<td>
-												<input class="Textinput" id="input_pesistent_volumne"/><span class="num-txt">개</span>
+												<input class="Textinput2" id="input_pesistent_volumne"/><span class="num-txt">개</span>
 											</td>
 										</tr>
 										<tr>
 											<th>Service Load<br/>Balancers</th>
 											<td>
-												<input class="Textinput" id="input_service_load"/><span class="num-txt">개</span>
+												<input class="Textinput2" id="input_service_load"/><span class="num-txt">개</span>
 											</td>
 										</tr>
 									</tbody>
@@ -236,11 +236,11 @@
 										<tr>
 											<th>CPU Requests</th>
 											<td>
-												<input class="Textinput" id="input_pod_cpu_requests"/>
+												<input class="Textinput2" id="input_pod_cpu_requests"/>
 												<div class="Divselect" id="select_pod_cpu_requests">
 												    <select>
-												        <option value="Core">CPU(core)</option>
-												        <option value="MilliCore">m(core)</option>
+												        <option value="Core">Core</option>
+												        <option value="MilliCore">MilliCore</option>
 												    </select>
 												    <span></span>
 												</div>
@@ -249,11 +249,11 @@
 										<tr>
 											<th>CPU Limits</th>
 											<td>
-												<input class="Textinput" id="input_pod_cpu_limits"/>
+												<input class="Textinput2" id="input_pod_cpu_limits"/>
 												<div class="Divselect" id="select_pod_cpu_limits">
 												    <select>
-												        <option value="Core">CPU(core)</option>
-												        <option value="MilliCore">m(core)</option>
+												        <option value="Core">Core</option>
+												        <option value="MilliCore">MilliCore</option>
 												    </select>
 												    <span></span>
 												</div>
@@ -262,7 +262,7 @@
 										<tr>
 											<th>Memory Requests</th>
 											<td>
-												<input class="Textinput" id="input_pod_memory_requests"/>
+												<input class="Textinput2" id="input_pod_memory_requests"/>
 												<div class="Divselect" id="select_pod_memory_requests">
 												    <select>
 												        <option value="Gi">Gi</option>
@@ -276,7 +276,7 @@
 											<!-- th의 style height: 410px;은 psd 상의 디자인을 맞추기 위한 것입니다. 참고하세요.-->
 											<th class="Valign-top" style="height: 410px;">Memory Limits</th> 
 											<td class="Valign-top">
-												<input class="Textinput" id="input_pod_memory_limits"/>
+												<input class="Textinput2" id="input_pod_memory_limits"/>
 												<div class="Divselect" id="select_pod_memory_limits">
 												    <select>
 												        <option value="Gi">Gi</option>

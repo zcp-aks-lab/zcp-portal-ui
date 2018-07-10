@@ -1427,6 +1427,10 @@ a.view-detail:active {
 	width: 160px;
 	min-width: 160px;
 }
+.tbl-name .Divselect2 {
+	width: 100px;
+	min-width: 100px;
+}
 .tbl-name .num-txt {padding-left: 2px;}
 .tbl-group__wrap {position: relative;}
 .tbl-group__wrap .left {

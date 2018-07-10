@@ -27,18 +27,29 @@
 		    	   		commonPopup.alert({
 		                    message: 'Namespace가 정상적으로 삭제 처리 되었습니다.',
 		                    callback: function() {
-		                    	location.reload();
+		                    	if(g_mode == 'cardType')
+		                    		location.reload();
+		                    	else if(g_mode == 'listType')
+		                    		getList();
 		                    }
 		                });
 	    	   		});		
 	        	}else if(data == 'cancel') {
 	        		
-	        	}else if(data){
+	        	}else if(data == ''){
+	        		commonPopup.alert({
+	                    message: 'Namespace 명을 정확히 입력 하세요',
+	                    callback: function() {
+	                    	deleteNamespace(name);
+	                    }
+	                });
+	        	}
+	        	else if(data){
 	        		//alert('Namespace명이 다릅니다.');
 	        		commonPopup.alert({
 	                    message: 'Namespace 명을 정확히 입력 하세요',
 	                    callback: function() {
-	                    	location.reload();
+	                    	deleteNamespace(name);
 	                    }
 	                });
 	        	}
@@ -315,15 +326,16 @@
 			$('#cardType').addClass('Checked').show();
 			g_mode = "cardType";
 		}
-		
-		function getList(){
-			var name = /*[[${param.namespace}]]*/;
-			var list = null;
-			ajaxCall('/management/namespace/list', {namespace:name}).done(function(data){
-				grid_init(data.items);
-				$("#grid").alopexGrid( "viewUpdate" );
-	   		});
-		}
+	}
+	
+
+	function getList(){
+		var name = /*[[${param.namespace}]]*/;
+		var list = null;
+		ajaxCall('/management/namespace/list', {namespace:name}).done(function(data){
+			grid_init(data.items);
+			$("#grid").alopexGrid( "viewUpdate" );
+   		});
 	}
 	
 	 /*]]>*/
