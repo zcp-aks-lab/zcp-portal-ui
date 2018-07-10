@@ -241,4 +241,44 @@ public class ChannelService {
 		return channelVo;
 	}
 	
+	public ChannelDtlVo deleteNotification(Map<String, Object> params) {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/notification/{id}").buildAndExpand(params.get("id"))
+				.toString();
+		logger.info(url);
+
+		ChannelDtlVo channelParam = new ChannelDtlVo();
+		
+		if(params.get("email_to") != null) {
+			channelParam.setEmail_to(params.get("email_to").toString());
+		}
+		if(params.get("slack_api_url") != null) {
+			channelParam.setSlack_api_url(params.get("slack_api_url").toString());
+		}
+		if(params.get("hipchat_api_url") != null) {
+			channelParam.setHipchat_api_url(params.get("hipchat_api_url").toString());
+		}
+		if(params.get("webhook_url") != null) {
+			channelParam.setWebhook_url(params.get("webhook_url").toString());
+		}
+
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<ChannelDtlVo> entity = new HttpEntity<ChannelDtlVo>(channelParam, headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<ChannelDtlVo> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, ChannelDtlVo.class);
+
+		HttpStatus statusCode = response.getStatusCode();
+
+		ChannelDtlVo channelDtlVo = null;
+		if (statusCode == HttpStatus.OK) {
+			channelDtlVo = response.getBody();
+		}
+
+		return channelDtlVo;
+	}
+	
 }
