@@ -213,4 +213,32 @@ public class ChannelService {
 		return channelDtlVo;
 	}
 	
+	public ChannelVo updateChannelName(Map<String, Object> params) {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/channelName/{id}").buildAndExpand(params.get("id"))
+				.toString();
+		logger.info(url);
+
+		ChannelVo channelParam = new ChannelVo();
+		channelParam.setChannel(params.get("channel").toString());
+
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<ChannelVo> entity = new HttpEntity<ChannelVo>(channelParam, headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<ChannelVo> response = restTemplate.exchange(url, HttpMethod.PUT, entity, ChannelVo.class);
+
+		HttpStatus statusCode = response.getStatusCode();
+
+		ChannelVo channelVo = null;
+		if (statusCode == HttpStatus.OK) {
+			channelVo = response.getBody();
+		}
+
+		return channelVo;
+	}
+	
 }

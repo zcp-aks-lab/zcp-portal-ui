@@ -63,8 +63,54 @@
 					}
 				});
 			},
+			updateChannelName : function() {
+				if (!this.validation()) {
+					return false;
+				}
+
+				var check = alertPopup.confirm({
+					width : 400,
+					height : 250,
+					message : '채널명을 변경하시겠습니까?',
+					callback : function(data) {
+						if (data == 'ok') {
+							$a.request('/alert/updateChannelName', {
+								method : 'post',
+								data : $('#channelForm').serializeObject(),
+								success : function(res) {
+									if (res.resultCd !== '200') {
+										if (res.resultMsg)
+											alert(res.resultMsg);
+										return false;
+									}
+									alertPopup.alert({
+										width : 400,
+										height : 250,
+										message : '채널명이 변경되었습니다.',
+										callback : function() {
+											location.href = '/alert/channels';
+										}
+									});
+								},
+								error : function(errObject) {
+									alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+								}
+							});
+						} else {
+							return false;
+						}
+					}
+				});
+			},
 			validation : function() {
-				var email_to = $('#email_to').validate();
+				var channel = $('#channel').validate();
+
+				if (!channel) {
+					return false;
+				} else {
+					return true;
+				}
+				/* var email_to = $('#email_to').validate();
 				var slack_api_url = $('#slack_api_url').validate();
 				var hipchat_api_url = $('#hipchat_api_url').validate();
 				var hipchat_room_id = $('#hipchat_room_id').validate();
@@ -77,7 +123,7 @@
 					return false;
 				} else {
 					return true;
-				}
+				} */
 			}
 		},
 		event : {
@@ -93,6 +139,14 @@
 				});
 				$('#btnUpdateWebhook').on('click', function() {
 					zcpPortalApp.data.updateDtl();
+				});
+				$('#btnUpdateChannelName').on('click', function() {
+					zcpPortalApp.data.updateChannelName();
+				});
+				$('#channel').on('keydown', function(e) {
+					if (e.keyCode === 13) {
+						zcpPortalApp.data.updateChannelName();
+					}
 				});
 			}
 		}
@@ -606,8 +660,8 @@
 										</table>
 									</fieldset>
 								</div>
-								<form th:id="form" onsubmit="return false;">
-									<div id="rightDiv" style="display: none;">
+								<div id="rightDiv" style="display: none;">
+									<form th:id="channelForm" onsubmit="return false;">
 										<input type="hidden" th:id="id" th:name="id" />
 										<fieldset>
 											<table class="Table Form-type">
@@ -619,207 +673,209 @@
 													<tr>
 														<th>채널명</th>
 														<td><input class="Textinput" th:id="channel"
-															th:name="channel" />
-															<button class="Button btn">저장</button></td>
+															th:name="channel" data-validation-rule="{required:true}"
+															data-validation-message="{required:'채널명을 입력해주세요.'}" />
+															<button class="Button btn" id="btnUpdateChannelName">저장</button>
+															<p class="info-text" data-for="channel"></p></td>
 													</tr>
 												</tbody>
 											</table>
 										</fieldset>
-										<!-- channel noti detail-->
-										<div class="channel-noti">
-											<div class="channel-noti__left">
-												Notifications 연결 : 총 <span id="notifications"></span>개
-											</div>
-											<div class="channel-noti__right">
-												<div class="Divselect">
-													<select th:id="division" th:name="division">
-														<option value="">전체</option>
-														<option value="email">Email</option>
-														<option value="slack">Slack</option>
-														<option value="hipchat">Hipchat</option>
-														<option value="webhook">Webhook</option>
-													</select> <span></span>
-												</div>
-												<button class="Button btn" th:id="btnNotiAdd">Notification
-													추가</button>
-											</div>
+									</form>
+									<!-- channel noti detail-->
+									<div class="channel-noti">
+										<div class="channel-noti__left">
+											Notifications 연결 : 총 <span id="notifications"></span>개
 										</div>
-										<!-- channel form table second-->
-										<div id="emailDiv" style="display: none;">
-											<div class="form-btn__wrap">
-												<h3 class="form-subtitle">Email</h3>
-												<div class="btn-wrap__right">
-													<!-- <label class="ImageCheckbox" id="checkTest03"> <input
-												class="Checkbox" type="checkbox" name="chk1" value="check1"
-												checked="checked" />
-											</label> -->
-													<button class="btn-ico channel-del" th:id="btnEmailDel">삭제</button>
-												</div>
+										<div class="channel-noti__right">
+											<div class="Divselect">
+												<select th:id="division" th:name="division">
+													<option value="">전체</option>
+													<option value="email">Email</option>
+													<option value="slack">Slack</option>
+													<option value="hipchat">Hipchat</option>
+													<option value="webhook">Webhook</option>
+												</select> <span></span>
 											</div>
-											<fieldset>
-												<table class="Table Form-type channel-line">
-													<colgroup>
-														<col style="width: 200px;" />
-														<col />
-													</colgroup>
-													<tbody>
-														<tr>
-															<th class="Valign-top">Email address</th>
-															<td><textarea class="Textarea Width-100" rows="4"
-																	th:id="email_to" th:name="email_to"
-																	data-validation-rule="{required:true}"
-																	data-validation-message="{required:'Email address을 입력해주세요.'}"
-																	style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666"></textarea>
-																<p class="info-text" data-for="email_to"></p> <!-- <input class="Textinput Width-100" th:id="email_to"
-												th:name="email_to" data-validation-rule="{required:true}"
-												data-validation-message="{required:'Email address를 입력해주세요.'}" /> -->
-																<!-- <p class="info-text Margin-bottom-5">이메일 형식 오류입니다.</p> -->
-																<!-- <button class="Button btn">테스트</button> -->
-																<div class="Margin-top-5">
-																	<button class="Button btn" id="btnUpdateEmail">저장</button>
-																</div></td>
-														</tr>
-													</tbody>
-												</table>
-											</fieldset>
-										</div>
-										<!-- channel form table third-->
-										<div id="slackDiv" style="display: none;">
-											<div class="form-btn__wrap">
-												<h3 class="form-subtitle">Slack</h3>
-												<div class="btn-wrap__right">
-													<!-- <label class="ImageCheckbox" id="checkTest03"> <input
-												class="Checkbox" type="checkbox" name="chk1" value="check1"
-												checked="checked" />
-											</label> -->
-													<button class="btn-ico channel-del" th:id="btnSlackDel">삭제</button>
-												</div>
-											</div>
-											<fieldset>
-												<table class="Table Form-type channel-line">
-													<colgroup>
-														<col style="width: 200px;" />
-														<col />
-													</colgroup>
-													<tbody>
-														<tr>
-															<th class="Valign-top">URL</th>
-															<td><input class="Textinput Width-100"
-																th:id="slack_api_url" th:name="slack_api_url"
-																data-validation-rule="{required:true}"
-																data-validation-message="{required:'URL을 입력해주세요.'}" />
-																<p class="info-text" data-for="slack_api_url"></p>
-																<div class="Margin-top-5">
-																	<!-- <button class="Button btn">테스트</button> -->
-																	<button class="Button btn" id="btnUpdateSlack">저장</button>
-																</div> <!-- <p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
-																	주세요.</p> --></td>
-														</tr>
-													</tbody>
-												</table>
-											</fieldset>
-										</div>
-										<!-- channel form table forth-->
-										<div id="hipchatDiv" style="display: none;">
-											<div class="form-btn__wrap">
-												<h3 class="form-subtitle">Hipchat</h3>
-												<div class="btn-wrap__right">
-													<!-- <label class="ImageCheckbox" id="checkTest03"> <input
-												class="Checkbox" type="checkbox" name="chk1" value="check1"
-												checked="checked" />
-											</label> -->
-													<button class="btn-ico channel-del" th:id="btnHipchatDel">삭제</button>
-												</div>
-											</div>
-											<fieldset>
-												<table class="Table Form-type channel-line">
-													<colgroup>
-														<col style="width: 200px;" />
-														<col />
-													</colgroup>
-													<tbody>
-														<tr>
-															<th>URL</th>
-															<td><input class="Textinput Width-100"
-																th:id="hipchat_api_url" th:name="hipchat_api_url"
-																data-validation-rule="{required:true}"
-																data-validation-message="{required:'URL을 입력해주세요.'}" />
-																<p class="info-text" data-for="hipchat_api_url"></p></td>
-														</tr>
-														<tr>
-															<th>Room ID</th>
-															<td><input class="Textinput Width-100"
-																th:id="hipchat_room_id" th:name="hipchat_room_id"
-																data-validation-rule="{required:true}"
-																data-validation-message="{required:'Room ID를 입력해주세요.'}" />
-																<p class="info-text" data-for="hipchat_room_id"></p></td>
-														</tr>
-														<tr>
-															<th>Token</th>
-															<td><input class="Textinput Width-100"
-																th:id="hipchat_auth_token" th:name="hipchat_auth_token"
-																data-validation-rule="{required:true}"
-																data-validation-message="{required:'Token을 입력해주세요.'}" />
-																<p class="info-text" data-for="hipchat_auth_token"></p></td>
-														</tr>
-														<tr>
-															<th class="Valign-top">Notify</th>
-															<td><label class="ImageRadio" th:id="notify_true">
-																	<input class="Radio" th:id="hipchat_notify_true"
-																	th:name="hipchat_notify" th:value="true" />True
-															</label> <label class="ImageRadio Margin-left-80"
-																th:id="notify_false"> <input class="Radio"
-																	th:id="hipchat_notify_false" th:name="hipchat_notify"
-																	th:value="false" />False
-															</label>
-																<div class="Margin-top-15">
-																	<!-- <button class="Button btn">테스트</button> -->
-																	<button class="Button btn" id="btnUpdateHipchat">저장</button>
-																</div> <!-- <p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
-																	주세요.</p> --></td>
-														</tr>
-													</tbody>
-												</table>
-											</fieldset>
-										</div>
-										<!-- channel form table fifth-->
-										<div id="webhookDiv" style="display: none;">
-											<div class="form-btn__wrap">
-												<h3 class="form-subtitle">Webhook</h3>
-												<div class="btn-wrap__right">
-													<!-- <label class="ImageCheckbox" id="checkTest03"> <input
-												class="Checkbox" type="checkbox" name="chk1" value="check1"
-												checked="checked" />
-											</label> -->
-													<button class="btn-ico channel-del" th:id="btnWebhookDel">삭제</button>
-												</div>
-											</div>
-											<fieldset>
-												<table class="Table Form-type channel-line">
-													<colgroup>
-														<col style="width: 200px;" />
-														<col />
-													</colgroup>
-													<tbody>
-														<tr>
-															<th class="Valign-top">URL</th>
-															<td><input class="Textinput Width-100"
-																th:id="webhook_url" th:name="webhook_url"
-																data-validation-rule="{required:true}"
-																data-validation-message="{required:'URL을 입력해주세요.'}" />
-																<p class="info-text" data-for="webhook_url"></p>
-																<div class="Margin-top-5">
-																	<!-- <button class="Button btn">테스트</button> -->
-																	<button class="Button btn" id="btnUpdateWebhook">저장</button>
-																</div> <!-- <p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
-																	주세요.</p> --></td>
-														</tr>
-													</tbody>
-												</table>
-											</fieldset>
+											<button class="Button btn" th:id="btnNotiAdd">Notification
+												추가</button>
 										</div>
 									</div>
-								</form>
+									<!-- channel form table second-->
+									<div id="emailDiv" style="display: none;">
+										<div class="form-btn__wrap">
+											<h3 class="form-subtitle">Email</h3>
+											<div class="btn-wrap__right">
+												<!-- <label class="ImageCheckbox" id="checkTest03"> <input
+												class="Checkbox" type="checkbox" name="chk1" value="check1"
+												checked="checked" />
+											</label> -->
+												<button class="btn-ico channel-del" th:id="btnEmailDel">삭제</button>
+											</div>
+										</div>
+										<fieldset>
+											<table class="Table Form-type channel-line">
+												<colgroup>
+													<col style="width: 200px;" />
+													<col />
+												</colgroup>
+												<tbody>
+													<tr>
+														<th class="Valign-top">Email address</th>
+														<td><textarea class="Textarea Width-100" rows="4"
+																th:id="email_to" th:name="email_to"
+																data-validation-rule="{required:true}"
+																data-validation-message="{required:'Email address을 입력해주세요.'}"
+																style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666"></textarea>
+															<p class="info-text" data-for="email_to"></p> <!-- <input class="Textinput Width-100" th:id="email_to"
+												th:name="email_to" data-validation-rule="{required:true}"
+												data-validation-message="{required:'Email address를 입력해주세요.'}" /> -->
+															<!-- <p class="info-text Margin-bottom-5">이메일 형식 오류입니다.</p> -->
+															<!-- <button class="Button btn">테스트</button> -->
+															<div class="Margin-top-5">
+																<button class="Button btn" id="btnUpdateEmail">저장</button>
+															</div></td>
+													</tr>
+												</tbody>
+											</table>
+										</fieldset>
+									</div>
+									<!-- channel form table third-->
+									<div id="slackDiv" style="display: none;">
+										<div class="form-btn__wrap">
+											<h3 class="form-subtitle">Slack</h3>
+											<div class="btn-wrap__right">
+												<!-- <label class="ImageCheckbox" id="checkTest03"> <input
+												class="Checkbox" type="checkbox" name="chk1" value="check1"
+												checked="checked" />
+											</label> -->
+												<button class="btn-ico channel-del" th:id="btnSlackDel">삭제</button>
+											</div>
+										</div>
+										<fieldset>
+											<table class="Table Form-type channel-line">
+												<colgroup>
+													<col style="width: 200px;" />
+													<col />
+												</colgroup>
+												<tbody>
+													<tr>
+														<th class="Valign-top">URL</th>
+														<td><input class="Textinput Width-100"
+															th:id="slack_api_url" th:name="slack_api_url"
+															data-validation-rule="{required:true}"
+															data-validation-message="{required:'URL을 입력해주세요.'}" />
+															<p class="info-text" data-for="slack_api_url"></p>
+															<div class="Margin-top-5">
+																<!-- <button class="Button btn">테스트</button> -->
+																<button class="Button btn" id="btnUpdateSlack">저장</button>
+															</div> <!-- <p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
+																	주세요.</p> --></td>
+													</tr>
+												</tbody>
+											</table>
+										</fieldset>
+									</div>
+									<!-- channel form table forth-->
+									<div id="hipchatDiv" style="display: none;">
+										<div class="form-btn__wrap">
+											<h3 class="form-subtitle">Hipchat</h3>
+											<div class="btn-wrap__right">
+												<!-- <label class="ImageCheckbox" id="checkTest03"> <input
+												class="Checkbox" type="checkbox" name="chk1" value="check1"
+												checked="checked" />
+											</label> -->
+												<button class="btn-ico channel-del" th:id="btnHipchatDel">삭제</button>
+											</div>
+										</div>
+										<fieldset>
+											<table class="Table Form-type channel-line">
+												<colgroup>
+													<col style="width: 200px;" />
+													<col />
+												</colgroup>
+												<tbody>
+													<tr>
+														<th>URL</th>
+														<td><input class="Textinput Width-100"
+															th:id="hipchat_api_url" th:name="hipchat_api_url"
+															data-validation-rule="{required:true}"
+															data-validation-message="{required:'URL을 입력해주세요.'}" />
+															<p class="info-text" data-for="hipchat_api_url"></p></td>
+													</tr>
+													<tr>
+														<th>Room ID</th>
+														<td><input class="Textinput Width-100"
+															th:id="hipchat_room_id" th:name="hipchat_room_id"
+															data-validation-rule="{required:true}"
+															data-validation-message="{required:'Room ID를 입력해주세요.'}" />
+															<p class="info-text" data-for="hipchat_room_id"></p></td>
+													</tr>
+													<tr>
+														<th>Token</th>
+														<td><input class="Textinput Width-100"
+															th:id="hipchat_auth_token" th:name="hipchat_auth_token"
+															data-validation-rule="{required:true}"
+															data-validation-message="{required:'Token을 입력해주세요.'}" />
+															<p class="info-text" data-for="hipchat_auth_token"></p></td>
+													</tr>
+													<tr>
+														<th class="Valign-top">Notify</th>
+														<td><label class="ImageRadio" th:id="notify_true">
+																<input class="Radio" th:id="hipchat_notify_true"
+																th:name="hipchat_notify" th:value="true" />True
+														</label> <label class="ImageRadio Margin-left-80"
+															th:id="notify_false"> <input class="Radio"
+																th:id="hipchat_notify_false" th:name="hipchat_notify"
+																th:value="false" />False
+														</label>
+															<div class="Margin-top-15">
+																<!-- <button class="Button btn">테스트</button> -->
+																<button class="Button btn" id="btnUpdateHipchat">저장</button>
+															</div> <!-- <p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
+																	주세요.</p> --></td>
+													</tr>
+												</tbody>
+											</table>
+										</fieldset>
+									</div>
+									<!-- channel form table fifth-->
+									<div id="webhookDiv" style="display: none;">
+										<div class="form-btn__wrap">
+											<h3 class="form-subtitle">Webhook</h3>
+											<div class="btn-wrap__right">
+												<!-- <label class="ImageCheckbox" id="checkTest03"> <input
+												class="Checkbox" type="checkbox" name="chk1" value="check1"
+												checked="checked" />
+											</label> -->
+												<button class="btn-ico channel-del" th:id="btnWebhookDel">삭제</button>
+											</div>
+										</div>
+										<fieldset>
+											<table class="Table Form-type channel-line">
+												<colgroup>
+													<col style="width: 200px;" />
+													<col />
+												</colgroup>
+												<tbody>
+													<tr>
+														<th class="Valign-top">URL</th>
+														<td><input class="Textinput Width-100"
+															th:id="webhook_url" th:name="webhook_url"
+															data-validation-rule="{required:true}"
+															data-validation-message="{required:'URL을 입력해주세요.'}" />
+															<p class="info-text" data-for="webhook_url"></p>
+															<div class="Margin-top-5">
+																<!-- <button class="Button btn">테스트</button> -->
+																<button class="Button btn" id="btnUpdateWebhook">저장</button>
+															</div> <!-- <p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
+																	주세요.</p> --></td>
+													</tr>
+												</tbody>
+											</table>
+										</fieldset>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
