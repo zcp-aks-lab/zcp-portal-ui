@@ -66,7 +66,7 @@
 				if (!this.validation()) {
 					return false;
 				}
-
+				
 				$a.request('/alert/updateChannel', {
 					method : 'post',
 					data : $('#popForm').serializeObject(),
@@ -83,6 +83,7 @@
 						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
 					}
 				});
+				
 			},
 			validation : function() {
 				var pDivision = $("#pDivision option:selected").val();
@@ -128,6 +129,8 @@
 		},
 		event : {
 			init : function() {
+				$a.keyfilter.addKeyUpRegexpRule("email", "a-zA-Z0-9@._-");
+				
 				$('#popCancel').on('click', function() {
 					$a.close('cancel');
 				});
@@ -223,7 +226,9 @@
 											<th class="Valign-top">Email address</th>
 											<td><textarea class="Textarea Width-100" rows="4"
 													th:id="pEmail_to" th:name="pEmail_to"
-													data-validation-rule="{required:true}"
+													maxlength="50"
+													data-keyfilter-rule="email"
+													data-validation-rule="{required:true, email:true}"
 													data-validation-message="{required:'Email address를 입력해주세요.'}"
 													style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666"></textarea>
 												<!-- <input class="Textinput Width-100" th:id="email_to"

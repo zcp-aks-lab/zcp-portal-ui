@@ -40,8 +40,9 @@
 							if (res.resultMsg)
 								alert(res.resultMsg);
 							return false;
+						} else {
+							$a.close('ok');	
 						}
-						$a.close('ok');
 					},
 					error : function(errObject) {
 						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -97,7 +98,9 @@
 									<th style="text-align: center;">채널명</th>
 									<td><input class="Textinput" th:id="newChannel"
 										th:name="newChannel" style="min-width: 300px;"
-										data-validation-rule="{required:true}"
+										maxlength="12"
+										data-keyfilter-rule="digits|english"
+										data-validation-rule="{required:true, numalpha:true}"
 										data-validation-message="{required:'채널명을 입력해주세요.'}" />
 										<p id="valid01" class="info-text" style="height: 22px;">채널명은
 											알파벳과 숫자로 구성된 6~12자리로 입력하세요.</p>

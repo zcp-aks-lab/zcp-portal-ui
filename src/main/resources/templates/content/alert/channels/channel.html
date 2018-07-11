@@ -25,10 +25,10 @@
 			init : function() {
 			},
 			updateDtl : function(notification) {
-				/* if (!this.validation()) {
+				if (!this.validation()) {
 					return false;
-				} */
-				
+				}
+
 				if (notification == 'email') {
 					json = $('#emailForm').serializeObject();
 				} else if (notification == 'slack') {
@@ -158,32 +158,56 @@
 				});
 			},
 			validation : function() {
-				var channel = $('#channel').validate();
-
-				if (!channel) {
-					return false;
-				} else {
-					return true;
+				if ($('#channel').val() != null) {
+					var channel = $('#channel').validate();	
+					if (!channel) {
+						return false;
+					} else {
+						return true;
+					}
 				}
-
-				/* var email_to = $('#email_to').validate();
-				var slack_api_url = $('#slack_api_url').validate();
-				var hipchat_api_url = $('#hipchat_api_url').validate();
-				var hipchat_room_id = $('#hipchat_room_id').validate();
-				var hipchat_auth_token = $('#hipchat_auth_token').validate();
-				var webhook_url = $('#webhook_url').validate();
-
-				if (!email_to || !slack_api_url || !hipchat_api_url
-						|| !hipchat_room_id || !hipchat_auth_token
-						|| !webhook_url) {
-					return false;
-				} else {
-					return true;
-				} */
+				if ($('#email_to').val() != null) {
+					var email_to = $('#email_to').validate();
+					if (!channel || !email_to) {
+						return false;
+					} else {
+						return true;
+					}
+				}
+				if ($('#slack_api_url').val() != null) {
+					var slack_api_url = $('#slack_api_url').validate();
+					if (!channel || !slack_api_url) {
+						return false;
+					} else {
+						return true;
+					}
+				}
+				if ($('#hipchat_api_url').val() != null) {
+					var hipchat_api_url = $('#hipchat_api_url').validate();
+					var hipchat_room_id = $('#hipchat_room_id').validate();
+					var hipchat_auth_token = $('#hipchat_auth_token')
+							.validate();
+					if (!channel || !hipchat_api_url || !hipchat_room_id
+							|| !hipchat_auth_token) {
+						return false;
+					} else {
+						return true;
+					}
+				}
+				if ($('#webhook_url').val() != null) {
+					var webhook_url = $('#webhook_url').validate();
+					if (!channel || !webhook_url) {
+						return false;
+					} else {
+						return true;
+					}
+				}
 			}
 		},
 		event : {
 			init : function() {
+				$a.keyfilter.addKeyUpRegexpRule("email", "a-zA-Z0-9@._-");
+
 				$('#btnUpdateEmail').on('click', function() {
 					zcpPortalApp.data.updateDtl('email');
 				});
@@ -334,15 +358,15 @@
 				})
 			},
 			deleteChannel : function(id) {
-				var data = {
+				var jsonData = {
 					id : id
 				};
 
-				if (!confirm('삭제하시겠습니까?'))
+				/* if (!confirm('삭제하시겠습니까?'))
 					return false;
 				$a.request('/alert/deleteChannel', {
 					method : 'post',
-					data : data,
+					data : jsonData,
 					success : function(res) {
 						if (res.resultCd !== '200') {
 							if (res.resultMsg)
@@ -356,48 +380,49 @@
 					error : function(errObject) {
 						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
 					}
-				})
+				}) */
 
-				/* alertPopup.confirm({
-								width : 400,
-								height : 250,
-								message : '삭제하시겠습니까?',
-								callback : function(data) {
-									if (data == 'ok') {
-										$a.request('/alert/deleteChannel', {
-											method : 'post',
-											data : data,
-											success : function(res) {
-												if (res.resultCd !== '200') {
-													if (res.resultMsg)
-														alert(res.resultMsg);
-													return false;
-												}
-												alertPopup.alert({
-													width : 400,
-													height : 250,
-													message : '정상처리 되었습니다.',
-													callback : function() {
-														location.reload();
-													}
-												});
-											},
-											error : function(errObject) {
-												alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
-											}
-										})
-									} else {
+				alertPopup.confirm({
+					width : 400,
+					height : 250,
+					message : '채널을 삭제하시겠습니까?',
+					callback : function(data) {
+						if (data == 'ok') {
+							$a.request('/alert/deleteChannel', {
+								method : 'post',
+								data : jsonData,
+								success : function(res) {
+									if (res.resultCd !== '200') {
+										if (res.resultMsg)
+											alert(res.resultMsg);
 										return false;
+									} else {
+										alertPopup.alert({
+											width : 400,
+											height : 250,
+											message : '채널이 삭제되었습니다.',
+											callback : function() {
+												location.reload();
+											}
+										});
 									}
+								},
+								error : function(errObject) {
+									alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
 								}
-							}); */
+							})
+						} else {
+							return false;
+						}
+					}
+				});
 			},
 			detailChannel : function(id) {
 				var test = {
 					id : id
 				};
 				$('#id').val(id);
-				
+
 				$('#channel').val('');
 				$('#notifications').val('');
 				$('#email_to').val('');
@@ -407,7 +432,7 @@
 				$('#hipchat_auth_token').val('');
 				$('#hipchat_notify').val('');
 				$('#webhook_url').val('');
-				
+
 				$('#emailId').val(id);
 				$('#slackId').val(id);
 				$('#hipchatId').val(id);
@@ -439,7 +464,8 @@
 											$('#emailDiv').css('display', '');
 											$('#email_to').val(
 													res.resultData.email_to);
-											$('#emailChannel').val(res.resultData.channel);
+											$('#emailChannel').val(
+													res.resultData.channel);
 										}
 
 										if (res.resultData.slack_api_url == null) {
@@ -451,7 +477,8 @@
 											$('#slack_api_url')
 													.val(
 															res.resultData.slack_api_url);
-											$('#slackChannel').val(res.resultData.channel);
+											$('#slackChannel').val(
+													res.resultData.channel);
 										}
 
 										if (res.resultData.hipchat_api_url == null) {
@@ -489,7 +516,8 @@
 												$("#hipchat_notify_false")
 														.prop('checked', true);
 											}
-											$('#hipchatChannel').val(res.resultData.channel);
+											$('#hipchatChannel').val(
+													res.resultData.channel);
 										}
 
 										if (res.resultData.webhook_url == null) {
@@ -501,7 +529,8 @@
 											$('#webhook_url').val(
 													res.resultData.webhook_url);
 										}
-										$('#webhookChannel').val(res.resultData.channel);
+										$('#webhookChannel').val(
+												res.resultData.channel);
 									},
 									error : function(errObject) {
 										alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -590,63 +619,6 @@
 							}
 							// ]]>
 						});
-
-				/* $('#btnNotiAdd').on('click', function() {
-					var divisionVal = $("#division option:selected").val();
-
-					if (divisionVal == '') {
-						alertPopup.alert({
-							width : 400,
-							height : 250,
-							message : 'Notification을 선택해주세요.',
-							callback : function() {
-							}
-						});
-					} else if (divisionVal == 'email') {
-						$('#emailDiv').css('display', '');
-					} else if (divisionVal == 'slack') {
-						$('#slackDiv').css('display', '');
-					} else if (divisionVal == 'hipchat') {
-						$('#hipchatDiv').css('display', '');
-					} else if (divisionVal == 'webhook') {
-						$('#webhookDiv').css('display', '');
-					}
-				}); */
-
-				$('#btnEmailDel').on('click', function() {
-					alertPopup.confirm({
-						width : 400,
-						height : 250,
-						message : 'Email을 삭제하시겠습니까?',
-						callback : function(data) {
-							if (data == 'ok') {
-								/* $a.request('/alert/deleteChannel', {
-									method : 'post',
-									data : data,
-									success : function(res) {
-										if (res.resultCd !== '200') {
-											if (res.resultMsg)
-												alert(res.resultMsg);
-											return false;
-										} else {
-											alertPopup.alert({
-												width : 400,
-												height : 250,
-												message : '정상처리되었습니다.',
-												callback : function() {
-													location.reload();
-												}
-											});
-										}
-									},
-									error : function(errObject) {
-										alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
-									}
-								}); */
-							}
-						}
-					});
-				});
 
 				$('#division').change(function() {
 					var divisionVal = $("#division option:selected").val();
@@ -769,7 +741,9 @@
 													<tr>
 														<th>채널명</th>
 														<td><input class="Textinput" th:id="channel"
-															th:name="channel" data-validation-rule="{required:true}"
+															maxlength="12" th:name="channel"
+															data-keyfilter-rule="digits|english"
+															data-validation-rule="{required:true, numalpha:true}"
 															data-validation-message="{required:'채널명을 입력해주세요.'}" />
 															<button class="Button btn" id="btnUpdateChannelName">저장</button>
 															<p class="info-text" data-for="channel"></p></td>
@@ -799,8 +773,8 @@
 									</div>
 									<!-- channel form table second-->
 									<form th:id="emailForm" onsubmit="return false;">
-										<input type="hidden" th:id="emailId" th:name="id" />
-										<input type="hidden" th:id="emailChannel" th:name="channel" />
+										<input type="hidden" th:id="emailId" th:name="id" /> <input
+											type="hidden" th:id="emailChannel" th:name="channel" />
 										<div id="emailDiv" style="display: none;">
 											<div class="form-btn__wrap">
 												<h3 class="form-subtitle">Email</h3>
@@ -822,8 +796,9 @@
 														<tr>
 															<th class="Valign-top">Email address</th>
 															<td><textarea class="Textarea Width-100" rows="4"
-																	th:id="email_to" th:name="email_to"
-																	data-validation-rule="{required:true}"
+																	th:id="email_to" th:name="email_to" maxlength="50"
+																	data-keyfilter-rule="email"
+																	data-validation-rule="{required:true, email:true}"
 																	data-validation-message="{required:'Email address을 입력해주세요.'}"
 																	style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666"></textarea>
 																<p class="info-text" data-for="email_to"></p> <!-- <input class="Textinput Width-100" th:id="email_to"
@@ -842,8 +817,8 @@
 									</form>
 									<!-- channel form table third-->
 									<form th:id="slackForm" onsubmit="return false;">
-										<input type="hidden" th:id="slackId" th:name="id" />
-										<input type="hidden" th:id="slackChannel" th:name="channel" />
+										<input type="hidden" th:id="slackId" th:name="id" /> <input
+											type="hidden" th:id="slackChannel" th:name="channel" />
 										<div id="slackDiv" style="display: none;">
 											<div class="form-btn__wrap">
 												<h3 class="form-subtitle">Slack</h3>
@@ -866,7 +841,7 @@
 															<th class="Valign-top">URL</th>
 															<td><input class="Textinput Width-100"
 																th:id="slack_api_url" th:name="slack_api_url"
-																data-validation-rule="{required:true}"
+																maxlength="100" data-validation-rule="{required:true}"
 																data-validation-message="{required:'URL을 입력해주세요.'}" />
 																<p class="info-text" data-for="slack_api_url"></p>
 																<div class="Margin-top-5">
@@ -882,8 +857,8 @@
 									</form>
 									<!-- channel form table forth-->
 									<form th:id="hipchatForm" onsubmit="return false;">
-										<input type="hidden" th:id="hipchatId" th:name="id" />
-										<input type="hidden" th:id="hipchatChannel" th:name="channel" />
+										<input type="hidden" th:id="hipchatId" th:name="id" /> <input
+											type="hidden" th:id="hipchatChannel" th:name="channel" />
 										<div id="hipchatDiv" style="display: none;">
 											<div class="form-btn__wrap">
 												<h3 class="form-subtitle">Hipchat</h3>
@@ -907,7 +882,7 @@
 															<th>URL</th>
 															<td><input class="Textinput Width-100"
 																th:id="hipchat_api_url" th:name="hipchat_api_url"
-																data-validation-rule="{required:true}"
+																maxlength="100" data-validation-rule="{required:true}"
 																data-validation-message="{required:'URL을 입력해주세요.'}" />
 																<p class="info-text" data-for="hipchat_api_url"></p></td>
 														</tr>
@@ -915,7 +890,7 @@
 															<th>Room ID</th>
 															<td><input class="Textinput Width-100"
 																th:id="hipchat_room_id" th:name="hipchat_room_id"
-																data-validation-rule="{required:true}"
+																maxlength="100" data-validation-rule="{required:true}"
 																data-validation-message="{required:'Room ID를 입력해주세요.'}" />
 																<p class="info-text" data-for="hipchat_room_id"></p></td>
 														</tr>
@@ -923,7 +898,7 @@
 															<th>Token</th>
 															<td><input class="Textinput Width-100"
 																th:id="hipchat_auth_token" th:name="hipchat_auth_token"
-																data-validation-rule="{required:true}"
+																maxlength="100" data-validation-rule="{required:true}"
 																data-validation-message="{required:'Token을 입력해주세요.'}" />
 																<p class="info-text" data-for="hipchat_auth_token"></p></td>
 														</tr>
@@ -950,8 +925,8 @@
 									</form>
 									<!-- channel form table fifth-->
 									<form th:id="webhookForm" onsubmit="return false;">
-										<input type="hidden" th:id="webhookId" th:name="id" />
-										<input type="hidden" th:id="webhookChannel" th:name="channel" />
+										<input type="hidden" th:id="webhookId" th:name="id" /> <input
+											type="hidden" th:id="webhookChannel" th:name="channel" />
 										<div id="webhookDiv" style="display: none;">
 											<div class="form-btn__wrap">
 												<h3 class="form-subtitle">Webhook</h3>
@@ -975,7 +950,7 @@
 															<th class="Valign-top">URL</th>
 															<td><input class="Textinput Width-100"
 																th:id="webhook_url" th:name="webhook_url"
-																data-validation-rule="{required:true}"
+																maxlength="100" data-validation-rule="{required:true}"
 																data-validation-message="{required:'URL을 입력해주세요.'}" />
 																<p class="info-text" data-for="webhook_url"></p>
 																<div class="Margin-top-5">

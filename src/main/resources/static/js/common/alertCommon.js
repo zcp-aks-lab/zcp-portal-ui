@@ -75,7 +75,7 @@ var channelPopup = {
 					alertPopup.alert({
 						width : 400,
 						height : 250,
-						message : '저장되었습니다.',
+						message : '신규 채널이 생성되었습니다.',
 						callback : function() {
 							_opts.callback(data);
 							location.reload();
@@ -125,7 +125,7 @@ var notificationPopup = {
 						alertPopup.alert({
 							width : 400,
 							height : 250,
-							message : '저장되었습니다.',
+							message : 'Notification이 저장되었습니다.',
 							callback : function() {
 								_opts.callback(data);
 								location.reload();
