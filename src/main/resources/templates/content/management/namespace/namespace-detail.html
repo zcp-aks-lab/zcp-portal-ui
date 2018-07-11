@@ -298,7 +298,7 @@
 	    				render : function(value, data, render, mapping){
 	    					var namespace = /*[[${namespace}]]*/;
 	    					var apply = {namespace:namespace, clusterRole : data.namespacedRole, username : data.username}
-	    					return "<button class='Button btn-ico btn-config__save Valign-md'  onclick='modifyNamespaceRole("+JSON.stringify(apply) +")'></button>" 
+	    					return "<button class='btn-ico btn-config__save'  onclick='modifyNamespaceRole("+JSON.stringify(apply) +")'></button>&nbsp;" 
 	    						+"<button class=\"btn-ico del\" onclick='delUser(" + JSON.stringify(data) + ")'></button>";
 	    				}
 	    			}
