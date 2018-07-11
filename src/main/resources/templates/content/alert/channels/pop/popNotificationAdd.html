@@ -21,19 +21,46 @@
 		},
 		data : {
 			init : function() {
-				alert($('#email_to').val());
-				alert($('#slack_api_url').val());
-				alert($('#hipchat_api_url').val());
-				alert($('#webhook_url').val());
-				//$("#pDivision option").not(":selected").attr("disabled", "disabled");
-				$('#pDivision').val('hipchat');
-				//
-				//
-				//
-				if($('#email_to').val() == '') {
+				if($('#email_to').val() != '') {
+					$('#pDivision option[value=email]').hide();
+					$('#pDivision option[value=slack]').attr('selected', 'selected');
+					$('#pSelect').text('Slack');
 					
+					$('#pEmailDiv').css('display', 'none');
+					$('#pSlackDiv').css('display', '');
+					$('#pHipchatDiv').css('display', 'none');
+					$('#pWebhookDiv').css('display', 'none');
 				}
-				
+				if($('#slack_api_url').val() != '') {
+					$('#pDivision option[value=slack]').hide();
+					$('#pDivision option[value=hipchat]').attr('selected', 'selected');
+					$('#pSelect').text('Hipchat');
+					
+					$('#pEmailDiv').css('display', 'none');
+					$('#pSlackDiv').css('display', 'none');
+					$('#pHipchatDiv').css('display', '');
+					$('#pWebhookDiv').css('display', 'none');
+				}
+				if($('#hipchat_api_url').val() != '') {
+					$('#pDivision option[value=hipchat]').hide();
+					$('#pDivision option[value=webhook]').attr('selected', 'selected');
+					$('#pSelect').text('Webhook');
+					
+					$('#pEmailDiv').css('display', 'none');
+					$('#pSlackDiv').css('display', 'none');
+					$('#pHipchatDiv').css('display', 'none');
+					$('#pWebhookDiv').css('display', '');
+				}
+				if($('#webhook_url').val() != '') {
+					$('#pDivision option[value=webhook]').hide();
+					$('#pDivision option[value=email]').attr('selected', 'selected');
+					$('#pSelect').text('Email');
+					
+					$('#pEmailDiv').css('display', '');
+					$('#pSlackDiv').css('display', 'none');
+					$('#pHipchatDiv').css('display', 'none');
+					$('#pWebhookDiv').css('display', 'none');
+				}
 			},
 			updateChannel : function() {
 				if (!this.validation()) {
@@ -164,7 +191,7 @@
 													<option value="slack">Slack</option>
 													<option value="hipchat">Hipchat</option>
 													<option value="webhook">Webhook</option>
-												</select> <span></span>
+												</select> <span id="pSelect"></span>
 											</div>
 										</div> <!-- <input class="Textinput" th:id="newChannel"
 										th:name="newChannel" style="min-width: 300px;"

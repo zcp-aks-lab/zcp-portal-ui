@@ -182,16 +182,22 @@ public class ChannelService {
 		ChannelDtlVo channelParam = new ChannelDtlVo();
 
 		channelParam.setChannel(params.get("channel").toString());
-		channelParam.setEmail_to(params.get("email_to").toString());
 		
-		channelParam.setSlack_api_url(params.get("slack_api_url").toString());
-		
-		channelParam.setHipchat_api_url(params.get("hipchat_api_url").toString());
-		channelParam.setHipchat_room_id(params.get("hipchat_room_id").toString());
-		channelParam.setHipchat_auth_token(params.get("hipchat_auth_token").toString());
-		channelParam.setHipchat_notify(params.get("hipchat_notify").toString());
-
-		channelParam.setWebhook_url(params.get("webhook_url").toString());
+		if(params.get("email_to") != null) {
+			channelParam.setEmail_to(params.get("email_to").toString());	
+		}
+		if(params.get("slack_api_url") != null) {
+			channelParam.setSlack_api_url(params.get("slack_api_url").toString());	
+		}
+		if(params.get("hipchat_api_url") != null) {
+			channelParam.setHipchat_api_url(params.get("hipchat_api_url").toString());
+			channelParam.setHipchat_room_id(params.get("hipchat_room_id").toString());
+			channelParam.setHipchat_auth_token(params.get("hipchat_auth_token").toString());
+			channelParam.setHipchat_notify(params.get("hipchat_notify").toString());
+		}
+		if(params.get("webhook_url") != null) {
+			channelParam.setWebhook_url(params.get("webhook_url").toString());	
+		}
 
 		HttpHeaders headers = new HttpHeaders();
 

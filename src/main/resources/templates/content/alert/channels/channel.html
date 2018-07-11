@@ -24,20 +24,30 @@
 		data : {
 			init : function() {
 			},
-			updateDtl : function() {
+			updateDtl : function(notification) {
 				/* if (!this.validation()) {
 					return false;
 				} */
+				
+				if (notification == 'email') {
+					json = $('#emailForm').serializeObject();
+				} else if (notification == 'slack') {
+					json = $('#slackForm').serializeObject();
+				} else if (notification == 'hipchat') {
+					json = $('#hipchatForm').serializeObject();
+				} else if (notification == 'webhook') {
+					json = $('#webhookForm').serializeObject();
+				}
 
 				var check = alertPopup.confirm({
 					width : 400,
 					height : 250,
-					message : '저장하시겠습니까?',
+					message : 'Notification을 저장하시겠습니까?',
 					callback : function(data) {
 						if (data == 'ok') {
 							$a.request('/alert/updateChannelDtl', {
 								method : 'post',
-								data : $('#form').serializeObject(),
+								data : json,
 								success : function(res) {
 									if (res.resultCd !== '200') {
 										if (res.resultMsg)
@@ -47,7 +57,7 @@
 									alertPopup.alert({
 										width : 400,
 										height : 250,
-										message : '저장되었습니다.',
+										message : 'Notification이 저장되었습니다.',
 										callback : function() {
 											location.href = '/alert/channels';
 										}
@@ -102,17 +112,17 @@
 					}
 				});
 			},
-			deleteNotification : function(noti) {
-				if(noti == 'email') {
+			deleteNotification : function(notification) {
+				if (notification == 'email') {
 					json = $('#emailForm').serializeObject();
-				} else if(noti == 'slack') {
+				} else if (notification == 'slack') {
 					json = $('#slackForm').serializeObject();
-				} else if(noti == 'hipchat') {
+				} else if (notification == 'hipchat') {
 					json = $('#hipchatForm').serializeObject();
-				} else if(noti == 'webhook') {
+				} else if (notification == 'webhook') {
 					json = $('#webhookForm').serializeObject();
 				}
-				
+
 				alertPopup.confirm({
 					width : 400,
 					height : 250,
@@ -175,16 +185,16 @@
 		event : {
 			init : function() {
 				$('#btnUpdateEmail').on('click', function() {
-					zcpPortalApp.data.updateDtl();
+					zcpPortalApp.data.updateDtl('email');
 				});
 				$('#btnUpdateSlack').on('click', function() {
-					zcpPortalApp.data.updateDtl();
+					zcpPortalApp.data.updateDtl('slack');
 				});
 				$('#btnUpdateHipchat').on('click', function() {
-					zcpPortalApp.data.updateDtl();
+					zcpPortalApp.data.updateDtl('hipchat');
 				});
 				$('#btnUpdateWebhook').on('click', function() {
-					zcpPortalApp.data.updateDtl();
+					zcpPortalApp.data.updateDtl('webhook');
 				});
 				$('#btnUpdateChannelName').on('click', function() {
 					zcpPortalApp.data.updateChannelName();
@@ -386,9 +396,8 @@
 				var test = {
 					id : id
 				};
-
 				$('#id').val(id);
-
+				
 				$('#channel').val('');
 				$('#notifications').val('');
 				$('#email_to').val('');
@@ -398,7 +407,7 @@
 				$('#hipchat_auth_token').val('');
 				$('#hipchat_notify').val('');
 				$('#webhook_url').val('');
-
+				
 				$('#emailId').val(id);
 				$('#slackId').val(id);
 				$('#hipchatId').val(id);
@@ -425,25 +434,30 @@
 										if (res.resultData.email_to == null) {
 											$('#emailDiv').css('display',
 													'none');
+											$('#email_to').val('');
 										} else {
 											$('#emailDiv').css('display', '');
 											$('#email_to').val(
 													res.resultData.email_to);
+											$('#emailChannel').val(res.resultData.channel);
 										}
 
 										if (res.resultData.slack_api_url == null) {
 											$('#slackDiv').css('display',
 													'none');
+											$('#slack_api_url').val('');
 										} else {
 											$('#slackDiv').css('display', '');
 											$('#slack_api_url')
 													.val(
 															res.resultData.slack_api_url);
+											$('#slackChannel').val(res.resultData.channel);
 										}
 
 										if (res.resultData.hipchat_api_url == null) {
 											$('#hipchatDiv').css('display',
 													'none');
+											$('#hipchat_api_url').val('');
 										} else {
 											$('#hipchatDiv').css('display', '');
 											$('#hipchat_api_url')
@@ -475,16 +489,19 @@
 												$("#hipchat_notify_false")
 														.prop('checked', true);
 											}
+											$('#hipchatChannel').val(res.resultData.channel);
 										}
 
 										if (res.resultData.webhook_url == null) {
 											$('#webhookDiv').css('display',
 													'none');
+											$('#webhook_url').val('');
 										} else {
 											$('#webhookDiv').css('display', '');
 											$('#webhook_url').val(
 													res.resultData.webhook_url);
 										}
+										$('#webhookChannel').val(res.resultData.channel);
 									},
 									error : function(errObject) {
 										alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -547,16 +564,31 @@
 				$('#btnNotiAdd').on(
 						'click',
 						function() {
-							notificationPopup.pop({
-								url : "/alert/popNotificationAdd/"
-										+ $('#id').val() + "/"
-										+ $('#channel').val(),
-								width : 590,
-								height : 530,
-								callback : function() {
-									location.reload();
-								}
-							});
+							//<![CDATA[
+							if ($('#email_to').val() != ''
+									&& $('#slack_api_url').val() != ''
+									&& $('#hipchat_api_url').val() != ''
+									&& $('#webhook_url').val() != '') {
+								alertPopup.alert({
+									width : 400,
+									height : 250,
+									message : '추가할 수 있는 Notification이 없습니다.',
+									callback : function() {
+									}
+								});
+							} else {
+								notificationPopup.pop({
+									url : "/alert/popNotificationAdd/"
+											+ $('#id').val() + "/"
+											+ $('#channel').val(),
+									width : 590,
+									height : 530,
+									callback : function() {
+										location.reload();
+									}
+								});
+							}
+							// ]]>
 						});
 
 				/* $('#btnNotiAdd').on('click', function() {
@@ -768,6 +800,7 @@
 									<!-- channel form table second-->
 									<form th:id="emailForm" onsubmit="return false;">
 										<input type="hidden" th:id="emailId" th:name="id" />
+										<input type="hidden" th:id="emailChannel" th:name="channel" />
 										<div id="emailDiv" style="display: none;">
 											<div class="form-btn__wrap">
 												<h3 class="form-subtitle">Email</h3>
@@ -810,6 +843,7 @@
 									<!-- channel form table third-->
 									<form th:id="slackForm" onsubmit="return false;">
 										<input type="hidden" th:id="slackId" th:name="id" />
+										<input type="hidden" th:id="slackChannel" th:name="channel" />
 										<div id="slackDiv" style="display: none;">
 											<div class="form-btn__wrap">
 												<h3 class="form-subtitle">Slack</h3>
@@ -849,6 +883,7 @@
 									<!-- channel form table forth-->
 									<form th:id="hipchatForm" onsubmit="return false;">
 										<input type="hidden" th:id="hipchatId" th:name="id" />
+										<input type="hidden" th:id="hipchatChannel" th:name="channel" />
 										<div id="hipchatDiv" style="display: none;">
 											<div class="form-btn__wrap">
 												<h3 class="form-subtitle">Hipchat</h3>
@@ -916,6 +951,7 @@
 									<!-- channel form table fifth-->
 									<form th:id="webhookForm" onsubmit="return false;">
 										<input type="hidden" th:id="webhookId" th:name="id" />
+										<input type="hidden" th:id="webhookChannel" th:name="channel" />
 										<div id="webhookDiv" style="display: none;">
 											<div class="form-btn__wrap">
 												<h3 class="form-subtitle">Webhook</h3>
