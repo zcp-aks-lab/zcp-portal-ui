@@ -12,9 +12,16 @@
         <div class="locations-area">
             <div class="prj-list">
                 <strong>Namespace : </strong>
-                <button class="Dropdownbutton namespace" th:text="${selectedNamespace != null ? selectedNamespace : '전체'}">ONM</button>
+                <th:block th:if="${#authentication.principal.accessRole} == 'cluster-admin'">
+                    <button class="Dropdownbutton namespace" th:text="${selectedNamespace != null ? selectedNamespace : '전체'}">ONM</button>
+                </th:block>
+                <th:block th:unless="${#authentication.principal.accessRole} == 'cluster-admin'">
+                    <button class="Dropdownbutton namespace" th:text="${selectedNamespace != null ? selectedNamespace : '선택'}">ONM</button>
+                </th:block>
+                
                 <ul class="dropmenu-list">
-                    <li><a th:href="@{/}">전체</a></li>
+                    <li th:if="${#authentication.principal.accessRole} == 'cluster-admin'"><a th:href="@{/}">전체</a></li>
+                    
                     <th:block th:each="namespace, iterStat : ${userNamespaces}">
                         <li><a th:href="@{/(namespace=${namespace})}" th:text="${namespace}"></a></li>
                     </th:block>

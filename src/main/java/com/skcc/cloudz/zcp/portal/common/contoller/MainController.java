@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpNodeVo;
+import com.skcc.cloudz.zcp.common.constants.AccessRole;
+import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.portal.common.service.MainService;
 
 @Controller
@@ -27,7 +30,15 @@ public class MainController {
     
     @GetMapping(value = {"/main", "/"}, consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String main(@RequestParam(required = false, value = "namespace") String namespace, Model model) throws Exception {
-        model.addAttribute("selectedNamespace", namespace);
+        
+        String accessRole = SecurityService.getUserDetail().getAccessRole();
+        if (accessRole.equals(AccessRole.CLUSTER_ADMIN.getName())) {
+            model.addAttribute("selectedNamespace", namespace);
+        } else {
+            String defaultNamespace = SecurityService.getUserDetail().getDefaultNamespace();
+            
+            model.addAttribute("selectedNamespace", StringUtils.isEmpty(namespace) ? defaultNamespace : namespace);    
+        }
         
         return "content/main";
     }

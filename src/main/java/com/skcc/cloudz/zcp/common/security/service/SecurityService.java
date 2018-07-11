@@ -47,5 +47,9 @@ public class SecurityService {
         OpenIdConnectUserDetailsVo userDetailsVo = (OpenIdConnectUserDetailsVo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userDetailsVo.getUserId();
     }
+    
+    public static OpenIdConnectUserDetailsVo getUserDetail() {
+        return (OpenIdConnectUserDetailsVo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
 
 }

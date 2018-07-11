@@ -14,9 +14,6 @@ import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
 public class UserNamespaceInterceptor extends HandlerInterceptorAdapter {
     
     @Autowired
-    private SecurityService securityService;
-    
-    @Autowired
     private UserService userService;
 
     @Override
@@ -26,9 +23,7 @@ public class UserNamespaceInterceptor extends HandlerInterceptorAdapter {
             return;
         }
         
-        String id = securityService.getUserDetails().getUserId();
-        
-        ZcpUserVo zcpUserVo = userService.getUser(id);
+        ZcpUserVo zcpUserVo = userService.getUser(SecurityService.getUserId());
         
         modelAndView.addObject("userNamespaces", zcpUserVo.getNamespaces());
         modelAndView.addObject("userDefaultNamespace", zcpUserVo.getDefaultNamespace());
