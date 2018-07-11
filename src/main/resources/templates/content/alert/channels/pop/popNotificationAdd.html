@@ -21,6 +21,19 @@
 		},
 		data : {
 			init : function() {
+				alert($('#email_to').val());
+				alert($('#slack_api_url').val());
+				alert($('#hipchat_api_url').val());
+				alert($('#webhook_url').val());
+				//$("#pDivision option").not(":selected").attr("disabled", "disabled");
+				$('#pDivision').val('hipchat');
+				//
+				//
+				//
+				if($('#email_to').val() == '') {
+					
+				}
+				
 			},
 			updateChannel : function() {
 				if (!this.validation()) {
