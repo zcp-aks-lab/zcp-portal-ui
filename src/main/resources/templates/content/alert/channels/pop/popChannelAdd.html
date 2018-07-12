@@ -9,11 +9,11 @@
 <script type="text/javascript">
 	$.alopex.page(function() {
 		this.init = function(id, param) {
-			zcpPortalApp.pageInit();
+			zcpPopChannelApp.pageInit();
 		};
 	});
 
-	var zcpPortalApp = {
+	var zcpPopChannelApp = {
 		pageInit : function() {
 			'use strict';
 			this.data.init();
@@ -69,11 +69,11 @@
 					$a.close('cancel');
 				});
 				$('#popOk').on('click', function() {
-					zcpPortalApp.data.createChannel();
+					zcpPopChannelApp.data.createChannel();
 				});
 				$('#newChannel').on('keydown', function(e) {
 					if (e.keyCode === 13) {
-						zcpPortalApp.data.createChannel();
+						zcpPopChannelApp.data.createChannel();
 					}
 				});
 			}

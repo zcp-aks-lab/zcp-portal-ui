@@ -10,7 +10,7 @@
 <script type="text/javascript">
 	$.alopex.page(function() {
 		this.init = function(id, param) {
-			zcpPortalGrid1.pageInit();
+			zcpPortalGrid.pageInit();
 			zcpPortalApp.pageInit();
 		};
 	});
@@ -82,7 +82,7 @@
 		}
 	}
 
-	var zcpPortalGrid1 = {
+	var zcpPortalGrid = {
 		pageInit : function() {
 			'use strict';
 			this.grid.init();
@@ -136,7 +136,7 @@
 												width : '200px',
 												align : 'left',
 												render : function(value, data) {
-													return '<a href="javascript:zcpPortalGrid1.data.detailRule(\''
+													return '<a href="javascript:zcpPortalGrid.data.detailRule(\''
 															+ data.id
 															+ '\');" style="font-size:15px;">'
 															+ data.type
@@ -187,7 +187,7 @@
 												width : '100px',
 												align : 'center',
 												render : function(value, data) {
-													return '<button class="btn-ico del" onclick="zcpPortalGrid1.data.deleteRule(\''
+													return '<button class="btn-ico del" onclick="zcpPortalGrid.data.deleteRule(\''
 															+ data.id
 															+ '\');" />';
 												}

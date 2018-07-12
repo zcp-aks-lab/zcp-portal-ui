@@ -8,13 +8,6 @@
 <title>알림</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <script type="text/javascript">
-	$.alopex.page(function() {
-		this.init = function(id, param) {
-			zcpPortalGrid.pageInit();
-			zcpPortalApp.pageInit();
-		};
-	});
-
 	var zcpPortalApp = {
 		pageInit : function() {
 			'use strict';
@@ -237,35 +230,44 @@
 			init : function() {
 				$a.keyfilter.addKeyUpRegexpRule("email", "a-zA-Z0-9@._-");
 
-				$('#btnUpdateEmail').on('click', function() {
-					zcpPortalApp.data.updateDtl('email');
-				});
-				$('#btnUpdateSlack').on('click', function() {
-					zcpPortalApp.data.updateDtl('slack');
-				});
-				$('#btnUpdateHipchat').on('click', function() {
-					zcpPortalApp.data.updateDtl('hipchat');
-				});
-				$('#btnUpdateWebhook').on('click', function() {
-					zcpPortalApp.data.updateDtl('webhook');
-				});
-				$('#btnUpdateChannelName').on('click', function() {
-					zcpPortalApp.data.updateChannelName();
-				});
 				$('#channel').on('keydown', function(e) {
 					if (e.keyCode === 13) {
 						zcpPortalApp.data.updateChannelName();
 					}
 				});
+
+				$('#btnUpdateChannelName').on('click', function() {
+					zcpPortalApp.data.updateChannelName();
+				});
+
+				$('#btnUpdateEmail').on('click', function() {
+					zcpPortalApp.data.updateDtl('email');
+				});
+
+				$('#btnUpdateSlack').on('click', function() {
+					zcpPortalApp.data.updateDtl('slack');
+				});
+
+				$('#btnUpdateHipchat').on('click', function() {
+					zcpPortalApp.data.updateDtl('hipchat');
+				});
+
+				$('#btnUpdateWebhook').on('click', function() {
+					zcpPortalApp.data.updateDtl('webhook');
+				});
+
 				$('#btnDeleteEmail').on('click', function() {
 					zcpPortalApp.data.deleteNotification('email');
 				});
+
 				$('#btnDeleteSlack').on('click', function() {
 					zcpPortalApp.data.deleteNotification('slack');
 				});
+
 				$('#btnDeleteHipchat').on('click', function() {
 					zcpPortalApp.data.deleteNotification('hipchat');
 				});
+
 				$('#btnDeleteWebhook').on('click', function() {
 					zcpPortalApp.data.deleteNotification('webhook');
 				});
@@ -280,6 +282,7 @@
 			this.data.init();
 			this.event.init();
 		},
+
 		grid : {
 			init : function() {
 				$("#channel-grid").removeAlopexGrid();
@@ -363,6 +366,7 @@
 								});
 			},
 		},
+
 		data : {
 			init : function() {
 				this.getList();
@@ -386,30 +390,11 @@
 					}
 				})
 			},
+
 			deleteChannel : function(id) {
 				var jsonData = {
 					id : id
 				};
-
-				/* if (!confirm('삭제하시겠습니까?'))
-					return false;
-				$a.request('/alert/deleteChannel', {
-					method : 'post',
-					data : jsonData,
-					success : function(res) {
-						if (res.resultCd !== '200') {
-							if (res.resultMsg)
-								alert(res.resultMsg);
-							return false;
-						}
-
-						alert('정상처리 되었습니다.');
-						location.reload();
-					},
-					error : function(errObject) {
-						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
-					}
-				}) */
 
 				alertPopup.confirm({
 					width : 400,
@@ -694,6 +679,13 @@
 			}
 		}
 	}
+
+	$.alopex.page(function() {
+		this.init = function(id, param) {
+			zcpPortalApp.pageInit();
+			zcpPortalGrid.pageInit();
+		};
+	});
 </script>
 </head>
 <body>

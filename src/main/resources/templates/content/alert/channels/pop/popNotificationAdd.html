@@ -9,11 +9,11 @@
 <script type="text/javascript">
 	$.alopex.page(function() {
 		this.init = function(id, param) {
-			zcpPortalApp.pageInit();
+			zcpPopNotificationApp.pageInit();
 		};
 	});
 
-	var zcpPortalApp = {
+	var zcpPopNotificationApp = {
 		pageInit : function() {
 			'use strict';
 			this.data.init();
@@ -23,47 +23,59 @@
 			init : function() {
 				if ($('#email_to').val() != '') {
 					$('#pDivision option[value=email]').hide();
-					$('#pDivision option[value=slack]').attr('selected',
-							'selected');
-					$('#pSelect').text('Slack');
 
-					$('#pEmailDiv').css('display', 'none');
-					$('#pSlackDiv').css('display', '');
-					$('#pHipchatDiv').css('display', 'none');
-					$('#pWebhookDiv').css('display', 'none');
+					if ($('#slack_api_url').val() == '') {
+						$('#pDivision option[value=slack]').attr('selected',
+								'selected');
+						$('#pSelect').text('Slack');
+
+						$('#pEmailDiv').css('display', 'none');
+						$('#pSlackDiv').css('display', '');
+						$('#pHipchatDiv').css('display', 'none');
+						$('#pWebhookDiv').css('display', 'none');
+					}
 				}
 				if ($('#slack_api_url').val() != '') {
 					$('#pDivision option[value=slack]').hide();
-					$('#pDivision option[value=hipchat]').attr('selected',
-							'selected');
-					$('#pSelect').text('Hipchat');
 
-					$('#pEmailDiv').css('display', 'none');
-					$('#pSlackDiv').css('display', 'none');
-					$('#pHipchatDiv').css('display', '');
-					$('#pWebhookDiv').css('display', 'none');
+					if ($('#hipchat_api_url').val() == '') {
+						$('#pDivision option[value=hipchat]').attr('selected',
+								'selected');
+						$('#pSelect').text('Hipchat');
+
+						$('#pEmailDiv').css('display', 'none');
+						$('#pSlackDiv').css('display', 'none');
+						$('#pHipchatDiv').css('display', '');
+						$('#pWebhookDiv').css('display', 'none');
+					}
 				}
 				if ($('#hipchat_api_url').val() != '') {
 					$('#pDivision option[value=hipchat]').hide();
-					$('#pDivision option[value=webhook]').attr('selected',
-							'selected');
-					$('#pSelect').text('Webhook');
 
-					$('#pEmailDiv').css('display', 'none');
-					$('#pSlackDiv').css('display', 'none');
-					$('#pHipchatDiv').css('display', 'none');
-					$('#pWebhookDiv').css('display', '');
+					if ($('#webhook_url').val() == '') {
+						$('#pDivision option[value=webhook]').attr('selected',
+								'selected');
+						$('#pSelect').text('Webhook');
+
+						$('#pEmailDiv').css('display', 'none');
+						$('#pSlackDiv').css('display', 'none');
+						$('#pHipchatDiv').css('display', 'none');
+						$('#pWebhookDiv').css('display', '');
+					}
 				}
 				if ($('#webhook_url').val() != '') {
 					$('#pDivision option[value=webhook]').hide();
-					$('#pDivision option[value=email]').attr('selected',
-							'selected');
-					$('#pSelect').text('Email');
 
-					$('#pEmailDiv').css('display', '');
-					$('#pSlackDiv').css('display', 'none');
-					$('#pHipchatDiv').css('display', 'none');
-					$('#pWebhookDiv').css('display', 'none');
+					if ($('#email_to').val() == '') {
+						$('#pDivision option[value=email]').attr('selected',
+								'selected');
+						$('#pSelect').text('Email');
+
+						$('#pEmailDiv').css('display', '');
+						$('#pSlackDiv').css('display', 'none');
+						$('#pHipchatDiv').css('display', 'none');
+						$('#pWebhookDiv').css('display', 'none');
+					}
 				}
 			},
 			updateChannel : function() {
@@ -96,7 +108,7 @@
 					var pEmail_to = $('#pEmail_to').validate();
 
 					if (!pEmail_to) {
-						$('#pSlack_api_url').effect('shake');
+						$('#pEmail_to').effect('shake');
 						return false;
 					} else {
 						return true;
@@ -129,14 +141,22 @@
 
 					if (!pHipchat_api_url || !pHipchat_room_id
 							|| !pHipchat_auth_token) {
-						$('#pHipchat_api_url').effect('shake');
+						if(!pHipchat_api_url) {
+							$('#pHipchat_api_url').effect('shake');	
+						} else if(!pUrl_valid) {
+							$('#pHipchat_msg').css('display', '');
+							$('#pHipchat_msg').text('유효한 URL을 입력해주세요.');
+							$('#pHipchat_api_url').effect('shake');
+						}
+						if(!pHipchat_room_id) {
+							$('#pHipchat_room_id').effect('shake');	
+						}
+						if(!pHipchat_auth_token) {
+							$('#pHipchat_auth_token').effect('shake');	
+						}
 						return false;
-					} else if (!pUrl_valid) {
-						$('#pHipchat_msg').css('display', '');
-						$('#pHipchat_msg').text('유효한 URL을 입력해주세요.');
-						$('#pHipchat_api_url').effect('shake');
-						return false;
-					} else {
+					} 
+					else {
 						$('#pHipchat_msg').css('display', 'none');
 						$('#pHipchat_msg').text('');
 						return true;
@@ -170,7 +190,7 @@
 					$a.close('cancel');
 				});
 				$('#popOk').on('click', function() {
-					zcpPortalApp.data.updateChannel();
+					zcpPopNotificationApp.data.updateChannel();
 				});
 				$('#pDivision').change(function() {
 					var divisionVal = $("#pDivision option:selected").val();
