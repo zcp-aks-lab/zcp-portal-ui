@@ -136,6 +136,7 @@
 			$('#type').change(
 					function(e) {
 						var type = $("#type option:selected").val();
+						$('#value2').val('');
 						if (type == 'NodeDown') {
 							$('#namespaceDiv').attr('class',
 									'Divselect af-disabled Disabled');

@@ -100,7 +100,7 @@ public class RuleController {
 			model.addAttribute("severity", ruleDtl.getSeverity());
 			model.addAttribute("channel", ruleDtl.getChannel());
 			model.addAttribute("condition", ruleDtl.getCondition());
-			model.addAttribute("value2", ruleDtl.getValue2());
+			model.addAttribute("value2", ruleDtl.getValue2().trim());
 			model.addAttribute("value", ruleDtl.getValue());
 		}
 
