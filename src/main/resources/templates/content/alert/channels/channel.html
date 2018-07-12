@@ -19,18 +19,30 @@
 			},
 
 			updateDtl : function(notification) {
-				if (!this.channelValidation()) {
-					return false;
-				}
-
 				if (notification == 'email') {
-					json = $('#emailForm').serializeObject();
+					if (!this.updateEmailValidation()) {
+						return false;
+					} else {
+						json = $('#emailForm').serializeObject();
+					}
 				} else if (notification == 'slack') {
-					json = $('#slackForm').serializeObject();
+					if (!this.updateSlackValidation()) {
+						return false;
+					} else {
+						json = $('#slackForm').serializeObject();
+					}
 				} else if (notification == 'hipchat') {
-					json = $('#hipchatForm').serializeObject();
+					if (!this.updateHipchatValidation()) {
+						return false;
+					} else {
+						json = $('#hipchatForm').serializeObject();
+					}
 				} else if (notification == 'webhook') {
-					json = $('#webhookForm').serializeObject();
+					if (!this.updateWebhookValidation()) {
+						return false;
+					} else {
+						json = $('#webhookForm').serializeObject();
+					}
 				}
 
 				var check = alertPopup.confirm({
@@ -69,7 +81,7 @@
 			},
 
 			updateChannelName : function() {
-				if (!this.channelValidation()) {
+				if (!this.channelNameValidation()) {
 					return false;
 				}
 
@@ -155,23 +167,18 @@
 				});
 			},
 
-			channelValidation : function() {
-				if ($('#channel').val() != null) {
-					var channel = $('#channel').validate();
-					if (!channel) {
-						return false;
-					} else {
-						return true;
-					}
-				}
+			updateEmailValidation : function() {
 				if ($('#email_to').val() != null) {
 					var email_to = $('#email_to').validate();
-					if (!channel || !email_to) {
+					if (!email_to) {
 						return false;
 					} else {
 						return true;
 					}
 				}
+			},
+
+			updateSlackValidation : function() {
 				if ($('#slack_api_url').val() != null) {
 					$('#slack_msg').text('');
 					var url_valid = isValidURL($('#slack_api_url').val());
@@ -188,6 +195,9 @@
 						return true;
 					}
 				}
+			},
+
+			updateHipchatValidation : function() {
 				if ($('#hipchat_api_url').val() != null) {
 					$('#hipchat_msg').text('');
 					var url_valid = isValidURL($('#hipchat_api_url').val());
@@ -208,6 +218,9 @@
 						return true;
 					}
 				}
+			},
+
+			updateWebhookValidation : function() {
 				if ($('#webhook_url').val() != null) {
 					$('#webhook_msg').text('');
 					var url_valid = isValidURL($('#webhook_url').val());
@@ -221,6 +234,17 @@
 					} else {
 						$('#webhook_msg').css('display', 'none');
 						$('#webhook_msg').text('');
+						return true;
+					}
+				}
+			},
+
+			channelNameValidation : function() {
+				if ($('#channel').val() != null) {
+					var channel = $('#channel').validate();
+					if (!channel) {
+						return false;
+					} else {
 						return true;
 					}
 				}
@@ -762,7 +786,7 @@
 													<tr>
 														<th>채널명</th>
 														<td><input class="Textinput" th:id="channel"
-															th:name="channel" maxlength="30"
+															th:name="channel" maxlength="30" style="width: 250px;"
 															data-keyfilter-rule="english|digits" data-keyfilter="-_"
 															data-validation-rule="{required:true, rangelength:[6,30]}"
 															data-validation-message="{required:'채널명을 입력해주세요.'}" />

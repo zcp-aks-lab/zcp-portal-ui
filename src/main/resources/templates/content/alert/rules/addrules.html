@@ -77,7 +77,7 @@
 					var pod = $('#pod').validate();
 					var channel = $('#channel').validate();
 					var duration = $('#duration').validate();
-					if (!type || !namespace || !channel || !duration) {
+					if (!type || !namespace || !pod || !channel || !duration) {
 						return false;
 					} else {
 						return true;
@@ -106,7 +106,7 @@
 				$('#btnCancel').on('click', function() {
 					location.href = '/alert/rules';
 				});
-				
+
 				$('#btnAdd').on('click', function() {
 					channelPopup.pop({
 						callback : function() {
@@ -124,6 +124,10 @@
 			$('#namespaceDiv').attr('data-disabled', 'true');
 			//$('#namespace').attr('class', 'af-disabled Disabled');
 			$('#namespace').attr('disabled', true);
+
+			$('#podDiv').attr('class', 'Divselect af-disabled Disabled');
+			$('#podDiv').attr('data-disabled', 'true');
+			$('#pod').attr('disabled', true);
 
 			/* $('#pod').attr('class', 'Textinput af-disabled Disabled');
 			$('#pod').attr('data-disabled', 'true');
@@ -217,6 +221,11 @@
 							$('#namespace').removeAttr('class')
 							$('#namespace').attr('disabled', false);
 
+							$('#podDiv').attr('class', 'Divselect');
+							$('#podDiv').removeAttr('data-disabled');
+							$('#pod').removeAttr('class')
+							$('#pod').attr('disabled', false);
+
 							/* $('#pod').attr('class', 'Textinput');
 							$('#pod').removeAttr('data-disabled');
 							$('#pod').attr('disabled', false); */
@@ -237,6 +246,11 @@
 									'Divselect af-disabled Disabled');
 							$('#namespaceDiv').attr('data-disabled', 'true');
 							$('#namespace').attr('disabled', true);
+
+							$('#podDiv').attr('class',
+									'Divselect af-disabled Disabled');
+							$('#podDiv').attr('data-disabled', 'true');
+							$('#pod').attr('disabled', true);
 
 							/* $('#pod').attr('class',
 									'Textinput af-disabled Disabled');
@@ -286,7 +300,7 @@
 									<col />
 								</colgroup>
 								<tbody>
-									<tr style="height:65px;">
+									<tr style="height: 65px;">
 										<th>Rule 종류<strong class="astertisk">*</strong></th>
 										<td>
 											<div class="Divselect" style="width: 300px;">
@@ -307,7 +321,7 @@
 											<p class="info-text" data-for="type"></p>
 										</td>
 									</tr>
-									<tr style="height:65px;">
+									<tr style="height: 65px;">
 										<th>Namespace<strong class="astertisk">*</strong></th>
 										<td>
 											<div class="Divselect" id="namespaceDiv" data-disabled="true"
@@ -323,32 +337,25 @@
 											<p class="info-text" data-for="namespace"></p>
 										</td>
 									</tr>
-									<tr style="height:65px;">
+									<tr style="height: 65px;">
 										<th>Pod<strong class="astertisk">*</strong></th>
 										<td>
-											<div class="Divselect" id="namespaceDiv" data-disabled="true"
+											<div class="Divselect" id="podDiv" data-disabled="true"
 												style="width: 300px;">
 												<select th:name="pod" th:id="pod"
 													data-validation-rule="{required:true}"
 													data-validation-message="{required:'Pod을 선택해주세요.'}">
 													<option value="">Pod 선택</option>
+													<option value="zcp-alertmanager">zcp-alertmanager</option>
+													<!-- <option value="">Pod 선택</option>
 													<option th:each="pod : ${pod}" th:value="${pod}"
-														th:text="${pod}"></option>
+														th:text="${pod}"></option> -->
 												</select> <span></span>
-											</div> <!-- <input class="Textinput" style="width: 300px"
-											th:name="pod" th:id="pod"
-											data-validation-rule="{required:true}"
-											data-validation-message="{required:'Pod을 입력해주세요.'}" />
-											<p class="info-text" data-for="pod"></p> --> <!-- <div class="Divselect" data-disabled="true"
-												style="width: 300px;">
-												<select>
-													<option value="">Pod 선택</option>
-													<option value="usa">pod</option>
-												</select> <span></span>
-											</div> -->
+											</div>
+											<p class="info-text" data-for="pod"></p>
 										</td>
 									</tr>
-									<tr style="height:65px;">
+									<tr style="height: 65px;">
 										<th>Duration<strong class="astertisk">*</strong></th>
 										<td>
 											<div class="Divselect" style="width: 150px;">
@@ -364,7 +371,7 @@
 											<p class="info-text" data-for="duration"></p>
 										</td>
 									</tr>
-									<tr style="height:65px;">
+									<tr style="height: 65px;">
 										<th>심각도<strong class="astertisk">*</strong></th>
 										<td><label class="ImageRadio" id="warningLabel">
 												<input class="Radio" th:name="severity" th:id="severity"
@@ -375,7 +382,7 @@
 										</label>
 											<p class="info-text">이미 등록된 심각도는 추가할 수 없습니다.</p></td>
 									</tr>
-									<tr style="height:65px;">
+									<tr style="height: 65px;">
 										<th>임계치<strong class="astertisk">*</strong></th>
 										<td>
 											<div class="Divselect" id="conditionDiv">
@@ -391,7 +398,7 @@
 											<p class="info-text" data-for="value2"></p>
 										</td>
 									</tr>
-									<tr style="height:65px;">
+									<tr style="height: 65px;">
 										<th>채널<strong class="astertisk">*</strong></th>
 										<td>
 											<div class="Divselect" style="width: 300px;">
