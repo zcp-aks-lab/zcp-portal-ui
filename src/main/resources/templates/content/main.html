@@ -246,7 +246,7 @@
                                 {
                                     key: 'cpuRequestsPercentage',
                                     title: 'CPU Requests',
-                                    width: '100px',
+                                    width: '90px',
                                     align: 'center',
                                     sorting: false,
                                     render: {
@@ -262,7 +262,7 @@
                                 {
                                     key: 'cpuLimitsPercentage',
                                     title: 'CPU Limits',
-                                    width: '100px',
+                                    width: '90px',
                                     align: 'center',
                                     sorting: false,
                                     render: {
@@ -278,7 +278,7 @@
                                 {
                                     key: 'memoryRequestsPercentage',
                                     title: 'Memory Requests',
-                                    width: '100px',
+                                    width: '90px',
                                     align: 'center',
                                     sorting: false,
                                     render: {
@@ -294,7 +294,7 @@
                                 {
                                     key: 'memoryLimitsPercentage',
                                     title: 'Memory Limits',
-                                    width: '100px',
+                                    width: '90px',
                                     align: 'center',
                                     sorting: false,
                                     render: {
@@ -312,11 +312,11 @@
                     },
 
                     getProgressbarType: function(value) {
+                        log(value);
+                        
                     	var type;
                         if(Number(value) > 90) {
                         	type = 'name-typee';
-                        } else if (Number(value) > 60) {
-                        	type = 'name-typeb';
                         } else if (Number(value) > 30) {
                         	type = 'name-typec';
                         } else {
