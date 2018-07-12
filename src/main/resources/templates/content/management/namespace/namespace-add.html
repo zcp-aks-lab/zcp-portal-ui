@@ -12,7 +12,9 @@
 	/*<![CDATA[*/
 				
 		function addNamespace(){
-			if(!validate()) return ;
+			//if(!validate()) return ;
+			var namespace = $('#input_namespace').validate();
+			if(!namespace) return;
 			
 			var data={
 					namespace : $('#input_namespace').val()
@@ -77,6 +79,9 @@
 			return true;
 		}
 		
+		$(document).ready(function(){
+			//$a.keyfilter.addKeyUpRegexpRule("input_namespace", "^[a-zA-Z][0-9a-zA-z\-\_\/]{2,29}$");
+		})
 		
 	 /*]]>*/
     </script>
@@ -112,7 +117,7 @@
 								<tr>
 									<th>Namespace 명<strong class="astertisk">*</strong></th>
 									<td>
-										<input class="Textinput Width-25" id="input_namespace" />
+										<input class="Textinput Width-25" id="input_namespace" maxlength="30" data-keyfilter="_-" data-keyfilter-rule="digits|english" data-validation-rule="{required:true, numalpha:true}" data-validation-message="{required:'namespace 형식이 올바르지 않습니다.'}"/>
 										<p class="info-text">알파벳으로 시작하여 알파벳과 숫자로 구성된 3~30자리로 입력하세요.</p>
 									</td>
 								</tr>
@@ -134,7 +139,7 @@
 										<tr>
 											<th>CPU Requests</th>
 											<td>
-												<input class="Textinput2" id="input_cpu_requests"/>
+												<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_cpu_requests"/>
 												<div class="Divselect" id="select_cpu_requests">
 												    <select>
 												        <option value="Core">Core</option>
@@ -147,7 +152,7 @@
 										<tr>
 											<th>CPU Limits</th>
 											<td>
-												<input class="Textinput2" id="input_cpu_limits"/>
+												<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_cpu_limits"/>
 												<div class="Divselect"  id="select_cpu_limits">
 												    <select>
 												        <option value="Core">Core</option>
@@ -160,11 +165,11 @@
 										<tr>
 											<th>Memory Requests</th>
 											<td>
-												<input class="Textinput2" id="input_memory_requests"/>
+												<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_memory_requests"/>
 												<div class="Divselect" id="select_memory_requests">
 												    <select>
 												        <option value="Gi">Gi</option>
-												        <option value="mi">mi</option>
+												        <option value="Mi">Mi</option>
 												    </select>
 												    <span></span>
 												</div>
@@ -173,11 +178,11 @@
 										<tr>
 											<th>Memory Limits</th>
 											<td>
-												<input class="Textinput2" id="input_memory_limits"/>
+												<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_memory_limits"/>
 												<div class="Divselect" id="select_memory_limits">
 												    <select>
 												        <option value="Gi">Gi</option>
-												        <option value="mi">mi</option>
+												        <option value="Mi">Mi</option>
 												    </select>
 												    <span></span>
 												</div>
@@ -186,37 +191,37 @@
 										<tr>
 											<th>Pods</th>
 											<td>
-												<input class="Textinput2" id="input_pods"/><span class="num-txt">개</span>
+												<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_pods"/><span class="num-txt">개</span>
 											</td>
 										</tr>
 										<tr>
 											<th>Services</th>
 											<td>
-												<input class="Textinput2" id="input_services"/><span class="num-txt">개</span>
+												<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_services"/><span class="num-txt">개</span>
 											</td>
 										</tr>
 										<tr>
 											<th>Secrets</th>
 											<td>
-												<input class="Textinput2" id="input_secrets"/><span class="num-txt">개</span>
+												<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_secrets"/><span class="num-txt">개</span>
 											</td>
 										</tr>
 										<tr>
 											<th>Config Maps</th>
 											<td>
-												<input class="Textinput2" id="input_config_maps"/><span class="num-txt">개</span>
+												<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_config_maps"/><span class="num-txt">개</span>
 											</td>
 										</tr>
 										<tr>
 											<th>Persistent Volume<br/>Claims</th>
 											<td>
-												<input class="Textinput2" id="input_pesistent_volumne"/><span class="num-txt">개</span>
+												<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_persistent_volumne"/><span class="num-txt">개</span>
 											</td>
 										</tr>
 										<tr>
 											<th>Service Load<br/>Balancers</th>
 											<td>
-												<input class="Textinput2" id="input_service_load"/><span class="num-txt">개</span>
+												<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_load_balancers"/><span class="num-txt">개</span>
 											</td>
 										</tr>
 									</tbody>
@@ -236,7 +241,7 @@
 										<tr>
 											<th>CPU Requests</th>
 											<td>
-												<input class="Textinput2" id="input_pod_cpu_requests"/>
+												<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_pod_cpu_requests"/>
 												<div class="Divselect" id="select_pod_cpu_requests">
 												    <select>
 												        <option value="Core">Core</option>
@@ -249,7 +254,7 @@
 										<tr>
 											<th>CPU Limits</th>
 											<td>
-												<input class="Textinput2" id="input_pod_cpu_limits"/>
+												<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_pod_cpu_limits"/>
 												<div class="Divselect" id="select_pod_cpu_limits">
 												    <select>
 												        <option value="Core">Core</option>
@@ -262,11 +267,11 @@
 										<tr>
 											<th>Memory Requests</th>
 											<td>
-												<input class="Textinput2" id="input_pod_memory_requests"/>
+												<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_pod_memory_requests"/>
 												<div class="Divselect" id="select_pod_memory_requests">
 												    <select>
 												        <option value="Gi">Gi</option>
-												        <option value="mi">mi</option>
+												        <option value="Mi">Mi</option>
 												    </select>
 												    <span></span>
 												</div>
@@ -276,11 +281,11 @@
 											<!-- th의 style height: 410px;은 psd 상의 디자인을 맞추기 위한 것입니다. 참고하세요.-->
 											<th class="Valign-top" style="height: 410px;">Memory Limits</th> 
 											<td class="Valign-top">
-												<input class="Textinput2" id="input_pod_memory_limits"/>
+												<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_pod_memory_limits"/>
 												<div class="Divselect" id="select_pod_memory_limits">
 												    <select>
 												        <option value="Gi">Gi</option>
-												        <option value="mi">mi</option>
+												        <option value="Mi">Mi</option>
 												    </select>
 												    <span></span>
 												</div>

@@ -20,8 +20,8 @@
 	        height: 450,
 	        title : "Namespace 삭제",
 	        data : {namespace : name},
-	        callback : function(data){
-	        	if(data==name){
+	        callback : function(data, obj){
+	        	if(data=='ok'){
 	        		ajaxCall('/management/namespace/delete', {namespace:name}).done(function(data){
 		    	   		//alert('삭제  되었습니다.');
 		    	   		commonPopup.alert({
@@ -34,24 +34,6 @@
 		                    }
 		                });
 	    	   		});		
-	        	}else if(data == 'cancel') {
-	        		
-	        	}else if(data == ''){
-	        		commonPopup.alert({
-	                    message: 'Namespace 명을 정확히 입력 하세요',
-	                    callback: function() {
-	                    	deleteNamespace(name);
-	                    }
-	                });
-	        	}
-	        	else if(data){
-	        		//alert('Namespace명이 다릅니다.');
-	        		commonPopup.alert({
-	                    message: 'Namespace 명을 정확히 입력 하세요',
-	                    callback: function() {
-	                    	deleteNamespace(name);
-	                    }
-	                });
 	        	}
 	        },
 	        alias: "flag1"
@@ -79,9 +61,9 @@
 			var b_order = g_order ?  'true' : 'false';
 			var searchText = {
 				namespace : $('#search').val() 
-				,label : ( !param.label ? '' : param.label)
-				,sortItem: ( !param.sortItem ? '' : param.sortItem)
-				,sortOrder : b_order
+				//,label : ( !param.label ? '' : param.label)
+				//,sortItem: ( !param.sortItem ? '' : param.sortItem)
+				//,sortOrder : b_order
 			};
 			
 			var list = null;
@@ -161,12 +143,12 @@
 	function changeRed(){
 		$.each($('.Progressbar'), function(idx, data){
 			var value = $(this).data('default');
-			if(Number(value) > 90) 
+			if(Number(value) >= 90) 
 				$(this).removeClass('name-typea').addClass('name-typee');	
-			else if(Number(value) > 60) 
-				$(this).removeClass('name-typea').addClass('name-typeb');
-			else if(Number(value) > 30) 
+			else if(Number(value) > 31 && Number(value) < 90) 
 				$(this).removeClass('name-typea').addClass('name-typec');
+			//else if(Number(value) > 30) 
+				//$(this).removeClass('name-typea').addClass('name-typec');
 		});
 	}
 	
@@ -187,12 +169,11 @@
 		});
 		return data;
 	}
-		
+	g_listCount= 5;		
 	function grid_init(data){
     	AlopexGrid.setup({
     		fitTableWidth : true // 테이블의 너비를 그리드 너비에 맞춰 확장시키는 옵션
     	});
-    	//data = objToString(data);
     	$('#grid').alopexGrid({
     		renderMapping : {
     			cpu_request_bar: {
@@ -244,14 +225,11 @@
     		},
     		pager: true,
     		paging: {
-    			perPage: 5,
+    			perPage: g_listCount,
     			pagerCount: 5,
     			pagerSelect: true,
                 pagerTotal: true
     		},
-    		/* rowSelectOption :{
-    			clickSelect: true
-    		}, */
             defaultColumnMapping : {
                 sorting:true,
                 resizing : true
@@ -275,34 +253,34 @@
     				}
     			}, {
     				title : 'CPU Request',
-    				width : '100px',
+    				width : '180px',
     				align : 'center',
     				render : {type:"cpu_request_bar"}  
     			}, {
     				align : 'center',
     				title : 'CPU Limit',
-    				width : '100px',
+    				width : '180px',
     				render : {type:"cpu_limits_bar"}
     			}, {
     				title : 'Memory Request',
-    				width : '100px',
+    				width : '180px',
     				align : 'center',
     				render : {type:"memory_request_bar"}  
     			}, {
     				align : 'center',
     				title : 'Memory Limit',
-    				width : '100px',
+    				width : '180px',
     				render : {type:"memory_limit_bar"}
     			}, {
     				align : 'center',
     				key : 'userCount',
     				title : '사용자',
-    				width : '100px'
+    				width : '50px'
     			}, {
     				align : 'center',
     				key : 'status',
     				title : '상태',
-    				width : '100px'
+    				width : '50px'
     			}, {
     				align : 'center',
     				key : 'creationDate',
@@ -324,7 +302,9 @@
     		],
     		data: data
     	});
-    	
+    	$("#grid").on( "perPageChange" , function(grid, pageinfo){
+			g_listCount = grid.alopexgrid.perPage;
+		});
     	changeRed();
 	}
 	
@@ -332,12 +312,13 @@
 		if(type=='listType'){
 			$('#listType').addClass('Checked').show();
 			$('#cardType').removeClass('Checked').hide();
-			var list = getList();
 			g_mode = "listType";
+			search1();
 		}else if(type=='cardType'){
 			$('#listType').removeClass('Checked').hide();
 			$('#cardType').addClass('Checked').show();
 			g_mode = "cardType";
+			search1();
 		}
 	}
 	

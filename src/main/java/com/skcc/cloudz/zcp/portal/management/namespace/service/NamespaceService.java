@@ -275,6 +275,22 @@ public class NamespaceService {
     	if(!resUser.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new Exception(resUser.getMsg());
         }
+    }
+    
+    public List<String> getClusterRoles() throws Exception{
+    	List<String> clusterRoles = new ArrayList<String>();
+    	ApiResponseVo apiResponseVo = client.request(HttpMethod.GET, "/iam/rbac/clusterRoles?type=namespace", null);
+    	if(!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new Exception(apiResponseVo.getMsg());
+        }
+    	Map<String, Object> data = apiResponseVo.getData();
+        List<HashMap<String, Object>> items = (List<HashMap<String, Object>>) data.get("items");
+        
+        for (HashMap<String, Object> item : items) {
+            clusterRoles.add(((HashMap<String, Object>) item.get("metadata")).get("name").toString());
+        }
+        
+        return clusterRoles;
         
     }
 }

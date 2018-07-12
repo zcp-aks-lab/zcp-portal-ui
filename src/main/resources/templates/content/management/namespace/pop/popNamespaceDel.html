@@ -5,7 +5,10 @@
 		<div class="popup-text">
 		<span id="span_text"></span><br/><br/>
 			<span>Namespace를 입력하세요: </span>
-			<input type="text" id="input_namespace" length="30"/>
+			<input type="text" id="input_namespace" length="30"/><br/>
+			<div>
+				<span style="font-size:15px;color:red" id="div_validation"></span>
+			</div>
 		</div>
 	</div>
 	<!--button-->
@@ -13,15 +16,21 @@
         <button class="Button btn bg-red" id="popOk">확인</button>
         <button class="Button btn" id="popCancel">취소</button>
     </div>
+    
 	<!--//button-->
 </div>
 <script>
 $a.page(function() {
     this.init = function(id, param) {
-    	 var namespace = param["namespace"];
+    	var namespace = param["namespace"];
     	$('#span_text').text(namespace + ' Namespace를 삭제 하시겠습니까?');
         $('#popOk').click( function(){ 
-            $a.close($('#input_namespace').val()); 
+        	if(namespace != $('#input_namespace').val()){
+        		$('#div_validation').show();
+                $('#div_validation').text('Namespace 명을 정확히 입력 하세요')
+        	}else{
+        		$a.close('ok');	
+        	}
         });
         $('#popCancel').click( function(){ 
             $a.close('cancel'); 

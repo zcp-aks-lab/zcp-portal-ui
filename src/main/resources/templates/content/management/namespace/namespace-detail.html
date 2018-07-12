@@ -23,28 +23,28 @@
 					$('#input_services').val(quota.services);
 					$('#input_secrets').val(quota.secrets);
 					$('#input_config_maps').val(quota.configmaps);
-					$('#input_pesistent_volumne').val(quota.persistentvolumeclaims);
+					$('#input_persistent_volumne').val(quota.persistentvolumeclaims);
 					$('#input_load_balancers').val(quota.servicesLoadbalancers);
-					selected('cpu_requests', quota.cpuRequestsUnit, 'm');
-					selected('cpu_limits', quota.cpuLimitsUnit, 'm');
-					selected('memory_requests', quota.memoryRequestsUnit, 'Gi');
-					selected('memory_limits', quota.memoryLimitsUnit, 'Gi');
+					selected('cpu_requests', quota.cpuRequestsUnit, 'MilliCore');
+					selected('cpu_limits', quota.cpuLimitsUnit, 'MilliCore');
+					selected('memory_requests', quota.memoryRequestsUnit, 'Mi');
+					selected('memory_limits', quota.memoryLimitsUnit, 'Mi');
 				}
 				if(limit){
 					$('#input_pod_cpu_requests').val(limit.cpuRequests);
 					$('#input_pod_cpu_limits').val(limit.cpuLimits);
 					$('#input_pod_memory_requests').val(limit.memoryRequests);
 					$('#input_pod_memory_limits').val(limit.memoryLimits);
-					selected('pod_cpu_requests', limit.cpuRequestsUnit, 'm');
-					selected('pod_cpu_limits', limit.cpuLimitsUnit, 'm');
-					selected('pod_memory_requests', limit.memoryRequestsUnit, 'Gi');
-					selected('pod_memory_limits', limit.memoryLimitsUnit, 'Gi');
+					selected('pod_cpu_requests', limit.cpuRequestsUnit, 'MilliCore');
+					selected('pod_cpu_limits', limit.cpuLimitsUnit, 'MilliCore');
+					selected('pod_memory_requests', limit.memoryRequestsUnit, 'Mi');
+					selected('pod_memory_limits', limit.memoryLimitsUnit, 'Mi');
 				}
 				if(data.namespace){
 					$('#input_namespace').val(data.namespace)
 				}
 				var maxCnt = 1000;
-				var cpuRq = data.used.cpuRequests / data.hard.cpuRequests * 100;
+				/* var cpuRq = data.used.cpuRequests / data.hard.cpuRequests * 100;
 				var cpuLm = data.used.cpuLimits / data.hard.cpuLimits * 100;
 				var memRm = data.used.memoryRequests / data.hard.memoryRequests * 100;
 				var memLm = data.used.memoryLimits / data.hard.memoryLimits * 100;
@@ -53,18 +53,19 @@
 				var secrets = data.used.secrets / data.hard.secrets *100;
 				var configMaps = data.used.configMaps / data.hard.configMaps *100;
 				var persistentVolumne = data.used.persistentvolumeclaims / data.hard.persistentvolumeclaims *100;
-				var loadbalancers = data.used.servicesLoadbalancers / data.hard.servicesLoadbalancers *100; 
-				
-				setGraph('cpu_requests', data.usage.cpuRequestsUsage, quota.cpuRequests);
-				setGraph('cpu_limits', data.usage.cpuLimitsUsage, quota.cpuLimits);
-				setGraph('memory_requests', data.usage.memoryRequestsUsage, quota.memoryRequests);
-				setGraph('memory_limits', data.usage.memoryLimitsUsage, quota.memoryLimits);
-				setGraph('pods', data.usage.podsUsage, quota.pods);
-				setGraph('services', data.usage.servicesUsage, quota.services);
-				setGraph('secrets', data.usage.secretsUsage, quota.secrets);
-				setGraph('config_maps', data.usage.configmapsUsage, quota.configmaps);
-				setGraph('persistent_volumne', data.usage.persistentvolumeclaimsUsage, quota.persistentvolumeclaims);
-				setGraph('load_balancers', data.usage.servicesLoadbalancersUsage, quota.servicesLoadbalancers);
+				var loadbalancers = data.used.servicesLoadbalancers / data.hard.servicesLoadbalancers *100;  */
+				if(data.usage){
+					setGraph('cpu_requests', data.usage.cpuRequestsUsage, quota.cpuRequests);
+					setGraph('cpu_limits', data.usage.cpuLimitsUsage, quota.cpuLimits);
+					setGraph('memory_requests', data.usage.memoryRequestsUsage, quota.memoryRequests);
+					setGraph('memory_limits', data.usage.memoryLimitsUsage, quota.memoryLimits);
+					setGraph('pods', data.usage.podsUsage, quota.pods);
+					setGraph('services', data.usage.servicesUsage, quota.services);
+					setGraph('secrets', data.usage.secretsUsage, quota.secrets);
+					setGraph('config_maps', data.usage.configmapsUsage, quota.configmaps);
+					setGraph('persistent_volumne', data.usage.persistentvolumeclaimsUsage, quota.persistentvolumeclaims);
+					setGraph('load_balancers', data.usage.servicesLoadbalancersUsage, quota.servicesLoadbalancers);
+				}
 				
 			});
 			url = "/management/namespace/labels";
@@ -79,7 +80,7 @@
 				}
 				function makeHtmlLabel(name){
 					var html = '<span class="Label Default" >'+name+'</span>';
-					if(!(name.indexOf('cloudzcp.io/zcp-system') > -1))
+					if(!(name.indexOf('cloudzcp.io/zcp-system=') > -1))
 						html +='<button class="btn-ico label-del" onclick="delLabel(\''+name+'\')">삭제</button>';
 					return html;
 				}
@@ -93,19 +94,22 @@
 					$('#div_' +obj_id).hide();
 					$('#span_' +obj_id).hide();
 					return ;
+				}else{
+					$('#div_' +obj_id).show();
+					$('#span_' +obj_id).show();
 				}
 					
 				if(div < 1 && div > 0) 
 					used = Number(used).toFixed(2);
 				
 				$('#span_'+ obj_id).text(used + '%');
-				if(Number(used) > 80){
+				if(Number(used) >= 90){
 					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typee');
 				}
-				else if(Number(used) > 60) 
-					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typeb');
-				else if(Number(used) > 30) 
+				else if(Number(used) > 31 && Number(used) < 90) 
 					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typec');
+				//else if(Number(used) > 30) 
+					//$('#div_' +obj_id).removeClass('name-typea').addClass('name-typec');
 			}
 			
 			function selected(id, value, unit){
@@ -124,6 +128,7 @@
 		}
 	
 		$(document).ready(function(){
+			$('.Progressbar').hide();
 			var namespace = /*[[${namespace}]]*/;
 			var status = /*[[${param.status}]]*/;
 			if(namespace){
@@ -135,6 +140,7 @@
 			}
 			getClusterRole();
 			registEvent();
+			
 		});
 		
 		function registEvent(){
@@ -196,6 +202,7 @@
                             callback: function() {
                             }
                         });
+        				location.href="/management/namespaces";
         			});      
                 }
             });
@@ -527,14 +534,15 @@
 					,"clusterRole" : data.namespacedRole
 	  				,"id" : data.id
 				};
+			var userName = data.username;
 			commonPopup.confirm({
                 //title: '비밀번호 재설정',
-                message: '멤버를 삭제하시겠습니까?',
+                message: data.username + ' 멤버를 삭제하시겠습니까?',
                 callback: function() {
                 	ajaxCall('/management/namespace/delRole', user).done(function(data){
     					//alert('정상처리되었습니다.');
     					commonPopup.alert({
-    	                    message: '정상처리되었습니다.',
+    	                    message: userName + ' 멤버를 삭제되었습니다.',
     	                    callback: function() {
     	                    }
     	                });
@@ -578,12 +586,9 @@
                 message: '라벨을 추가 하시겠습니까? ',
                 callback: function() {
                 	if(!regex.test(label)){
-        				//alert('형식이 올바르지 않습니다.');
-        				commonPopup.alert({
-                            message: '형식이 올바르지 않습니다.',
-                            callback: function() {
-                            }
-                        });
+                		$('#span_validation').show();
+                        $('#span_validation').text('라벨 형식이 올바르지 않습니다');
+                        $('#input_label').focus();
         				return ;
         			}
         			ajaxCall('/management/namespace/addLabel', {namespace : namespace, label : label}).done(function(data){
@@ -600,7 +605,7 @@
 		}
 		
 		function delLabel(label){
-			if(label.indexOf('cloudzcp.io/zcp-system') > -1){
+			if(label.indexOf('cloudzcp.io/zcp-system=') > -1){
 				//alert('삭제 할수 없습니다.');
 				commonPopup.alert({
                     message: '삭제 할수 없습니다.',
@@ -684,7 +689,8 @@
 					    		<div id="div_label">
 					    		</div>
             					<input class="Autocomplete add-label__input" id="input_label"  style="width:300px"/>
-            					<button class="Label add-label" onclick="addLabel()">추가</button>
+            					<button class="Label add-label" onclick="addLabel()">추가</button><br/>
+            					<span style="font-size:15px;color:red" id="span_validation"></span>
             				</div>
 				    	</div>
 					    <!-- namespace name detail data-->
@@ -704,7 +710,7 @@
 													<th>CPU Requests</th>
 													<td>
 														<div class="tbl-group__wrap">
-															<div class="left"><input class="Textinput2" id="input_cpu_requests"/></div>
+															<div class="left"><input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_cpu_requests"/></div>
 															<div class="left">
 																<div class="Divselect" id="select_cpu_requests" style="width:90px;min-width:90px">
 																    <select >
@@ -728,7 +734,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput2" id="input_cpu_limits"/>
+																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_cpu_limits"/>
 																<div class="Divselect"  id="select_cpu_limits" style="width:90px;min-width:90px">
 																    <select>
 																        <option value="Core">Core</option>
@@ -751,7 +757,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput2" id="input_memory_requests"/>
+																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_memory_requests"/>
 																<div class="Divselect" id="select_memory_requests" style="width:90px;min-width:90px">
 																    <select >
 																        <option value="Gi">Gi</option>
@@ -774,7 +780,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput2" id="input_memory_limits"/>
+																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_memory_limits"/>
 																<div class="Divselect"  id="select_memory_limits" style="width:90px;min-width:90px">
 																    <select>
 																        <option value="Gi">Gi</option>
@@ -797,7 +803,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput2" id="input_pods"/><span class="num-txt">개</span>
+																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_pods"/><span class="num-txt">개</span>
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
@@ -813,7 +819,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput2"  id="input_services"/><span class="num-txt">개</span>
+																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput"  id="input_services"/><span class="num-txt">개</span>
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
@@ -829,7 +835,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput2" id="input_secrets"/><span class="num-txt">개</span>
+																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_secrets"/><span class="num-txt">개</span>
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
@@ -845,7 +851,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput2" id="input_config_maps"/><span class="num-txt">개</span>
+																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_config_maps"/><span class="num-txt">개</span>
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
@@ -861,7 +867,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput2" id="input_pesistent_volumne"/><span class="num-txt">개</span>
+																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_persistent_volumne"/><span class="num-txt">개</span>
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
@@ -877,7 +883,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput2"  id="input_load_balancers"/><span class="num-txt">개</span>
+																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput"  id="input_load_balancers"/><span class="num-txt">개</span>
 															</div>
 															<div class="name-pro_position">
 																<div class="name-pro__wrap">
@@ -909,7 +915,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput2" id="input_pod_cpu_requests"/>
+																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_pod_cpu_requests"/>
 																<div class="Divselect" id="select_pod_cpu_requests" style="width:90px;min-width:90px">
 																    <select >
 																        <option value="Core">Core</option>
@@ -926,7 +932,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput2" id="input_pod_cpu_limits"/>
+																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_pod_cpu_limits"/>
 																<div class="Divselect"  id="select_pod_cpu_limits" style="width:90px;min-width:90px">
 																    <select>
 																        <option value="Core">Core</option>
@@ -943,7 +949,7 @@
 													<td>
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput2" id="input_pod_memory_requests"/>
+																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_pod_memory_requests"/>
 																<div class="Divselect"  id="select_pod_memory_requests" style="width:90px;min-width:90px">
 																    <select>
 																        <option value="Gi">Gi</option>
@@ -960,7 +966,7 @@
 													<td class="Valign-top">
 														<div class="tbl-group__wrap">
 															<div class="left">
-																<input class="Textinput2" id="input_pod_memory_limits"/>
+																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_pod_memory_limits"/>
 																<div class="Divselect"  id="select_pod_memory_limits" style="width:90px;min-width:90px">
 																   <select>
 																        <option value="Gi">Gi</option>

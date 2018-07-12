@@ -278,17 +278,20 @@ public class ZcpNamespace {
 	}
 	
 	private BigDecimal cpuToInteger(String integer) {
+		if(integer == null) return new BigDecimal("0");
 		if(integer.indexOf("m") > -1)	
 			return new BigDecimal(integer.replace("m", ""));
 		else
-			return new BigDecimal(Integer.parseInt(integer)* 1000);
+			return new BigDecimal(Double.parseDouble(integer)* 1000);
 	}
 	
 	private BigDecimal memoryToInteger(String integer) {
+		if(integer == null) return new BigDecimal("0");
 		if(integer.indexOf("Gi") > -1) {
 			integer = integer.replace("Gi", "");
-			return new BigDecimal(Integer.parseInt(integer) * 1000);
+			return new BigDecimal(Double.parseDouble(integer) * 1000);
 		}else {
+			integer = integer.replace("Mi", "");
 			return new BigDecimal(integer);	
 		}
 		
