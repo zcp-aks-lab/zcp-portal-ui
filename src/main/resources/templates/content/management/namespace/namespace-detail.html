@@ -119,14 +119,6 @@
 			
 		}
 	
-		function ntrim(data){
-			data = data +'';
-			data = data.replace('m','');
-			data = data.replace('Gi','');
-			data = isNaN(data) ? 0 : data;
-			return data;
-		}
-	
 		$(document).ready(function(){
 			$('.Progressbar').hide();
 			var namespace = /*[[${namespace}]]*/;

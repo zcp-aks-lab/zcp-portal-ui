@@ -305,6 +305,9 @@
     	$("#grid").on( "perPageChange" , function(grid, pageinfo){
 			g_listCount = grid.alopexgrid.perPage;
 		});
+    	$("#grid").on( "perPageChangeEnd" , function(grid, pageinfo){
+			changeRed();
+		});
     	changeRed();
 	}
 	
