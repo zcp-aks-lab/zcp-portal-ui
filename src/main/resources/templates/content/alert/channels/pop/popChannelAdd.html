@@ -54,9 +54,8 @@
 			},
 			validation : function() {
 				var valid = $('#newChannel').validate();
-				var channelLength = $("#newChannel").val().length;
 				if (!valid) {
-					//$("#newChannel").effect("shake");
+					$('#newChannel').effect('shake');
 					return false;
 				} else {
 					return true;
@@ -98,12 +97,12 @@
 								<tr>
 									<th style="text-align: center;">채널명</th>
 									<td><input class="Textinput" th:id="newChannel"
-										th:name="newChannel" style="min-width: 300px;" maxlength="12"
-										data-keyfilter-rule="digits|english"
-										data-validation-rule="{required:true, numalpha:true}"
+										th:name="newChannel" style="min-width: 300px;" maxlength="30"
+										data-keyfilter-rule="english|digits" data-keyfilter="-_"
+										data-validation-rule="{required:true, rangelength:[6,30]}"
 										data-validation-message="{required:'채널명을 입력해주세요.'}" />
 										<p id="valid01" class="info-text" style="height: 22px;">채널명은
-											알파벳과 숫자로 구성된 6~12자리로 입력하세요.</p>
+											알파벳과 숫자로 구성된 6~30자리로 입력하세요.</p>
 										<p id="valid02" class="info-text"
 											style="height: 22px; display: none;">이미 존재하는 채널명입니다. 다른
 											이름으로 입력해 주세요.</p>
