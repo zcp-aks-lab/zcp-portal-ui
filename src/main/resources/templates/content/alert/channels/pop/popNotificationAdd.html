@@ -143,16 +143,16 @@
 					}
 				} else if (pDivision == 'webhook') {
 					$('#pWebhook_msg').text('');
-					var pUrl_valid = isValidURL($('#pWebhook_api_url').val());
+					var pUrl_valid = isValidURL($('#pWebhook_url').val());
 					var pWebhook_url = $('#pWebhook_url').validate();
 
 					if (!pWebhook_url) {
-						$('#pWebhook_api_url').effect('shake');
+						$('#pWebhook_url').effect('shake');
 						return false;
 					} else if (!pUrl_valid) {
 						$('#pWebhook_msg').css('display', '');
 						$('#pWebhook_msg').text('유효한 URL을 입력해주세요.');
-						$('#pWebhook_api_url').effect('shake');
+						$('#pWebhook_url').effect('shake');
 						return false;
 					} else {
 						$('#pWebhook_msg').css('display', 'none');
