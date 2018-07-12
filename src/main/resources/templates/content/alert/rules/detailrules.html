@@ -156,7 +156,7 @@
 									<col />
 								</colgroup>
 								<tbody>
-									<tr>
+									<tr style="height:65px;">
 										<th>Rule 종류<strong class="astertisk">*</strong></th>
 										<td>
 											<div th:text="${type}"></div>
@@ -170,7 +170,7 @@
 											</div>
 										</td>
 									</tr>
-									<tr th:id="podTr">
+									<tr th:id="podTr" style="height:65px;">
 										<th>Pod<strong class="astertisk">*</strong></th>
 										<td>
 											<div th:text="${value}"></div>
@@ -180,7 +180,7 @@
 											</div>
 										</td>
 									</tr>
-									<tr>
+									<tr style="height:65px;">
 										<th>Duration<strong class="astertisk">*</strong></th>
 										<td>
 											<div th:text="${duration}"></div>
@@ -190,7 +190,7 @@
 											</div>
 										</td>
 									</tr>
-									<tr>
+									<tr style="height:65px;">
 										<th>심각도<strong class="astertisk">*</strong></th>
 										<td>
 											<div th:text="${severity}"></div>
@@ -200,7 +200,7 @@
 											</div>
 										</td>
 									</tr>
-									<tr id="exprTr">
+									<tr id="exprTr" style="height:65px;">
 										<th>임계치<strong class="astertisk">*</strong></th>
 										<td>
 											<div class="Divselect" id="conditionDiv">
@@ -208,10 +208,9 @@
 													<option value="&gt;" th:selected="${condition == '&gt;'}">&gt;</option>
 													<option value="&lt;" th:selected="${condition == '&lt;'}">&lt;</option>
 												</select> <span></span>
-											</div> <input class="Textinput" 
-											style="width: 120px; min-width: 50px;" maxlength="3" 
-											th:name="value2" th:id="value2"
-											th:value="${value2}" 
+											</div> <input class="Textinput"
+											style="width: 120px; min-width: 50px;" maxlength="3"
+											th:name="value2" th:id="value2" th:value="${value2}"
 											data-keyfilter-rule="digits"
 											data-validation-rule="{required:true}"
 											data-validation-message="{required:'임계치를 입력해주세요.'}" />
@@ -225,7 +224,9 @@
 												<select th:name="channel" th:id="channel"
 													data-validation-rule="{required:true}"
 													data-validation-message="{required:'채널을 선택해주세요.'}">
-													<option th:value="${channel}" th:text="${channel}"></option>
+													<option th:each="channel : ${channel}"
+														th:value="${channel}" th:text="${channel}"
+														th:selected="${channel == selectedChannel}"></option>
 												</select> <span></span>
 											</div> <!-- <button class="Button btn">신규 채널</button> -->
 											<p class="info-text" data-for="channel"></p> <!-- <p class="Margin-top-5">

@@ -218,49 +218,15 @@
 				})
 			},
 			deleteRule : function(id) {
-				var data = {
+				var jsonData = {
 					id : id
 				};
 
-				/* alertPopup.confirm({
-					width : 400,
-					height : 250,
-					message : '삭제하시겠습니까?',
-					callback : function(data) {
-						if (data == 'ok') {
-							$a.request('/alert/deleteRule', {
-								method : 'post',
-								data : data,
-								success : function(res) {
-									if (res.resultCd !== '200') {
-										if (res.resultMsg)
-											alert(res.resultMsg);
-										return false;
-									}
-									alertPopup.alert({
-										width : 400,
-										height : 250,
-										message : '정상처리 되었습니다.',
-										callback : function() {
-											location.reload();
-										}
-									});
-								},
-								error : function(errObject) {
-									alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
-								}
-							})
-						} else {
-							return false;
-						}
-					}
-				}); */
-
-				if (!confirm('삭제하시겠습니까?'))
+				/* if (!confirm('삭제하시겠습니까?'))
 					return false;
 				$a.request('/alert/deleteRule', {
 					method : 'post',
-					data : data,
+					data : jsonData,
 					success : function(res) {
 						if (res.resultCd !== '200') {
 							if (res.resultMsg)
@@ -274,7 +240,42 @@
 					error : function(errObject) {
 						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
 					}
-				})
+				}); */
+
+				alertPopup.confirm({
+					width : 400,
+					height : 250,
+					message : 'Rule을 삭제하시겠습니까?',
+					callback : function(data) {
+						if (data == 'ok') {
+							$a.request('/alert/deleteRule', {
+								method : 'post',
+								data : jsonData,
+								success : function(res) {
+									if (res.resultCd !== '200') {
+										if (res.resultMsg)
+											alert(res.resultMsg);
+										return false;
+									} else {
+										alertPopup.alert({
+											width : 400,
+											height : 250,
+											message : 'Rule이 삭제되었습니다.',
+											callback : function() {
+												location.reload();
+											}
+										});
+									}
+								},
+								error : function(errObject) {
+									alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+								}
+							})
+						} else {
+							return false;
+						}
+					}
+				});
 			},
 			detailRule : function(id) {
 				location.href = '/alert/detailRule/' + id;
@@ -362,9 +363,9 @@
 									<tr>
 										<th>Repeat interval</th>
 										<td><input class="Textinput"
-											style="width: 120px; min-width: 50px;"
-											th:name="repeat" th:id="repeat" th:value="${repeatInterval}"
-											maxlength="10" data-keyfilter-rule="digits"
+											style="width: 100px; min-width: 50px;" th:name="repeat"
+											th:id="repeat" th:value="${repeatInterval}" maxlength="10"
+											data-keyfilter-rule="digits"
 											data-validation-rule="{required:true}"
 											data-validation-message="{required:'Repeat Interval을 입력해주세요.'}" /><span
 											class="Padding-left-10 Padding-right-10">분</span>

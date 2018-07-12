@@ -24,7 +24,7 @@
 		data : {
 			init : function() {
 			},
-			
+
 			updateDtl : function(notification) {
 				if (!this.channelValidation()) {
 					return false;
@@ -74,7 +74,7 @@
 					}
 				});
 			},
-			
+
 			updateChannelName : function() {
 				if (!this.channelValidation()) {
 					return false;
@@ -114,7 +114,7 @@
 					}
 				});
 			},
-			
+
 			deleteNotification : function(notification) {
 				if (notification == 'email') {
 					json = $('#emailForm').serializeObject();
@@ -140,15 +140,16 @@
 										if (res.resultMsg)
 											alert(res.resultMsg);
 										return false;
+									} else {
+										alertPopup.alert({
+											width : 400,
+											height : 250,
+											message : 'Notification이 삭제되었습니다.',
+											callback : function() {
+												location.reload();
+											}
+										});
 									}
-									alertPopup.alert({
-										width : 400,
-										height : 250,
-										message : 'Notification이 삭제되었습니다.',
-										callback : function() {
-											location.reload();
-										}
-									});
 								},
 								error : function(errObject) {
 									alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -160,7 +161,7 @@
 					}
 				});
 			},
-			
+
 			channelValidation : function() {
 				if ($('#channel').val() != null) {
 					var channel = $('#channel').validate();
@@ -178,20 +179,17 @@
 						return true;
 					}
 				}
-				alert($('#slack_api_url').val());
 				if ($('#slack_api_url').val() != null) {
 					$('#slack_msg').text('');
 					var url_valid = isValidURL($('#slack_api_url').val());
 					var slack_api_url = $('#slack_api_url').validate();
 					if (!channel || !slack_api_url) {
 						return false;
-					}
-					else if(!url_valid) {
+					} else if (!url_valid) {
 						$('#slack_msg').css('display', '');
 						$('#slack_msg').text('유효한 URL을 입력해주세요.');
 						return false;
-					}
-					else {
+					} else {
 						$('#slack_msg').css('display', 'none');
 						$('#slack_msg').text('');
 						return true;
@@ -207,13 +205,11 @@
 					if (!channel || !hipchat_api_url || !hipchat_room_id
 							|| !hipchat_auth_token) {
 						return false;
-					} 
-					else if(!url_valid) {
+					} else if (!url_valid) {
 						$('#hipchat_msg').css('display', '');
 						$('#hipchat_msg').text('유효한 URL을 입력해주세요.');
 						return false;
-					}
-					else {
+					} else {
 						$('#hipchat_msg').css('display', 'none');
 						$('#hipchat_msg').text('');
 						return true;
@@ -225,13 +221,11 @@
 					var webhook_url = $('#webhook_url').validate();
 					if (!channel || !webhook_url) {
 						return false;
-					} 
-					else if(!url_valid) {
+					} else if (!url_valid) {
 						$('#webhook_msg').css('display', '');
 						$('#webhook_msg').text('유효한 URL을 입력해주세요.');
 						return false;
-					}
-					else {
+					} else {
 						$('#webhook_msg').css('display', 'none');
 						$('#webhook_msg').text('');
 						return true;
@@ -836,7 +830,7 @@
 																data-validation-rule="{required:true, email:true}"
 																data-validation-message="{required:'Email address을 입력해주세요.'}"
 																style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666" />
-															<!-- <textarea class="Textarea Width-100" rows="4"
+																<!-- <textarea class="Textarea Width-100" rows="4"
 																	th:id="email_to" th:name="email_to" maxlength="50"
 																	data-keyfilter-rule="email"
 																	data-validation-rule="{required:true, email:true}"
@@ -884,7 +878,8 @@
 																th:id="slack_api_url" th:name="slack_api_url"
 																maxlength="100" data-validation-rule="{required:true}"
 																data-validation-message="{required:'URL을 입력해주세요.'}" />
-																<p id="slack_msg" class="info-text" data-for="slack_api_url"></p>
+																<p id="slack_msg" class="info-text"
+																	data-for="slack_api_url"></p>
 																<div class="Margin-top-5">
 																	<!-- <button class="Button btn">테스트</button> -->
 																	<button class="Button btn" id="btnUpdateSlack">저장</button>
@@ -925,7 +920,8 @@
 																th:id="hipchat_api_url" th:name="hipchat_api_url"
 																maxlength="100" data-validation-rule="{required:true}"
 																data-validation-message="{required:'URL을 입력해주세요.'}" />
-																<p id="hipchat_msg" class="info-text" data-for="hipchat_api_url"></p></td>
+																<p id="hipchat_msg" class="info-text"
+																	data-for="hipchat_api_url"></p></td>
 														</tr>
 														<tr>
 															<th>Room ID</th>
@@ -993,7 +989,8 @@
 																th:id="webhook_url" th:name="webhook_url"
 																maxlength="100" data-validation-rule="{required:true}"
 																data-validation-message="{required:'URL을 입력해주세요.'}" />
-																<p id="webhook_msg" class="info-text" data-for="webhook_url"></p>
+																<p id="webhook_msg" class="info-text"
+																	data-for="webhook_url"></p>
 																<div class="Margin-top-5">
 																	<!-- <button class="Button btn">테스트</button> -->
 																	<button class="Button btn" id="btnUpdateWebhook">저장</button>

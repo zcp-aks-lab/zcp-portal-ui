@@ -106,6 +106,14 @@
 				$('#btnCancel').on('click', function() {
 					location.href = '/alert/rules';
 				});
+				
+				$('#btnAdd').on('click', function() {
+					channelPopup.pop({
+						callback : function() {
+							location.reload();
+						}
+					});
+				});
 			}
 		}
 	}
@@ -278,7 +286,7 @@
 									<col />
 								</colgroup>
 								<tbody>
-									<tr>
+									<tr style="height:65px;">
 										<th>Rule 종류<strong class="astertisk">*</strong></th>
 										<td>
 											<div class="Divselect" style="width: 300px;">
@@ -299,7 +307,7 @@
 											<p class="info-text" data-for="type"></p>
 										</td>
 									</tr>
-									<tr>
+									<tr style="height:65px;">
 										<th>Namespace<strong class="astertisk">*</strong></th>
 										<td>
 											<div class="Divselect" id="namespaceDiv" data-disabled="true"
@@ -315,7 +323,7 @@
 											<p class="info-text" data-for="namespace"></p>
 										</td>
 									</tr>
-									<tr>
+									<tr style="height:65px;">
 										<th>Pod<strong class="astertisk">*</strong></th>
 										<td>
 											<div class="Divselect" id="namespaceDiv" data-disabled="true"
@@ -340,7 +348,7 @@
 											</div> -->
 										</td>
 									</tr>
-									<tr>
+									<tr style="height:65px;">
 										<th>Duration<strong class="astertisk">*</strong></th>
 										<td>
 											<div class="Divselect" style="width: 150px;">
@@ -356,7 +364,7 @@
 											<p class="info-text" data-for="duration"></p>
 										</td>
 									</tr>
-									<tr>
+									<tr style="height:65px;">
 										<th>심각도<strong class="astertisk">*</strong></th>
 										<td><label class="ImageRadio" id="warningLabel">
 												<input class="Radio" th:name="severity" th:id="severity"
@@ -367,7 +375,7 @@
 										</label>
 											<p class="info-text">이미 등록된 심각도는 추가할 수 없습니다.</p></td>
 									</tr>
-									<tr>
+									<tr style="height:65px;">
 										<th>임계치<strong class="astertisk">*</strong></th>
 										<td>
 											<div class="Divselect" id="conditionDiv">
@@ -383,17 +391,19 @@
 											<p class="info-text" data-for="value2"></p>
 										</td>
 									</tr>
-									<tr>
+									<tr style="height:65px;">
 										<th>채널<strong class="astertisk">*</strong></th>
 										<td>
 											<div class="Divselect" style="width: 300px;">
 												<select th:name="channel" th:id="channel"
 													data-validation-rule="{required:true}"
 													data-validation-message="{required:'채널을 선택해주세요.'}">
-													<option value="test-channel">test-channel</option>
+													<option value="">채널 선택</option>
+													<option th:each="channel : ${channel}"
+														th:value="${channel}" th:text="${channel}"></option>
 												</select> <span></span>
 											</div>
-											<button class="Button btn">신규 채널</button> <!-- <p class="Margin-top-5">Notification <span>3</span>개</p> -->
+											<button class="Button btn" id="btnAdd">신규 채널</button> <!-- <p class="Margin-top-5">Notification <span>3</span>개</p> -->
 											<p class="info-text" data-for="channel"></p>
 										</td>
 									</tr>

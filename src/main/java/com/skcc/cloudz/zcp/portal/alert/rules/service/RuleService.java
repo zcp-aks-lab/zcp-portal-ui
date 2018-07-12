@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skcc.cloudz.zcp.common.util.Message;
+import com.skcc.cloudz.zcp.portal.alert.channels.vo.ChannelVo;
 import com.skcc.cloudz.zcp.portal.alert.rules.vo.RepeatVo;
 import com.skcc.cloudz.zcp.portal.alert.rules.vo.RuleVo;
 
@@ -305,6 +306,34 @@ public class RuleService {
 		}
 
 		return ruleVo;
+	}
+	
+	public List<String> getChannels() throws Exception {
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/channel").build().toString();
+		logger.info(url);
+
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		
+		HttpEntity<ChannelVo[]> entity = new HttpEntity<ChannelVo[]>(headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<ChannelVo[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, ChannelVo[].class);
+
+		HttpStatus statusCode = response.getStatusCode();
+
+		ChannelVo[] channelVo = null;
+		List<String> channelList = new ArrayList<String>();
+		
+		if (statusCode == HttpStatus.OK) {
+			channelVo = response.getBody();
+			for (ChannelVo chList : channelVo) {
+				channelList.add(chList.getChannel());
+			}
+		}
+		return channelList;
 	}
 
 }

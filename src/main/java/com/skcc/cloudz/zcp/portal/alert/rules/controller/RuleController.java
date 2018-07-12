@@ -67,6 +67,12 @@ public class RuleController {
 	public String addRule(Model model) throws Exception {
 		List<String> namespace = userService.getNamespaces();
 		model.addAttribute("namespace", namespace);
+		
+//		List<String> pod = ruleService.getPods();
+//		model.addAttribute("pod", pod);
+		
+		List<String> channel = ruleService.getChannels();
+		model.addAttribute("channel", channel);
 
 		return "content/alert/rules/addrules";
 	}
@@ -93,17 +99,20 @@ public class RuleController {
 	@GetMapping(value = "/detailRule/{id}", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String detailRule(Model model, @PathVariable("id") String id) throws Exception {
 		RuleVo ruleDtl = ruleService.getRuleDtl(id);
+		
+		List<String> channel = ruleService.getChannels();
+		model.addAttribute("channel", channel);
 
 		if (ruleDtl != null) {
 			model.addAttribute("type", ruleDtl.getType());
 			model.addAttribute("duration", ruleDtl.getDuration());
 			model.addAttribute("severity", ruleDtl.getSeverity());
-			model.addAttribute("channel", ruleDtl.getChannel());
+			model.addAttribute("selectedChannel", ruleDtl.getChannel());
 			model.addAttribute("condition", ruleDtl.getCondition());
 			model.addAttribute("value2", ruleDtl.getValue2().trim());
 			model.addAttribute("value", ruleDtl.getValue());
 		}
-
+		
 		return "content/alert/rules/detailrules";
 	}
 
