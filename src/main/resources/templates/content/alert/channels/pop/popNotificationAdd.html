@@ -21,41 +21,45 @@
 		},
 		data : {
 			init : function() {
-				if($('#email_to').val() != '') {
+				if ($('#email_to').val() != '') {
 					$('#pDivision option[value=email]').hide();
-					$('#pDivision option[value=slack]').attr('selected', 'selected');
+					$('#pDivision option[value=slack]').attr('selected',
+							'selected');
 					$('#pSelect').text('Slack');
-					
+
 					$('#pEmailDiv').css('display', 'none');
 					$('#pSlackDiv').css('display', '');
 					$('#pHipchatDiv').css('display', 'none');
 					$('#pWebhookDiv').css('display', 'none');
 				}
-				if($('#slack_api_url').val() != '') {
+				if ($('#slack_api_url').val() != '') {
 					$('#pDivision option[value=slack]').hide();
-					$('#pDivision option[value=hipchat]').attr('selected', 'selected');
+					$('#pDivision option[value=hipchat]').attr('selected',
+							'selected');
 					$('#pSelect').text('Hipchat');
-					
+
 					$('#pEmailDiv').css('display', 'none');
 					$('#pSlackDiv').css('display', 'none');
 					$('#pHipchatDiv').css('display', '');
 					$('#pWebhookDiv').css('display', 'none');
 				}
-				if($('#hipchat_api_url').val() != '') {
+				if ($('#hipchat_api_url').val() != '') {
 					$('#pDivision option[value=hipchat]').hide();
-					$('#pDivision option[value=webhook]').attr('selected', 'selected');
+					$('#pDivision option[value=webhook]').attr('selected',
+							'selected');
 					$('#pSelect').text('Webhook');
-					
+
 					$('#pEmailDiv').css('display', 'none');
 					$('#pSlackDiv').css('display', 'none');
 					$('#pHipchatDiv').css('display', 'none');
 					$('#pWebhookDiv').css('display', '');
 				}
-				if($('#webhook_url').val() != '') {
+				if ($('#webhook_url').val() != '') {
 					$('#pDivision option[value=webhook]').hide();
-					$('#pDivision option[value=email]').attr('selected', 'selected');
+					$('#pDivision option[value=email]').attr('selected',
+							'selected');
 					$('#pSelect').text('Email');
-					
+
 					$('#pEmailDiv').css('display', '');
 					$('#pSlackDiv').css('display', 'none');
 					$('#pHipchatDiv').css('display', 'none');
@@ -66,7 +70,7 @@
 				if (!this.validation()) {
 					return false;
 				}
-				
+
 				$a.request('/alert/updateChannel', {
 					method : 'post',
 					data : $('#popForm').serializeObject(),
@@ -83,7 +87,7 @@
 						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
 					}
 				});
-				
+
 			},
 			validation : function() {
 				var pDivision = $("#pDivision option:selected").val();
@@ -92,19 +96,32 @@
 					var pEmail_to = $('#pEmail_to').validate();
 
 					if (!pEmail_to) {
+						$('#pSlack_api_url').effect('shake');
 						return false;
 					} else {
 						return true;
 					}
 				} else if (pDivision == 'slack') {
+					$('#pSlack_msg').text('');
+					var pUrl_valid = isValidURL($('#pSlack_api_url').val());
 					var pSlack_api_url = $('#pSlack_api_url').validate();
 
 					if (!pSlack_api_url) {
+						$('#pSlack_api_url').effect('shake');
+						return false;
+					} else if (!pUrl_valid) {
+						$('#pSlack_msg').css('display', '');
+						$('#pSlack_msg').text('유효한 URL을 입력해주세요.');
+						$('#pSlack_api_url').effect('shake');
 						return false;
 					} else {
+						$('#pSlack_msg').css('display', 'none');
+						$('#pSlack_msg').text('');
 						return true;
 					}
 				} else if (pDivision == 'hipchat') {
+					$('#pHipchat_msg').text('');
+					var pUrl_valid = isValidURL($('#pHipchat_api_url').val());
 					var pHipchat_api_url = $('#pHipchat_api_url').validate();
 					var pHipchat_room_id = $('#pHipchat_room_id').validate();
 					var pHipchat_auth_token = $('#pHipchat_auth_token')
@@ -112,16 +129,34 @@
 
 					if (!pHipchat_api_url || !pHipchat_room_id
 							|| !pHipchat_auth_token) {
+						$('#pHipchat_api_url').effect('shake');
+						return false;
+					} else if (!pUrl_valid) {
+						$('#pHipchat_msg').css('display', '');
+						$('#pHipchat_msg').text('유효한 URL을 입력해주세요.');
+						$('#pHipchat_api_url').effect('shake');
 						return false;
 					} else {
+						$('#pHipchat_msg').css('display', 'none');
+						$('#pHipchat_msg').text('');
 						return true;
 					}
 				} else if (pDivision == 'webhook') {
+					$('#pWebhook_msg').text('');
+					var pUrl_valid = isValidURL($('#pWebhook_api_url').val());
 					var pWebhook_url = $('#pWebhook_url').validate();
 
 					if (!pWebhook_url) {
+						$('#pWebhook_api_url').effect('shake');
+						return false;
+					} else if (!pUrl_valid) {
+						$('#pWebhook_msg').css('display', '');
+						$('#pWebhook_msg').text('유효한 URL을 입력해주세요.');
+						$('#pWebhook_api_url').effect('shake');
 						return false;
 					} else {
+						$('#pWebhook_msg').css('display', 'none');
+						$('#pWebhook_msg').text('');
 						return true;
 					}
 				}
@@ -130,7 +165,7 @@
 		event : {
 			init : function() {
 				$a.keyfilter.addKeyUpRegexpRule("email", "a-zA-Z0-9@._-");
-				
+
 				$('#popCancel').on('click', function() {
 					$a.close('cancel');
 				});
@@ -179,7 +214,7 @@
 							th:value="${channel}" />
 						<table class="Table Form-type">
 							<colgroup>
-								<col style="width: 200px;" />
+								<col style="width: 170px;" />
 								<col />
 							</colgroup>
 							<tbody>
@@ -187,25 +222,15 @@
 									<th style="text-align: left; padding-left: 20px">Notification
 										종류</th>
 									<td>
-										<div class="channel-noti__right">
-											<div class="Divselect" style="width: 298px;">
-												<select th:id="pDivision">
-													<option value="email">Email</option>
-													<option value="slack">Slack</option>
-													<option value="hipchat">Hipchat</option>
-													<option value="webhook">Webhook</option>
-												</select> <span id="pSelect"></span>
-											</div>
-										</div> <!-- <input class="Textinput" th:id="newChannel"
-										th:name="newChannel" style="min-width: 300px;"
-										data-validation-rule="{required:true}"
-										data-validation-message="{required:'채널명을 입력해주세요.'}" />
-										<p id="valid01" class="info-text" style="height: 22px;">채널명은
-											알파벳과 숫자로 구성된 6~12자리로 입력하세요.</p>
-										<p id="valid02" class="info-text"
-											style="height: 22px; display: none;">이미 존재하는 채널명입니다. 다른
-											이름으로 입력해 주세요.</p>
-										<p id="valid03" class="info-text" data-for="newChannel" style="height: 22px; display:none;"></p> -->
+										<div class="Divselect"
+											style="width: 300px; padding: 0px 18px 0px 10px;">
+											<select th:id="pDivision">
+												<option value="email">Email</option>
+												<option value="slack">Slack</option>
+												<option value="hipchat">Hipchat</option>
+												<option value="webhook">Webhook</option>
+											</select> <span id="pSelect"></span>
+										</div>
 									</td>
 								</tr>
 							</tbody>
@@ -218,19 +243,18 @@
 							<fieldset>
 								<table class="Table Form-type channel-line">
 									<colgroup>
-										<col style="width: 200px;" />
+										<col style="width: 170px;" />
 										<col />
 									</colgroup>
 									<tbody>
 										<tr>
 											<th class="Valign-top">Email address</th>
-											<td><textarea class="Textarea Width-100" rows="4"
-													th:id="pEmail_to" th:name="pEmail_to"
-													maxlength="50"
-													data-keyfilter-rule="email"
-													data-validation-rule="{required:true, email:true}"
-													data-validation-message="{required:'Email address를 입력해주세요.'}"
-													style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666"></textarea>
+											<td><input class="Textinput Width-100" th:id="pEmail_to"
+												th:name="pEmail_to" maxlength="50"
+												data-keyfilter-rule="email"
+												data-validation-rule="{required:true, email:true}"
+												data-validation-message="{required:'Email address를 입력해주세요.'}"
+												style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666" />
 												<!-- <input class="Textinput Width-100" th:id="email_to"
 												th:name="email_to" data-validation-rule="{required:true}"
 												data-validation-message="{required:'Email address를 입력해주세요.'}" /> -->
@@ -248,7 +272,7 @@
 							<fieldset>
 								<table class="Table Form-type channel-line">
 									<colgroup>
-										<col style="width: 200px;" />
+										<col style="width: 170px;" />
 										<col />
 									</colgroup>
 									<tbody>
@@ -256,10 +280,11 @@
 											<th class="Valign-top">URL</th>
 											<td><input class="Textinput Width-100"
 												th:id="pSlack_api_url" th:name="pSlack_api_url"
-												data-validation-rule="{required:true}"
+												maxlength="100" data-validation-rule="{required:true}"
 												data-validation-message="{required:'URL을 입력해주세요.'}" /> <!-- <p class="form-infotxt">메시지가 발송되었습니다. Slack 에서 확인해
 																	주세요.</p> -->
-												<p class="info-text" data-for="pSlack_api_url"></p></td>
+												<p id="pSlack_msg" class="info-text"
+													data-for="pSlack_api_url"></p></td>
 										</tr>
 									</tbody>
 								</table>
@@ -273,7 +298,7 @@
 							<fieldset>
 								<table class="Table Form-type channel-line">
 									<colgroup>
-										<col style="width: 200px;" />
+										<col style="width: 170px;" />
 										<col />
 									</colgroup>
 									<tbody>
@@ -281,15 +306,16 @@
 											<th>URL</th>
 											<td><input class="Textinput Width-100"
 												th:id="pHipchat_api_url" th:name="pHipchat_api_url"
-												data-validation-rule="{required:true}"
+												maxlength="100" data-validation-rule="{required:true}"
 												data-validation-message="{required:'URL을 입력해주세요.'}" />
-												<p class="info-text" data-for="pHipchat_api_url"></p></td>
+												<p id="pHipchat_msg" class="info-text"
+													data-for="pHipchat_api_url"></p></td>
 										</tr>
 										<tr>
 											<th>Room ID</th>
 											<td><input class="Textinput Width-100"
 												th:id="pHipchat_room_id" th:name="pHipchat_room_id"
-												data-validation-rule="{required:true}"
+												maxlength="100" data-validation-rule="{required:true}"
 												data-validation-message="{required:'Room ID를 입력해주세요.'}" />
 												<p class="info-text" data-for="pHipchat_room_id"></p></td>
 										</tr>
@@ -297,7 +323,7 @@
 											<th>Token</th>
 											<td><input class="Textinput Width-100"
 												th:id="pHipchat_auth_token" th:name="pHipchat_auth_token"
-												data-validation-rule="{required:true}"
+												maxlength="200" data-validation-rule="{required:true}"
 												data-validation-message="{required:'Token을 입력해주세요.'}" />
 												<p class="info-text" data-for="pHipchat_auth_token"></p></td>
 										</tr>
@@ -323,17 +349,18 @@
 							<fieldset>
 								<table class="Table Form-type channel-line">
 									<colgroup>
-										<col style="width: 200px;" />
+										<col style="width: 170px;" />
 										<col />
 									</colgroup>
 									<tbody>
 										<tr>
 											<th class="Valign-top">URL</th>
 											<td><input class="Textinput Width-100"
-												th:id="pWebhook_url" th:name="pWebhook_url"
+												th:id="pWebhook_url" th:name="pWebhook_url" maxlength="100"
 												data-validation-rule="{required:true}"
 												data-validation-message="{required:'URL을 입력해주세요.'}" />
-											<p class="info-text" data-for="pWebhook_url"></p></td>
+												<p id="pWebhook_msg" class="info-text"
+													data-for="pWebhook_url"></p></td>
 										</tr>
 									</tbody>
 								</table>

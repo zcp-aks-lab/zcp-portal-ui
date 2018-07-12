@@ -221,7 +221,7 @@
 				var data = {
 					id : id
 				};
-				
+
 				/* alertPopup.confirm({
 					width : 400,
 					height : 250,
@@ -361,8 +361,10 @@
 								<tbody>
 									<tr>
 										<th>Repeat interval</th>
-										<td><input class="Textinput" th:name="repeat"
-											th:id="repeat" th:value="${repeatInterval}"
+										<td><input class="Textinput"
+											style="width: 120px; min-width: 50px;"
+											th:name="repeat" th:id="repeat" th:value="${repeatInterval}"
+											maxlength="10" data-keyfilter-rule="digits"
 											data-validation-rule="{required:true}"
 											data-validation-message="{required:'Repeat Interval을 입력해주세요.'}" /><span
 											class="Padding-left-10 Padding-right-10">분</span>

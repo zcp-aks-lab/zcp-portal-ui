@@ -323,8 +323,8 @@
 													data-validation-rule="{required:true}"
 													data-validation-message="{required:'Pod을 선택해주세요.'}">
 													<option value="">Pod 선택</option>
-													<option th:each="pod : ${pod}"
-														th:value="${pod}" th:text="${pod}"></option>
+													<option th:each="pod : ${pod}" th:value="${pod}"
+														th:text="${pod}"></option>
 												</select> <span></span>
 											</div> <!-- <input class="Textinput" style="width: 300px"
 											th:name="pod" th:id="pod"
@@ -374,7 +374,9 @@
 													<option value="&gt;">&gt;</option>
 													<option value="&lt;">&lt;</option>
 												</select> <span></span>
-											</div> <input class="Textinput" th:name="value2" th:id="value2"
+											</div> <input class="Textinput"
+											style="width: 120px; min-width: 50px;" maxlength="3"
+											th:name="value2" th:id="value2" data-keyfilter-rule="digits"
 											data-validation-rule="{required:true}"
 											data-validation-message="{required:'임계치를 입력해주세요.'}" />
 											<p class="info-text" data-for="value2"></p>
