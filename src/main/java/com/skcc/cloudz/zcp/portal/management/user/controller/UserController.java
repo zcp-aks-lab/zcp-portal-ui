@@ -25,6 +25,9 @@ public class UserController {
     
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     
+    static final String CLUSTER_ROLES_TYPE_CLUSTER = "cluster";
+    static final String CLUSTER_ROLES_TYPE_NAMESPACE = "namespace";
+    
     @Autowired
     private UserService userService;
     
@@ -39,12 +42,12 @@ public class UserController {
             log.debug("id : {}", id);
         }
         
-        List<String> clusterRoles = userService.getClusterRoles();
-        model.addAttribute("clusterRoles", clusterRoles);
+        model.addAttribute("clusterRoles", userService.getClusterRoles(CLUSTER_ROLES_TYPE_CLUSTER));
         
         if (id.equals("create")) {
             return "content/management/user/user-create";    
         } else {
+            model.addAttribute("namespaceRoles", userService.getClusterRoles(CLUSTER_ROLES_TYPE_NAMESPACE));
             model.addAttribute("zcpUser", userService.getUser(id));
             model.addAttribute("roleBindings", userService.getRoleBindings(id));
             model.addAttribute("namespaces", userService.getNamespaces());

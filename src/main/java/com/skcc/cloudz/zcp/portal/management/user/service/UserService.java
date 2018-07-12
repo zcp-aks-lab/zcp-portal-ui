@@ -104,10 +104,10 @@ public class UserService {
     }
     
     @SuppressWarnings("unchecked")
-    public List<String> getClusterRoles() throws Exception {
+    public List<String> getClusterRoles(String type) throws Exception {
         List<String> clusterRoles = new ArrayList<String>();
         
-        ApiResponseVo apiResponseVo = iamApiService.getClusterRoles();
+        ApiResponseVo apiResponseVo = iamApiService.getClusterRoles(type);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new ZcpPortalException(apiResponseVo);
         }

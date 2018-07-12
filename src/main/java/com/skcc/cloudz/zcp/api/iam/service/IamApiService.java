@@ -31,7 +31,7 @@ public interface IamApiService {
     
     ApiResponseVo resetCredentials(String id, HashMap<String, Object> reqMap);
     
-    ApiResponseVo getClusterRoles();
+    ApiResponseVo getClusterRoles(String type);
     
     ApiResponseVo updateClusterRoleBinding(String id, HashMap<String, Object> reqMap);
     

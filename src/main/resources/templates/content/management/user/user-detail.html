@@ -9,6 +9,7 @@
         /*<![CDATA[*/
         var namespaces = /*[[${namespaces}]]*/;
         var clusterRoles = /*[[${clusterRoles}]]*/;
+        var namespaceRoles = /*[[${namespaceRoles}]]*/;
         var userTotp = /*[[${zcpUser.totp}]]*/;
         var requiredActions = /*[[${zcpUser.requiredActions}]]*/;
         /*]]>*/
@@ -28,6 +29,7 @@
                 data: {
                 	namespaces: [],
                 	clusterRoles: [],
+                	namespaceRoles: [],
                     
                     init: function() {
                         this.validate();
@@ -41,6 +43,10 @@
 
                         $.each(clusterRoles, function (key, value) {
                         	zcpPortalApp.data.clusterRoles.push({value: value, text: value});
+                        });
+
+                        $.each(namespaceRoles, function (key, value) {
+                            zcpPortalApp.data.namespaceRoles.push({value: value, text: value});
                         });
 
                         if ($('#tbody_namespaces tr').length === 0) {
@@ -420,7 +426,7 @@
            
                         $('#tbody_namespaces').append(html);
                         createOptions(namespaceId, zcpPortalApp.data.namespaces, '');
-                        createOptions(nsClusterRoleId, zcpPortalApp.data.clusterRoles, '');
+                        createOptions(nsClusterRoleId, zcpPortalApp.data.namespaceRoles, '');
                         $a.convert($('#tbody_namespaces'));
                         namespaceRoleAddCnt++;
                     }
@@ -471,6 +477,9 @@
                     <div id="tab1">
                         <p class="intab-txt">사용자의 기본 정보를 조회 및 수정합니다.</p>
                         <form th:id="infoform" onsubmit="return false;">
+                            <input type="hidden" th:name="username" th:id="username" th:value="${zcpUser.username}" />
+                            <input type="hidden" th:name="id" th:id="id" th:value="${zcpUser.id}" />
+                        
                             <fieldset>
                                 <table class="Table Form-type topline">
                                     <colgroup>
@@ -481,7 +490,7 @@
                                         <tr>
                                             <th>Account ID</th>
                                             <td>
-                                                <input type="text" th:name="id" th:id="id" th:value="${zcpUser.id}" class="Textinput Width-35" data-disabled="true"/>
+                                                <input type="text" th:value="${zcpUser.id}" class="Textinput Width-35" data-disabled="true"/>
                                                 <button class="btn-ico btn-copy" id="btnCopy">복사</button>
                                                 <div class="Tooltip">클립보드로 복사합니다.</div>
                                             </td>
@@ -492,19 +501,19 @@
                                         </tr>
                                         <tr>
                                             <th>사용자 ID</th>
-                                            <td><input type="text" th:name="username" th:id="username" th:value="${zcpUser.username}" class="Textinput Width-60" data-disabled="true" /></td>
+                                            <td><input type="text" th:value="${zcpUser.username}" class="Textinput Width-35" data-disabled="true" /></td>
                                         </tr>
                                         <tr>
                                             <th>이메일<strong class="astertisk">*</strong></th>
                                             <td>
-                                                <input type="text" th:name="email" th:id="email" th:value="${zcpUser.email}" class="Textinput Width-60" maxlength="100" data-keyfilter-rule="email" data-validation-rule="{required:true, email:true}" data-validation-message="{required:'이메일을 입력해 주세요.'}" />
+                                                <input type="text" th:name="email" th:id="email" th:value="${zcpUser.email}" class="Textinput Width-35" maxlength="100" data-keyfilter-rule="email" data-validation-rule="{required:true, email:true}" data-validation-message="{required:'이메일을 입력해 주세요.'}" />
                                                 <p class="info-text" data-for="email"></p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>이름<strong class="astertisk">*</strong></th>
                                             <td>
-                                                <input type="text" th:name="firstName" th:id="firstName" th:value="${zcpUser.firstName}" class="Textinput Width-60" maxlength="100" data-validation-rule="{required:true}" data-validation-message="{required:'이름을 입력해 주세요.'}"/>
+                                                <input type="text" th:name="firstName" th:id="firstName" th:value="${zcpUser.firstName}" class="Textinput Width-35" maxlength="100" data-validation-rule="{required:true}" data-validation-message="{required:'이름을 입력해 주세요.'}"/>
                                                 <p class="info-text" data-for="firstName"></p>
                                             </td>
                                         </tr>
@@ -545,7 +554,7 @@
                                                     </label>
                                                     <label class="ImageCheckbox" id="checkTest03">
                                                         <input class="Checkbox" type="checkbox" th:id="userVerifyEmail" th:name="requiredAction" value="VERIFY_EMAIL"/>
-                                                        Email Verified
+                                                        이메일 인증
                                                     </label>
                                                 </div>
                                             </td>
@@ -759,8 +768,7 @@
                                                                 <td>
                                                                     <div class="Divselect" style="width: 300px">
                                                                         <select th:id="|clusterRole_${iterStat.index}|">
-                                                                            <option value="none">none</option>
-                                                                            <option th:each="clusterRole : ${clusterRoles}" th:value="${clusterRole}" th:text="${clusterRole}" th:selected="${clusterRole == item.roleRef.name}"></option>
+                                                                            <option th:each="namespaceRole : ${namespaceRoles}" th:value="${namespaceRole}" th:text="${namespaceRole}" th:selected="${namespaceRole == item.roleRef.name}"></option>
                                                                         </select>
                                                                         <span></span>
                                                                     </div>

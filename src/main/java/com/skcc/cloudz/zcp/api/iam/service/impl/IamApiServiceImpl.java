@@ -430,12 +430,13 @@ public class IamApiServiceImpl implements IamApiService {
     }
 
     @Override
-    public ApiResponseVo getClusterRoles() {
+    public ApiResponseVo getClusterRoles(String type) {
         ApiResponseVo apiResponseVo = new ApiResponseVo();
         
         try {
             String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
-                    .path("/iam/clusterRoles")
+                    .path("/iam/rbac/clusterRoles")
+                    .queryParam("type", type)
                     .buildAndExpand()
                     .toString();
             log.info("===> Request Url : {}", url);
