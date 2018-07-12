@@ -137,7 +137,16 @@
                         	renderMapping : {
                                 cpu_request_bar: {
                                     renderer : function(value, data, render, mapping) {
-                                        return '<div class="Progressbar name-typea" data-default="' + data.cpuRequestsPercentage + '"></div>';
+                                    	var type = zcpPortalApp.grid.getProgressbarType(data.cpuRequestsPercentage);
+                                        
+                                        var html = '';
+                                        html += '<div class="Float-left Margin-top-10">';
+                                        html += '   <div class="name-pro__wrap">';
+                                        html += '       <div class="Progressbar ' + type + '" data-default="' + data.cpuRequestsPercentage + '"></div>';
+                                        html += '   </div>';
+                                        html += '</div>';
+                                        
+                                        return html;
                                     },
                                     postRender: function(cell, value, data, render, mapping, grid){
                                         $a.convert($(cell));
@@ -145,7 +154,16 @@
                                 },
                                 cpu_limits_bar: {
                                     renderer : function(value, data, render, mapping) {
-                                        return '<div class="Progressbar name-typea" data-default="' + data.cpuLimitsPercentage + '"></div>';
+                                    	var type = zcpPortalApp.grid.getProgressbarType(data.cpuLimitsPercentage);
+                                        
+                                    	var html = '';
+                                        html += '<div class="Float-left Margin-top-10">';
+                                        html += '   <div class="name-pro__wrap">';
+                                        html += '       <div class="Progressbar ' + type + '" data-default="' + data.cpuLimitsPercentage + '"></div>';
+                                        html += '   </div>';
+                                        html += '</div>';
+                                        
+                                        return html;
                                     },
                                     postRender: function(cell, value, data, render, mapping, grid){
                                         $a.convert($(cell));
@@ -153,7 +171,16 @@
                                 },
                                 memory_request_bar: {
                                     renderer : function(value, data, render, mapping) {
-                                        return '<div class="Progressbar name-typea" data-default="' + data.memoryRequestsPercentage + '" ></div>';
+                                    	var type = zcpPortalApp.grid.getProgressbarType(data.memoryRequestsPercentage);
+                                        
+                                    	var html = '';
+                                        html += '<div class="Float-left Margin-top-10">';
+                                        html += '   <div class="name-pro__wrap">';
+                                        html += '       <div class="Progressbar ' + type + '" data-default="' + data.memoryRequestsPercentage + '"></div>';
+                                        html += '   </div>';
+                                        html += '</div>';
+                                        
+                                        return html;
                                     },
                                     postRender: function(cell, value, data, render, mapping, grid){
                                         $a.convert($(cell));
@@ -161,7 +188,16 @@
                                 },
                                 memory_limit_bar: {
                                     renderer : function(value, data, render, mapping) {
-                                        return '<div class="Progressbar name-typea" data-default="' + data.memoryLimitsPercentage + '"></div>';
+                                    	var type = zcpPortalApp.grid.getProgressbarType(data.memoryLimitsPercentage);
+                                        
+                                    	var html = '';
+                                        html += '<div class="Float-left Margin-top-10">';
+                                        html += '   <div class="name-pro__wrap">';
+                                        html += '       <div class="Progressbar ' + type + '" data-default="' + data.memoryLimitsPercentage + '"></div>';
+                                        html += '   </div>';
+                                        html += '</div>';
+                                        
+                                        return html;
                                     },
                                     postRender: function(cell, value, data, render, mapping, grid){
                                         $a.convert($(cell));
@@ -192,13 +228,13 @@
                                 {
                                     key: 'nodeName',
                                     title: 'Node',
-                                    width: '90px',
+                                    width: '80px',
                                     align: 'center'
                                 }, 
                                 {
                                     key: 'status',
                                     title: 'Status',
-                                    width: '70px',
+                                    width: '60px',
                                     align: 'center'
                                 },
                                 {
@@ -273,6 +309,21 @@
                                 }
                             ],
                         });
+                    },
+
+                    getProgressbarType: function(value) {
+                    	var type;
+                        if(Number(value) > 90) {
+                        	type = 'name-typee';
+                        } else if (Number(value) > 60) {
+                        	type = 'name-typeb';
+                        } else if (Number(value) > 30) {
+                        	type = 'name-typec';
+                        } else {
+                        	type = 'name-typea';
+                        }
+
+                        return type;
                     }
                 },
                 data: {
@@ -392,11 +443,26 @@
                             titleField: 'role'
                         }
                         zcpPortalApp.chart.draw('usersChart', props);
+                    },
+
+                    moveDashboard: function() {
+                    	$a.request('/main/getCsrfToken', {
+                            method: 'get',
+                            data: null, 
+                            success: function(res) {
+                                
+                            },
+                            error: function(errObject) {
+                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                            }
+                        })
                     }
                 },
                 event: {
                     init: function() {
-                        
+                    	$('#btnDashboard').on('click', function() {
+                            //zcpPortalApp.data.moveDashboard();
+                        });
                     }
                 }
             }
@@ -421,7 +487,7 @@
 				        <span class="tag">Namespace의 시스템 및 리소스 사용 현황을 일괄 조회합니다.</span>
 				    </div>
 				    <div class="btn-wrap__right">
-				        <button class="Button btn btn-dash"><span class="Icon btn-outlink" data-position="right"></span>대시보드</button>
+				        <button class="Button btn btn-dash" id="btnDashboard"><span class="Icon btn-outlink" data-position="right"></span>대시보드</button>
 				    </div>
 				</div>
 				<!-- dashboard panel group-->
