@@ -8,6 +8,7 @@
 	<script src="/js/common/namespaceCommon.js" data-th-src="@{/js/common/namespaceCommon.js}"></script>
 	<script th:inline="javascript" type="text/javascript">
 	/*<![CDATA[*/
+		
 		function initNamespace(namespace){
 			var url = "/management/namespace/getNamespaceResource";
 			ajaxCall(url, {"namespace" : namespace}).done(function(data){
@@ -98,7 +99,7 @@
 					$('#div_' +obj_id).show();
 					$('#span_' +obj_id).show();
 				}
-					
+				console.log('color represention')					
 				if(div < 1 && div > 0) 
 					used = Number(used).toFixed(2);
 				
@@ -194,7 +195,7 @@
                             callback: function() {
                             }
                         });
-        				location.href="/management/namespaces";
+        				location.reload();
         			});      
                 }
             });

@@ -178,10 +178,13 @@
     		renderMapping : {
     			cpu_request_bar: {
     				renderer : function(value, data, render, mapping) {
+    					var string = '';
+	    				if(data.hardCpuRequests)
+	    					string = data.usedCpuRequests + "/" + data.hardCpuRequests;
     					return '<div class="Float-left Margin-top-10"><div class="name-pro__wrap">'
 							+'<div class="Progressbar name-typea" data-default="' +data.cpuRequestsPercentage + '"></div>'
 							+'</div>'
-							+'<span class="name-pro__num" style="font-size:10px">'+ data.usedCpuRequests + "/" + data.hardCpuRequests +'</span></div>'
+							+'<span class="name-pro__num" style="font-size:10px">'+ string +'</span></div>'
 	    			},
 	    			postRender: function(cell, value, data, render, mapping, grid){
 	                    $a.convert($(cell));
@@ -189,10 +192,13 @@
 	    		},
 	    		cpu_limits_bar: {
     				renderer : function(value, data, render, mapping) {
+    					var string = '';
+	    				if(data.hardCpuLimits)
+	    					string = data.usedCpuLimits + "/" + data.hardCpuLimits;
     					return '<div class="Float-left Margin-top-10"><div class="name-pro__wrap">'
 						+'<div class="Progressbar name-typea" data-default="' +data.cpuLimitsPercentage + '"></div>'
 						+'</div>'
-						+'<span class="name-pro__num" style="font-size:10px">'+ data.usedCpuLimits + "/" + data.hardCpuLimits +'</span></div>'
+						+'<span class="name-pro__num" style="font-size:10px">'+ string +'</span></div>'
 						
 	    			},
 	    			postRender: function(cell, value, data, render, mapping, grid){
@@ -201,10 +207,13 @@
 	    		},
 	    		memory_request_bar: {
     				renderer : function(value, data, render, mapping) {
+    					var string = '';
+	    				if(data.hardMemoryRequests)
+	    					string = data.usedMemoryRequests + "/" + data.hardMemoryRequests;
     					return '<div class="Float-left Margin-top-10"><div class="name-pro__wrap">'
 						+'<div class="Progressbar name-typea" data-default="' +data.memoryRequestsPercentage + '"></div>'
 						+'</div>'
-						+'<span class="name-pro__num" style="font-size:10px">'+ data.usedMemoryRequests + "/" + data.hardMemoryRequests +'</span></div>'
+						+'<span class="name-pro__num" style="font-size:10px">'+ string +'</span></div>'
 						
 	    			},
 	    			postRender: function(cell, value, data, render, mapping, grid){
@@ -213,10 +222,13 @@
 	    		},
 	    		memory_limit_bar: {
 	    			renderer : function(value, data, render, mapping) {
+	    				var string = '';
+	    				if(data.hardMemoryLimits)
+	    					string = data.usedMemoryLimits + "/" + data.hardMemoryLimits
 		    			return '<div class="Float-left Margin-top-10"><div class="name-pro__wrap">'
 						+'<div class="Progressbar name-typea" data-default="' +data.memoryLimitsPercentage + '"></div>'
 						+'</div>'
-						+'<span class="name-pro__num" style="font-size:10px">'+ data.usedMemoryLimits + "/" + data.hardMemoryLimits +'</span></div>'
+						+'<span class="name-pro__num" style="font-size:10px">'+ string +'</span></div>'
 					},
 	    			postRender: function(cell, value, data, render, mapping, grid){
 	                    $a.convert($(cell));
@@ -407,22 +419,22 @@
 	                			<ul class="name-progress__wrap">
 	                				<li>
 	                					<p class="name-pro__title">CPU Request</p>
-	                					<span class="name-pro__info" th:text="${namespace.usedCpuRequestsString} + '/' + ${namespace.hardCpuRequestsString}"></span>
+	                					<span class="name-pro__info" th:if="${namespace.hardCpuRequestsString} != null" th:text="${namespace.usedCpuRequestsString} + '/' + ${namespace.hardCpuRequestsString}"></span>
 	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.cpuRequestsPercentage}"></div>
 	                				</li>
 	                				<li>
 	                					<p class="name-pro__title">Memory Request</p>
-	                					<span class="name-pro__info" th:text="${namespace.usedMemoryRequestsString} + '/' + ${namespace.hardMemoryRequestsString}"></span>
+	                					<span class="name-pro__info" th:if="${namespace.hardMemoryRequestsString} != null" th:text="${namespace.usedMemoryRequestsString} + '/' + ${namespace.hardMemoryRequestsString}"></span>
 	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.memoryRequestsPercentage}"></div>
 	                				</li>
 	                				<li>
 	                					<p class="name-pro__title">CPU Limit</p>
-	                					<span class="name-pro__info" th:text="${namespace.usedCpuLimitsString} + '/' + ${namespace.hardCpuLimitsString}"></span>
+	                					<span class="name-pro__info" th:if="${namespace.hardCpuLimitsString} != null" th:text="${namespace.usedCpuLimitsString} + '/' + ${namespace.hardCpuLimitsString}"></span>
 	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.cpuLimitsPercentage}"></div>
 	                				</li>
 	                				<li>
 	                					<p class="name-pro__title">Memory Limit</p>
-	                					<span class="name-pro__info" th:text="${namespace.usedMemoryLimitsString} + '/' + ${namespace.hardMemoryLimitsString}"></span>
+	                					<span class="name-pro__info" th:if="${namespace.hardMemoryLimitsString} != null" th:text="${namespace.usedMemoryLimitsString} + '/' + ${namespace.hardMemoryLimitsString}"></span>
 	                					<div class="Progressbar name-typea" th:attr="data-default=${namespace.memoryLimitsPercentage}"></div>
 	                				</li>
 	                			</ul>

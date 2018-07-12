@@ -10,7 +10,11 @@
 	<script src="/js/common/namespaceCommon.js" data-th-src="@{/js/common/namespaceCommon.js}"></script>
 	<script th:inline="javascript" type="text/javascript">
 	/*<![CDATA[*/
-				
+	$.alopex.page(function() {
+          this.init = function(id, param) { 
+              zcpPortalApp.pageInit();
+          };
+      			
 		function addNamespace(){
 			//if(!validate()) return ;
 			var namespace = $('#input_namespace').validate();
@@ -82,7 +86,7 @@
 		$(document).ready(function(){
 			//$a.keyfilter.addKeyUpRegexpRule("input_namespace", "^[a-zA-Z][0-9a-zA-z\-\_\/]{2,29}$");
 		})
-		
+	});	
 	 /*]]>*/
     </script>
 </head>
