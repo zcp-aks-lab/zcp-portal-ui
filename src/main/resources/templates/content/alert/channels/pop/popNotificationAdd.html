@@ -141,22 +141,21 @@
 
 					if (!pHipchat_api_url || !pHipchat_room_id
 							|| !pHipchat_auth_token) {
-						if(!pHipchat_api_url) {
-							$('#pHipchat_api_url').effect('shake');	
-						} else if(!pUrl_valid) {
+						if (!pHipchat_api_url) {
+							$('#pHipchat_api_url').effect('shake');
+						} else if (!pUrl_valid) {
 							$('#pHipchat_msg').css('display', '');
 							$('#pHipchat_msg').text('유효한 URL을 입력해주세요.');
 							$('#pHipchat_api_url').effect('shake');
 						}
-						if(!pHipchat_room_id) {
-							$('#pHipchat_room_id').effect('shake');	
+						if (!pHipchat_room_id) {
+							$('#pHipchat_room_id').effect('shake');
 						}
-						if(!pHipchat_auth_token) {
-							$('#pHipchat_auth_token').effect('shake');	
+						if (!pHipchat_auth_token) {
+							$('#pHipchat_auth_token').effect('shake');
 						}
 						return false;
-					} 
-					else {
+					} else {
 						$('#pHipchat_msg').css('display', 'none');
 						$('#pHipchat_msg').text('');
 						return true;

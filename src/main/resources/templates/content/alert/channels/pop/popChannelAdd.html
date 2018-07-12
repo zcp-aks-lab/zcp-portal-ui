@@ -30,8 +30,6 @@
 					return false;
 				}
 
-				/* var check = confirm("저장하시겠습니까?");
-				if (check) { */
 				$a.request('/alert/createChannel', {
 					method : 'post',
 					data : $('#popForm').serializeObject(),
@@ -48,9 +46,6 @@
 						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
 					}
 				})
-				/* } else {
-					return false;
-				} */
 			},
 			validation : function() {
 				var valid = $('#newChannel').validate();
@@ -65,12 +60,15 @@
 		event : {
 			init : function() {
 				$('#newChannel').focus();
+				
 				$('#popCancel').on('click', function() {
 					$a.close('cancel');
 				});
+				
 				$('#popOk').on('click', function() {
 					zcpPopChannelApp.data.createChannel();
 				});
+				
 				$('#newChannel').on('keydown', function(e) {
 					if (e.keyCode === 13) {
 						zcpPopChannelApp.data.createChannel();
