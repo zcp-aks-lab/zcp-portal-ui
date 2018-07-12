@@ -208,8 +208,12 @@
 													<option value="&gt;" th:selected="${condition == '&gt;'}">&gt;</option>
 													<option value="&lt;" th:selected="${condition == '&lt;'}">&lt;</option>
 												</select> <span></span>
-											</div> <input class="Textinput" th:name="value2" th:id="value2"
-											th:value="${value2}" data-validation-rule="{required:true}"
+											</div> <input class="Textinput" 
+											style="width: 120px; min-width: 50px;" maxlength="3" 
+											th:name="value2" th:id="value2"
+											th:value="${value2}" 
+											data-keyfilter-rule="digits"
+											data-validation-rule="{required:true}"
 											data-validation-message="{required:'임계치를 입력해주세요.'}" />
 											<p class="info-text" data-for="value2"></p>
 										</td>
