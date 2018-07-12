@@ -11,7 +11,7 @@
     "enable": true
   },
   {
-    "id": "grafana",
+    "id": "monitoring",
     "name": "모니터링",
     "order": 2,
     "url": "https://grafana.cloudzcp.io/login/generic_oauth",
@@ -23,15 +23,14 @@
     "enable": true
   },
   {
-    "id": "kibana",
+    "id": "logging",
     "name": "로깅",
     "order": 3,
     "url": "https://kibana.cloudzcp.io",
     "target": "blank",
     "accessRoles": [
       "cluster-admin",
-      "admin",
-      "view"
+      "admin"
     ],
     "enable": true
   },
@@ -69,9 +68,7 @@
     ],
     "accessRoles": [
       "cluster-admin",
-      "admin",
-      "editor",
-      "view"
+      "admin"
     ],
     "enable": true
   },
@@ -102,7 +99,7 @@
     "accessRoles": [
       "cluster-admin",
       "admin",
-      "editor"
+      "member"
     ],
     "enable": true
   },
@@ -115,8 +112,7 @@
     "accessRoles": [
       "cluster-admin",
       "admin",
-      "editor",
-      "view"
+      "member"
     ],
     "enable": true
   },
@@ -129,15 +125,26 @@
     "accessRoles": [
       "cluster-admin",
       "admin",
-      "editor",
-      "view"
+      "member"
     ],
     "enable": true
   },
   {
-    "id": "iam",
-    "name": "설정 및 관리",
+    "id": "zdb",
+    "name": "ZDB",
     "order": 8,
+    "url": "https://zdb.cloudzcp.io",
+    "target": "blank",
+    "accessRoles": [
+      "cluster-admin",
+      "admin"
+    ],
+    "enable": true
+  },
+  {
+    "id": "management",
+    "name": "설정 및 관리",
+    "order": 9,
     "url": "/management",
     "target": "",
     "sub": [
@@ -160,16 +167,14 @@
     ],
     "accessRoles": [
       "cluster-admin",
-      "admin",
-      "editor",
-      "view"
+      "admin"
     ],
     "enable": true
   },
   {
     "id": "guide",
     "name": "안내 및 도움말",
-    "order": 9,
+    "order": 10,
     "url": "/guide",
     "target": "",
     "sub": [
@@ -209,8 +214,7 @@
     "accessRoles": [
       "cluster-admin",
       "admin",
-      "editor",
-      "view",
+      "member",
       "none"
     ],
     "enable": true
