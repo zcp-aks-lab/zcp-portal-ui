@@ -231,11 +231,9 @@
                                     data: data, 
                                     success : function(res) {
                                     	commonPopup.alert({
-                                            message: '클러스터 권한이 변경되었습니다.',
-                                            callback: function() {
-                                            	location.reload();
-                                            }
+                                            message: '클러스터 권한이 변경되었습니다.'
                                         });
+                                        $('#clusterRoleTxt').text($('#clusterRole').val());
                                     },
                                     error : function(errObject) {
                                         //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -458,7 +456,7 @@
                         </dt>
                         <dd class="service-user">
                             사용자ID: <span th:text="${zcpUser.username}">afaserfs</span>
-                            <span class="Margin-left-80">Cluster 권한</span> : <span th:text="${zcpUser.clusterRole != null} ? ${zcpUser.clusterRole} : 'none'">admin</span>
+                            <span class="Margin-left-80">Cluster 권한</span> : <span id="clusterRoleTxt" th:text="${zcpUser.clusterRole != null} ? ${zcpUser.clusterRole} : 'none'">admin</span>
                         </dd>
                     </dl>
                     <div class="btn-wrap__right">
