@@ -67,9 +67,7 @@ public class RuleController {
 	public String addRule(Model model) throws Exception {
 		List<String> namespace = userService.getNamespaces();
 		model.addAttribute("namespace", namespace);
-		
-//		List<String> pod = ruleService.getPods();
-//		model.addAttribute("pod", pod);
+		ruleService.getDeployments();
 		
 		List<String> channel = ruleService.getChannels();
 		model.addAttribute("channel", channel);

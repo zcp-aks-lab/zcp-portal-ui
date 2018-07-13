@@ -2,6 +2,7 @@ package com.skcc.cloudz.zcp.portal.alert.rules.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.api.iam.service.impl.IamRestClient;
 import com.skcc.cloudz.zcp.common.util.Message;
 import com.skcc.cloudz.zcp.portal.alert.channels.vo.ChannelVo;
 import com.skcc.cloudz.zcp.portal.alert.rules.vo.RepeatVo;
@@ -36,6 +39,9 @@ public class RuleService {
 
 	@Autowired
 	Message message;
+	
+	@Autowired
+    private IamRestClient client;
 
 	public RuleVo[] getRuleList() {
 		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/rule").build().toString();
@@ -334,6 +340,56 @@ public class RuleService {
 			}
 		}
 		return channelList;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public List<String> getDeployments() throws Exception {
+		String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path("/iam/apps/deployments").build().toString();
+		logger.info(url);
+
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		
+		HttpEntity entity = new HttpEntity(headers);
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("namespace", "zcp-system");
+
+		RestTemplate restTemplate = new RestTemplate();
+		
+		HttpEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class, params);
+		System.out.println(response.getBody());
+		
+//		Map<String, Object> resultMap = new HashMap<String, Object>();
+//        ApiResponseVo response2 = client.request("/iam/apps/deployments?namespace="+params.get("namespace"), null);
+		
+//		JSONObject jsonObj = new JSONObject();
+//		
+//		JSONParser jsonParser = new JSONParser();
+//		jsonObj = (JSONObject) jsonParser.parse(response.getBody());
+//		
+//		System.out.println(jsonObj.get("code"));
+//		System.out.println(jsonObj.get("msg"));
+//		System.out.println(jsonObj.get("data"));
+		
+//		if(response.getBody().getCode() == HttpStatus.OK) {
+//			
+//		}
+		
+		
+
+//		ChannelVo[] channelVo = null;
+//		List<String> channelList = new ArrayList<String>();
+//		
+//		if (statusCode == HttpStatus.OK) {
+//			channelVo = response.getBody();
+//			for (ChannelVo chList : channelVo) {
+//				channelList.add(chList.getChannel());
+//			}
+//		}
+		return null;
 	}
 
 }
