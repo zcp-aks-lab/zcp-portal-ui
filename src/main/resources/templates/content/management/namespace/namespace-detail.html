@@ -8,17 +8,7 @@
 	<script src="/js/common/namespaceCommon.js" data-th-src="@{/js/common/namespaceCommon.js}"></script>
 	<script th:inline="javascript" type="text/javascript">
 	/*<![CDATA[*/
-	$.alopex.page(function() {
-         this.init = function(id, param) { 
-             $('#btn_add_namespace').on('click', addNamespace);
-             $('#btn_add_label').on('click', addLabel);
-             $('#li_resource').on('click', showResource);
-             $('#li_member').on('click', showMember);
-             $('#btn_main').on('click', goMain);
-             $('#btn_search1').on('click', search1);
-             $('#btn_add_member').on('click', showSearch2);
-             $('#btn_search2').on('click', search2)
-         };
+		
 		function initNamespace(namespace){
 			var url = "/management/namespace/getNamespaceResource";
 			ajaxCall(url, {"namespace" : namespace}).done(function(data){
@@ -403,7 +393,7 @@
 	    				title : '추가',
 	    				width : '50px',
 	    				render : function(value, data, render, mapping){
-	    					return "<button class=\"btn-ico list-add\" id=\"btn_add_member2\" onclick=\'addUser(" + JSON.stringify(data) + ")'></button>";
+	    					return "<button class=\"btn-ico list-add\" onclick=\'addUser(" + JSON.stringify(data) + ")'></button>";
 	    				}
 	    			}
 	    		],
@@ -643,7 +633,8 @@
 		function goUser(){
 			location.href='/management/users';
 		}
-	});	
+		
+		
 	 /*]]>*/
     </script>
 </head>
@@ -671,15 +662,15 @@
             			</dd>
             		</dl>
             		<div class="btn-wrap__right">
-	                    <button class="Button btn-ico__typeb btn-godash" id="btn_main">Dashoboard 보기</button>
+	                    <button class="Button btn-ico__typeb btn-godash" onclick='goMain()'>Dashoboard 보기</button>
 	                    <!-- <button class="Button btn-ico__typeb btn-adduser" onclick='goUser()'></button> -->
 	                </div>
 				</div>
 				<!-- tab wrap -->
 				<div class="Tabs Fixed" data-tab-width="180px">
 				    <ul>
-				        <li data-content="#tab1" id="li_resource">Resource 구성</li>
-				        <li data-content="#tab2" id="li_member">멤버관리</li>
+				        <li data-content="#tab1" onclick="showResource()">Resource 구성</li>
+				        <li data-content="#tab2" onclick="showMember()">멤버관리</li>
 				    </ul>
 				    <!-- Resource 구성 -->
 				    <div id="div_resource">
@@ -691,7 +682,7 @@
 					    		<div id="div_label">
 					    		</div>
             					<input class="Autocomplete add-label__input" id="input_label"  style="width:300px"/>
-            					<button class="Label add-label" id="btn_add_label">추가</button><br/>
+            					<button class="Label add-label" onclick="addLabel()">추가</button><br/>
             					<span style="font-size:15px;color:red" id="span_validation"></span>
             				</div>
 				    	</div>
@@ -988,7 +979,7 @@
 						</div>
 						<!-- button wrap-->
 						<div class="btn-wrap">
-							<div class="btn-right"><button class="Button btn bg-red" id="btn_add_namespace">저장</button></div>
+							<div class="btn-right"><button class="Button btn bg-red"  onclick="addNamespace();">저장</button></div>
 						</div>
 					</div>
 				    <!-- 멤버관리 -->
@@ -1003,9 +994,9 @@
 		            	
 		            	
 							<div class="btn-wrap">
-								<div class="btn-left"><button class="Button btn" id="btn_add_member">멤버추가</button></div>
+								<div class="btn-left"><button class="Button btn" onclick="showSearch2()">멤버추가</button></div>
 								<div class="btn-right" id="div_search2" style="display:none" >
-									<input class="Textinput srcinput" id="searchWord2"  placeholder="검색어를 입력하세요."/><button class="Button btn-search" id="btn_search2">검색</button>
+									<input class="Textinput srcinput" id="searchWord2"  placeholder="검색어를 입력하세요."/><button class="Button btn-search" onclick="search2()">검색</button>
 								</div>
 							</div>
 							<br/>
