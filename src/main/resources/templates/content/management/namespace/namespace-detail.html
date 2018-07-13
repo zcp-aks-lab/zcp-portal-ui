@@ -8,7 +8,12 @@
 	<script src="/js/common/namespaceCommon.js" data-th-src="@{/js/common/namespaceCommon.js}"></script>
 	<script th:inline="javascript" type="text/javascript">
 	/*<![CDATA[*/
-		
+	$.alopex.page(function() {
+         this.init = function(id, param) { 
+             $('#btn_add_namespace').on('click', addNamespace);
+             $('#btn_add_label').on('click', addLabel);
+         };
+    
 		function initNamespace(namespace){
 			var url = "/management/namespace/getNamespaceResource";
 			ajaxCall(url, {"namespace" : namespace}).done(function(data){
@@ -633,8 +638,7 @@
 		function goUser(){
 			location.href='/management/users';
 		}
-		
-		
+	});	
 	 /*]]>*/
     </script>
 </head>
@@ -682,7 +686,7 @@
 					    		<div id="div_label">
 					    		</div>
             					<input class="Autocomplete add-label__input" id="input_label"  style="width:300px"/>
-            					<button class="Label add-label" onclick="addLabel()">추가</button><br/>
+            					<button class="Label add-label" id="btn_add_label">추가</button><br/>
             					<span style="font-size:15px;color:red" id="span_validation"></span>
             				</div>
 				    	</div>
@@ -979,7 +983,7 @@
 						</div>
 						<!-- button wrap-->
 						<div class="btn-wrap">
-							<div class="btn-right"><button class="Button btn bg-red"  onclick="addNamespace();">저장</button></div>
+							<div class="btn-right"><button class="Button btn bg-red" id="btn_add_namespace">저장</button></div>
 						</div>
 					</div>
 				    <!-- 멤버관리 -->
