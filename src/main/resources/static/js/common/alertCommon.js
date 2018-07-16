@@ -20,9 +20,9 @@ function comboOptions(id, data, comboText) {
 		var option = [];
 		option.push("<option value=\"\">Pod 선택</option>");
 
-		if (data == '' || data == null) {
+		/*if (data == '' || data == null) {
 			option.push("<option value=\"\">데이타가 없습니다.</option>");
-		}
+		}*/
 
 		for (var i = 0; i < data.length; i++) {
 			option.push("<option value=\"" + data[i] + "\"");

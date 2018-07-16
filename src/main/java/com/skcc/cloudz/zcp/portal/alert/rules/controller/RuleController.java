@@ -127,6 +127,7 @@ public class RuleController {
 			model.addAttribute("value2", ruleDtl.getValue2().trim());
 			model.addAttribute("value", ruleDtl.getValue());
 			model.addAttribute("pod", ruleDtl.getPod());
+			model.addAttribute("namespace", ruleDtl.getNamespace());
 		}
 
 		return "content/alert/rules/detailrules";

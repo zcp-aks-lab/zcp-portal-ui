@@ -25,7 +25,7 @@
 				var check = alertPopup.confirm({
 					width : 400,
 					height : 250,
-					message : '저장하시겠습니까?',
+					message : 'Rule 정보를 저장하시겠습니까?',
 					callback : function(data) {
 						if (data == 'ok') {
 							$a.request('/alert/createRule', {
@@ -40,7 +40,7 @@
 									alertPopup.alert({
 										width : 400,
 										height : 250,
-										message : '저장되었습니다.',
+										message : 'Rule 정보가 저장되었습니다.',
 										callback : function() {
 											location.href = '/alert/rules';
 										}

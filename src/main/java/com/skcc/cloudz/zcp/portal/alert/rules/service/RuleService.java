@@ -117,9 +117,9 @@ public class RuleService {
 			ruleParam.setValue2("0");
 
 		} else if ("PodFrequentlyRestarting".equals(params.get("type"))) {
-//			String expr = "increase(kube_pod_container_status_restarts_total{pod=~\"" + params.get("pod").toString() + ".*\"}[1h])";
-			String expr = "increase(kube_pod_container_status_restarts_total{namespace=\"zcp-system\", pod=~\"" + params.get("pod").toString() + ".*\"}[1h])";
-			
+			String expr = "increase(kube_pod_container_status_restarts_total{namespace=\""
+					+ params.get("namespace").toString() + "\", pod=~\"" + params.get("pod").toString() + ".*\"}[1h])";
+
 			ruleParam.setValue1(expr);
 			ruleParam.setCondition(params.get("condition").toString());
 			ruleParam.setValue2(params.get("value2").toString());
@@ -281,9 +281,11 @@ public class RuleService {
 			ruleParam.setValue2("0");
 
 		} else if ("PodFrequentlyRestarting".equals(params.get("type"))) {
-//			String expr = "increase(kube_pod_container_status_restarts_total{pod=~\"" + params.get("pod").toString() + ".*\"}[1h])";
-			String expr = "increase(kube_pod_container_status_restarts_total{namespace=\"zcp-system\", pod=~\"" + params.get("pod").toString() + ".*\"}[1h])";
-			
+			// String expr = "increase(kube_pod_container_status_restarts_total{pod=~\"" +
+			// params.get("pod").toString() + ".*\"}[1h])";
+			String expr = "increase(kube_pod_container_status_restarts_total{namespace=\"zcp-system\", pod=~\""
+					+ params.get("pod").toString() + ".*\"}[1h])";
+
 			ruleParam.setValue1(expr);
 			ruleParam.setCondition(params.get("condition").toString());
 			ruleParam.setValue2(params.get("value2").toString());
@@ -344,7 +346,7 @@ public class RuleService {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<String> getDeployments(Map<String, Object> params) throws Exception {
-		String targetUrl = "/iam/apps/deployments?namespace="+params.get("namespace");
+		String targetUrl = "/iam/apps/deployments?namespace=" + params.get("namespace");
 		String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path(targetUrl).build().toString();
 		logger.info(url);
 

@@ -25,7 +25,7 @@
 				var check = alertPopup.confirm({
 					width : 400,
 					height : 250,
-					message : '저장하시겠습니까?',
+					message : 'Rule 정보를 수정하시겠습니까?',
 					callback : function(data) {
 						if (data == 'ok') {
 							$a.request('/alert/updateRule', {
@@ -40,7 +40,7 @@
 									alertPopup.alert({
 										width : 400,
 										height : 250,
-										message : '저장되었습니다.',
+										message : 'Rule 정보가 수정되었습니다.',
 										callback : function() {
 											location.href = '/alert/rules';
 										}
@@ -55,29 +55,6 @@
 						}
 					}
 				});
-
-				/* var check = confirm("저장하시겠습니까?");
-				if (check) {
-					$a.request('/alert/updateRule', {
-						method : 'post',
-						data : $('#form').serializeObject(),
-						success : function(res) {
-							if (res.resultCd !== '200') {
-								if (res.resultMsg)
-									alert(res.resultMsg);
-								return false;
-							}
-
-							alert('저장되었습니다.');
-							location.href = '/alert/rules';
-						},
-						error : function(errObject) {
-							alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
-						}
-					})
-				} else {
-					return false;
-				} */
 			},
 			validation : function() {
 				var typeVal = $("#type").val();
@@ -86,9 +63,6 @@
 						|| typeVal == 'K8SNodeNotReady') {
 					return true;
 				} 
-				/* else if (typeVal == 'PodFrequentlyRestarting') {
-					return true;
-				}  */
 				else {
 					var value2 = $('#value2').validate();
 					if (!value2) {
@@ -101,15 +75,16 @@
 		},
 		event : {
 			init : function() {
+				$("#namespaceTr").css("display", "none");
 				$("#podTr").css("display", "none");
 				if ($('#type').val() == 'NodeDown'
 						|| $('#type').val() == 'ApiserverDown'
 						|| $('#type').val() == 'K8SNodeNotReady'
-						//|| $('#type').val() == 'PodFrequentlyRestarting'
 						) {
 					$("#exprTr").css("display", "none");
 				}
 				if ($('#type').val() == 'PodFrequentlyRestarting') {
+					$("#namespaceTr").css("display", "");
 					$("#podTr").css("display", "");
 				}
 				$('#btnUpdate').on('click', function() {
@@ -170,6 +145,16 @@
 											<div>
 												<input type="hidden" th:id="type" th:name="type"
 													th:value="${type}" />
+											</div>
+										</td>
+									</tr>
+									<tr th:id="namespaceTr" style="height:65px;">
+										<th>Namespace<strong class="astertisk">*</strong></th>
+										<td>
+											<div th:text="${namespace}"></div>
+											<div>
+												<input type="hidden" th:id="namespace" th:name="namespace"
+													th:value="${namespace}" />
 											</div>
 										</td>
 									</tr>
