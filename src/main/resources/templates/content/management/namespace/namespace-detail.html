@@ -9,6 +9,23 @@
 	<script th:inline="javascript" type="text/javascript">
 	/*<![CDATA[*/
 		
+		$.alopex.page(function() {
+         this.init = function(id, param) { 
+        	$('.Progressbar').hide();
+ 			var namespace = /*[[${namespace}]]*/;
+ 			var status = /*[[${param.status}]]*/;
+ 			if(namespace){
+ 				$('#input_namespace').val(namespace);
+ 				initNamespace(namespace);
+ 				$('#span_namespace').text(namespace);
+ 				if('inactive' == status)
+ 					$('.active').removeClass('active').addClass('inactive');
+ 			}
+ 			getClusterRole();
+ 			registEvent();
+         }
+		});
+	
 		function initNamespace(namespace){
 			var url = "/management/namespace/getNamespaceResource";
 			ajaxCall(url, {"namespace" : namespace}).done(function(data){
@@ -121,18 +138,7 @@
 		}
 	
 		$(document).ready(function(){
-			$('.Progressbar').hide();
-			var namespace = /*[[${namespace}]]*/;
-			var status = /*[[${param.status}]]*/;
-			if(namespace){
-				$('#input_namespace').val(namespace);
-				initNamespace(namespace);
-				$('#span_namespace').text(namespace);
-				if('inactive' == status)
-					$('.active').removeClass('active').addClass('inactive');
-			}
-			getClusterRole();
-			registEvent();
+			
 			
 		});
 		
@@ -193,9 +199,9 @@
         				commonPopup.alert({
                             message: 'Namespace 구성 정보를 변경하였습니다.',
                             callback: function() {
+                            	location.reload();
                             }
                         });
-        				location.reload();
         			});      
                 }
             });
