@@ -97,7 +97,6 @@ public class RuleController {
 	@ResponseBody
 	public Map<String, Object> createRule(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		System.out.println(params);
 		try {
 			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
 			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
@@ -127,6 +126,7 @@ public class RuleController {
 			model.addAttribute("condition", ruleDtl.getCondition());
 			model.addAttribute("value2", ruleDtl.getValue2().trim());
 			model.addAttribute("value", ruleDtl.getValue());
+			model.addAttribute("pod", ruleDtl.getPod());
 		}
 
 		return "content/alert/rules/detailrules";
