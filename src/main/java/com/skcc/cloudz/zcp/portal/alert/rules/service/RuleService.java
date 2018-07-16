@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -19,8 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
-import com.skcc.cloudz.zcp.api.iam.service.impl.IamRestClient;
 import com.skcc.cloudz.zcp.common.util.Message;
 import com.skcc.cloudz.zcp.portal.alert.channels.vo.ChannelVo;
 import com.skcc.cloudz.zcp.portal.alert.rules.vo.RepeatVo;
@@ -40,9 +40,6 @@ public class RuleService {
 	@Autowired
 	Message message;
 	
-	@Autowired
-    private IamRestClient client;
-
 	public RuleVo[] getRuleList() {
 		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/rule").build().toString();
 		logger.info(url);
@@ -105,17 +102,17 @@ public class RuleService {
 
 		if ("NodeDown".equals(params.get("type"))) {
 			ruleParam.setValue1(message.get("NodeDown"));
-			ruleParam.setCondition("=");
+			ruleParam.setCondition("==");
 			ruleParam.setValue2("0");
 
 		} else if ("ApiserverDown".equals(params.get("type"))) {
 			ruleParam.setValue1(message.get("ApiserverDown"));
-			ruleParam.setCondition("=");
+			ruleParam.setCondition("==");
 			ruleParam.setValue2("0");
 
 		} else if ("K8SNodeNotReady".equals(params.get("type"))) {
 			ruleParam.setValue1(message.get("K8SNodeNotReady"));
-			ruleParam.setCondition("=");
+			ruleParam.setCondition("==");
 			ruleParam.setValue2("0");
 
 		} else if ("PodFrequentlyRestarting".equals(params.get("type"))) {
@@ -268,17 +265,17 @@ public class RuleService {
 
 		if ("NodeDown".equals(params.get("type"))) {
 			ruleParam.setValue1(message.get("NodeDown"));
-			ruleParam.setCondition("=");
+			ruleParam.setCondition("==");
 			ruleParam.setValue2("0");
 
 		} else if ("ApiserverDown".equals(params.get("type"))) {
 			ruleParam.setValue1(message.get("ApiserverDown"));
-			ruleParam.setCondition("=");
+			ruleParam.setCondition("==");
 			ruleParam.setValue2("0");
 
 		} else if ("K8SNodeNotReady".equals(params.get("type"))) {
 			ruleParam.setValue1(message.get("K8SNodeNotReady"));
-			ruleParam.setCondition("=");
+			ruleParam.setCondition("==");
 			ruleParam.setValue2("0");
 
 		} else if ("PodFrequentlyRestarting".equals(params.get("type"))) {
@@ -362,17 +359,14 @@ public class RuleService {
 		HttpEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class, params);
 		System.out.println(response.getBody());
 		
-//		Map<String, Object> resultMap = new HashMap<String, Object>();
-//        ApiResponseVo response2 = client.request("/iam/apps/deployments?namespace="+params.get("namespace"), null);
+		JSONObject jsonObj = new JSONObject();
 		
-//		JSONObject jsonObj = new JSONObject();
-//		
-//		JSONParser jsonParser = new JSONParser();
-//		jsonObj = (JSONObject) jsonParser.parse(response.getBody());
-//		
-//		System.out.println(jsonObj.get("code"));
-//		System.out.println(jsonObj.get("msg"));
-//		System.out.println(jsonObj.get("data"));
+		JSONParser jsonParser = new JSONParser();
+		jsonObj = (JSONObject) jsonParser.parse(response.getBody());
+		
+		System.out.println(jsonObj.get("code"));
+		System.out.println(jsonObj.get("msg"));
+		System.out.println(jsonObj.get("data"));
 		
 //		if(response.getBody().getCode() == HttpStatus.OK) {
 //			
