@@ -13,6 +13,7 @@ public class RuleVo {
 	private String value;
 	private String pod;
 	private String namespace;
+	private String notification;
 
 	/**
 	 * @return the id
@@ -175,6 +176,20 @@ public class RuleVo {
 	 */
 	public void setNamespace(String namespace) {
 		this.namespace = namespace;
+	}
+
+	/**
+	 * @return the notification
+	 */
+	public String getNotification() {
+		return notification;
+	}
+
+	/**
+	 * @param notification the notification to set
+	 */
+	public void setNotification(String notification) {
+		this.notification = notification;
 	}
 
 	
