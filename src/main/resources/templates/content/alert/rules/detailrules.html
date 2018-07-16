@@ -85,9 +85,11 @@
 				if (typeVal == 'NodeDown' || typeVal == 'ApiserverDown'
 						|| typeVal == 'K8SNodeNotReady') {
 					return true;
-				} else if (typeVal == 'PodFrequentlyRestarting') {
+				} 
+				/* else if (typeVal == 'PodFrequentlyRestarting') {
 					return true;
-				} else {
+				}  */
+				else {
 					var value2 = $('#value2').validate();
 					if (!value2) {
 						return false;
@@ -103,7 +105,8 @@
 				if ($('#type').val() == 'NodeDown'
 						|| $('#type').val() == 'ApiserverDown'
 						|| $('#type').val() == 'K8SNodeNotReady'
-						|| $('#type').val() == 'PodFrequentlyRestarting') {
+						//|| $('#type').val() == 'PodFrequentlyRestarting'
+						) {
 					$("#exprTr").css("display", "none");
 				}
 				if ($('#type').val() == 'PodFrequentlyRestarting') {

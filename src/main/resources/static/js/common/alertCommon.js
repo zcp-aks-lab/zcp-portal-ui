@@ -8,6 +8,31 @@ function isValidURL(url) {
 	}
 }
 
+function comboOptions(id, data, comboText) {
+	try {
+		$('#' + id).find("option:eq(0)").prop("selected", true);
+		$('#' + comboText).text('Pod 선택');
+		
+		$('#' + id).find('option').each(function() {
+			$(this).remove();
+		});
+
+		var option = [];
+		option.push("<option value=\"\">Pod 선택</option>");
+
+		if (data == '' || data == null) {
+			option.push("<option value=\"\">데이타가 없습니다.</option>");
+		}
+
+		for (var i = 0; i < data.length; i++) {
+			option.push("<option value=\"" + data[i] + "\"");
+			option.push(">" + data[i] + "</option>");
+		}
+		$('#' + id).append(option.join(''));
+	} catch (e) {
+	}
+}
+
 var alertPopup = {
 	default_opts : {
 		title : '알림',

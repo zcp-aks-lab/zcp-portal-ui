@@ -56,6 +56,29 @@
 					}
 				});
 			},
+
+			getDeployment : function(namespace) {
+				var jsonData = {
+					namespace : namespace
+				};
+
+				$a.request('/alert/getDeployment', {
+					method : 'post',
+					data : jsonData,
+					success : function(res) {
+						if (res.resultCd !== '200') {
+							if (res.resultMsg)
+								return false;
+						} else {
+							comboOptions("pod", res.resultData, "podSpan");
+						}
+					},
+					error : function(errObject) {
+						alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+					}
+				});
+			},
+
 			validation : function() {
 				var typeVal = $("#type option:selected").val();
 
@@ -114,6 +137,31 @@
 						}
 					});
 				});
+
+				$('#namespace').change(function(e) {
+					$('#podDiv').attr('class', 'Divselect');
+					$('#podDiv').removeAttr('data-disabled');
+					$('#pod').removeAttr('class')
+					$('#pod').attr('disabled', false);
+
+					var type = $("#namespace option:selected").val();
+					zcpPortalApp.data.getDeployment(type);
+				});
+
+				$('#type').change(
+						function(e) {
+							var typeVal = $("#type option:selected").val();
+
+							if (typeVal != 'PodFrequentlyRestarting') {
+								$('#namespace').find("option:eq(0)").prop(
+										"selected", true);
+								$('#namespaceSpan').text('Namespace 선택');
+
+								$('#pod').find("option:eq(0)").prop("selected",
+										true);
+								$('#podSpan').text('Pod 선택');
+							}
+						});
 			}
 		}
 	}
@@ -128,10 +176,6 @@
 			$('#podDiv').attr('class', 'Divselect af-disabled Disabled');
 			$('#podDiv').attr('data-disabled', 'true');
 			$('#pod').attr('disabled', true);
-
-			/* $('#pod').attr('class', 'Textinput af-disabled Disabled');
-			$('#pod').attr('data-disabled', 'true');
-			$('#pod').attr('disabled', true); */
 
 			/* $('#warningLabel').attr('class', 'ImageRadio Disabled');
 			$("#severity").attr("readonly", true);
@@ -149,16 +193,17 @@
 					function(e) {
 						var type = $("#type option:selected").val();
 						$('#value2').val('');
+
 						if (type == 'NodeDown') {
 							$('#namespaceDiv').attr('class',
 									'Divselect af-disabled Disabled');
 							$('#namespaceDiv').attr('data-disabled', 'true');
 							$('#namespace').attr('disabled', true);
 
-							/* $('#pod').attr('class',
-									'Textinput af-disabled Disabled');
-							$('#pod').attr('data-disabled', 'true');
-							$('#pod').attr('disabled', true); */
+							$('#podDiv').attr('class',
+									'Divselect af-disabled Disabled');
+							$('#podDiv').attr('data-disabled', 'true');
+							$('#pod').attr('disabled', true);
 
 							$('#conditionDiv').attr('class',
 									'Divselect af-disabled Disabled');
@@ -177,10 +222,10 @@
 							$('#namespaceDiv').attr('data-disabled', 'true');
 							$('#namespace').attr('disabled', true);
 
-							/* $('#pod').attr('class',
-									'Textinput af-disabled Disabled');
-							$('#pod').attr('data-disabled', 'true');
-							$('#pod').attr('disabled', true); */
+							$('#podDiv').attr('class',
+									'Divselect af-disabled Disabled');
+							$('#podDiv').attr('data-disabled', 'true');
+							$('#pod').attr('disabled', true);
 
 							$('#conditionDiv').attr('class',
 									'Divselect af-disabled Disabled');
@@ -199,10 +244,10 @@
 							$('#namespaceDiv').attr('data-disabled', 'true');
 							$('#namespace').attr('disabled', true);
 
-							/* $('#pod').attr('class',
-									'Textinput af-disabled Disabled');
-							$('#pod').attr('data-disabled', 'true');
-							$('#pod').attr('disabled', true); */
+							$('#podDiv').attr('class',
+									'Divselect af-disabled Disabled');
+							$('#podDiv').attr('data-disabled', 'true');
+							$('#pod').attr('disabled', true);
 
 							$('#conditionDiv').attr('class',
 									'Divselect af-disabled Disabled');
@@ -221,16 +266,20 @@
 							$('#namespace').removeAttr('class')
 							$('#namespace').attr('disabled', false);
 
-							$('#podDiv').attr('class', 'Divselect');
-							$('#podDiv').removeAttr('data-disabled');
-							$('#pod').removeAttr('class')
-							$('#pod').attr('disabled', false);
+							$('#podDiv').attr('class',
+									'Divselect af-disabled Disabled');
+							$('#podDiv').attr('data-disabled', 'true');
+							$('#pod').attr('disabled', true);
+							
+							$('#conditionDiv').attr('class', 'Divselect');
+							$('#conditionDiv').removeAttr('data-disabled');
+							$('#condition').removeAttr('class');
+							$('#condition').attr('disabled', false);
 
-							/* $('#pod').attr('class', 'Textinput');
-							$('#pod').removeAttr('data-disabled');
-							$('#pod').attr('disabled', false); */
+							$('#value2').attr('class', 'Textinput');
+							$('#value2').attr('disabled', false);
 
-							$('#conditionDiv').attr('class',
+							/* $('#conditionDiv').attr('class',
 									'Divselect af-disabled Disabled');
 							$('#conditionDiv').attr('data-disabled', 'true');
 							$('#condition').attr('class',
@@ -239,7 +288,7 @@
 
 							$('#value2').attr('class',
 									'Textinput af-disabled Disabled');
-							$('#value2').attr('disabled', true);
+							$('#value2').attr('disabled', true); */
 
 						} else {
 							$('#namespaceDiv').attr('class',
@@ -251,11 +300,6 @@
 									'Divselect af-disabled Disabled');
 							$('#podDiv').attr('data-disabled', 'true');
 							$('#pod').attr('disabled', true);
-
-							/* $('#pod').attr('class',
-									'Textinput af-disabled Disabled');
-							$('#pod').attr('data-disabled', 'true');
-							$('#pod').attr('disabled', true); */
 
 							$('#conditionDiv').attr('class', 'Divselect');
 							$('#conditionDiv').removeAttr('data-disabled');
@@ -303,7 +347,7 @@
 									<tr style="height: 65px;">
 										<th>Rule 종류<strong class="astertisk">*</strong></th>
 										<td>
-											<div class="Divselect" style="width: 300px;">
+											<div class="Divselect" style="width: 310px;">
 												<select th:name="type" th:id="type"
 													data-validation-rule="{required:true}"
 													data-validation-message="{required:'Rule 종류를 선택해주세요.'}">
@@ -325,14 +369,14 @@
 										<th>Namespace<strong class="astertisk">*</strong></th>
 										<td>
 											<div class="Divselect" id="namespaceDiv" data-disabled="true"
-												style="width: 300px;">
+												style="width: 310px;">
 												<select th:name="namespace" th:id="namespace"
 													data-validation-rule="{required:true}"
 													data-validation-message="{required:'Namespace를 선택해주세요.'}">
 													<option value="">Namespace 선택</option>
 													<option th:each="namespace : ${namespace}"
 														th:value="${namespace}" th:text="${namespace}"></option>
-												</select> <span></span>
+												</select> <span id="namespaceSpan"></span>
 											</div>
 											<p class="info-text" data-for="namespace"></p>
 										</td>
@@ -341,16 +385,12 @@
 										<th>Pod<strong class="astertisk">*</strong></th>
 										<td>
 											<div class="Divselect" id="podDiv" data-disabled="true"
-												style="width: 300px;">
+												style="width: 310px;">
 												<select th:name="pod" th:id="pod"
 													data-validation-rule="{required:true}"
 													data-validation-message="{required:'Pod을 선택해주세요.'}">
 													<option value="">Pod 선택</option>
-													<option value="zcp-alertmanager">zcp-alertmanager</option>
-													<!-- <option value="">Pod 선택</option>
-													<option th:each="pod : ${pod}" th:value="${pod}"
-														th:text="${pod}"></option> -->
-												</select> <span></span>
+												</select> <span id="podSpan"></span>
 											</div>
 											<p class="info-text" data-for="pod"></p>
 										</td>
@@ -358,7 +398,7 @@
 									<tr style="height: 65px;">
 										<th>Duration<strong class="astertisk">*</strong></th>
 										<td>
-											<div class="Divselect" style="width: 150px;">
+											<div class="Divselect" style="width: 170px;">
 												<select th:name="duration" th:id="duration"
 													data-validation-rule="{required:true}"
 													data-validation-message="{required:'Duration을 선택해주세요.'}">
@@ -401,7 +441,7 @@
 									<tr style="height: 65px;">
 										<th>채널<strong class="astertisk">*</strong></th>
 										<td>
-											<div class="Divselect" style="width: 300px;">
+											<div class="Divselect" style="width: 310px;">
 												<select th:name="channel" th:id="channel"
 													data-validation-rule="{required:true}"
 													data-validation-message="{required:'채널을 선택해주세요.'}">

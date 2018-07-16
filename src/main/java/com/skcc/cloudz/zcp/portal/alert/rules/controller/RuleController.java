@@ -29,7 +29,7 @@ public class RuleController {
 
 	@Autowired
 	private RuleService ruleService;
-	
+
 	@Autowired
 	private UserService userService;
 
@@ -67,19 +67,37 @@ public class RuleController {
 	public String addRule(Model model) throws Exception {
 		List<String> namespace = userService.getNamespaces();
 		model.addAttribute("namespace", namespace);
-		ruleService.getDeployments();
-		
+
 		List<String> channel = ruleService.getChannels();
 		model.addAttribute("channel", channel);
 
 		return "content/alert/rules/addrules";
+	}
+	
+	@PostMapping(value = "/getDeployment", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String, Object> getDeployment(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		try {
+			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
+			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
+			resultMap.put("resultData", ruleService.getDeployments(params));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			resultMap.put("resultCd", ApiResult.FAIL.getCode());
+			resultMap.put("resultMsg", e.getMessage());
+		}
+
+		return resultMap;
 	}
 
 	@PostMapping(value = "/createRule", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Map<String, Object> createRule(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-
+		System.out.println(params);
 		try {
 			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
 			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
@@ -97,7 +115,7 @@ public class RuleController {
 	@GetMapping(value = "/detailRule/{id}", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String detailRule(Model model, @PathVariable("id") String id) throws Exception {
 		RuleVo ruleDtl = ruleService.getRuleDtl(id);
-		
+
 		List<String> channel = ruleService.getChannels();
 		model.addAttribute("channel", channel);
 
@@ -110,7 +128,7 @@ public class RuleController {
 			model.addAttribute("value2", ruleDtl.getValue2().trim());
 			model.addAttribute("value", ruleDtl.getValue());
 		}
-		
+
 		return "content/alert/rules/detailrules";
 	}
 

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class RuleService {
 
 	@Autowired
 	Message message;
-	
+
 	public RuleVo[] getRuleList() {
 		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/rule").build().toString();
 		logger.info(url);
@@ -116,11 +117,12 @@ public class RuleService {
 			ruleParam.setValue2("0");
 
 		} else if ("PodFrequentlyRestarting".equals(params.get("type"))) {
-			String expr = "increase(kube_pod_container_status_restarts_total{pod=~\"" + params.get("pod").toString()
-					+ ".*\"}[1h])";
+//			String expr = "increase(kube_pod_container_status_restarts_total{pod=~\"" + params.get("pod").toString() + ".*\"}[1h])";
+			String expr = "increase(kube_pod_container_status_restarts_total{namespace=\"zcp-system\", pod=~\"" + params.get("pod").toString() + ".*\"}[1h])";
+			
 			ruleParam.setValue1(expr);
-			ruleParam.setCondition("");
-			ruleParam.setValue2("");
+			ruleParam.setCondition(params.get("condition").toString());
+			ruleParam.setValue2(params.get("value2").toString());
 
 		} else {
 			ruleParam.setValue1(message.get(ruleParam.getType()));
@@ -279,11 +281,12 @@ public class RuleService {
 			ruleParam.setValue2("0");
 
 		} else if ("PodFrequentlyRestarting".equals(params.get("type"))) {
-			String expr = "increase(kube_pod_container_status_restarts_total{pod=~\"" + params.get("pod").toString()
-					+ ".*\"}[1h])";
+//			String expr = "increase(kube_pod_container_status_restarts_total{pod=~\"" + params.get("pod").toString() + ".*\"}[1h])";
+			String expr = "increase(kube_pod_container_status_restarts_total{namespace=\"zcp-system\", pod=~\"" + params.get("pod").toString() + ".*\"}[1h])";
+			
 			ruleParam.setValue1(expr);
-			ruleParam.setCondition("");
-			ruleParam.setValue2("");
+			ruleParam.setCondition(params.get("condition").toString());
+			ruleParam.setValue2(params.get("value2").toString());
 
 		} else {
 			ruleParam.setValue1(message.get(ruleParam.getType()));
@@ -310,7 +313,7 @@ public class RuleService {
 
 		return ruleVo;
 	}
-	
+
 	public List<String> getChannels() throws Exception {
 		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/channel").build().toString();
 		logger.info(url);
@@ -319,7 +322,7 @@ public class RuleService {
 
 		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		
+
 		HttpEntity<ChannelVo[]> entity = new HttpEntity<ChannelVo[]>(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
@@ -329,7 +332,7 @@ public class RuleService {
 
 		ChannelVo[] channelVo = null;
 		List<String> channelList = new ArrayList<String>();
-		
+
 		if (statusCode == HttpStatus.OK) {
 			channelVo = response.getBody();
 			for (ChannelVo chList : channelVo) {
@@ -338,52 +341,36 @@ public class RuleService {
 		}
 		return channelList;
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public List<String> getDeployments() throws Exception {
-		String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path("/iam/apps/deployments").build().toString();
+	public List<String> getDeployments(Map<String, Object> params) throws Exception {
+		String targetUrl = "/iam/apps/deployments?namespace="+params.get("namespace");
+		String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path(targetUrl).build().toString();
 		logger.info(url);
 
 		HttpHeaders headers = new HttpHeaders();
 
 		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		
-		HttpEntity entity = new HttpEntity(headers);
-		
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("namespace", "zcp-system");
 
+		HttpEntity entity = new HttpEntity(headers);
 		RestTemplate restTemplate = new RestTemplate();
-		
-		HttpEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class, params);
-		System.out.println(response.getBody());
-		
+
+		HttpEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
 		JSONObject jsonObj = new JSONObject();
-		
+
 		JSONParser jsonParser = new JSONParser();
 		jsonObj = (JSONObject) jsonParser.parse(response.getBody());
-		
-		System.out.println(jsonObj.get("code"));
-		System.out.println(jsonObj.get("msg"));
-		System.out.println(jsonObj.get("data"));
-		
-//		if(response.getBody().getCode() == HttpStatus.OK) {
-//			
-//		}
-		
-		
 
-//		ChannelVo[] channelVo = null;
-//		List<String> channelList = new ArrayList<String>();
-//		
-//		if (statusCode == HttpStatus.OK) {
-//			channelVo = response.getBody();
-//			for (ChannelVo chList : channelVo) {
-//				channelList.add(chList.getChannel());
-//			}
-//		}
-		return null;
+		List<String> deploymentList = new ArrayList<String>();
+		JSONArray deploymentArray = (JSONArray) jsonObj.get("data");
+
+		for (int cnt = 0; cnt < deploymentArray.size(); cnt++) {
+			deploymentList.add(deploymentArray.get(cnt).toString());
+		}
+
+		return deploymentList;
 	}
 
 }
