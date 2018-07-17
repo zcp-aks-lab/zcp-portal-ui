@@ -99,3 +99,22 @@ var commonPopup = {
 	    });
 	}
 };
+
+function goUrl(url) {
+	 var openNewWindow = window.open("about:blank");
+	 var pReg = /^(http|https)/i
+	 var isHttp =  pReg.test(url);
+	 url = (!isHttp)?"http://"+url:url;
+	 openNewWindow.location.href = url;
+}
+
+function getCookie(key){
+    var val = $.cookie(key);
+    return val;
+}
+
+function setCookie(name, value, expiredays) {
+    $.cookie(name, value, { expires: expiredays, path: '/' });
+}
+
+

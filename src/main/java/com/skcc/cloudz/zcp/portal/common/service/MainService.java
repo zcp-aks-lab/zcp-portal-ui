@@ -21,6 +21,9 @@ public class MainService {
     
     private static final Logger log = LoggerFactory.getLogger(MainService.class);
     
+    static final String TYPE_MEMORY = "memory";
+    static final String TYPE_CPU = "cpu";
+    
     @Autowired
     private IamApiService iamApiService;
     
@@ -75,7 +78,7 @@ public class MainService {
     public Map<String, Object> getMemoryStatus() throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
-        ApiResponseVo apiResponseVo = iamApiService.getClusterStatus("memory");
+        ApiResponseVo apiResponseVo = iamApiService.getClusterStatus(TYPE_MEMORY);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new ZcpPortalException(apiResponseVo);
         }
@@ -88,7 +91,7 @@ public class MainService {
     public Map<String, Object> getCpuStatus() throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
-        ApiResponseVo apiResponseVo = iamApiService.getClusterStatus("cpu");
+        ApiResponseVo apiResponseVo = iamApiService.getClusterStatus(TYPE_CPU);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new ZcpPortalException(apiResponseVo);
         }

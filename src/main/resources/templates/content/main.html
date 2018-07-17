@@ -8,6 +8,7 @@
         <script src="js/lib/amcharts/amcharts.js" data-th-src="@{/js/lib/amcharts/amcharts.js}"></script>
         <script src="js/lib/amcharts/pie.js" data-th-src="@{/js/lib/amcharts/pie.js}"></script>
         <script src="js/lib/amcharts/themes/light.js" data-th-src="@{/js/lib/amcharts/themes/light.js}"></script>
+        <script src="js/lib/jquery/jquery.cookie.js" data-th-src="@{/js/lib/jquery/jquery.cookie.js}"></script>
         
         <script th:inline="javascript">
         /*<![CDATA[*/
@@ -312,8 +313,6 @@
                     },
 
                     getProgressbarType: function(value) {
-                        log(value);
-                        
                     	var type;
                         if(Number(value) > 90) {
                         	type = 'name-typee';
@@ -450,7 +449,11 @@
                             method: 'get',
                             data: null, 
                             success: function(res) {
-                                
+                                var result = res.loginResult;
+
+                                //log(result.jweToken);
+                                $.cookie('jweToken', encodeURIComponent(result.jweToken), { expires: 7, path: '/' });
+                                goUrl('https://dashboard.cloudzcp.io');
                             },
                             error: function(errObject) {
                                 //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -461,7 +464,7 @@
                 event: {
                     init: function() {
                     	$('#btnDashboard').on('click', function() {
-                            //zcpPortalApp.data.moveDashboard();
+                            zcpPortalApp.data.moveDashboard();
                         });
                     }
                 }
@@ -478,6 +481,8 @@
         <th:block layout:fragment="content">
             <!-- location -->
             <th:block th:include="common/include/namespace :: common"></th:block>
+            
+            <!-- <iframe src="https://dashboard.cloudzcp.io" width="100%" height="100%" valign="top" frameborder="1" id="resume_dp_id" name="resume_dp" vspace="0" hspace="0" marginheight="0" marginwidth="0" scrolling="yes" align="center"></iframe> -->
             
             <div class="contents-box">
                 <!-- service top area-->
