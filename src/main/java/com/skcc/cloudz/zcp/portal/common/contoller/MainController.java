@@ -68,6 +68,12 @@ public class MainController {
         return resultMap;
     }
     
+    @GetMapping(value = "/main-dashboard", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+    public String mainDashboard() throws Exception {
+        
+        return "content/main-dashboard";
+    }
+    
     @GetMapping(value = "/main/getCsrfToken", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Object> getCsrfToken() throws Exception {

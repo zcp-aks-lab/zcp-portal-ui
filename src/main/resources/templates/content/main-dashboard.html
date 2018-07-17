@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-default">
+    <head>
+        <title>메인</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <script src="js/lib/jquery/jquery.cookie.js" data-th-src="@{/js/lib/jquery/jquery.cookie.js}"></script>
+        
+        <script type="text/javascript">
+            var zcpPortalApp = {
+                pageInit: function() {
+                    'use strict';
+                    
+                    // data init
+                    this.data.init();
+                    
+                    // event init
+                    this.event.init();
+                },
+                data: {
+                    init: function() {
+                        this.getCsrfToken();
+                    },
+
+                    getCsrfToken: function() {
+                        $a.request('/main/getCsrfToken', {
+                            method: 'get',
+                            data: null, 
+                            success: function(res) {
+                                var result = res.loginResult;
+
+                                //log(result.jweToken);
+                                $.cookie('jweToken', encodeURIComponent(result.jweToken), { expires: 7, path: '/' });
+                            },
+                            error: function(errObject) {
+                                //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                            }
+                        })
+                    }
+                },
+                event: {
+                    init: function() {
+                        
+                    }
+                }
+            }
+            
+            $.alopex.page(function() {
+                this.init = function(id, param) { 
+                    zcpPortalApp.pageInit();
+                };
+            });
+        </script>
+    </head>
+    <body>
+        <th:block layout:fragment="content">
+            <iframe src="https://dashboard.cloudzcp.io" width="100%" height="100%" valign="top" frameborder="1" id="resume_dp_id" name="resume_dp" vspace="0" hspace="0" marginheight="0" marginwidth="0" scrolling="yes" align="center"></iframe>
+        </th:block>
+    </body>
+</html>

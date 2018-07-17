@@ -445,7 +445,8 @@
                     },
 
                     moveDashboard: function() {
-                    	$a.request('/main/getCsrfToken', {
+                        location.href = '/main-dashboard'
+                    	/* $a.request('/main/getCsrfToken', {
                             method: 'get',
                             data: null, 
                             success: function(res) {
@@ -458,7 +459,7 @@
                             error: function(errObject) {
                                 //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
                             }
-                        })
+                        }) */
                     }
                 },
                 event: {
