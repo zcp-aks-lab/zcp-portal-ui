@@ -9,6 +9,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,8 +21,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
-
 @Component
 public class K8sSsoService {
     
@@ -30,7 +29,8 @@ public class K8sSsoService {
     @Autowired
     private RestTemplate restTemplate;
     
-    final String DASHBOARD_BASE_URL = "https://kubernetes";
+    @Value("${props.dashboard.baseUrl}")
+    private String DASHBOARD_BASE_URL;
     
     public String getCsrfToken() {
         String result = StringUtils.EMPTY;
@@ -87,8 +87,7 @@ public class K8sSsoService {
             ResponseEntity<Map> responseEntity = restTemplate.exchange(url, HttpMethod.POST, entity, Map.class);
             
             log.info("===> Response status : {}", responseEntity.getStatusCode().value());
-            log.info("===> Response body code : {}", responseEntity.getBody());
-            log.info("===> Response body data : {}", responseEntity.getBody());
+            log.info("===> Response body : {}", responseEntity.getBody());
             
             if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
                 resultMap.putAll(responseEntity.getBody());
@@ -122,8 +121,7 @@ public class K8sSsoService {
             ResponseEntity<Map> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
             
             log.info("===> Response status : {}", responseEntity.getStatusCode().value());
-            log.info("===> Response body code : {}", responseEntity.getBody());
-            log.info("===> Response body data : {}", responseEntity.getBody());
+            log.info("===> Response body : {}", responseEntity.getBody());
             
             if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
                 resultMap.putAll(responseEntity.getBody());
