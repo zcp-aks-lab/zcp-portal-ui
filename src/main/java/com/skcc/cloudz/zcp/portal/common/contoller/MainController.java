@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpNodeVo;
 import com.skcc.cloudz.zcp.common.constants.AccessRole;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
+import com.skcc.cloudz.zcp.common.util.CommonUtil;
 import com.skcc.cloudz.zcp.portal.common.service.K8sSsoService;
 import com.skcc.cloudz.zcp.portal.common.service.MainService;
 
@@ -69,34 +74,76 @@ public class MainController {
     }
     
     @GetMapping(value = "/main-dashboard", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
-    public String mainDashboard() throws Exception {
+    public String mainDashboard(HttpServletResponse response) throws Exception {
+        
+        /* 1) get token */
+        String token = k8sSsoService.getCsrfToken();
+        log.info("token : {}", token);
+        
+        /* 2) login */
+        HashMap<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("kubeConfig", "");
+        reqMap.put("password", "");
+        reqMap.put("token", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJ6Y3Atc3lzdGVtIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6InpjcC1zeXN0ZW0tYWRtaW4tdG9rZW4tcmptN24iLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiemNwLXN5c3RlbS1hZG1pbiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImJlOTI0MmM2LTYyOTctMTFlOC1iNzZhLTM2YjhlMjg5NmNjNCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDp6Y3Atc3lzdGVtOnpjcC1zeXN0ZW0tYWRtaW4ifQ.onxzYoJnX7f8UZ2RNMw_mExBv6Qavs-7KH92sLEJdeRdis24caiAhCJWG3_G73zmSJpij21fxsPKYkp9GQ67HySTZTYZRm-UcwPGIoWiRLO-ahiwaBftLuLykgo-92woPRdA-5NKmNX1NrWXLuhEA4LHIiNJYqXcN2snmUpmEDLztX4-jtJkUypCvsiitz9T-1ozyFSpSWXd_gjs_IabI2KCQM2l3-2dEehaM_-r0OZDI7S9OdmsBSQKQJ_sPkpGU4LyCsur9eHH5yx27FvPgsxX6sZJeG2bIVpNDcbhpn9jv27eaiiTCHfb8kBr8Y95-k2mD136Uy_A2fLZaq4G9WsgIewgZ0Fp0biMpd6Ma4PRxDvOUtIxsd7i8kdO2Ozo7NWQ7B_7HXX4px-w6FPtU6mgqYRV36nD3zz-IC7_YvHZGWfyE_U6xcre_HBbWoy6FCMi8R4z__-pb3EAq_ARKw-_XwQVF062WICjJy6TkoKlCB_w5vB9RfY9fPZR0HVu0t2toh5zQyCMu3x6x900M5tEyxDZNQN0d6dRDSH3TkvsDqJ5mV7xiHCWWIqvqKJvIXo_XwNMKpGhSItCMlGcwx-eUxFhR_ksXXUBz9jGRPkG2kBYzy7s7zMaUeDmsjzbE_6LLyaMwjoNl2CJd6uBsjqEAYG--KFQQ6GHL0CyOew");
+        reqMap.put("username", "");
+        
+        Map<String, Object> res = k8sSsoService.login(token, reqMap);
+        log.info("jweToken : {}", res.get("jweToken").toString());
+        log.info("jweToken encoded : {}", CommonUtil.getInstance().encodeURIComponent(res.get("jweToken").toString()));
+        
+        /* 3) login status */
+        String jweToken = CommonUtil.getInstance().encodeURIComponent(res.get("jweToken").toString());
+        k8sSsoService.loginStatus(jweToken);
+        
+        /* 4) Cookie set */
+        Cookie cookie = new Cookie("jweToken", jweToken);
+        cookie.setDomain("dashboard.cloudzcp.io");
+        cookie.setMaxAge(1 * 60 * 60);
+        response.addCookie(cookie);
+        
         
         return "content/main-dashboard";
     }
     
     @GetMapping(value = "/main/getCsrfToken", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Object> getCsrfToken() throws Exception {
+    public Map<String, Object> getCsrfToken(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
         /* 1) get token */
         String token = k8sSsoService.getCsrfToken();
         log.info("token : {}", token);
         
+        /* 2) login */
         HashMap<String, Object> reqMap = new HashMap<String, Object>();
         reqMap.put("kubeConfig", "");
         reqMap.put("password", "");
-        //reqMap.put("token", "1234");
         reqMap.put("token", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJ6Y3Atc3lzdGVtIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6InpjcC1zeXN0ZW0tYWRtaW4tdG9rZW4tcmptN24iLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiemNwLXN5c3RlbS1hZG1pbiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImJlOTI0MmM2LTYyOTctMTFlOC1iNzZhLTM2YjhlMjg5NmNjNCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDp6Y3Atc3lzdGVtOnpjcC1zeXN0ZW0tYWRtaW4ifQ.onxzYoJnX7f8UZ2RNMw_mExBv6Qavs-7KH92sLEJdeRdis24caiAhCJWG3_G73zmSJpij21fxsPKYkp9GQ67HySTZTYZRm-UcwPGIoWiRLO-ahiwaBftLuLykgo-92woPRdA-5NKmNX1NrWXLuhEA4LHIiNJYqXcN2snmUpmEDLztX4-jtJkUypCvsiitz9T-1ozyFSpSWXd_gjs_IabI2KCQM2l3-2dEehaM_-r0OZDI7S9OdmsBSQKQJ_sPkpGU4LyCsur9eHH5yx27FvPgsxX6sZJeG2bIVpNDcbhpn9jv27eaiiTCHfb8kBr8Y95-k2mD136Uy_A2fLZaq4G9WsgIewgZ0Fp0biMpd6Ma4PRxDvOUtIxsd7i8kdO2Ozo7NWQ7B_7HXX4px-w6FPtU6mgqYRV36nD3zz-IC7_YvHZGWfyE_U6xcre_HBbWoy6FCMi8R4z__-pb3EAq_ARKw-_XwQVF062WICjJy6TkoKlCB_w5vB9RfY9fPZR0HVu0t2toh5zQyCMu3x6x900M5tEyxDZNQN0d6dRDSH3TkvsDqJ5mV7xiHCWWIqvqKJvIXo_XwNMKpGhSItCMlGcwx-eUxFhR_ksXXUBz9jGRPkG2kBYzy7s7zMaUeDmsjzbE_6LLyaMwjoNl2CJd6uBsjqEAYG--KFQQ6GHL0CyOew");
         reqMap.put("username", "");
         
-        /* 2) login */
-        Map<String, Object> loginResult = k8sSsoService.login(token, reqMap);
+        Map<String, Object> res = k8sSsoService.login(token, reqMap);
+        log.info("jweToken : {}", res.get("jweToken").toString());
+        log.info("jweToken encoded : {}", CommonUtil.getInstance().encodeURIComponent(res.get("jweToken").toString()));
         
         /* 3) login status */
-        resultMap.put("token", token);
-        resultMap.put("loginResult", loginResult);
-                
+        String jweToken = CommonUtil.getInstance().encodeURIComponent(res.get("jweToken").toString());
+        k8sSsoService.loginStatus(jweToken);
+        
+        /* 4) Cookie set */
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (int i = 0; i < cookies.length; i++) {
+                log.info(cookies[i].getName() + ":" + cookies[i].getValue() + "<br>");
+            }
+        }
+        
+        Cookie cookie = new Cookie("jweToken", jweToken);
+        cookie.setDomain("dashboard.cloudzcp.io");
+        cookie.setMaxAge(1 * 60 * 60);
+        response.addCookie(cookie);
+        
+        resultMap.put("res", res);
+        
         return resultMap;
     }
     

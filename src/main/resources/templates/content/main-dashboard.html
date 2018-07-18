@@ -27,10 +27,11 @@
                             method: 'get',
                             data: null, 
                             success: function(res) {
-                                var result = res.loginResult;
+                                var result = res.res;
 
-                                //log(result.jweToken);
-                                $.cookie('jweToken', encodeURIComponent(result.jweToken), { expires: 7, path: '/' });
+                                log(result.jweToken);
+                                //$.cookie('jweToken', encodeURIComponent(result.jweToken), { expires: 7, path: '/' });
+                                //$.cookie('jweToken', result.jweToken, { expires: 7, path: '/' });
                             },
                             error: function(errObject) {
                                 //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');

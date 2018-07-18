@@ -101,7 +101,7 @@ public class K8sSsoService {
     }
     
     @SuppressWarnings("unchecked")
-    public Map<String, Object> loginStatus(String token, HashMap<String, Object> reqMap) {
+    public Map<String, Object> loginStatus(String token) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
         try {
@@ -111,18 +111,15 @@ public class K8sSsoService {
                     .toString();
             log.info("===> Request Url : {}", url);
             
-            ObjectMapper objectMapper = new ObjectMapper();
-            String requestBody = objectMapper.writeValueAsString(reqMap);
-            log.info("===> Request Body : {}", requestBody);
             
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.add("Cookie", "jweToken=");
+            headers.add("Cookie", "jweToken=" + token);
             
-            HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers); 
+            HttpEntity<String> entity = new HttpEntity<String>(headers); 
             
             @SuppressWarnings("rawtypes")
-            ResponseEntity<Map> responseEntity = restTemplate.exchange(url, HttpMethod.POST, entity, Map.class);
+            ResponseEntity<Map> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
             
             log.info("===> Response status : {}", responseEntity.getStatusCode().value());
             log.info("===> Response body code : {}", responseEntity.getBody());
@@ -131,7 +128,7 @@ public class K8sSsoService {
             if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
                 resultMap.putAll(responseEntity.getBody());
             }
-        } catch (RestClientException | IOException e) {
+        } catch (RestClientException e) {
             e.printStackTrace();
         }
         
