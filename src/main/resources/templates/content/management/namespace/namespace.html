@@ -261,7 +261,7 @@
     				title : 'Namespace',
     				width : '100px',
     				render : function(value, data){
-    					return '<a href="/management/namespace/'+value+'">' +value+ '</a>';
+    					return '<a class="grid" style="a.inherited:no" href="/management/namespace/'+value+'">' +value+ '</a>';
     				}
     			}, {
     				title : 'CPU Request',
@@ -401,7 +401,7 @@
 		                	<div class="Panel-content">
 		                		<span th:class="'state ' + ${namespace.status}">active</span>
 		                		<dl class="namespace-info">
-		                			<dt><a th:href="'/management/namespace/' + ${namespace.name}"  th:text="${namespace.name}"></a></dt>
+		                			<dt><a th:href="'/management/namespace/' + ${namespace.name}"  th:text="${namespace.name}" class="namespace"></a></dt>
 		                			<dd class="time-info">
 		                				<strong>생성일시</strong> : <span th:text="${#dates.format(namespace.creationDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
 		                				<div class="name-pro__title">
@@ -411,8 +411,10 @@
 		                			<dd>
 		                				<div class="namespace-btn__wrap">
 				                			<button class="btn-ico btn-viewdash" th:onclick="'location.href=\'/?namespace=' + ${namespace.name} + '\';'">대쉬보드보기</button>
+				                			<div class="Tooltip" data-position="left">대시보드 화면으로 이동</div>
 				                			<span class="vline"></span>
 				                			<button class="btn-ico btn-delnamespace" th:onclick="'deleteNamespace(\'' + ${namespace.name} + '\')'">삭제</button>
+				                			<div class="Tooltip" data-position="left">Namespace 삭제</div>
 				                		</div>
 				                	</dd>
 		                		</dl>

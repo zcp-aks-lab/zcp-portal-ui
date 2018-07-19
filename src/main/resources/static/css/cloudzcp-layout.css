@@ -2172,3 +2172,15 @@ a.view-detail:active {
 	border-top: 1px solid #dddddd;
 	background: #f9f9f9;
 }
+/*-----------------------------------
+	developer css
+------------------------------------*/
+a.namespace:link    { text-decoration:none; color:blue }
+a.namespace:visited { text-decoration:underline; color:#800080 }
+a.namespace:hover   { text-decoration:underline; }
+a.namespace:active  { text-decoration:underline; }
+
+a.grid:link    { text-decoration:none; color:blue }
+a.grid:visited { text-decoration:underline; color:#800080 }
+a.grid:hover   { text-decoration:underline; }
+a.grid:active  { text-decoration:underline; }
