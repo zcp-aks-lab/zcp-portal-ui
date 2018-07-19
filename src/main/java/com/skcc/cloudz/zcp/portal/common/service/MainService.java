@@ -15,6 +15,7 @@ import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpNodeVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
 import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
+import com.skcc.cloudz.zcp.portal.my.service.MyService;
 
 @Service
 public class MainService {
@@ -26,6 +27,12 @@ public class MainService {
     
     @Autowired
     private IamApiService iamApiService;
+    
+    @Autowired
+    private MyService myService;
+    
+    @Autowired
+    private K8sSsoService k8sSsoService;
     
     public List<ZcpNodeVo> getNodes() throws Exception {
         ZcpNodeListVo zcpNodeListVo = iamApiService.getNodes();
@@ -110,6 +117,37 @@ public class MainService {
         }
         
         resultMap.putAll(apiResponseVo.getData());
+        
+        return resultMap;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getJweToken() throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        /* get csfr token */
+        String csrfToken = k8sSsoService.getCsrfToken();
+        log.info("csrfToken : {}", csrfToken);
+        
+        /* get login user token */
+        Map<String, Object> kubeConfig = myService.getKubeConfig();
+        log.info("users : {}", kubeConfig.get("users"));
+        
+        List<HashMap<String, Object>> users = (List<HashMap<String, Object>>) kubeConfig.get("users");
+        log.info("user : {}", ((HashMap<String, Object>)users.get(0).get("user")).get("token").toString());
+        String token = ((HashMap<String, Object>)users.get(0).get("user")).get("token").toString();
+        
+        /* login dashboard */
+        HashMap<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("kubeConfig", "");
+        reqMap.put("password", "");
+        //reqMap.put("token", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJ6Y3Atc3lzdGVtIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6InpjcC1zeXN0ZW0tYWRtaW4tdG9rZW4tcmptN24iLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiemNwLXN5c3RlbS1hZG1pbiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImJlOTI0MmM2LTYyOTctMTFlOC1iNzZhLTM2YjhlMjg5NmNjNCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDp6Y3Atc3lzdGVtOnpjcC1zeXN0ZW0tYWRtaW4ifQ.onxzYoJnX7f8UZ2RNMw_mExBv6Qavs-7KH92sLEJdeRdis24caiAhCJWG3_G73zmSJpij21fxsPKYkp9GQ67HySTZTYZRm-UcwPGIoWiRLO-ahiwaBftLuLykgo-92woPRdA-5NKmNX1NrWXLuhEA4LHIiNJYqXcN2snmUpmEDLztX4-jtJkUypCvsiitz9T-1ozyFSpSWXd_gjs_IabI2KCQM2l3-2dEehaM_-r0OZDI7S9OdmsBSQKQJ_sPkpGU4LyCsur9eHH5yx27FvPgsxX6sZJeG2bIVpNDcbhpn9jv27eaiiTCHfb8kBr8Y95-k2mD136Uy_A2fLZaq4G9WsgIewgZ0Fp0biMpd6Ma4PRxDvOUtIxsd7i8kdO2Ozo7NWQ7B_7HXX4px-w6FPtU6mgqYRV36nD3zz-IC7_YvHZGWfyE_U6xcre_HBbWoy6FCMi8R4z__-pb3EAq_ARKw-_XwQVF062WICjJy6TkoKlCB_w5vB9RfY9fPZR0HVu0t2toh5zQyCMu3x6x900M5tEyxDZNQN0d6dRDSH3TkvsDqJ5mV7xiHCWWIqvqKJvIXo_XwNMKpGhSItCMlGcwx-eUxFhR_ksXXUBz9jGRPkG2kBYzy7s7zMaUeDmsjzbE_6LLyaMwjoNl2CJd6uBsjqEAYG--KFQQ6GHL0CyOew");
+        reqMap.put("token", token);
+        reqMap.put("username", "");
+        
+        Map<String, Object> data = k8sSsoService.login(csrfToken, reqMap);
+        
+        resultMap.putAll(data);
         
         return resultMap;
     }

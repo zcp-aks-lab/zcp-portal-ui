@@ -63,7 +63,7 @@ public class K8sSsoService {
     }
     
     @SuppressWarnings("unchecked")
-    public Map<String, Object> login(String token, HashMap<String, Object> reqMap) {
+    public Map<String, Object> login(String csrfToken, HashMap<String, Object> reqMap) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
         try {
@@ -79,7 +79,7 @@ public class K8sSsoService {
             
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.add("x-csrf-token", token);
+            headers.add("x-csrf-token", csrfToken);
             
             HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers); 
             
@@ -93,40 +93,6 @@ public class K8sSsoService {
                 resultMap.putAll(responseEntity.getBody());
             }
         } catch (RestClientException | IOException e) {
-            e.printStackTrace();
-        }
-        
-        return resultMap;
-    }
-    
-    @SuppressWarnings("unchecked")
-    public Map<String, Object> loginStatus(String token) {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        
-        try {
-            String url = UriComponentsBuilder.fromUriString(DASHBOARD_BASE_URL)
-                    .path("/api/v1/login/status")
-                    .buildAndExpand()
-                    .toString();
-            log.info("===> Request Url : {}", url);
-            
-            
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.add("Cookie", "jweToken=" + token);
-            
-            HttpEntity<String> entity = new HttpEntity<String>(headers); 
-            
-            @SuppressWarnings("rawtypes")
-            ResponseEntity<Map> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
-            
-            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
-            log.info("===> Response body : {}", responseEntity.getBody());
-            
-            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
-                resultMap.putAll(responseEntity.getBody());
-            }
-        } catch (RestClientException e) {
             e.printStackTrace();
         }
         

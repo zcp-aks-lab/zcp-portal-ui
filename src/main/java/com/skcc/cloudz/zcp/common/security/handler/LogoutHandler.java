@@ -3,6 +3,7 @@ package com.skcc.cloudz.zcp.common.security.handler;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,6 +28,16 @@ public class LogoutHandler implements LogoutSuccessHandler {
         if (authentication != null) {
             OpenIdConnectUserDetailsVo vo = (OpenIdConnectUserDetailsVo) authentication.getPrincipal();
             iamApiService.logout(vo.getUserId());
+        }
+        
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                cookie.setValue("");
+                cookie.setPath("/");
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
+            }
         }
         
         String redirectUrl = request.getContextPath() + "/login";

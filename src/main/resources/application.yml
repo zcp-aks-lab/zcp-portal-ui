@@ -94,7 +94,7 @@ props:
 #    baseUrl: https://alert.cloudzcp.io:443
     baseUrl: http://localhost:8080
   dashboard:
-    baseUrl: https://kubernetes
+    baseUrl: https://dashboard.cloudzcp.io
 
 ---
 spring:
