@@ -450,8 +450,10 @@
                             data: null, 
                             success: function(res) {
                                 var result = res.result;
+                                log('jweToken : ' + result.jweToken);
 
-                                $.cookie('jweToken', result.jweToken, { path: '/', domain: '.cloudzcp.io' });
+                                $.removeCookie('jweToken', { expires:1, path: '/', domain: '.cloudzcp.io'});
+                                $.cookie('jweToken', result.jweToken, { expires:1, path: '/', domain: '.cloudzcp.io'});
                                 goUrl('https://dashboard.cloudzcp.io/#!/overview?namespace=' + (selectedNamespace || ''));
                             },
                             error: function(errObject) {

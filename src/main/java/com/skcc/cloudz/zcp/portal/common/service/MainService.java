@@ -15,6 +15,7 @@ import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpNodeVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
 import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
+import com.skcc.cloudz.zcp.common.util.CommonUtil;
 import com.skcc.cloudz.zcp.portal.my.service.MyService;
 
 @Service
@@ -137,7 +138,7 @@ public class MainService {
         log.info("user : {}", ((HashMap<String, Object>)users.get(0).get("user")).get("token").toString());
         String token = ((HashMap<String, Object>)users.get(0).get("user")).get("token").toString();
         
-        /* login dashboard */
+        /* login  */
         HashMap<String, Object> reqMap = new HashMap<String, Object>();
         reqMap.put("kubeConfig", "");
         reqMap.put("password", "");
@@ -145,9 +146,25 @@ public class MainService {
         reqMap.put("token", token);
         reqMap.put("username", "");
         
-        Map<String, Object> data = k8sSsoService.login(csrfToken, reqMap);
+        Map<String, Object> login = k8sSsoService.login(csrfToken, reqMap);
         
-        resultMap.putAll(data);
+        /* login status */
+        String jweToken = login.get("jweToken").toString();
+        String encodedJweToken = CommonUtil.getInstance().encodeURIComponent(login.get("jweToken").toString());
+        Map<String, Object> loginStatus = k8sSsoService.loginStatus(encodedJweToken);
+        log.info("loginStatus : {}", loginStatus);
+        
+        /* get token */
+        String refreshToken = k8sSsoService.getToken(encodedJweToken);
+        log.info("refreshToken : {}", refreshToken);
+        
+        /* refresh token */
+        reqMap = new HashMap<String, Object>();
+        reqMap.put("jweToken", login.get("jweToken"));
+        Map<String, Object> refresh = k8sSsoService.refresh(jweToken, encodedJweToken, refreshToken, reqMap);
+        log.info("refresh : {}", refresh);
+        
+        resultMap.putAll(refresh);
         
         return resultMap;
     }

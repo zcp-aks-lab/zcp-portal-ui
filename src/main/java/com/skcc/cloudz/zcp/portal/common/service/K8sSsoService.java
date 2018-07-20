@@ -98,5 +98,111 @@ public class K8sSsoService {
         
         return resultMap;
     }
+    
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> loginStatus(String token) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(DASHBOARD_BASE_URL)
+                    .path("/api/v1/login/status")
+                    .buildAndExpand()
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.add("Cookie", "jweToken=" + token);
+            
+            HttpEntity<String> entity = new HttpEntity<String>(headers); 
+            
+            @SuppressWarnings("rawtypes")
+            ResponseEntity<Map> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body : {}", responseEntity.getBody());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                resultMap.putAll(responseEntity.getBody());
+            }
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
+        
+        return resultMap;
+    }
+    
+    public String getToken(String jweToken) {
+        String result = StringUtils.EMPTY;
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(DASHBOARD_BASE_URL)
+                    .path("/api/v1/csrftoken/token")
+                    .buildAndExpand()
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.add("Cookie", "jweToken=" + jweToken);
+            
+            HttpEntity<String> entity = new HttpEntity<String>(headers); 
+            
+            @SuppressWarnings("rawtypes")
+            ResponseEntity<Map> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body : {}", responseEntity.getBody());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                result = responseEntity.getBody().get("token").toString(); 
+            }
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
+        
+        return result;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> refresh(String jweToken, String encodedJweToken, String csrfToken, HashMap<String, Object> reqMap) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        try {
+            String url = UriComponentsBuilder.fromUriString(DASHBOARD_BASE_URL)
+                    .path("/api/v1/token/refresh")
+                    .buildAndExpand()
+                    .toString();
+            log.info("===> Request Url : {}", url);
+            
+            ObjectMapper objectMapper = new ObjectMapper();
+            String requestBody = objectMapper.writeValueAsString(reqMap);
+            log.info("===> Request Body : {}", requestBody);
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.add("x-csrf-token", csrfToken);
+            headers.add("jwetoken", jweToken);
+            headers.add("Cookie", "jweToken=" + jweToken);
+            
+            HttpEntity<String> entity = new HttpEntity<String>(requestBody, headers); 
+            
+            @SuppressWarnings("rawtypes")
+            ResponseEntity<Map> responseEntity = restTemplate.exchange(url, HttpMethod.POST, entity, Map.class);
+            
+            log.info("===> Response status : {}", responseEntity.getStatusCode().value());
+            log.info("===> Response body : {}", responseEntity.getBody());
+            
+            if (responseEntity!= null && responseEntity.getStatusCode() == HttpStatus.OK) {
+                resultMap.putAll(responseEntity.getBody());
+            }
+        } catch (RestClientException | IOException e) {
+            e.printStackTrace();
+        }
+        
+        return resultMap;
+    }
 
 }
