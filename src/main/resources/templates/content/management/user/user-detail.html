@@ -586,7 +586,7 @@
                                                     <tr>
                                                         <th>비밀번호<strong class="astertisk">*</strong></th>
                                                         <td>
-                                                            <input type="password" th:name="password" th:id="password" class="Textinput" maxlength="12" data-validation-rule="{required:true, rangelength:[6,12], numalpha:true}" data-validation-message="{required:'비밀번호를 입력해 주세요.'}" />
+                                                            <input type="password" th:name="password" th:id="password" class="Textinput" maxlength="12" data-keyfilter-rule="digits|english" data-validation-rule="{required:true, rangelength:[8,12], numalpha:true}" data-validation-message="{required:'비밀번호를 입력해 주세요.'}" />
                                                             <p class="info-text" data-for="password"></p>
                                                         </td>
                                                     </tr>

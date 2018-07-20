@@ -27,11 +27,11 @@
     <div class="cp-wrapper">
 	    <!-- header -->
 	    <header class="cp-header">
-	        <h1 class="logo"><img src="images/cloudzcp-logo.png" data-th-src="@{/images/cloudzcp-logo.png}" alt="CLOUD Z Container Platform" onclick="location.href='/'" /></h1>
+	        <h1 class="logo"><img src="images/cloudzcp-logo.png" data-th-src="@{/images/cloudzcp-logo.png}" alt="CLOUD Z Container Platform" style="cursor:pointer;" onclick="location.href='/'" /></h1>
 	        
 	        <!-- utils -->
 	        <div class="header-utils">
-	            <a class="user" th:text="${#authentication.principal.username}">skccux01@sk.com</a>
+	            <a class="user" th:text="${#authentication.principal.firstName}">skccux01@sk.com</a>
 	            <div class="user-menus">
 	                <ul class="dropmenu-list">
 	                    <li class="selected" onclick="location.href='/my/profile'" >나의 정보</li>
@@ -53,7 +53,7 @@
 	        <div class="lnb-wrap">
 	            <nav>
 	                <ul>
-                        <li><a href="javascript:void(0);"><img src="images/ico-lnbname.png" data-th-src="@{/images/ico-lnbname.png}" class="icon-img" /><span class="lnb-name">ZCP</span></a></li>
+                        <li><a href="javascript:void(0);"><img src="images/ico-lnbname.png" data-th-src="@{/images/ico-lnbname.png}" class="icon-img" onclick="location.href='/'" /><span class="lnb-name" onclick="location.href='/'">ZCP</span></a></li>
                         
                         <th:block th:each="parent, iterStat : ${addOnServiceMataData}">
 	                        <li th:classappend="${parent.url == activePathInfo.firstPath ? 'selected':''}">
