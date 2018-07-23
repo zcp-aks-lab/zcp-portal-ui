@@ -5,9 +5,11 @@ metadata:
   namespace: zcp-system
 data:
   SPRING_ACTIVE_PROFILE: stage
+  CLIENT_ID: account
   CLIENT_SECRET: 0227b024-6483-4e96-827b-3bc4dd73637e
   ACCESS_TOKEN_URI: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/token
   USER_AUTHORIZATION_URI: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/auth
+  REDIRECT_URI: https://console.cloudzcp.io/login
   IAM_BASE_URI: http://zcp-iam:80
   ALERT_BASE_URI: http://zcp-alertmanager:80
   DASHBOARD_BASE_URI: https://dashboard.cloudzcp.io
