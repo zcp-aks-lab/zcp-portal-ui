@@ -114,11 +114,11 @@ props:
   appName: zcp-portal-stage
   keycloak:
     zcp:
-      clientId: account
+      clientId: ${CLIENT_ID}
       clientSecret: ${CLIENT_SECRET}
       accessTokenUri: ${ACCESS_TOKEN_URI}
       userAuthorizationUri: ${USER_AUTHORIZATION_URI}
-      redirectUri: https://console.cloudzcp.io/login
+      redirectUri: ${REDIRECT_URI}
   iam:
     baseUrl: ${IAM_BASE_URI}
   alertmanager:
