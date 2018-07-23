@@ -100,7 +100,8 @@
 					var pod = $('#pod').validate();
 					var channel = $('#channel').validate();
 					var duration = $('#duration').validate();
-					if (!type || !namespace || !pod || !channel || !duration) {
+					var value2 = $('#value2').validate();
+					if (!type || !namespace || !pod || !channel || !duration || !value2) {
 						return false;
 					} else {
 						return true;
