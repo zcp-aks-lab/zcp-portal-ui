@@ -1,46 +1,6 @@
-server:
-  port: 8181
-  tomcat:
-    uri-encoding: UTF-8
-  session:
-    timeout: 3600
-  error:
-    whitelabel:
-      enabled: false
-      
 spring:
-  application:
-    name: zcp-portal
-  output:
-    ansi:
-      enabled: always
-  resources:
-    chain:
-      enabled: true
-  thymeleaf:
-    cache: false
-    enabled: true
-    encoding: UTF-8
-    mode: HTML5
-    template-resolver-order: 2
-  http:
-    encoding:
-      charset: UTF-8 # the encoding of HTTP requests/responses
-      enabled: true # enable http encoding support
-      force: true # force the configured encoding
-
-security:
-  basic:
-    enabled: false
-
-logging:
-  level:
-    root: DEBUG 
-    org.apache: DEBUG   
-  config: classpath:config/logback-spring.xml
-  file : local
-  path : data/logs
-
+  profiles: local
+  
 props:
   appName: zcp-portal-local
   keycloak:

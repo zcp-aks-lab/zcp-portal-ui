@@ -1,46 +1,6 @@
-server:
-  port: 8181
-  tomcat:
-    uri-encoding: UTF-8
-  session:
-    timeout: 3600
-  error:
-    whitelabel:
-      enabled: false
-      
 spring:
-  application:
-    name: zcp-portal
-  output:
-    ansi:
-      enabled: always
-  resources:
-    chain:
-      enabled: true
-  thymeleaf:
-    cache: false
-    enabled: true
-    encoding: UTF-8
-    mode: HTML5
-    template-resolver-order: 2
-  http:
-    encoding:
-      charset: UTF-8 # the encoding of HTTP requests/responses
-      enabled: true # enable http encoding support
-      force: true # force the configured encoding
-
-security:
-  basic:
-    enabled: false
-
-logging:
-  level:
-    root: INFO 
-    org.apache: INFO   
-  config: classpath:config/logback-spring.xml
-  file : local
-  path : data/logs
-
+  profiles: dev
+  
 props:
   appName: zcp-portal-dev
   keycloak:
@@ -49,7 +9,7 @@ props:
       clientSecret: 0227b024-6483-4e96-827b-3bc4dd73637e
       accessTokenUri: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/token
       userAuthorizationUri: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/auth
-      #redirectUri: ${HOME_URL:http://localhost:8181}/login
+#      redirectUri: ${HOME_URL:http://localhost:8181}/login
       redirectUri: http://console.cloudzcp.io:8181/login
   iam:
     baseUrl: https://zcp-iam.cloudzcp.io:443
