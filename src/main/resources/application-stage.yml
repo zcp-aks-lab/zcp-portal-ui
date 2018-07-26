@@ -16,4 +16,4 @@ props:
     baseUrl: ${ALERT_BASE_URI}
   dashboard:
     baseUrl: ${DASHBOARD_BASE_URI}
-  uploadPath: /zcp/upload
+  uploadPath: /var/www/upload/
