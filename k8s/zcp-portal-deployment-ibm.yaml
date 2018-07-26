@@ -28,10 +28,19 @@ spec:
                 operator: In
                 values:
                 - "management"
+#      initContainers:
+#      - name: init-certificate
+#        image: registry.au-syd.bluemix.net/cloudzcp/busybox
+#        command: ['update-ca-certificates']
+#        volumeMounts:
+#        - name: certificate
+#          mountPath: "/usr/local/share/ca-certificates/"
+#          readOnly: true
       containers:
       - name: zcp-portal-ui
-        image: cloudzcp/zcp-portal-ui:latest
+        image: registry.au-syd.bluemix.net/cloudzcp/zcp-portal-ui:0.9
         imagePullPolicy: Always
+#        command: ['update-ca-certificates']
         ports:
         - name: cont-port
           containerPort: 8181
@@ -49,7 +58,14 @@ spec:
 #              secretKeyRef:
 #                name: zcp-portal-ui-secret
 #                key: MARIADB_PASSWORD
-
+        volumeMounts:
+        - name: certificate
+          mountPath: "/usr/local/share/ca-certificates/"
+          readOnly: true
+      volumes:
+      - name: certificate
+        secret:
+          secretName: kloudz-xyz-cert
 ---
 
 apiVersion: v1

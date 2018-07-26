@@ -2,16 +2,17 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   annotations:
-   ingress.bluemix.net/redirect-to-https: "True"
+    #ingress.bluemix.net/ALB-ID: private-cr7a9b181c82674f478e461c648c3000da-alb1
+    ingress.bluemix.net/redirect-to-https: "True"
   name: zcp-portal-ui-ingress
   namespace: zcp-system
 spec:
   tls:
   - hosts:
-    - console.cloudzcp.io
+    - lawai-console.cloudzcp.io
     secretName: cloudzcp-io-cert
   rules:
-  - host: console.cloudzcp.io
+  - host: lawai-console.cloudzcp.io
     http:
       paths:
       - backend:
