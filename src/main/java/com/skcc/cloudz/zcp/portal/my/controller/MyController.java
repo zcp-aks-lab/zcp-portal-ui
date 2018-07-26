@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,9 +31,6 @@ public class MyController {
     private static final Logger log = LoggerFactory.getLogger(MyController.class);
     
     static final String RESOURCE_PATH = "/my";
-    
-    @Value("${props.uploadPath}")
-    private String uploadPath;
     
     @Autowired
     private MyService myService;
@@ -77,12 +73,12 @@ public class MyController {
     @PostMapping(value = "/cliDownload")
     public void cliDownload(HttpServletResponse response, @RequestParam("cli") String cli) {
         try {
-            String fileName = uploadPath + SecurityService.getUserId() + "_cli.txt";
+            String fileName = SecurityService.getUserId() + "_cli.txt";
             File file = new File(fileName);
             
-            FileUtil.fileDelete(fileName);
             FileUtil.fileWrite(file, cli);
-            FileUtil.fileDownload(response, file);    
+            FileUtil.fileDownload(response, file);
+            FileUtil.fileDelete(fileName);
         } catch (Exception e) {
             e.printStackTrace();
         }

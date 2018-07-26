@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.util.FileCopyUtils;
 
 public class FileUtil {
-    
-    //public final static String PATH = "C:\\cloud\\temp\\upload\\";
 
     public static void fileDownload(HttpServletResponse response, File file) throws IOException {
         response.setContentLength((int) file.length());
