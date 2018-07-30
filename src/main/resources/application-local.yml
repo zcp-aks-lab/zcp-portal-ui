@@ -14,5 +14,7 @@ props:
     baseUrl: https://zcp-iam.cloudzcp.io:443
   alertmanager:
     baseUrl: http://localhost:8080
-
+  addOnService:
+    filePath: C:\cloud\temp\upload\
+    fileName: addOnServiceMetaData.json
     

@@ -1,5 +1,7 @@
 package com.skcc.cloudz.zcp.configuration.web.interceptor;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -16,26 +18,39 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.skcc.cloudz.zcp.common.component.AddOnServiceMataComponent;
+import com.skcc.cloudz.zcp.common.component.AuthUserComponent;
 import com.skcc.cloudz.zcp.common.constants.AccessRole;
+import com.skcc.cloudz.zcp.common.constants.ZcpEnviroment;
 import com.skcc.cloudz.zcp.common.domain.vo.AddOnServiceMataSubVo;
 import com.skcc.cloudz.zcp.common.domain.vo.AddOnServiceMataVo;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
+import com.skcc.cloudz.zcp.common.util.CommonUtil;
 
 public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
     
     private static final Logger log = LoggerFactory.getLogger(AddOnServiceMetaDataInterceptor.class);
     
+    @Value("${props.addOnService.filePath}")
+    private String addOnServiceFilePath;
+    
+    @Value("${props.addOnService.fileName}")
+    private String addOnServiceFileName;
+    
+    @Autowired
+    private Environment environment;
+    
     @Autowired
     private SecurityService securityService;
     
     @Autowired
-    private AddOnServiceMataComponent addOnServiceMataComponent;
+    private AuthUserComponent authUserComponent;
     
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
@@ -44,21 +59,21 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
         }
         
         String requestURI = request.getRequestURI().substring(request.getContextPath().length());
-        if (log.isDebugEnabled()) {
-            log.debug("requestURI : {}", requestURI);    
+        if (log.isInfoEnabled()) {
+            log.info("===> requestURI : {}", requestURI);    
         }
         
         List<AddOnServiceMataVo> resultList = new ArrayList<AddOnServiceMataVo>();
-        if (addOnServiceMataComponent.getAddOnServiceMetaVoList() == null) {
+        if (authUserComponent.getAddOnServiceMetaVoList() == null) {
             resultList = this.getAddOnServiceMetaData();
             
-            addOnServiceMataComponent.setUserId(securityService.getUserDetails().getUserId());
-            addOnServiceMataComponent.setAddOnServiceMetaVoList(resultList);
+            authUserComponent.setUserId(securityService.getUserDetails().getUserId());
+            authUserComponent.setAddOnServiceMetaVoList(resultList);
         } else {
-            resultList = addOnServiceMataComponent.getAddOnServiceMetaVoList();
+            resultList = authUserComponent.getAddOnServiceMetaVoList();
         }
         
-        log.info("getAddOnServiceActivePathInfo : {}", this.getAddOnServiceActivePathInfo(requestURI));
+        log.info("===> getAddOnServiceActivePathInfo : {}", this.getAddOnServiceActivePathInfo(requestURI));
         
         modelAndView.addObject("addOnServiceMataData", resultList);
         modelAndView.addObject("activePathInfo", this.getAddOnServiceActivePathInfo(requestURI));
@@ -66,15 +81,21 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
     
     public List<AddOnServiceMataVo> getAddOnServiceMetaData () {
         List<AddOnServiceMataVo> AddOnServiceMataVoList = new ArrayList<AddOnServiceMataVo>();
+        InputStream inputStream = null;
         ObjectMapper mapper = new ObjectMapper();
         
         try {
             String userAccessRole = securityService.getUserDetails().getAccessRole();
-            log.debug("userAccessRole : {}", userAccessRole);
+            log.info("===> userAccessRole : {}", userAccessRole);
             
-            InputStream inputStream = AddOnServiceMetaDataInterceptor.class.getClassLoader().getResourceAsStream("addOnServiceMetaData.json");
-            if (inputStream == null) {
-                throw new Exception();
+            String profile = CommonUtil.getInstance().getProfile(environment);
+            log.info("===> profile : {}", profile);
+            
+            if (profile.equals(ZcpEnviroment.LOCAL.getName()) ||  profile.equals(ZcpEnviroment.DEV.getName())) {
+                inputStream = AddOnServiceMetaDataInterceptor.class.getClassLoader().getResourceAsStream("addOnServiceMetaData.json");
+            } else {
+                File file = new File(addOnServiceFilePath + addOnServiceFileName);
+                inputStream = new FileInputStream(file);
             }
             
             List<AddOnServiceMataVo> addOnServiceMataList = mapper.readValue(inputStream, new TypeReference<List<AddOnServiceMataVo>>(){});
