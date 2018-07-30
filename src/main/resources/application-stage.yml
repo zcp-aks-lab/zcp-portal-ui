@@ -16,3 +16,6 @@ props:
     baseUrl: ${ALERT_BASE_URI}
   dashboard:
     baseUrl: ${DASHBOARD_BASE_URI}
+  addOnService:
+    filePath: /home/upload/
+    fileName: addOnServiceMetaData.json

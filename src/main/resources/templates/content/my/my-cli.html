@@ -38,7 +38,9 @@
                 },
                 event: {
                     init: function() {
-                        $('#btnCopy').on('click', function() {
+                        $('#btnCopy').on('click', function(e) {
+                        	e.preventDefault();
+                        	
                             var t = document.createElement("textarea");
                             document.body.appendChild(t);
                             t.value = $('#cli').val();
@@ -47,8 +49,8 @@
                             document.body.removeChild(t);
                         });
 
-                        $('#btnDownload').on('click', function() {
-                            //location.href = '/my/cliDownload';
+                        $('#btnDownload').on('click', function(e) {
+                        	e.preventDefault();
                             $('#form').submit();
                         });
                     }
