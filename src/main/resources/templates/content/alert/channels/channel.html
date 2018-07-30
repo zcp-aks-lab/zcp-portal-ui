@@ -168,14 +168,39 @@
 			},
 
 			updateEmailValidation : function() {
-				if ($('#email_to').val() != null) {
-					var email_to = $('#email_to').validate();
-					if (!email_to) {
-						return false;
-					} else {
-						return true;
+				//<![CDATA[
+				var result = $('#email_to').val().split(";");
+				var resultValidate = '';
+				
+				if($('#email_to').val() == '') {
+					$('#p_Email_to').text('Email address을 입력해주세요.');
+					return false;
+				} 
+				else {
+					for (var i = 0; i < result.length; i++) {
+						if (result[i] != "") {
+							$('#p_Email_to').text('');
+							var email_to = validateEmail(result[i]);
+							resultValidate = email_to;
+							
+							if (!email_to) {
+								$('#p_Email_to').text('이메일 형식에 맞게 입력해 주십시오.');
+								return false;
+							} else {
+								$('#p_Email_to').text('');
+							}
+						} else if(result[i] != ";") {
+						} else {
+							$('#p_Email_to').text('Email address을 입력해주세요.');
+							return false;
+						}
 					}
 				}
+				
+				if (resultValidate == true) {
+					return true;
+				}
+				// ]]>
 			},
 
 			updateSlackValidation : function() {
@@ -252,7 +277,7 @@
 		},
 		event : {
 			init : function() {
-				$a.keyfilter.addKeyUpRegexpRule("email", "a-zA-Z0-9@._-");
+				$a.keyfilter.addKeyUpRegexpRule("email", "a-zA-Z0-9@.;_-");
 
 				$('#channel').on('keydown', function(e) {
 					if (e.keyCode === 13) {
@@ -840,26 +865,25 @@
 													<tbody>
 														<tr>
 															<th class="Valign-top">Email address</th>
-															<td><input class="Textinput Width-100"
+															<td>
+																<!-- <input class="Textinput Width-100"
 																th:id="email_to" th:name="email_to" maxlength="50"
 																data-keyfilter-rule="email"
 																data-validation-rule="{required:true, email:true}"
 																data-validation-message="{required:'Email address을 입력해주세요.'}"
-																style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666" />
-																<!-- <textarea class="Textarea Width-100" rows="4"
-																	th:id="email_to" th:name="email_to" maxlength="50"
+																style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666" /> -->
+																<textarea class="Textarea Width-100" rows="4"
+																	th:id="email_to" th:name="email_to" maxlength="1000"
 																	data-keyfilter-rule="email"
 																	data-validation-rule="{required:true, email:true}"
 																	data-validation-message="{required:'Email address을 입력해주세요.'}"
-																	style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666"></textarea> -->
-																<p class="info-text" data-for="email_to"></p> <!-- <input class="Textinput Width-100" th:id="email_to"
-												th:name="email_to" data-validation-rule="{required:true}"
-												data-validation-message="{required:'Email address를 입력해주세요.'}" /> -->
-																<!-- <p class="info-text Margin-bottom-5">이메일 형식 오류입니다.</p> -->
+																	style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666"></textarea>
+																<p id="p_Email_to" class="info-text" data-for="email_to"></p>
 																<!-- <button class="Button btn">테스트</button> -->
 																<div class="Margin-top-5">
 																	<button class="Button btn" id="btnUpdateEmail">저장</button>
-																</div></td>
+																</div>
+															</td>
 														</tr>
 													</tbody>
 												</table>

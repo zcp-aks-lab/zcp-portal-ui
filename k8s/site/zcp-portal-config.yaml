@@ -8,8 +8,8 @@ data:
   CLIENT_ID: account
   CLIENT_SECRET: 0227b024-6483-4e96-827b-3bc4dd73637e
   REDIRECT_URI: https://console.cloudzcp.io/login
-  ACCESS_TOKEN_URI: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/token
-  USER_AUTHORIZATION_URI: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/auth
+  ACCESS_TOKEN_URI: https://lawai-iam.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/token
+  USER_AUTHORIZATION_URI: https://lawai-iam.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/auth
   IAM_BASE_URI: http://zcp-iam:80
   ALERT_BASE_URI: http://zcp-alertmanager:80
-  DASHBOARD_BASE_URI: https://dashboard.cloudzcp.io
+  DASHBOARD_BASE_URI: https://lawai-dashboard.cloudzcp.io

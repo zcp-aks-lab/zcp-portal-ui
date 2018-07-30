@@ -143,6 +143,10 @@
                                     data: data, 
                                     success : function(res) {
                                     	commonPopup.alert({message: '비밀번호가 재설정 되었습니다.'});
+
+                                    	if ($('#temporary').hasClass('btn-on')) {
+                                    		$("#userUpdatePassword").setChecked(true);
+                                        }
                                     },
                                     error : function(errObject) {
                                         //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -340,14 +344,11 @@
                                     data: data, 
                                     success : function(res) {
                                         if (userTotp) {
-                                        	commonPopup.alert({
-                                                message: '모바일 인증이 해제 되었습니다.',
-                                                callback: function() {
-                                                    location.reload();
-                                                }
-                                            });
+                                        	commonPopup.alert({message: '모바일 인증이 해제 되었습니다.'});
+                                        	$('#btnTotp').removeClass('btn-on').addClass('btn-off');
                                         } else {
                                         	commonPopup.alert({message: '모바일 인증이 설정 되었습니다.<br/>사용자가 로그인시 모바일 인증 설정을 해야만 상태가 변경됩니다.'});
+                                        	$("#userConfigureOtp").setChecked(true);
                                         }
                                     },
                                     error : function(errObject) {

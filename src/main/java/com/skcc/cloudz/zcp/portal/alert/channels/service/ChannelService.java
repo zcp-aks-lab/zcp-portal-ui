@@ -3,6 +3,7 @@ package com.skcc.cloudz.zcp.portal.alert.channels.service;
 import java.util.Arrays;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +20,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.skcc.cloudz.zcp.common.util.Message;
 import com.skcc.cloudz.zcp.portal.alert.channels.vo.ChannelDtlVo;
 import com.skcc.cloudz.zcp.portal.alert.channels.vo.ChannelVo;
-import com.skcc.cloudz.zcp.portal.alert.rules.vo.RuleVo;
 
 @Service
 public class ChannelService {
@@ -78,6 +78,11 @@ public class ChannelService {
 		ChannelDtlVo channelDtlVo = null;
 		if (statusCode == HttpStatus.OK) {
 			channelDtlVo = response.getBody();
+			if (channelDtlVo.getEmail_to() != null) {
+				if (channelDtlVo.getEmail_to().contains(",")) {
+					channelDtlVo.setEmail_to(channelDtlVo.getEmail_to().replaceAll(",", ";"));
+				}
+			}
 		}
 
 		return channelDtlVo;
@@ -109,7 +114,7 @@ public class ChannelService {
 
 		return channelVo;
 	}
-	
+
 	public ChannelVo deleteChannel(ChannelVo params) {
 		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/channel/{id}").buildAndExpand(params.getId())
 				.toString();
@@ -134,7 +139,7 @@ public class ChannelService {
 
 		return channelVo;
 	}
-	
+
 	public ChannelDtlVo updateChannel(Map<String, Object> params) {
 		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/channel/{id}").buildAndExpand(params.get("id"))
 				.toString();
@@ -143,10 +148,24 @@ public class ChannelService {
 		ChannelDtlVo channelParam = new ChannelDtlVo();
 
 		channelParam.setChannel(params.get("channel").toString());
-		channelParam.setEmail_to(params.get("pEmail_to").toString());
 		
+		if (params.get("pEmail_to") != null) {
+			String[] emails = params.get("pEmail_to").toString().split(";");
+			String email_to = "";
+			for (String email : emails) {
+				if (!"".equals(email)) {
+					if ("".equals(email_to)) {
+						email_to = email_to.concat(email.replaceAll(";", ""));
+					} else {
+						email_to = email_to.concat("," + email.replaceAll(";", ""));
+					}
+				}
+			}
+			channelParam.setEmail_to(email_to);
+		}
+
 		channelParam.setSlack_api_url(params.get("pSlack_api_url").toString());
-		
+
 		channelParam.setHipchat_api_url(params.get("pHipchat_api_url").toString());
 		channelParam.setHipchat_room_id(params.get("pHipchat_room_id").toString());
 		channelParam.setHipchat_auth_token(params.get("pHipchat_auth_token").toString());
@@ -173,7 +192,7 @@ public class ChannelService {
 
 		return channelDtlVo;
 	}
-	
+
 	public ChannelDtlVo updateChannelDtl(Map<String, Object> params) {
 		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/channel/{id}").buildAndExpand(params.get("id"))
 				.toString();
@@ -182,21 +201,33 @@ public class ChannelService {
 		ChannelDtlVo channelParam = new ChannelDtlVo();
 
 		channelParam.setChannel(params.get("channel").toString());
-		
-		if(params.get("email_to") != null) {
-			channelParam.setEmail_to(params.get("email_to").toString());	
+
+		if (params.get("email_to") != null) {
+			String[] emails = params.get("email_to").toString().split(";");
+			String email_to = "";
+			for (String email : emails) {
+				if (!"".equals(email)) {
+					if ("".equals(email_to)) {
+						email_to = email_to.concat(email.replaceAll(";", ""));
+					} else {
+						email_to = email_to.concat("," + email.replaceAll(";", ""));
+					}
+				}
+			}
+			channelParam.setEmail_to(email_to);
 		}
-		if(params.get("slack_api_url") != null) {
-			channelParam.setSlack_api_url(params.get("slack_api_url").toString());	
+
+		if (params.get("slack_api_url") != null) {
+			channelParam.setSlack_api_url(params.get("slack_api_url").toString());
 		}
-		if(params.get("hipchat_api_url") != null) {
+		if (params.get("hipchat_api_url") != null) {
 			channelParam.setHipchat_api_url(params.get("hipchat_api_url").toString());
 			channelParam.setHipchat_room_id(params.get("hipchat_room_id").toString());
 			channelParam.setHipchat_auth_token(params.get("hipchat_auth_token").toString());
 			channelParam.setHipchat_notify(params.get("hipchat_notify").toString());
 		}
-		if(params.get("webhook_url") != null) {
-			channelParam.setWebhook_url(params.get("webhook_url").toString());	
+		if (params.get("webhook_url") != null) {
+			channelParam.setWebhook_url(params.get("webhook_url").toString());
 		}
 
 		HttpHeaders headers = new HttpHeaders();
@@ -218,10 +249,10 @@ public class ChannelService {
 
 		return channelDtlVo;
 	}
-	
+
 	public ChannelVo updateChannelName(Map<String, Object> params) {
-		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/channelName/{id}").buildAndExpand(params.get("id"))
-				.toString();
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/channelName/{id}")
+				.buildAndExpand(params.get("id")).toString();
 		logger.info(url);
 
 		ChannelVo channelParam = new ChannelVo();
@@ -246,24 +277,24 @@ public class ChannelService {
 
 		return channelVo;
 	}
-	
+
 	public ChannelDtlVo deleteNotification(Map<String, Object> params) {
-		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/notification/{id}").buildAndExpand(params.get("id"))
-				.toString();
+		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/notification/{id}")
+				.buildAndExpand(params.get("id")).toString();
 		logger.info(url);
 
 		ChannelDtlVo channelParam = new ChannelDtlVo();
-		
-		if(params.get("email_to") != null) {
+
+		if (params.get("email_to") != null) {
 			channelParam.setEmail_to(params.get("email_to").toString());
 		}
-		if(params.get("slack_api_url") != null) {
+		if (params.get("slack_api_url") != null) {
 			channelParam.setSlack_api_url(params.get("slack_api_url").toString());
 		}
-		if(params.get("hipchat_api_url") != null) {
+		if (params.get("hipchat_api_url") != null) {
 			channelParam.setHipchat_api_url(params.get("hipchat_api_url").toString());
 		}
-		if(params.get("webhook_url") != null) {
+		if (params.get("webhook_url") != null) {
 			channelParam.setWebhook_url(params.get("webhook_url").toString());
 		}
 
@@ -275,7 +306,8 @@ public class ChannelService {
 		HttpEntity<ChannelDtlVo> entity = new HttpEntity<ChannelDtlVo>(channelParam, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<ChannelDtlVo> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, ChannelDtlVo.class);
+		ResponseEntity<ChannelDtlVo> response = restTemplate.exchange(url, HttpMethod.DELETE, entity,
+				ChannelDtlVo.class);
 
 		HttpStatus statusCode = response.getStatusCode();
 
@@ -286,5 +318,5 @@ public class ChannelService {
 
 		return channelDtlVo;
 	}
-	
+
 }

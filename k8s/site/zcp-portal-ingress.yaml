@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - console.cloudzcp.io
+    - lawai-console.cloudzcp.io
     secretName: cloudzcp-io-cert
   rules:
-  - host: console.cloudzcp.io
+  - host: lawai-console.cloudzcp.io
     http:
       paths:
       - backend:
