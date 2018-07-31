@@ -36,6 +36,11 @@
                                 return false;
                             }
                         });
+
+                    	Validator.addMethod('passwordSecuity', function(element, value, param) {
+                            var newPassword = $("#newPassword").val();
+                            return chkPwd(newPassword);
+                        });
                     },
                     updatePassword: function() {
                     	if (!this.validation()) {
@@ -69,7 +74,7 @@
                         var newPasswordValid = $('#newPassword').validate();
                         var passwordConfirmValid = $('#passwordConfirm').validate();
                      
-                        if (!currentPasswordValid || !currentPasswordValid || !passwordConfirmValid) {
+                        if (!currentPasswordValid || !newPasswordValid || !passwordConfirmValid) {
                             return false;
                         } else {
                         	return true;
@@ -104,7 +109,7 @@
                                                 }
                                             });
                                         } else {
-                                            commonPopup.alert({message: '모바일 인증이 설정 되었습니다.<br/> 다음 로그인 시 모바일 인증 설정을 해야 합니다.'});
+                                            commonPopup.alert({message: '모바일 인증이 설정 되었습니다.<br/>다음 로그인시 모바일 인증 설정을 해야만 상태가 변경됩니다.'});
                                         }
                                     },
                                     error : function(errObject) {
@@ -165,21 +170,21 @@
                                             <tr>
                                                 <th>현재 비밀번호<strong class="astertisk">*</strong></th>
                                                 <td>
-                                                    <input type="password" th:name="currentPassword" th:id="currentPassword" class="Textinput" data-validation-rule="{required:true}" data-validation-message="{required:'현재 비밀번호를 입력해 주세요.'}" />
+                                                    <input type="password" th:name="currentPassword" th:id="currentPassword" class="Textinput" maxlength="20" data-validation-rule="{required:true}" data-validation-message="{required:'현재 비밀번호를 입력해 주세요.'}" />
                                                     <p class="info-text" data-for="currentPassword"></p>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <th>새 비밀번호<strong class="astertisk">*</strong></th>
                                                 <td>
-                                                    <input type="password" th:name="newPassword" th:id="newPassword" class="Textinput" data-validation-rule="{required:true, rangelength:[6,12], numalpha:true}" data-validation-message="{required:'새 비밀번호를 입력해 주세요.'}" />
+                                                    <input type="password" th:name="newPassword" th:id="newPassword" class="Textinput" maxlength="20" data-keyfilter-rule="digits|english" data-keyfilter="!@#$%^*_-" data-validation-rule="{required:true, passwordSecuity:true}" data-validation-message="{required:'비밀번호를 입력해 주세요.', passwordSecuity:'알파벳, 특수문자, 숫자를 포함하여 8~20자 사이로 입력하세요.'}" />
                                                     <p class="info-text" data-for="newPassword"></p>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <th>새 비밀번호 확인<strong class="astertisk">*</strong></th>
                                                 <td>
-                                                    <input type="password" th:name="passwordConfirm" th:id="passwordConfirm" class="Textinput" data-validation-rule="{required:true, passwordEqual:'testing'}"  data-validation-message="{required:'새 비밀번호 확인을 입력해 주세요.', passwordEqual:'두개의 비밀번호가 일치하지 않습니다.'}" />
+                                                    <input type="password" th:name="passwordConfirm" th:id="passwordConfirm" class="Textinput" maxlength="20" data-validation-rule="{required:true, passwordEqual:'testing'}"  data-validation-message="{required:'새 비밀번호 확인을 입력해 주세요.', passwordEqual:'두개의 비밀번호가 일치하지 않습니다.'}" />
                                                     <p class="info-text" data-for="passwordConfirm"></p>
                                                 </td>
                                             </tr>

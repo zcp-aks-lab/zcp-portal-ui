@@ -1,0 +1,25 @@
+spring:
+  profiles: dev
+  
+props:
+  appName: zcp-portal-dev
+  keycloak:
+    zcp:
+      clientId: account
+      clientSecret: 0227b024-6483-4e96-827b-3bc4dd73637e
+      accessTokenUri: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/token
+      userAuthorizationUri: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/auth
+#      redirectUri: ${HOME_URL:http://localhost:8181}/login
+      redirectUri: http://console.cloudzcp.io:8181/login
+  iam:
+    baseUrl: https://zcp-iam.cloudzcp.io:443
+  alertmanager:
+    baseUrl: http://localhost:8080
+  dashboard:
+    baseUrl: https://dashboard.cloudzcp.io
+  addOnService:
+    filePath: C:\cloud\temp\upload\
+    fileName: addOnServiceMetaData.json
+  
+
+    

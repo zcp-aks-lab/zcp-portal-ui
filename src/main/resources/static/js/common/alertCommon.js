@@ -1,3 +1,8 @@
+function validateEmail(field) {
+    var regex=/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i;
+    return (regex.test(field)) ? true : false;
+}
+
 function isValidURL(url) {
 	var RegExp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 

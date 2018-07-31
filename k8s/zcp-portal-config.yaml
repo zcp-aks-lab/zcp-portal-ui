@@ -1,12 +1,23 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
 apiVersion: v1
+data:
+  ACCESS_TOKEN_URI: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/token
+  ALERT_BASE_URI: http://zcp-alertmanager:80
+  CLIENT_ID: account
+  CLIENT_SECRET: 0227b024-6483-4e96-827b-3bc4dd73637e
+  DASHBOARD_BASE_URI: https://dashboard.cloudzcp.io
+  IAM_BASE_URI: http://zcp-iam:80
+  REDIRECT_URI: https://console.cloudzcp.io/login
+  SPRING_ACTIVE_PROFILE: stage
+  USER_AUTHORIZATION_URI: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/auth
 kind: ConfigMap
 metadata:
+  creationTimestamp: 2018-07-23T13:26:11Z
   name: zcp-portal-ui-config
   namespace: zcp-system
-data:
-  SPRING_ACTIVE_PROFILE: stage
-  MARIADB_HOST: bk-mariadb-mariadb.bk-service
-  MARIADB_USER: zcp-user
-  REDIS_HOST: bk-redis-redis.bk-service
-
-  
+  resourceVersion: "3534063"
+  selfLink: /api/v1/namespaces/zcp-system/configmaps/zcp-portal-ui-config
+  uid: f736940c-8e7b-11e8-a7fe-5664a44d0e47

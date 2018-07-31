@@ -14,32 +14,37 @@ import com.skcc.cloudz.zcp.common.domain.vo.AddOnServiceMataVo;
 
 @Component
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class AddOnServiceMataComponent implements Serializable {
-    
-    private static final long serialVersionUID = 3639865422732730897L;
+public class AuthUserComponent implements Serializable {
+
+    private static final long serialVersionUID = -3331519522204041061L;
     
     private String userId;
+    private String firstName;
     private List<AddOnServiceMataVo> addOnServiceMetaVoList;
     
     public String getUserId() {
         return userId;
     }
-    
     public void setUserId(String userId) {
         this.userId = userId;
     }
-    
+    public String getFirstName() {
+        return firstName;
+    }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
     public List<AddOnServiceMataVo> getAddOnServiceMetaVoList() {
         return addOnServiceMetaVoList;
     }
-
     public void setAddOnServiceMetaVoList(List<AddOnServiceMataVo> addOnServiceMetaVoList) {
         this.addOnServiceMetaVoList = addOnServiceMetaVoList;
     }
-
+    
     @PreDestroy
     public void cleanUp() throws Exception {
         this.userId = null;
+        this.firstName = null;
         this.addOnServiceMetaVoList = null;
     }
 

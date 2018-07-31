@@ -1,21 +1,39 @@
-apiVersion: apps/v1beta1
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  creationTimestamp: 2018-07-23T14:12:07Z
+  generation: 1
+  labels:
+    component: zcp-portal-ui
   name: zcp-portal-ui
   namespace: zcp-system
+  resourceVersion: "3489827"
+  selfLink: /apis/extensions/v1beta1/namespaces/zcp-system/deployments/zcp-portal-ui
+  uid: 62102ae5-8e82-11e8-a7fe-5664a44d0e47
 spec:
+  progressDeadlineSeconds: 600
   replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      component: zcp-portal-ui
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
+      creationTimestamp: null
       labels:
         component: zcp-portal-ui
-#        stack: stable
     spec:
-      tolerations:
-      - key: "management"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -24,49 +42,51 @@ spec:
               - key: beta.kubernetes.io/arch
                 operator: In
                 values:
-                - "amd64"
+                - amd64
               - key: role
                 operator: In
                 values:
-                - "management"
+                - management
       containers:
-      - name: zcp-portal-ui
-        image: cloudzcp/zcp-portal-ui
-        imagePullPolicy: Always
-        ports:
-        - name: cont-port
-          containerPort: 8181
-        envFrom:
+      - envFrom:
         - configMapRef:
             name: zcp-portal-ui-config
-#        env:
-#          - name: REDIS_PASSWORD
-#            valueFrom:
-#              secretKeyRef:
-#                name: cloud-movie-bk-secret
-#                key: REDIS_PASSWORD
-#          - name: MARIADB_PASSWORD
-#            valueFrom:
-#              secretKeyRef:
-#                name: cloud-movie-bk-secret
-#                key: MARIADB_PASSWORD
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: zcp-portal-ui
-  labels:
-    name: zcp-portal-ui
-  namespace: zcp-system
-spec:
-  type: ClusterIP
-  ports:
-  - port: 80
-    targetPort: "cont-port"
-    protocol: TCP
-    name: http
-  selector:
-    component: zcp-portal-ui
-
+        image: cloudzcp/zcp-portal-ui
+        imagePullPolicy: Always
+        name: zcp-portal-ui
+        ports:
+        - containerPort: 8181
+          name: cont-port
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - effect: NoSchedule
+        key: management
+        operator: Equal
+        value: "true"
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: 2018-07-23T14:12:07Z
+    lastUpdateTime: 2018-07-23T14:12:15Z
+    message: ReplicaSet "zcp-portal-ui-55c4dbb44b" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: 2018-07-25T14:36:12Z
+    lastUpdateTime: 2018-07-25T14:36:12Z
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

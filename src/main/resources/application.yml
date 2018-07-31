@@ -14,8 +14,6 @@ spring:
   output:
     ansi:
       enabled: always
-  profiles:
-    active: dev
   resources:
     chain:
       enabled: true
@@ -25,11 +23,6 @@ spring:
     encoding: UTF-8
     mode: HTML5
     template-resolver-order: 2
-#  messages:
-#    encoding: UTF-8
-#    cache-seconds: 5
-#    fallback-to-system-locale: false
-#    basename: i18n/messages
   http:
     encoding:
       charset: UTF-8 # the encoding of HTTP requests/responses
@@ -40,89 +33,11 @@ security:
   basic:
     enabled: false
 
----
-spring:
-  profiles: local
-
 logging:
   level:
-    root: DEBUG 
-    org.apache: DEBUG   
+    root: INFO 
+    org.apache: INFO   
   config: classpath:config/logback-spring.xml
   file : local
   path : data/logs
-
-props:
-  appName: zcp-portal-local
-  keycloak:
-    zcp:
-      clientId: account
-      clientSecret: 944eb586-e550-4577-8081-93f91a22b248
-      accessTokenUri: http://localhost:8080/auth/realms/zcp/protocol/openid-connect/token
-      userAuthorizationUri: http://localhost:8080/auth/realms/zcp/protocol/openid-connect/auth
-      redirectUri: ${HOME_URL:http://localhost:8181}/login
-  iam:
-    baseUrl: https://zcp-iam.cloudzcp.io:443
-  alertmanager:
-    baseUrl: http://localhost:8080
-  dashboard:
-    baseUrl: https://dashboard.cloudzcp.io
   
----
-spring:
-  profiles: dev
-
-logging:
-  level:
-    root: INFO 
-    org.apache: INFO   
-  config: classpath:config/logback-spring.xml
-  file : local
-  path : data/logs
-
-props:
-  appName: zcp-portal-dev
-  keycloak:
-    zcp:
-      clientId: account
-      clientSecret: 0227b024-6483-4e96-827b-3bc4dd73637e
-      accessTokenUri: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/token
-      userAuthorizationUri: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/auth
-      redirectUri: ${HOME_URL:http://localhost:8181}/login
-      #redirectUri: http://console.cloudzcp.io:8181/login
-  iam:
-    baseUrl: https://zcp-iam.cloudzcp.io:443
-  alertmanager:
-#    baseUrl: https://alert.cloudzcp.io:443
-    baseUrl: http://localhost:8080
-  dashboard:
-    baseUrl: https://dashboard.cloudzcp.io
-
----
-spring:
-  profiles: stage
-
-logging:
-  level:
-    root: INFO 
-    org.apache: INFO   
-  config: classpath:config/logback-spring.xml
-  file : local
-  path : data/logs
-
-props:
-  appName: zcp-portal-stage
-  keycloak:
-    zcp:
-      clientId: account
-      clientSecret: 0227b024-6483-4e96-827b-3bc4dd73637e
-      accessTokenUri: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/token
-      userAuthorizationUri: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/auth
-      redirectUri: https://console.cloudzcp.io/login
-  iam:
-    baseUrl: http://zcp-iam:80
-  alertmanager:
-    baseUrl: http://zcp-alertmanager:80
-  dashboard:
-    baseUrl: https://dashboard.cloudzcp.io
-    

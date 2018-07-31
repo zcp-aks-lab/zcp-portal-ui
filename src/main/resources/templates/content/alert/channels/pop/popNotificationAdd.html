@@ -105,14 +105,50 @@
 				var pDivision = $("#pDivision option:selected").val();
 
 				if (pDivision == 'email') {
-					var pEmail_to = $('#pEmail_to').validate();
+					//<![CDATA[
+					var result = $('#pEmail_to').val().split(";");
+					var resultValidate = '';
+					
+					if($('#pEmail_to').val() == '') {
+						$('#pp_Email_to').text('Email address을 입력해주세요.');
+						$('#pEmail_to').effect('shake');
+						return false;
+					} 
+					else {
+						for (var i = 0; i < result.length; i++) {
+							if (result[i] != "") {
+								$('#pp_Email_to').text('');
+								var email_to = validateEmail(result[i]);
+								resultValidate = email_to;
+								
+								if (!email_to) {
+									$('#pp_Email_to').text('이메일 형식에 맞게 입력해 주십시오.');
+									$('#pEmail_to').effect('shake');
+									return false;
+								} else {
+									$('#pp_Email_to').text('');
+								}
+							} else if(result[i] != ";") {
+							} else {
+								$('#pp_Email_to').text('Email address을 입력해주세요.');
+								$('#pEmail_to').effect('shake');
+								return false;
+							}
+						}
+					}
+					
+					if (resultValidate == true) {
+						return true;
+					}
+					// ]]>
+					/* var pEmail_to = $('#pEmail_to').validate();
 
 					if (!pEmail_to) {
 						$('#pEmail_to').effect('shake');
 						return false;
 					} else {
 						return true;
-					}
+					} */
 				} else if (pDivision == 'slack') {
 					$('#pSlack_msg').text('');
 					var pUrl_valid = isValidURL($('#pSlack_api_url').val());
@@ -183,7 +219,7 @@
 		},
 		event : {
 			init : function() {
-				$a.keyfilter.addKeyUpRegexpRule("email", "a-zA-Z0-9@._-");
+				$a.keyfilter.addKeyUpRegexpRule("email", "a-zA-Z0-9@.;_-");
 
 				$('#popCancel').on('click', function() {
 					$a.close('cancel');
@@ -268,16 +304,16 @@
 									<tbody>
 										<tr>
 											<th class="Valign-top">Email address</th>
-											<td><input class="Textinput Width-100" th:id="pEmail_to"
-												th:name="pEmail_to" maxlength="50"
+											<td><textarea class="Textarea Width-100" rows="4" th:id="pEmail_to"
+												th:name="pEmail_to" maxlength="1000"
 												data-keyfilter-rule="email"
 												data-validation-rule="{required:true, email:true}"
 												data-validation-message="{required:'Email address를 입력해주세요.'}"
-												style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666" />
+												style="font-size: 15px; padding: 0 15px; line-height: 2.4rem; border: 1px solid #cccccc; color: #666666"></textarea>
 												<!-- <input class="Textinput Width-100" th:id="email_to"
 												th:name="email_to" data-validation-rule="{required:true}"
 												data-validation-message="{required:'Email address를 입력해주세요.'}" /> -->
-												<p class="info-text" data-for="pEmail_to"></p></td>
+												<p id="pp_Email_to" class="info-text" data-for="pEmail_to"></p></td>
 										</tr>
 									</tbody>
 								</table>

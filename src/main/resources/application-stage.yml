@@ -1,0 +1,21 @@
+spring:
+  profiles: stage
+  
+props:
+  appName: zcp-portal-stage
+  keycloak:
+    zcp:
+      clientId: ${CLIENT_ID}
+      clientSecret: ${CLIENT_SECRET}
+      accessTokenUri: ${ACCESS_TOKEN_URI}
+      userAuthorizationUri: ${USER_AUTHORIZATION_URI}
+      redirectUri: ${REDIRECT_URI}
+  iam:
+    baseUrl: ${IAM_BASE_URI}
+  alertmanager:
+    baseUrl: ${ALERT_BASE_URI}
+  dashboard:
+    baseUrl: ${DASHBOARD_BASE_URI}
+  addOnService:
+    filePath: /home/upload/
+    fileName: addOnServiceMetaData.json
