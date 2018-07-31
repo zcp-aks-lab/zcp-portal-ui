@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skcc.cloudz.zcp.common.component.AuthUserComponent;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.common.util.FileUtil;
 import com.skcc.cloudz.zcp.portal.my.service.MyService;
@@ -34,6 +35,9 @@ public class MyController {
     
     @Autowired
     private MyService myService;
+    
+    @Autowired
+    private AuthUserComponent authUserComponent;
     
     @GetMapping(value = "/profile", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String myInfo(Model model) throws Exception {
@@ -56,6 +60,8 @@ public class MyController {
     @ResponseBody 
     public void updatedMyProfile(@RequestBody MyUserVo myUserVo) throws Exception {
         myService.updateUser(myUserVo);
+        
+        authUserComponent.setFirstName(myUserVo.getFirstName());
     }
     
     @PostMapping(value = "/updatedPassword", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

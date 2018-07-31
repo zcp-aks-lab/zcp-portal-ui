@@ -31,7 +31,7 @@
 	        
 	        <!-- utils -->
 	        <div class="header-utils">
-	            <a class="user" th:text="${#authentication.principal.firstName}">skccux01@sk.com</a>
+	            <a class="user" th:text="${@authUserComponent.getFirstName()}">skccux01@sk.com</a>
 	            <div class="user-menus">
 	                <ul class="dropmenu-list">
 	                    <li class="selected" onclick="location.href='/my/profile'" >나의 정보</li>

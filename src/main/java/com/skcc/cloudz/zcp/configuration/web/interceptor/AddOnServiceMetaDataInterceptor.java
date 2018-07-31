@@ -68,6 +68,7 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
             resultList = this.getAddOnServiceMetaData();
             
             authUserComponent.setUserId(securityService.getUserDetails().getUserId());
+            authUserComponent.setFirstName(securityService.getUserDetails().getFirstName());
             authUserComponent.setAddOnServiceMetaVoList(resultList);
         } else {
             resultList = authUserComponent.getAddOnServiceMetaVoList();
