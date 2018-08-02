@@ -17,5 +17,5 @@ props:
   dashboard:
     baseUrl: ${DASHBOARD_BASE_URI}
   addOnService:
-    filePath: /home/upload/
+    filePath: /home/zcp/
     fileName: addOnServiceMetaData.json

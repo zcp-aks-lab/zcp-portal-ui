@@ -1,0 +1,134 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zcp-portal-service-meta-config
+  namespace: zcp-system
+data:
+  addOnServiceMetaData.json: |
+    [
+      {
+        "id": "dashboard",
+        "name": "대시보드",
+        "order": 1,
+        "url": "https://dashboard.hklaw.co.kr",
+        "target": "blank",
+        "accessRoles": [
+          "cluster-admin"
+        ],
+        "enable": true
+      },
+      {
+        "id": "monitoring",
+        "name": "모니터링",
+        "order": 2,
+        "url": "https://monitoring.hklaw.co.kr/login/generic_oauth",
+        "target": "blank",
+        "accessRoles": [
+          "cluster-admin",
+          "admin"
+        ],
+        "enable": true
+      },
+      {
+        "id": "logging",
+        "name": "로깅",
+        "order": 3,
+        "url": "https://logging.hklaw.co.kr",
+        "target": "blank",
+        "accessRoles": [
+          "cluster-admin",
+          "admin"
+        ],
+        "enable": true
+      },
+      {
+        "id": "zdb",
+        "name": "ZDB",
+        "order": 8,
+        "url": "https://zdb.hklaw.co.kr",
+        "target": "blank",
+        "accessRoles": [
+          "cluster-admin",
+          "admin"
+        ],
+        "enable": true
+      },
+      {
+        "id": "management",
+        "name": "설정 및 관리",
+        "order": 9,
+        "url": "/management",
+        "target": "",
+        "sub": [
+          {
+            "id": "namespace",
+            "name": "네임스페이스",
+            "order": 1,
+            "url": "/management/namespaces",
+            "target": "self",
+            "enable": true
+          },
+          {
+            "id": "user",
+            "name": "사용자",
+            "order": 2,
+            "url": "/management/users",
+            "target": "self",
+            "enable": true
+          }
+        ],
+        "accessRoles": [
+          "cluster-admin",
+          "admin"
+        ],
+        "enable": true
+      },
+      {
+        "id": "guide",
+        "name": "안내 및 도움말",
+        "order": 10,
+        "url": "/guide",
+        "target": "",
+        "sub": [
+          {
+            "id": "initialize",
+            "name": "시작하기",
+            "order": 1,
+            "url": "/guide/initialize",
+            "target": "self",
+            "enable": true
+          },
+          {
+            "id": "document",
+            "name": "문서",
+            "order": 2,
+            "url": "/guide/document",
+            "target": "self",
+            "enable": true
+          },
+          {
+            "id": "qna",
+            "name": "문의 및 지원",
+            "order": 3,
+            "url": "/guide/qna",
+            "target": "self",
+            "enable": true
+          },
+          {
+            "id": "terms",
+            "name": "약관",
+            "order": 4,
+            "url": "/guide/terms",
+            "target": "self",
+            "enable": true
+          }
+        ],
+        "accessRoles": [
+          "cluster-admin",
+          "admin",
+          "member",
+          "none"
+        ],
+        "enable": true
+      }
+    ]

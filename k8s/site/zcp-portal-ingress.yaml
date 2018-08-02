@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - lawai-console.cloudzcp.io
-    secretName: cloudzcp-io-cert
+    - iam.hklaw.co.kr
+    secretName: hklaw-co-kr-cert
   rules:
-  - host: lawai-console.cloudzcp.io
+  - host: iam.hklaw.co.kr
     http:
       paths:
       - backend:
