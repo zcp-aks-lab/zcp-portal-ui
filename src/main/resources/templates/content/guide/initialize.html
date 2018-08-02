@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-default">
+    <head>
+        <title>시작하기</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    </head>
+    <body>
+        <th:block layout:fragment="content">
+            <!-- location -->
+            <div class="locations-area"></div>
+            <div class="contents-box">
+                <!-- service top area-->
+                <div class="top-area">
+                    <h2 class="title">시작하기</h2>
+                    <div class="start-intro">
+                        <h3 class="intro-big__title">Cloud Z Container Platform를 소개합니다.</h3>
+                        <p class="intro-text">
+                            Cloud Z CP(Container Platform)는 Container Orchestration Platform인 Kubernetes 기반 위에 다음 세가지 서비스를 하나의 패키지 형태로 제공하는 상품 입니다.
+                        </p>
+                        <br/>
+                        <p>
+                        1. Kubernetes 기반의 Container Platform Service <br/>
+						- Container Lifecycle Management (Health Check, Self-Healing, Auto-Scaling 등)<br/>
+						- Kubernetes Cluster의 고 가용성 보장<br/>
+						<br/>
+						2. Cloud 기반 서비스 개발/운영을 위한 Add-on Service<br/>
+						- 개발을 위한 CI/CD, Private Image Registry, Helm Chart Catalog 등<br/>
+						- 운영을 위한 IAM,  Monitoring, Logging, Alert 등<br/>
+						<br/>
+						3. Platform 영역의 Managed Service<br/>
+						- Kubernetes Platform (Master + Worker Node) 영역<br/>
+						- Add-on Service 영역<br/>
+                        </p>
+                    </div>
+                </div>
+                <!-- service information -->
+                <div class="intro-contents">
+                    <h4 class="intro-sm__title">Add-on 서비스</h4>
+                    <p class="intro-text">Cloud Z Container Platform에 Add-on 된 다양한 서비스를 통해 Container Platform의 시스템 및 서비스를 보다 쉽게 관리할 수 있습니다.</p>
+                    <ul class="addon-list">
+                        <li>
+                            <p class="addon-img"></p>
+                            <dl class="addon-detail">
+                                <dt>대시보드</dt>
+                                <dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus</dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <p class="addon-img"></p>
+                            <dl class="addon-detail">
+                                <dt>모니터링</dt>
+                                <dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus</dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <p class="addon-img"></p>
+                            <dl class="addon-detail">
+                                <dt>알림</dt>
+                                <dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet la bibendum laobibendum laobibendum laocus</dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <p class="addon-img"></p>
+                            <dl class="addon-detail">
+                                <dt>Image Registry</dt>
+                                <dd>Lorem ipsum dolor sit aoreet. Proin gravida dolor sit amet lacus</dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <p class="addon-img"></p>
+                            <dl class="addon-detail">
+                                <dt>DevOps - 빌드 및 배포</dt>
+                                <dd>Lorem ipsum dolort, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus</dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <p class="addon-img"></p>
+                            <dl class="addon-detail">
+                                <dt>DevOps - 소스저장소</dt>
+                                <dd>Lorem ipsum dolor. Proin gravida dolor sit amet lacus</dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <p class="addon-img"></p>
+                            <dl class="addon-detail">
+                                <dt>Cloud Z Database</dt>
+                                <dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus</dd>
+                            </dl>
+                        </li>
+                    </ul>
+                    <!--following-->
+                    <div class="follow-wrap">
+                        <h3 class="intro-big__title">따라해보기</h3>
+                        <div class="Tabs follow-tabs">
+                            <div class="follow-name">나는</div>
+                            <ul>
+                                <li data-content="#tab1">클러스터 관리자</li>
+                                <li data-content="#tab2">네임스페이스 관리자</li>
+                                <li data-content="#tab3">아키텍트 / 개발자</li>
+                            </ul>
+                            <div id="tab1" class="follow-contents">
+                                <p class="follow-maintitle">클러스터 관리자는 Cloud Z Container Platform 의 모든 기능을 이용할 수 있습니다.<br/>
+                                네임스페이스 생성하고 사용자들이 이용할 수 있게 설정하는 과정을 따라해 보세요.</p>
+                                <ul class="step-wrap">
+                                    <li>
+                                        <p class="step-num">STEP 01</p>
+                                        <dl class="step-desc">
+                                            <dt>네임스페이스 생성</dt>
+                                            <dd><span class="color-red">설정 및 관리>메임스페이즈>네임스페이즈 추가</span> 메뉴를 통해 네임스페이스를 생성합니다.</dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <p class="step-num">STEP 02</p>
+                                        <dl class="step-desc">
+                                            <dt>사용자 등록</dt>
+                                            <dd><span class="color-red">설정 및 관리 > 사용자 > 사용자 추가</span> 메뉴를 통해 사용자를 등록합니다.<br/>
+                                            클러스터 권한은 총 4가지가 있으며, 각 권한에 따라 사용할 수 있는 기능이 달라집니다.</dd>
+                                            <dd>
+                                                <ul class="desc-list">
+                                                    <li>cluster admin : Lorem ipsum dolor sit amet, consectetur adipisc</li>
+                                                    <li>admin : Lorem ipsum dolor sit amet, consectetur adipisc</li>
+                                                    <li>edit : Lorem ipsum dolor sit amet, consectetur adipisc</li>
+                                                    <li>view : Lorem ipsum dolor sit amet, consectetur adipisc</li>
+                                                </ul>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <p class="step-num">STEP 03</p>
+                                        <dl class="step-desc">
+                                            <dt>네임스페이스 접근권한 설정</dt>
+                                            <dd>사용자가 정상적으로 생성이 되면, 사용자 상세 페이지의 접근권한(탭) 메뉴에서 사용자가 이용할 수 있도록 네임스페이스 권한을 추가합니다.<br/>
+                                            네임스페이스 권한은 platform admin 과 viewer 두 가지가 있으며, 권한에 따라 사용할 수 있는 기능이 달라집니다.</dd>
+                                            <dd>
+                                                <ul class="desc-list">
+                                                    <li>platform admin : Lorem ipsum dolor sit amet, consectetur adipisc</li>
+                                                    <li>viewer : Lorem ipsum dolor sit amet, consectetur adipisc</li>
+                                                </ul>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="tab2" class="follow-contents">
+                                <p class="follow-maintitle">네임스페이스를 생성하고 사용자들이 이용할 수 있게 설정하는 과정을 따라해 보세요.</p>
+                                <ul class="step-wrap">
+                                    <li>
+                                        <p class="step-num">STEP 01</p>
+                                        <dl class="step-desc">
+                                            <dt>네임스페이스 생성</dt>
+                                            <dd><span class="color-red">설정 및 관리>메임스페이즈>네임스페이즈 추가</span> 메뉴를 통해 네임스페이스를 생성합니다. <br/>
+                                                Resource Quota 와 Pod Default Limit Range 는 옵션값이며, 자세한 사항은 <a href="#">관련 문서</a>를 참조해주세요.</dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <p class="step-num">STEP 02</p>
+                                        <dl class="step-desc">
+                                            <dt>네임스페이스 접근권한 설정</dt>
+                                            <dd>네임스페이스가 정상적으로 생성이 되면, 상세 페이지의 멤버관리 (탭) 메뉴에서 멤버를 추가합니다.<br/>네임스페이스 권한은 platform admin 과 viewer 두 가지가 있으며, 권한에 따라 사용할 수 있는 기능이 달라집니다.</dd>
+                                            <dd>
+                                                <ul class="desc-list">
+                                                    <li>platform admin : Lorem ipsum dolor sit amet, consectetur adipisc</li>
+                                                    <li>viewer : Lorem ipsum dolor sit amet, consectetur adipisc</li>
+                                                </ul>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="tab3" class="follow-contents">
+                                <p class="follow-maintitle">시스템 및 서비스 개발 및 운영 담당자는 다양한 Add-on 서비스를 이용하여 애플리케이션</p>
+                                <ul class="step-wrap">
+                                    <li>
+                                        <p class="step-num">STEP 01</p>
+                                        <dl class="step-desc">
+                                            <dt>Cluster 권한 및 네임스페이스 멤버 확인</dt>
+                                            <dd>왼쪽 메뉴에서 안내 및 도움말 이외의 add-on 서비스 메뉴가 보이는지 확인 합니다. <br/>만약, 아무런 메뉴가 보이지 않는다면, 아직 cluster 권한이 설정되지 않은 상태입니다. cluster 권한을 먼저 부여 받아야 합니다.
+                                                <ul class="desc-list">
+                                                    <li>cluster 권한 요청 : 김마에 (admin@zcp.com, 1234)</li>
+                                                </ul>
+                                            </dd>
+                                            <dd class="Padding-top-10">
+                                                왼쪽 메뉴의 Cloud Z Container Platform 로고를 클릭했을 때, 네임스페이스의 상태를 보여주는 그래프가 나타나지 않으면, <br/>아직 어떠한 네임스페이스의 멤버가 되지 않은 상태입니다.
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <p class="step-num">STEP 02</p>
+                                        <dl class="step-desc">
+                                            <dt>기본 네임스페이스 설정</dt>
+                                            <dd>상단 우측에 있는 이름을 클릭하여 나의 정보 메뉴로 이동하여 기본 네임스페이스를 설정합니다.<br/>만약 권한을 가진 네임스페이스가 한 개라면, 기본으로 설정되어 있습니다.</dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <p class="step-num">STEP 03</p>
+                                        <dl class="step-desc">
+                                            <dt>네임스페이스 상태 확인</dt>
+                                            <dd>메인화면에서 네임스페이스의 리소스 및 시스템 상태를 확인합니다.</dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <p class="step-num">STEP 04</p>
+                                        <dl class="step-desc">
+                                            <dt>애플리케이션 빌드 및 배포</dt>
+                                            <dd><span class="color-red">DevOps > 빌드 및 배포</span> 메뉴를 통해 어플리케이션을 배포합니다.</dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </body>
+</html>
