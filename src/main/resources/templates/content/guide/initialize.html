@@ -195,28 +195,43 @@
                                 </ul>
                             </div>
                             <div id="tab2" class="follow-contents">
-                                <p class="follow-maintitle">네임스페이스를 생성하고 사용자들이 이용할 수 있게 설정하는 과정을 따라해 보세요.</p>
+                                <p class="follow-maintitle">ZCP의 기반이 되는 Kubernetes는 동일한 물리적 클러스터에 의해 지원되는 여러 개의 가상 클러스터를 지원합니다. 이러한 가상 클러스터를 네임스페이스라고 합니다. 네임스페이스를 생성하고 사용자들이 이용할 수 있게 설정하는 과정을 따라해 보세요.</p>
                                 <ul class="step-wrap">
                                     <li>
                                         <p class="step-num">STEP 01</p>
                                         <dl class="step-desc">
-                                            <dt>네임스페이스 생성</dt>
-                                            <dd><span class="color-red">설정 및 관리>메임스페이즈>네임스페이즈 추가</span> 메뉴를 통해 네임스페이스를 생성합니다. <br/>
-                                                Resource Quota 와 Pod Default Limit Range 는 옵션값이며, 자세한 사항은 <a href="#">관련 문서</a>를 참조해주세요.</dd>
+                                            <dt>네임스페이스를 생성하세요.</dt>
+                                            <dd><span class="color-red">설정 및 관리 > 네임스페이스 > Namespace 추가</span> 에서 네임스페이스를 생성합니다. </dd>
+                                            <dd><p class="addon-img" style="width:800px; height:400px"><img src="/images/guide/create-namespace.png" style="border:0px; width:800px; height:400px"/></p></dd>
+                                            <dd>
+                                            	1. <span class="color-red">설정 및 관리 > 네임스페이스</span> 로 이동합니다. <br/>
+                                            	2. 오른쪽 상단에 있는  을 클릭하거나 카드 형태로 보기일 때는 마지막 카드 다음에 있는 <span class="color-red">+ Namespace 추가</span> 를 클릭합니다. <br/>
+                                            	3. Namespace 추가 화면이 나타나면 다음 정보를 입력합니다. <br/>
+                                            </dd>
+                                            <dd><p class="addon-img" style="width:800px; height:400px"><img src="/images/guide/add-namespace02.png" style="border:0px; width:800px; height:400px"/></p></dd>
+                                            <dd>
+                                                <ul class="desc-list">
+                                                    <li>Namespace 명: Namespace를 구분하기 위한 고유의 값입니다.</li>
+                                                    <li>Resource Quotas: 각 항목에 대한 상세 정보는 Resource Quotas를 참고하세요.</li>
+                                                    <li>Pod Default Limit Range: 각 항목에 대한 상세 정보는 Pod Default Limit Range를 참고하세요.</li>
+                                                </ul>
+                                            </dd>
                                         </dl>
                                     </li>
                                     <li>
                                         <p class="step-num">STEP 02</p>
                                         <dl class="step-desc">
-                                            <dt>네임스페이스 접근권한 설정</dt>
-                                            <dd>네임스페이스가 정상적으로 생성이 되면, 상세 페이지의 멤버관리 (탭) 메뉴에서 멤버를 추가합니다.<br/>네임스페이스 권한은 platform admin 과 viewer 두 가지가 있으며, 권한에 따라 사용할 수 있는 기능이 달라집니다.</dd>
+                                            <dt>네임스페이스에 멤버를 추가하고 접근권한을 설정하세요.</dt>
+                                            <dd>네임스페이스가 정상적으로 생성이 되면 생성된 네임스페이스 링크를 클릭하고 나타나는 화면에서 멤버관리 탭에서 멤버를 추가하고 접근 권한을 설정합니다.</dd>
+                                            <dd><p class="addon-img" style="width:800px; height:400px"><img src="/images/guide/member-manging.png" style="border:0px; width:800px; height:400px"/></p></dd>
                                             <dd>
-                                                <ul class="desc-list">
-                                                    <li>platform admin : Lorem ipsum dolor sit amet, consectetur adipisc</li>
-                                                    <li>viewer : Lorem ipsum dolor sit amet, consectetur adipisc</li>
-                                                </ul>
+                                            	1. 멤버 목록 아래에 있는 <span class="color-red">멤버 추가</span> 버튼을 클릭합니다. <br/>
+                                            	2. 멤버 추가 목록이 나타나면 멤버 추가 목록 상단에 추가하려면 멤버 검색어를 입력하고 을 클릭합니다. <br/>
+                                            	3. Namespace 권한을 변경하고 <span class="color-red">추가</span> 열에 있는 을 클릭합니다. <br/>
                                             </dd>
-                                        </dl>
+                                            <dd>각 권한에 대한 설명은 다음과 같습니다:</dd>
+										<dd>좀 더 상세한 내용은 Using RBAC Authorization의 <span class="color-red">User-facing Roles</span> 를 참고하세요.</dd>
+									</dl>
                                     </li>
                                 </ul>
                             </div>
