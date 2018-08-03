@@ -20,17 +20,17 @@
                         </p>
                         <br/>
                         <p>
-                        1. Kubernetes 기반의 Container Platform Service <br/>
-						- Container Lifecycle Management (Health Check, Self-Healing, Auto-Scaling 등)<br/>
-						- Kubernetes Cluster의 고 가용성 보장<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. Kubernetes 기반의 Container Platform Service <br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Container Lifecycle Management (Health Check, Self-Healing, Auto-Scaling 등)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Kubernetes Cluster의 고 가용성 보장<br/>
 						<br/>
-						2. Cloud 기반 서비스 개발/운영을 위한 Add-on Service<br/>
-						- 개발을 위한 CI/CD, Private Image Registry, Helm Chart Catalog 등<br/>
-						- 운영을 위한 IAM,  Monitoring, Logging, Alert 등<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Cloud 기반 서비스 개발/운영을 위한 Add-on Service<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- 개발을 위한 CI/CD, Private Image Registry, Helm Chart Catalog 등<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- 운영을 위한 IAM,  Monitoring, Logging, Alert 등<br/>
 						<br/>
-						3. Platform 영역의 Managed Service<br/>
-						- Kubernetes Platform (Master + Worker Node) 영역<br/>
-						- Add-on Service 영역<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Platform 영역의 Managed Service<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Kubernetes Platform (Master + Worker Node) 영역<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Add-on Service 영역<br/>
                         </p>
                     </div>
                 </div>
@@ -43,49 +43,63 @@
                             <p class="addon-img"></p>
                             <dl class="addon-detail">
                                 <dt>대시보드</dt>
-                                <dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus</dd>
+                                <dd>Cloud Z CP 운영에 필요한 관리 및 모니터링 기능을 사용자에게 권한 별로 차별화하여 제공합니다.</dd>
                             </dl>
                         </li>
                         <li>
                             <p class="addon-img"></p>
                             <dl class="addon-detail">
                                 <dt>모니터링</dt>
-                                <dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus</dd>
+                                <dd>모니터링 Metric 수집 및 처리하여 grafana에서 시각화하고, Kubernetes API를 통한 모니터링 대상(node, pod, service, endpoints, ingress)들을 자동 관리(등록/삭제) 해줍니다.</dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <p class="addon-img"></p>
+                            <dl class="addon-detail">
+                                <dt>로깅</dt>
+                                <dd>컨테이너에서 수집되는 로그들을 필터링해서 Kibana에서 시각화하고, kibana의 Dashboard에서 수집된 로그들의 현황들을 파악 및 분석이 가능합니다.</dd>
                             </dl>
                         </li>
                         <li>
                             <p class="addon-img"></p>
                             <dl class="addon-detail">
                                 <dt>알림</dt>
-                                <dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet la bibendum laobibendum laobibendum laocus</dd>
-                            </dl>
-                        </li>
-                        <li>
-                            <p class="addon-img"></p>
-                            <dl class="addon-detail">
-                                <dt>Image Registry</dt>
-                                <dd>Lorem ipsum dolor sit aoreet. Proin gravida dolor sit amet lacus</dd>
+                                <dd>클러스터에서 발생하는 Node Down, Pod Restart, CPU/Memory Usage 등와 같은 필요한 알림들을 설정 및 관리할 수 있습니다.</dd>
                             </dl>
                         </li>
                         <li>
                             <p class="addon-img"></p>
                             <dl class="addon-detail">
                                 <dt>DevOps - 빌드 및 배포</dt>
-                                <dd>Lorem ipsum dolort, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus</dd>
+                                <dd>Jenkins의 배포 Pipeline를 통한 자동화 빌드/배포를 지원하고,  서비스의 무중단 배포를 위해서 서비스 Downtime 최소화를 통한 효율화를 제공합니다.</dd>
                             </dl>
                         </li>
                         <li>
                             <p class="addon-img"></p>
                             <dl class="addon-detail">
                                 <dt>DevOps - 소스저장소</dt>
-                                <dd>Lorem ipsum dolor. Proin gravida dolor sit amet lacus</dd>
+                                <dd>git을 서비스하기 위한 gitea를 이용해서 소스들을 저장할 수 있는 저장소를 제공합니다.</dd>
                             </dl>
                         </li>
                         <li>
                             <p class="addon-img"></p>
                             <dl class="addon-detail">
-                                <dt>Cloud Z Database</dt>
-                                <dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus</dd>
+                                <dt>Image Registry</dt>
+                                <dd>Public 및 Private Registry를 통해서 Application의 이미지를 관리 할 수 있으며, 기 확보된 Image를 기반으로 즉시 활용 할 수 있는 체계를 제공합니다.</dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <p class="addon-img"></p>
+                            <dl class="addon-detail">
+                                <dt>Catalog</dt>
+                                <dd>Helm Chart로 package화 된 Kubernetes Application을 관리하기 위한 웹 기반 UI로 여러 저장소에서 사용 가능한 차트를 검색 및 클러스터에 설치할 수 있습니다.</dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <p class="addon-img"></p>
+                            <dl class="addon-detail">
+                                <dt>Cloud Z DB</dt>
+                                <dd>Cloud Z DB는 Dedicated Managed DBaaS 플랫폼으로서, 데이터베이스를 Cloud Z CP 상에 자동으로 배포하고 손쉽게 관리하는 기능을 제공합니다.</dd>
                             </dl>
                         </li>
                     </ul>
@@ -104,39 +118,77 @@
                                 네임스페이스 생성하고 사용자들이 이용할 수 있게 설정하는 과정을 따라해 보세요.</p>
                                 <ul class="step-wrap">
                                     <li>
-                                        <p class="step-num">STEP 01</p>
+                                        <p class="step-num">STEP 01 신규 사용자 생성 하기</p>
                                         <dl class="step-desc">
-                                            <dt>네임스페이스 생성</dt>
-                                            <dd><span class="color-red">설정 및 관리>메임스페이즈>네임스페이즈 추가</span> 메뉴를 통해 네임스페이스를 생성합니다.</dd>
-                                        </dl>
-                                    </li>
-                                    <li>
-                                        <p class="step-num">STEP 02</p>
-                                        <dl class="step-desc">
-                                            <dt>사용자 등록</dt>
-                                            <dd><span class="color-red">설정 및 관리 > 사용자 > 사용자 추가</span> 메뉴를 통해 사용자를 등록합니다.<br/>
-                                            클러스터 권한은 총 4가지가 있으며, 각 권한에 따라 사용할 수 있는 기능이 달라집니다.</dd>
                                             <dd>
-                                                <ul class="desc-list">
-                                                    <li>cluster admin : Lorem ipsum dolor sit amet, consectetur adipisc</li>
-                                                    <li>admin : Lorem ipsum dolor sit amet, consectetur adipisc</li>
-                                                    <li>edit : Lorem ipsum dolor sit amet, consectetur adipisc</li>
-                                                    <li>view : Lorem ipsum dolor sit amet, consectetur adipisc</li>
-                                                </ul>
+                                            새로운 시스템 사용자를 바로 생성할 수 있고, 신규 사용자 가입 후 시스템 접근 권한을 부여할 수 있습니다.<br/> 
+                                            <span class="color-red">ZCP 사이드 메뉴 > 설정 및 관리 > 사용자</span> 메뉴를 선택 합니다. <br/>
+                                            <img src="images/guide/cluster-admin-01.png" data-th-src="@{/images/guide/cluster-admin-01.png}" width="630" /><br/>
+                                            <br/>
+                                            사용자 관리 화면 상단의 <span class="color-red">사용자 추가(아이콘)</span> 클릭합니다.<br/>
+                                            <img src="images/guide/cluster-admin-02.png" data-th-src="@{/images/guide/cluster-admin-02.png}" width="630" /><br/>
+                                            <br/>
+                                            <span class="color-red">사용자 추가</span> 화면에서 <span class="color-red">필요한 정보를 입력 후 등록 버튼 클릭</span>합니다.<br/>
+                                            <img src="images/guide/cluster-admin-03.png" data-th-src="@{/images/guide/cluster-admin-03.png}" width="630" /><br/>
+                                            <br/>
+                                            사용자 추가 창에서 <span class="color-red">확인 버튼 클릭</span>합니다.<br/>
+                                            <img src="images/guide/cluster-admin-04.png" data-th-src="@{/images/guide/cluster-admin-04.png}" height="412" width="630" /><br/>
+                                            <br/>
+                                            사용자 목록에서 신규로 추가한 사용자 확인할 수 있습니다.<br/>
+                                            <img src="images/guide/cluster-admin-05.png" data-th-src="@{/images/guide/cluster-admin-05.png}" width="630" /><br/>
                                             </dd>
                                         </dl>
                                     </li>
                                     <li>
-                                        <p class="step-num">STEP 03</p>
+                                        <p class="step-num">STEP 02 사용자 정보 변경 하기</p>
                                         <dl class="step-desc">
-                                            <dt>네임스페이스 접근권한 설정</dt>
-                                            <dd>사용자가 정상적으로 생성이 되면, 사용자 상세 페이지의 접근권한(탭) 메뉴에서 사용자가 이용할 수 있도록 네임스페이스 권한을 추가합니다.<br/>
-                                            네임스페이스 권한은 platform admin 과 viewer 두 가지가 있으며, 권한에 따라 사용할 수 있는 기능이 달라집니다.</dd>
+                                            <dd>사용자가 생성되면 사용자 목록 화면에서 사용자 인증 처리, 보안 설정, 그리고 권한을 관리할 수 있는 기능을 제공합니다. <br/><br/></dd>
+                                            <dt>기본 정보 변경 하기</dt>
                                             <dd>
+                                            사용자 정보를 변경할 사용자를 선택합니다.<br/>
+                                            <img src="images/guide/cluster-admin-06.png" data-th-src="@{/images/guide/cluster-admin-06.png}" width="630" /><br/>
+                                            <br/>
+                                            사용자 정보 확인 및 수정 합니다. <br/>
+                                            <img src="images/guide/cluster-admin-07.png" data-th-src="@{/images/guide/cluster-admin-07.png}" width="630" /><br/>
+                                            <br/>
+                                            </dd>
+                                            <dt>Credentials 설정 (암호 및 강제 인증 변경 설정, 알림)하기</dt>
+                                            <dd>
+                                                <img src="images/guide/cluster-admin-08.png" data-th-src="@{/images/guide/cluster-admin-08.png}" width="630" /><br/><br/>
+                                            </dd>
+                                            <dt>접근 권한(Cluster 권한, Namespace권한) 부여하기</dt>
+                                            <dd>
+                                                <img src="images/guide/cluster-admin-09.png" data-th-src="@{/images/guide/cluster-admin-09.png}" width="630" /><br/>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <p class="step-num">STEP 03 사용자 상태 변경 및 인증/프로필 강제 설정 하기</p>
+                                        <dl class="step-desc">
+                                            <dd>미사용자 제어를 위해 사용자 상태 변경이 가능합니다. 또한 로그인시 다양한 인증 수단을 강제화 할 수 있도록 지정할 수 있습니다. </dd>
+                                            <dd>보안 강화를 위해 다음 4가지 기능을 활용해 사용자에게 정보가 필수적으로 추가/변경 되도록 강제 할 수 있습니다. 
                                                 <ul class="desc-list">
-                                                    <li>platform admin : Lorem ipsum dolor sit amet, consectetur adipisc</li>
-                                                    <li>viewer : Lorem ipsum dolor sit amet, consectetur adipisc</li>
-                                                </ul>
+                                                    <li>이메일 인증</li>
+                                                    <li>OTP(One Time Password)를 활용한 이중 로그인(2-Factor) 인증</li>
+                                                    <li>비밀번호 강제 변경 인증</li>
+                                                    <li>프로필 강제 업데이트 </li>
+                                                </ul><br/>
+                                                사용자 기본 정보 변경 메뉴의 하단 메뉴에서 강제로 설정 할 수 있습니다. 
+                                                <img src="images/guide/cluster-admin-10.png" data-th-src="@{/images/guide/cluster-admin-10.png}" width="630" /><br/>
+                                                <br/>
+                                                각 버튼을 체크하면 사용자는 다음 로그인시 반드시 해당 변경 처리를 해야만 로그인 할 수 있습니다. 각 인증 수단 별로 다음과 같은 화면이 로그인시 표시됩니다.<br/><br/>
+                                            </dd>
+                                            <dt>비밀번호 변경 화면</dt>
+                                            <dd>
+                                                <img src="images/guide/cluster-admin-11.png" data-th-src="@{/images/guide/cluster-admin-11.png}" width="630" /><br/>
+                                            </dd>
+                                            <dt>모바일인증 등록 화면</dt>
+                                            <dd>
+                                                <img src="images/guide/cluster-admin-12.png" data-th-src="@{/images/guide/cluster-admin-12.png}" width="630" /><br/>
+                                            </dd>
+                                            <dt>프로필 변경 화면 </dt>
+                                            <dd>
+                                                <img src="images/guide/cluster-admin-13.png" data-th-src="@{/images/guide/cluster-admin-13.png}" width="630" /><br/>
                                             </dd>
                                         </dl>
                                     </li>
@@ -194,10 +246,6 @@
                                     </li>
                                     <li>
                                         <p class="step-num">STEP 03</p>
-                                        <dl class="step-desc">
-                                            <dt>네임스페이스 상태 확인</dt>
-                                            <dd>메인화면에서 네임스페이스의 리소스 및 시스템 상태를 확인합니다.</dd>
-                                        </dl>
                                     </li>
                                     <li>
                                         <p class="step-num">STEP 04</p>
