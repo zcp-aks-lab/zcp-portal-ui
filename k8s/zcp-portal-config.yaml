@@ -6,7 +6,7 @@ metadata:
 data:
   SPRING_ACTIVE_PROFILE: stage
   CLIENT_ID: account
-  CLIENT_SECRET: 0227b024-6483-4e96-827b-3bc4dd73637e
+#  CLIENT_SECRET: 0227b024-6483-4e96-827b-3bc4dd73637e
   REDIRECT_URI: https://console.cloudzcp.io/login
   ACCESS_TOKEN_URI: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/token
   USER_AUTHORIZATION_URI: https://keycloak.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/auth
