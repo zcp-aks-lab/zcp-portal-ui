@@ -32,6 +32,10 @@ public class MainController {
     public String main(@RequestParam(required = false, value = "namespace") String namespace, Model model) throws Exception {
         
         String accessRole = SecurityService.getUserDetail().getAccessRole();
+        if (accessRole == null) {
+            return "redirect:/guide/initialize";
+        } 
+        
         if (accessRole.equals(AccessRole.CLUSTER_ADMIN.getName())) {
             model.addAttribute("selectedNamespace", namespace);
         } else {

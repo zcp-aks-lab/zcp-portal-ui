@@ -3,6 +3,7 @@ package com.skcc.cloudz.zcp.configuration.web.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -23,10 +24,13 @@ public class UserNamespaceInterceptor extends HandlerInterceptorAdapter {
             return;
         }
         
-        ZcpUserVo zcpUserVo = userService.getUser(SecurityService.getUserId());
-        
-        modelAndView.addObject("userNamespaces", zcpUserVo.getNamespaces());
-        modelAndView.addObject("userDefaultNamespace", zcpUserVo.getDefaultNamespace());
+        String accessRole = SecurityService.getUserDetail().getAccessRole();
+        if (!StringUtils.isEmpty(accessRole)) {
+            ZcpUserVo zcpUserVo = userService.getUser(SecurityService.getUserId());
+            
+            modelAndView.addObject("userNamespaces", zcpUserVo.getNamespaces());
+            modelAndView.addObject("userDefaultNamespace", zcpUserVo.getDefaultNamespace());    
+        }
     }
 
 }
