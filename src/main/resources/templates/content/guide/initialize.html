@@ -4,6 +4,71 @@
     <head>
         <title>시작하기</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <style type="text/css">
+        .addon-img-dashboard {
+		    text-align: center;
+		    width: 100%;
+		    height: 200px;
+		    border: 1px solid #eeeeee;
+		    background: url("../images/guide/1.dashboard.png") no-repeat;
+		}
+		.addon-img-monitoring {
+            text-align: center;
+            width: 100%;
+            height: 200px;
+            border: 1px solid #eeeeee;
+            background: url("../images/guide/2.monitoring.png") no-repeat;
+        }
+        .addon-img-logging {
+            text-align: center;
+            width: 100%;
+            height: 200px;
+            border: 1px solid #eeeeee;
+            background: url("../images/guide/3.logging.png") no-repeat;
+        }
+        .addon-img-alerting {
+            text-align: center;
+            width: 100%;
+            height: 200px;
+            border: 1px solid #eeeeee;
+            background: url("../images/guide/4.alerting.png") no-repeat;
+        }
+        .addon-img-jenkins {
+            text-align: center;
+            width: 100%;
+            height: 200px;
+            border: 1px solid #eeeeee;
+            background: url("../images/guide/5.jenkins.png") no-repeat;
+        }
+        .addon-img-gitea {
+            text-align: center;
+            width: 100%;
+            height: 200px;
+            border: 1px solid #eeeeee;
+            background: url("../images/guide/6.gitea.png") no-repeat;
+        }
+        .addon-img-imageRegistry {
+            text-align: center;
+            width: 100%;
+            height: 200px;
+            border: 1px solid #eeeeee;
+            background: url("../images/guide/7.imageRegistry.png") no-repeat;
+        }
+        .addon-img-catalog {
+            text-align: center;
+            width: 100%;
+            height: 200px;
+            border: 1px solid #eeeeee;
+            background: url("../images/guide/8.catalog.png") no-repeat;
+        }
+        .addon-img-zdb {
+            text-align: center;
+            width: 100%;
+            height: 200px;
+            border: 1px solid #eeeeee;
+            background: url("../images/guide/9.ZDB.png") no-repeat;
+        }
+        </style>
     </head>
     <body>
         <th:block layout:fragment="content">
@@ -40,63 +105,63 @@
                     <p class="intro-text">Cloud Z Container Platform에 Add-on 된 다양한 서비스를 통해 Container Platform의 시스템 및 서비스를 보다 쉽게 관리할 수 있습니다.</p>
                     <ul class="addon-list">
                         <li>
-                            <p class="addon-img"></p>
+                            <p class="addon-img-dashboard"></p>
                             <dl class="addon-detail">
                                 <dt>대시보드</dt>
                                 <dd>Cloud Z CP 운영에 필요한 관리 및 모니터링 기능을 사용자에게 권한 별로 차별화하여 제공합니다.</dd>
                             </dl>
                         </li>
                         <li>
-                            <p class="addon-img"></p>
+                            <p class="addon-img-monitoring"></p>
                             <dl class="addon-detail">
                                 <dt>모니터링</dt>
                                 <dd>모니터링 Metric 수집 및 처리하여 grafana에서 시각화하고, Kubernetes API를 통한 모니터링 대상(node, pod, service, endpoints, ingress)들을 자동 관리(등록/삭제) 해줍니다.</dd>
                             </dl>
                         </li>
                         <li>
-                            <p class="addon-img"></p>
+                            <p class="addon-img-logging"></p>
                             <dl class="addon-detail">
                                 <dt>로깅</dt>
                                 <dd>컨테이너에서 수집되는 로그들을 필터링해서 Kibana에서 시각화하고, kibana의 Dashboard에서 수집된 로그들의 현황들을 파악 및 분석이 가능합니다.</dd>
                             </dl>
                         </li>
                         <li>
-                            <p class="addon-img"></p>
+                            <p class="addon-img-alerting"></p>
                             <dl class="addon-detail">
                                 <dt>알림</dt>
                                 <dd>클러스터에서 발생하는 Node Down, Pod Restart, CPU/Memory Usage 등와 같은 필요한 알림들을 설정 및 관리할 수 있습니다.</dd>
                             </dl>
                         </li>
                         <li>
-                            <p class="addon-img"></p>
+                            <p class="addon-img-jenkins"></p>
                             <dl class="addon-detail">
                                 <dt>DevOps - 빌드 및 배포</dt>
                                 <dd>Jenkins의 배포 Pipeline를 통한 자동화 빌드/배포를 지원하고,  서비스의 무중단 배포를 위해서 서비스 Downtime 최소화를 통한 효율화를 제공합니다.</dd>
                             </dl>
                         </li>
                         <li>
-                            <p class="addon-img"></p>
+                            <p class="addon-img-gitea"></p>
                             <dl class="addon-detail">
                                 <dt>DevOps - 소스저장소</dt>
                                 <dd>git을 서비스하기 위한 gitea를 이용해서 소스들을 저장할 수 있는 저장소를 제공합니다.</dd>
                             </dl>
                         </li>
                         <li>
-                            <p class="addon-img"></p>
+                            <p class="addon-img-imageRegistry"></p>
                             <dl class="addon-detail">
                                 <dt>Image Registry</dt>
                                 <dd>Public 및 Private Registry를 통해서 Application의 이미지를 관리 할 수 있으며, 기 확보된 Image를 기반으로 즉시 활용 할 수 있는 체계를 제공합니다.</dd>
                             </dl>
                         </li>
                         <li>
-                            <p class="addon-img"></p>
+                            <p class="addon-img-catalog"></p>
                             <dl class="addon-detail">
                                 <dt>Catalog</dt>
                                 <dd>Helm Chart로 package화 된 Kubernetes Application을 관리하기 위한 웹 기반 UI로 여러 저장소에서 사용 가능한 차트를 검색 및 클러스터에 설치할 수 있습니다.</dd>
                             </dl>
                         </li>
                         <li>
-                            <p class="addon-img"></p>
+                            <p class="addon-img-zdb"></p>
                             <dl class="addon-detail">
                                 <dt>Cloud Z DB</dt>
                                 <dd>Cloud Z DB는 Dedicated Managed DBaaS 플랫폼으로서, 데이터베이스를 Cloud Z CP 상에 자동으로 배포하고 손쉽게 관리하는 기능을 제공합니다.</dd>
@@ -230,8 +295,8 @@
                                             	3. Namespace 권한을 변경하고 <span class="color-red">추가</span> 열에 있는 을 클릭합니다. <br/>
                                             </dd>
                                             <dd>각 권한에 대한 설명은 다음과 같습니다:</dd>
-										<dd>좀 더 상세한 내용은 Using RBAC Authorization의 <span class="color-red">User-facing Roles</span> 를 참고하세요.</dd>
-									</dl>
+                                            <dd>좀 더 상세한 내용은 Using RBAC Authorization의 <span class="color-red">User-facing Roles</span> 를 참고하세요.</dd>
+									   </dl>
                                     </li>
                                 </ul>
                             </div>
@@ -239,35 +304,132 @@
                                 <p class="follow-maintitle">시스템 및 서비스 개발 및 운영 담당자는 다양한 Add-on 서비스를 이용하여 애플리케이션</p>
                                 <ul class="step-wrap">
                                     <li>
-                                        <p class="step-num">STEP 01</p>
+                                        <p class="step-num">STEP 01 kubectl Command 사용하기</p>
                                         <dl class="step-desc">
-                                            <dt>Cluster 권한 및 네임스페이스 멤버 확인</dt>
-                                            <dd>왼쪽 메뉴에서 안내 및 도움말 이외의 add-on 서비스 메뉴가 보이는지 확인 합니다. <br/>만약, 아무런 메뉴가 보이지 않는다면, 아직 cluster 권한이 설정되지 않은 상태입니다. cluster 권한을 먼저 부여 받아야 합니다.
+                                            <dt>kubectl 설치</dt>
+                                            <dd>
+                                                kubectl은 Kubernetes에 접속하여 어플리케이션 배포, 설정 등 다양한 동작을 실행하는 명령어 입니다.<br/>
+                                                본 문서에서는 Windows 환경에서 binary 방식으로 설치하는 방법을 가이드 합니다.<br/>
                                                 <ul class="desc-list">
-                                                    <li>cluster 권한 요청 : 김마에 (admin@zcp.com, 1234)</li>
+                                                    <li><a href="https://kubernetes.io/docs/tasks/tools/install-kubectl" target="_blank">https://kubernetes.io/docs/tasks/tools/install-kubectl</a></li>
                                                 </ul>
                                             </dd>
                                             <dd class="Padding-top-10">
-                                                왼쪽 메뉴의 Cloud Z Container Platform 로고를 클릭했을 때, 네임스페이스의 상태를 보여주는 그래프가 나타나지 않으면, <br/>아직 어떠한 네임스페이스의 멤버가 되지 않은 상태입니다.
+                                                먼저 아래 링크의 최신 kubectl.exe 파일을 c:\kube 폴더에 다운로드 합니다.<br/>
+                                                <ul class="desc-list">
+                                                    <li><a href="https://storage.googleapis.com/kubernetes-release/release/v1.11.0/bin/windows/amd64/kubectl.exe" target="_blank">https://storage.googleapis.com/kubernetes-release/release/v1.11.0/bin/windows/amd64/kubectl.exe</a></li>
+                                                </ul>
+                                            </dd>
+                                            <dd class="Padding-top-10">
+                                                cmd 창을 열고 <span class="color-red">c:\kube</span> 폴더로 이동해 <span class="color-red">kubectl version -c</span> 명령을 확인합니다. <br/>
+                                                <img src="images/guide/developer-01.png" data-th-src="@{/images/guide/developer-01.png}" /><br/><br/>
+                                            </dd>
+                                            <dt>kubectl 설정</dt>
+                                            <dd>
+                                                생성된 클러스터에 접속하기 위해서는 클러스터 서버정보, 인증토큰 등 관련 설정이 필요합니다.<br/>
+                                                이러한 접속설정은 CloudZ CP 콘솔에서 다운로드 가능합니다. 우측 상단의 드롭다운 목록에서 CLI Command 를 선택합니다.<br/>
+                                                <img src="images/guide/developer-02.png" data-th-src="@{/images/guide/developer-02.png}" /><br/><br/>
+                                                CLI Command 화면에서 2단계의 다운로드 버튼을 클릭합니다.<br/>
+                                                파일 이름은 <span class="color-red">kube.conf</span> 파일로 변경하고 <span class="color-red">c:\kube</span>  폴더에 다운로드 합니다.
+                                                <img src="images/guide/developer-03.png" data-th-src="@{/images/guide/developer-03.png}" /><br/><br/>
+                                                <img src="images/guide/developer-04.png" data-th-src="@{/images/guide/developer-04.png}" /><br/><br/>
+                                                
+                                                다운로드한 kube.conf 파일을 활성화 하기 위해 set KUBECONFIG=kube.conf 명령을 수행합니다.<br/>
+                                                kubectl version을 사용하여 클라이언트와 서버 정보가 정상적으로 출력되는지 확인합니다.<br/>
+                                                <img src="images/guide/developer-05.png" data-th-src="@{/images/guide/developer-05.png}" /><br/><br/>
                                             </dd>
                                         </dl>
                                     </li>
                                     <li>
-                                        <p class="step-num">STEP 02</p>
+                                        <p class="step-num">STEP 02 Gitea 에 소스 올리기</p>
                                         <dl class="step-desc">
-                                            <dt>기본 네임스페이스 설정</dt>
-                                            <dd>상단 우측에 있는 이름을 클릭하여 나의 정보 메뉴로 이동하여 기본 네임스페이스를 설정합니다.<br/>만약 권한을 가진 네임스페이스가 한 개라면, 기본으로 설정되어 있습니다.</dd>
-                                        </dl>
+                                            <dt>Gitea 통합로그인 설정</dt>
+                                            <dd>DevOps > 소스 저장소 메뉴를 클릭합니다.</dd>
+                                            <dd><img src="images/guide/developer-06.png" data-th-src="@{/images/guide/developer-06.png}" /><br/><br/></dd>
+                                            <dd>아래의 화면에서 최초 1회, 소스 저장소에 회원가입을 합니다. 앞으로 별도의 로그인 없이 접속이 가능합니다.</dd>
+                                            <dd>비밀번호는 Push 등 저장소 활용시 사용되므로 분실하지 않도록 주의합니다.</dd>
+                                            <dd><img src="images/guide/developer-07.png" data-th-src="@{/images/guide/developer-07.png}" /><br/></dd>
+                                            <dd>회원가입이 완료되면 OpenId Connect 이미지를 클릭하여 로그인 합니다.<br/></dd>
+                                            <dd><img src="images/guide/developer-08.png" data-th-src="@{/images/guide/developer-08.png}" /><br/><br/></dd>
+                                            <dt>샘플 프로젝트 생성</dt>
+                                            <dd><img src="images/guide/developer-09.png" data-th-src="@{/images/guide/developer-09.png}" /><br/></dd>
+                                            <dd>미리 Github에 공개된 아래의 샘플 프로젝트 주소를 입력합니다.<br/>
+                                                <ul class="desc-list">
+                                                    <li><a href="https://git.cloudzcp.io/developer02/sample.git" target="_blank">https://git.cloudzcp.io/developer02/sample.git</a></li>
+                                                </ul>
+                                            </dd>
+                                            <dd>새로 생성될 저장소의 이름을 입력하고 저장소 마이그레이션 버튼을 클릭합니다.</dd>
+                                            <dd>비공개 저장소를 선택하면, 프로젝트의 멤버로 등록된 사용자만 조회, 수정이 가능합니다.</dd>
+                                            <dd>이후 프로젝트 설정 화면에서 가시성 여부를 변경 할 수 있습니다.</dd>
+                                            <dd><img src="images/guide/developer-10.png" data-th-src="@{/images/guide/developer-10.png}" /><br/><br/></dd>
+                                            
+                                            <dd>모든 작업을 완료하면 아래와 같이 샘플 프로젝트가 생성된 것을 확인 할 수 있습니다.</dd>
+                                            <dd>사용법은 Github과 유사하며 웹 화면에서 직접 파일을 생성하거나, 로컬로 체크아웃 하여 작업 할 수 있습니다.</dd>
+                                            <dd><img src="images/guide/developer-11.png" data-th-src="@{/images/guide/developer-11.png}" /><br/></dd>
+                                       </dl>
                                     </li>
                                     <li>
-                                        <p class="step-num">STEP 03</p>
+                                        <p class="step-num">STEP 03 Public Repository 생성하기</p>
+                                        <dl class="step-desc">
+                                            <dt>Public Repository 생성하기</dt>
+                                            <dd>Image Registry 메뉴를 클릭합니다.</dd>
+                                            <dd><img src="images/guide/developer-12.png" data-th-src="@{/images/guide/developer-12.png}" /><br/></dd>
+                                            <dd>Harbor 좌측 하단의 Sign up for an account 메뉴를 클릭하여 계정을 생성하고, Harbor 에 로그인합니다.</dd>
+                                            <dd><img src="images/guide/developer-13.png" data-th-src="@{/images/guide/developer-13.png}" /><br/></dd>
+                                            <dt>Public Project 생성</dt>
+                                            <dd>Projects 메뉴를 선택하고 NEW PROJECT 버튼을 클릭합니다.</dd>
+                                            <dd><img src="images/guide/developer-14.png" data-th-src="@{/images/guide/developer-14.png}" /><br/></dd>
+                                            <dd>Project Name 을 입력하고 Public 의 메뉴를 체크한 후 OK 버튼을 클릭합니다.</dd>
+                                            <dd>Access level 의 Public 을 check 하면 누구나 인증 절차 없이 해당 Project 의 이미지를 pull 할 수 있습니다.</dd>
+                                            <dd><img src="images/guide/developer-15.png" data-th-src="@{/images/guide/developer-15.png}" /><br/></dd>
+                                            <dd>Project 가 생성된 모습입니다.</dd>
+                                            <dd><img src="images/guide/developer-16.png" data-th-src="@{/images/guide/developer-16.png}" /><br/></dd>
+                                            <dd>Project 명을 클릭하고, 우측의 PUSH IMAGE 메뉴를 클릭하면 이 프로젝트에 Image 를 올리는 docker command 를 확인할 수 있습니다.</dd>
+                                            <dd><img src="images/guide/developer-17.png" data-th-src="@{/images/guide/developer-17.png}" /><br/></dd>
+                                       </dl>
                                     </li>
                                     <li>
-                                        <p class="step-num">STEP 04</p>
+                                        <p class="step-num">STEP 04 Jenkins 로 배포하기</p>
                                         <dl class="step-desc">
-                                            <dt>애플리케이션 빌드 및 배포</dt>
-                                            <dd><span class="color-red">DevOps > 빌드 및 배포</span> 메뉴를 통해 어플리케이션을 배포합니다.</dd>
-                                        </dl>
+                                            <dt>Jenkins 접속하기</dt>
+                                            <dd>DevOps > 빌드 및 배포 메뉴를 선택합니다.</dd>
+                                            <dd><img src="images/guide/developer-18.png" data-th-src="@{/images/guide/developer-18.png}" /><br/></dd>
+                                            <dd>자신의 Namespace 와 동일한 Folder 를 선택합니다.</dd>
+                                            <dd>만약 동일한 Folder 가 보이지 않으면 Cluster admin 에게 요청하여 권한을 할당받아야 합니다.</dd>
+                                            <dd><img src="images/guide/developer-19.png" data-th-src="@{/images/guide/developer-19.png}" /><br/></dd>
+                                            
+                                            <dt>Credentials 생성하기</dt>
+                                            <dd>Jenkins 가 Gitea 의 소스를 Checkout 받고, Docker registry 에 push 를 하려면 각 시스템에 로그인하기 위한 인증 정보가 필요합니다.</dd>
+                                            <dd>자신의 Folder 에 들어가서 좌측의 Credentials 메뉴를 클릭합니다.</dd>
+                                            <dd>Credentials 하위의 Folder 를 선택하고 Global credentials 를 클릭합니다.</dd>
+                                            <dd><img src="images/guide/developer-20.png" data-th-src="@{/images/guide/developer-20.png}" /><br/></dd>
+                                            <dd><img src="images/guide/developer-21.png" data-th-src="@{/images/guide/developer-21.png}" /><br/></dd>
+                                            <dd>좌측의 Add Credentials 메뉴를 선택하고, Step 02 에서 생성한 Gitea 의 ID, Password 를 입력하여 Credential 정보를 생성합니다.</dd>
+                                            <dd>ID, Description 은 식별이 용이하도록 입력합니다.</dd>
+                                            <dd><img src="images/guide/developer-22.png" data-th-src="@{/images/guide/developer-22.png}" /><br/></dd>
+                                            <dd>동일하게 Docker Registry 계정도 생성합니다.</dd>
+                                            <dd>Gitea, Docker 두 Credentials 를 모두 생성한 화면입니다.</dd>
+                                            <dd><img src="images/guide/developer-23.png" data-th-src="@{/images/guide/developer-23.png}" /><br/><br/></dd>
+                                            <dt>Jenkins Pipeline 생성하기</dt>
+                                            <dd>좌측의 New Item 또는 중앙의 새 작업을 클릭합니다.</dd>
+                                            <dd><img src="images/guide/developer-24.png" data-th-src="@{/images/guide/developer-24.png}" /><br/></dd>
+                                            <dd>Pipeline 이름을 입력하고, Pipeline 을 선택한 뒤 OK 버튼을 클릭합니다.</dd>
+                                            <dd><img src="images/guide/developer-25.png" data-th-src="@{/images/guide/developer-25.png}" /><br/></dd>
+                                            <dd>생성된 Pipeline Job의 구성 화면이 표시되면 General > Properties Content 영역에 아래 설정을 입력합니다.</dd>
+                                            <dd><img src="images/guide/developer-26.png" data-th-src="@{/images/guide/developer-26.png}" /><br/></dd>
+                                            <dd>마지막으로, 아래의 파이프라인 코드를 입력하고 저장 버튼을 클릭합니다.</dd>
+                                            <dd><img src="images/guide/developer-27.png" data-th-src="@{/images/guide/developer-27.png}" /><br/><br/></dd>
+                                            <dt>Jenkins Pipeline 실행하기</dt>
+                                            <dd>파이프라인이 완성되면 Job 상태 화면으로 이동됩니다. Job을 실행하기 위해 화면 좌측의 Build Now 버튼을 클릭합니다.</dd>
+                                            <dd>빌드가 실행되면 하단의 Build History 화면에서 실행중인 Job을 확인 할 수 있습니다.</dd>
+                                            <dd><img src="images/guide/developer-29.png" data-th-src="@{/images/guide/developer-29.png}" /><br/><br/></dd>
+                                            <dd><img src="images/guide/developer-28.png" data-th-src="@{/images/guide/developer-28.png}" /><br/><br/></dd>
+                                            <dd>Job 실행이 완료되면 아래의 주소에 접속하여 배포된 어플리케이션을 확인 할 수 있습니다.
+                                                <ul class="desc-list">
+                                                    <li><a href="http://sample.cloudzcp.io/" target="_blank">http://sample.cloudzcp.io/</a></li>
+                                                </ul>
+                                            </dd>
+                                       </dl>
                                     </li>
                                 </ul>
                             </div>
