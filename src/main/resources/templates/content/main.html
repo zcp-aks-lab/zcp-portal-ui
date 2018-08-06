@@ -343,107 +343,151 @@
                         })
                     },
                     getChartsData: function() {
-                        $a.request('/main/getChartsData', {
+                        this.getNodesStatus();
+                        this.getDeploymentsStatus();
+                        this.getPodsStatus();
+                        this.getCpuStatus();
+                        this.getMemoryStatus();
+                        this.getUsersStatus();
+                    },
+                    getNodesStatus: function() {
+                    	$a.request('/main/getNodesStatus', {
+                            method: 'get',
+                            data: null, 
+                            success: function(res) {
+                            	var props = {
+                                    title: res.title,
+                                    mainTitle: res.mainStatus,
+                                    mainValue: res.mainStatusPercentage,
+                                    totalCount: res.totalCount,
+                                    dataProvider: res.statuses,
+                                    valueField: 'count',
+                                    titleField: 'status'
+                                }
+                                zcpPortalApp.chart.draw('nodesChart', props);
+                            },
+                            error: function(errObject) {}
+                        }) 
+                    }, 
+
+                    getDeploymentsStatus: function() {
+                        $a.request('/main/getDeploymentsStatus', {
                             method: 'get',
                             data: {'namespace': selectedNamespace}, 
                             success: function(res) {
-                            	zcpPortalApp.data.setChartsData(res);
+                            	var props = {
+                                    title: res.title,
+                                    mainTitle: res.mainStatus,
+                                    mainValue: res.mainStatusPercentage,
+                                    totalCount: res.totalCount,
+                                    dataProvider: res.statuses,
+                                    valueField: 'count',
+                                    titleField: 'status'
+                                }
+                                zcpPortalApp.chart.draw('deploymentsChart', props);
                             },
                             error: function(errObject) {}
-                        })
-                    },
-                    setChartsData: function(res) {
-                    	var nodesStatus = res.nodesStatus;
-                    	var props = {
-                            title: nodesStatus.title,
-                            mainTitle: nodesStatus.mainStatus,
-                            mainValue: nodesStatus.mainStatusPercentage,
-                            totalCount: nodesStatus.totalCount,
-                            dataProvider: nodesStatus.statuses,
-                            valueField: 'count',
-                            titleField: 'status'
-                        }
-                        zcpPortalApp.chart.draw('nodesChart', props);
-                        
-                        var deploymentsStatus = res.deploymentsStatus;
-                        var props = {
-                            title: deploymentsStatus.title,
-                            mainTitle: deploymentsStatus.mainStatus,
-                            mainValue: deploymentsStatus.mainStatusPercentage,
-                            totalCount: deploymentsStatus.totalCount,
-                            dataProvider: deploymentsStatus.statuses,
-                            valueField: 'count',
-                            titleField: 'status'
-                        }
-                        zcpPortalApp.chart.draw('deploymentsChart', props);
+                        }) 
+                    }, 
 
-                        var podsStatus = res.podsStatus;
-                        var props = {
-                            title: podsStatus.title,
-                            mainTitle: podsStatus.mainStatus,
-                            mainValue: podsStatus.mainStatusPercentage,
-                            totalCount: podsStatus.totalCount,
-                            dataProvider: podsStatus.statuses,
-                            valueField: 'count',
-                            titleField: 'status'
-                        }
-                        zcpPortalApp.chart.draw('podsChart', props);
-
-                        var cpuStatus = res.cpuStatus;
-                        var props = {
-                            title: cpuStatus.title,
-                            mainTitle: cpuStatus.utilizationTitle,
-                            mainValue: cpuStatus.utilizationPercentage,
-                            totalCount: cpuStatus.total,
-                            dataProvider: [
-                                {
-                                    title:  'available',
-                                    value:  cpuStatus.available
-                                },
-                                {
-                                    title:  'utilization',
-                                    value:  cpuStatus.utilization
+                    getPodsStatus: function() {
+                        $a.request('/main/getPodsStatus', {
+                            method: 'get',
+                            data: {'namespace': selectedNamespace}, 
+                            success: function(res) {
+                            	var props = {
+                                    title: res.title,
+                                    mainTitle: res.mainStatus,
+                                    mainValue: res.mainStatusPercentage,
+                                    totalCount: res.totalCount,
+                                    dataProvider: res.statuses,
+                                    valueField: 'count',
+                                    titleField: 'status'
                                 }
-                            ],
-                            valueField: 'value',
-                            titleField: 'title'
-                        }
-                        zcpPortalApp.chart.draw('cpuChart', props);
+                                zcpPortalApp.chart.draw('podsChart', props);
+                            },
+                            error: function(errObject) {}
+                        }) 
+                    }, 
 
-                        var memoryStatus = res.memoryStatus;
-                        var props = {
-                            title: memoryStatus.title,
-                            mainTitle: memoryStatus.utilizationTitle,
-                            mainValue: memoryStatus.utilizationPercentage,
-                            totalCount: memoryStatus.total,
-                            dataProvider: [
-                                {
-                                    title:  'available',
-                                    value:  memoryStatus.available
-                                },
-                                {
-                                    title:  'utilization',
-                                    value:  memoryStatus.utilization
+                    getCpuStatus: function() {
+                        $a.request('/main/getCpuStatus', {
+                            method: 'get',
+                            data: null, 
+                            success: function(res) {
+                            	var props = {
+                                    title: res.title,
+                                    mainTitle: res.utilizationTitle,
+                                    mainValue: res.utilizationPercentage,
+                                    totalCount: res.total,
+                                    dataProvider: [
+                                        {
+                                            title:  'available',
+                                            value:  res.available
+                                        },
+                                        {
+                                            title:  'utilization',
+                                            value:  res.utilization
+                                        }
+                                    ],
+                                    valueField: 'value',
+                                    titleField: 'title'
                                 }
-                            ],
-                            valueField: 'value',
-                            titleField: 'title'
-                        }
-                        zcpPortalApp.chart.draw('memoryChart', props);
+                                zcpPortalApp.chart.draw('cpuChart', props);
+                            },
+                            error: function(errObject) {}
+                        }) 
+                    }, 
 
-                        var usersStatus = res.usersStatus;
-                        var props = {
-                            title: usersStatus.title,
-                            mainTitle: usersStatus.mainRole,
-                            mainValue: usersStatus.mainRolePercentage,
-                            totalCount: usersStatus.totalCount,
-                            dataProvider: usersStatus.roles,
-                            valueField: 'count',
-                            titleField: 'role'
-                        }
-                        zcpPortalApp.chart.draw('usersChart', props);
-                    },
+                    getMemoryStatus: function() {
+                        $a.request('/main/getMemoryStatus', {
+                            method: 'get',
+                            data: null, 
+                            success: function(res) {
+                            	var props = {
+                                    title: res.title,
+                                    mainTitle: res.utilizationTitle,
+                                    mainValue: res.utilizationPercentage,
+                                    totalCount: res.total,
+                                    dataProvider: [
+                                        {
+                                            title:  'available',
+                                            value:  res.available
+                                        },
+                                        {
+                                            title:  'utilization',
+                                            value:  res.utilization
+                                        }
+                                    ],
+                                    valueField: 'value',
+                                    titleField: 'title'
+                                }
+                                zcpPortalApp.chart.draw('memoryChart', props);
+                            },
+                            error: function(errObject) {}
+                        }) 
+                    }, 
 
+                    getUsersStatus: function() {
+                        $a.request('/main/getUsersStatus', {
+                            method: 'get',
+                            data: {'namespace': selectedNamespace}, 
+                            success: function(res) {
+                            	var props = {
+                                    title: res.title,
+                                    mainTitle: res.mainRole,
+                                    mainValue: res.mainRolePercentage,
+                                    totalCount: res.totalCount,
+                                    dataProvider: res.roles,
+                                    valueField: 'count',
+                                    titleField: 'role'
+                                }
+                                zcpPortalApp.chart.draw('usersChart', props);
+                            },
+                            error: function(errObject) {}
+                        }) 
+                    }, 
+                    
                     getJweToken: function() {
                         $a.request('/main/getJweToken', {
                             method: 'get',
@@ -483,8 +527,6 @@
         <th:block layout:fragment="content">
             <!-- location -->
             <th:block th:include="common/include/namespace :: common"></th:block>
-            
-            <!-- <iframe src="https://dashboard.cloudzcp.io" width="100%" height="100%" valign="top" frameborder="1" id="resume_dp_id" name="resume_dp" vspace="0" hspace="0" marginheight="0" marginwidth="0" scrolling="yes" align="center"></iframe> -->
             
             <div class="contents-box">
                 <!-- service top area-->

@@ -53,19 +53,40 @@ public class MainController {
         return mainService.getNodes();
     }
     
-    @GetMapping(value = "/main/getChartsData", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/main/getNodesStatus", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Object> getChartsData(@RequestParam(required = false, value = "namespace") String namespace) throws Exception {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        
-        resultMap.put("nodesStatus", mainService.getNodesStatus());
-        resultMap.put("deploymentsStatus", mainService.getDeploymentsStatus(namespace));
-        resultMap.put("podsStatus", mainService.getPodsStatus(namespace));
-        resultMap.put("cpuStatus", mainService.getCpuStatus());
-        resultMap.put("memoryStatus", mainService.getMemoryStatus());
-        resultMap.put("usersStatus", mainService.getUsersStatus(namespace));
-                
-        return resultMap;
+    public Map<String, Object> getNodesStatus() throws Exception {
+        return mainService.getNodesStatus();
+    }
+    
+    @GetMapping(value = "/main/getDeploymentsStatus", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> getDeploymentsStatus(@RequestParam(required = false, value = "namespace") String namespace) throws Exception {
+        return mainService.getDeploymentsStatus(namespace);
+    }
+    
+    @GetMapping(value = "/main/getPodsStatus", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> getPodsStatus(@RequestParam(required = false, value = "namespace") String namespace) throws Exception {
+        return mainService.getPodsStatus(namespace);
+    }
+    
+    @GetMapping(value = "/main/getCpuStatus", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> getCpuStatus() throws Exception {
+        return mainService.getCpuStatus();
+    }
+    
+    @GetMapping(value = "/main/getMemoryStatus", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> getMemoryStatus() throws Exception {
+        return mainService.getMemoryStatus();
+    }
+    
+    @GetMapping(value = "/main/getUsersStatus", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> getUsersStatus(@RequestParam(required = false, value = "namespace") String namespace) throws Exception {
+        return mainService.getUsersStatus(namespace);
     }
     
     @GetMapping(value = "/main/getJweToken", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

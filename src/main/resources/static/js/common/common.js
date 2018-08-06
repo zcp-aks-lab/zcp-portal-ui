@@ -121,7 +121,7 @@ function chkPwd(str) {
 	var pw = str;
 	var num = pw.search(/[0-9]/g);
 	var eng = pw.search(/[a-z]/ig);
-	var spe = pw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
+	var spe = pw.search(/[!@#$%^*_-]/gi);
 
 	if (pw.length < 8 || pw.length > 20) {
 		//alert("8자리 ~ 20자리 이내로 입력해주세요.");
