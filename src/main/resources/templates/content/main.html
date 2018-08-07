@@ -327,8 +327,8 @@
                 },
                 data: {
                     init: function() {
-                        this.getNodes();
                         this.getChartsData();
+                        this.getNodes();
                     },
                     getNodes: function() {
                         $a.request('/main/getNodes', {
