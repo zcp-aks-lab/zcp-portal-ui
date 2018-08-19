@@ -45,7 +45,9 @@ data:
 
 KeyCloak > zcp realm > clients > account > credentials 탭으로 이동하여 secret 정보를 복사 한 후 base64로 incoding 한다.
 
-([base64 encoding web site](https://www.base64encode.org/) 참고. :bangbang: Mac 에서 base64 로 하는 경우 % 가 붙어서 값이 틀림 주의 요망)
+```
+$ echo -n "secret of account client" | base64
+```
 
 `CLIENT_SECRET` 의 value 를 base64 incoding 된 값으로 변경한다.
 
