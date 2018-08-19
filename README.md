@@ -149,7 +149,6 @@ $ kubectl get ingress -n zcp-system
 ```
 
 DNS 라우팅이 설정되어 있으면 브라우져에서 ingress 에 설정한 도메인으로 접속을 한다.
+
 ex) https://console.cloudzcp.io
 
-      - backend:ㅏ
-      - backend:
