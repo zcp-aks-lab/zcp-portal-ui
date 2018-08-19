@@ -24,6 +24,7 @@ $ cd zcp-iam/k8s/site
 
 #### 프로젝트에 적용 할 add-on service meta data용 Secret을 생성한다.
 v1.0 에서 제공하는 add-on service 의 모든 목록은 `k8s/zcp-portal-service-meta-config.yaml` 에 있으므로 참고하고, 프로젝트에 제공할 add-on service 를 확인한 후 `k8s/site/zcp-portal-service-meta-config.yaml` 파일을 수정한다.
+
 :bangbang: 이때 각 add-on service의 링크정보에 도메인 정보도 반드시 수정해 주어야 한다.
 
 ```
