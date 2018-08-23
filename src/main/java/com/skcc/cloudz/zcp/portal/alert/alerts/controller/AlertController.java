@@ -37,44 +37,33 @@ public class AlertController {
 		ApiServerVo apiServerVo = new ApiServerVo();
 		apiServerVo = alertService.getApiServer();
 		
-		if(apiServerVo.getStatus() != null) {
-			model.addAttribute("apiServer", apiServerVo.getStatus());	
-		} else {
+		if(apiServerVo.getStatus() == null) {
 			apiServerVo.setStatus("Downed");
-			model.addAttribute("apiServer", apiServerVo.getStatus());	
 		}
+		model.addAttribute("apiServer", apiServerVo.getStatus());
 
 		NodeNotReadyVo nodeNotReadyVo = new NodeNotReadyVo();
 
 		nodeNotReadyVo = alertService.getNodeNotReady();
 		
-		if(nodeNotReadyVo.getCount() != null) {
-			model.addAttribute("nodeNotReadyCnt", nodeNotReadyVo.getCount());
-			model.addAttribute("nodeNotReadyTotCnt", nodeNotReadyVo.getTotalCount());
-		} else {
+		if(nodeNotReadyVo.getCount() == null) {
 			nodeNotReadyVo.setCount("0");
 			nodeNotReadyVo.setTotalCount("0");
-			
-			model.addAttribute("nodeNotReadyCnt", nodeNotReadyVo.getCount());
-			model.addAttribute("nodeNotReadyTotCnt", nodeNotReadyVo.getTotalCount());
 		}
+		model.addAttribute("nodeNotReadyCnt", nodeNotReadyVo.getCount());
+		model.addAttribute("nodeNotReadyTotCnt", nodeNotReadyVo.getTotalCount());
 
 		NodeDownVo nodeDownVo = new NodeDownVo();
 
 		nodeDownVo = alertService.getNodeDown();
 		
-		if(nodeDownVo.getCount() != null) {
-			model.addAttribute("nodeDownCnt", nodeDownVo.getCount());
-			model.addAttribute("nodeDownTotCnt", nodeDownVo.getTotalCount());	
-		} else {
+		if(nodeDownVo.getCount() == null) {
 			nodeDownVo.setCount("0");
 			nodeDownVo.setTotalCount("0");
-			
-			model.addAttribute("nodeDownCnt", nodeDownVo.getCount());
-			model.addAttribute("nodeDownTotCnt", nodeDownVo.getTotalCount());
 		}
+		model.addAttribute("nodeDownCnt", nodeDownVo.getCount());
+		model.addAttribute("nodeDownTotCnt", nodeDownVo.getTotalCount());
 		
-
 		return "content/alert/alerts/alerting";
 	}
 
