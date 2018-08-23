@@ -36,19 +36,44 @@ public class AlertController {
 
 		ApiServerVo apiServerVo = new ApiServerVo();
 		apiServerVo = alertService.getApiServer();
-		model.addAttribute("apiServer", apiServerVo.getStatus());
+		
+		if(apiServerVo.getStatus() != null) {
+			model.addAttribute("apiServer", apiServerVo.getStatus());	
+		} else {
+			apiServerVo.setStatus("Downed");
+			model.addAttribute("apiServer", apiServerVo.getStatus());	
+		}
 
 		NodeNotReadyVo nodeNotReadyVo = new NodeNotReadyVo();
 
 		nodeNotReadyVo = alertService.getNodeNotReady();
-		model.addAttribute("nodeNotReadyCnt", nodeNotReadyVo.getCount());
-		model.addAttribute("nodeNotReadyTotCnt", nodeNotReadyVo.getTotalCount());
+		
+		if(nodeNotReadyVo.getCount() != null) {
+			model.addAttribute("nodeNotReadyCnt", nodeNotReadyVo.getCount());
+			model.addAttribute("nodeNotReadyTotCnt", nodeNotReadyVo.getTotalCount());
+		} else {
+			nodeNotReadyVo.setCount("0");
+			nodeNotReadyVo.setTotalCount("0");
+			
+			model.addAttribute("nodeNotReadyCnt", nodeNotReadyVo.getCount());
+			model.addAttribute("nodeNotReadyTotCnt", nodeNotReadyVo.getTotalCount());
+		}
 
 		NodeDownVo nodeDownVo = new NodeDownVo();
 
 		nodeDownVo = alertService.getNodeDown();
-		model.addAttribute("nodeDownCnt", nodeDownVo.getCount());
-		model.addAttribute("nodeDownTotCnt", nodeDownVo.getTotalCount());
+		
+		if(nodeDownVo.getCount() != null) {
+			model.addAttribute("nodeDownCnt", nodeDownVo.getCount());
+			model.addAttribute("nodeDownTotCnt", nodeDownVo.getTotalCount());	
+		} else {
+			nodeDownVo.setCount("0");
+			nodeDownVo.setTotalCount("0");
+			
+			model.addAttribute("nodeDownCnt", nodeDownVo.getCount());
+			model.addAttribute("nodeDownTotCnt", nodeDownVo.getTotalCount());
+		}
+		
 
 		return "content/alert/alerts/alerting";
 	}
