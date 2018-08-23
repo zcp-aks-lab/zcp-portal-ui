@@ -107,6 +107,11 @@
                                     method: 'post',
                                     data: data, 
                                     success : function(res) {
+                                    	if (res.resultCd !== constants.result.SUCCESS) {
+                                            commonPopup.alert({message: res.resultMsg});
+                                            return false;
+                                        }
+                                        
                                         commonPopup.alert({
                                             message: '사용자 정보가 변경 되었습니다.',
                                             callback: function() {
@@ -142,8 +147,12 @@
                                     method: 'post',
                                     data: data, 
                                     success : function(res) {
+                                    	if (res.resultCd !== constants.result.SUCCESS) {
+                                            commonPopup.alert({message: res.resultMsg});
+                                            return false;
+                                        }
+                                        
                                     	commonPopup.alert({message: '비밀번호가 재설정 되었습니다.'});
-
                                     	if ($('#temporary').hasClass('btn-on')) {
                                     		$("#userUpdatePassword").setChecked(true);
                                         }
@@ -182,6 +191,11 @@
                                     method: 'post',
                                     data: data, 
                                     success : function(res) {
+                                    	if (res.resultCd !== constants.result.SUCCESS) {
+                                            commonPopup.alert({message: res.resultMsg});
+                                            return false;
+                                        }
+                                        
                                     	commonPopup.alert({message: 'Credentials 설정 메일이 발송 되었습니다.'});
                                     },
                                     error : function(errObject) {
@@ -205,6 +219,11 @@
                                     method: 'post',
                                     data: data, 
                                     success : function(res) {
+                                    	if (res.resultCd !== constants.result.SUCCESS) {
+                                            commonPopup.alert({message: res.resultMsg});
+                                            return false;
+                                        }
+                                        
                                     	commonPopup.alert({
                                             message: '사용자가 삭제 되었습니다.',
                                             callback: function() {
@@ -239,9 +258,12 @@
                                     method: 'post',
                                     data: data, 
                                     success : function(res) {
-                                    	commonPopup.alert({
-                                            message: '클러스터 권한이 변경되었습니다.'
-                                        });
+                                    	if (res.resultCd !== constants.result.SUCCESS) {
+                                            commonPopup.alert({message: res.resultMsg});
+                                            return false;
+                                        }
+                                        
+                                    	commonPopup.alert({message: '클러스터 권한이 변경되었습니다.'});
                                         $('#clusterRoleTxt').text($('#clusterRole').val());
                                     },
                                     error : function(errObject) {
@@ -284,6 +306,11 @@
                                     method: 'post',
                                     data: data, 
                                     success : function(res) {
+                                        if (res.resultCd !== constants.result.SUCCESS) {
+                                            commonPopup.alert({message: res.resultMsg});
+                                            return false;
+                                        }
+                                        
                                         switch(mode) {
                                         case 'create':
                                         	commonPopup.alert({
@@ -343,6 +370,11 @@
                                     method: 'post',
                                     data: data, 
                                     success : function(res) {
+                                    	if (res.resultCd !== constants.result.SUCCESS) {
+                                            commonPopup.alert({message: res.resultMsg});
+                                            return false;
+                                        }
+                                        
                                         if (userTotp) {
                                         	commonPopup.alert({message: '모바일 인증이 해제 되었습니다.'});
                                         	$('#btnTotp').removeClass('btn-on').addClass('btn-off');

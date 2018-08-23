@@ -1,6 +1,8 @@
 package com.skcc.cloudz.zcp.portal.management.user.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
+import com.skcc.cloudz.zcp.common.constants.Result;
+import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
 import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
 import com.skcc.cloudz.zcp.portal.management.user.vo.UserVo;
 
@@ -58,66 +62,164 @@ public class UserController {
     
     @PostMapping(value = "/user/getUsers", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<ZcpUserVo> getUsers(@RequestBody UserVo userVo) throws Exception {
-        return userService.getUsers(userVo.getKeyword());
+    public Map<String, Object> getUsers(@RequestBody UserVo userVo) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        try {
+            resultMap.put("resultCd", Result.SUCCESS.getCd());
+            resultMap.put("resultData", userService.getUsers(userVo.getKeyword()));
+        } catch (Exception e) {
+            resultMap.put("resultCd", Result.ERROR.getCd());
+            resultMap.put("resultMsg", ZcpPortalException.getExceptionMsg(e));
+        }
+        
+        return resultMap;
     }
     
     @PostMapping(value = "/user/createUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public void createUser(@RequestBody UserVo userVo) throws Exception {
-        userService.setUser(userVo);
+    public Map<String, Object> createUser(@RequestBody UserVo userVo) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        try {
+            userService.setUser(userVo);
+            
+            resultMap.put("resultCd", Result.SUCCESS.getCd());
+        } catch (Exception e) {
+            resultMap.put("resultCd", Result.ERROR.getCd());
+            resultMap.put("resultMsg", ZcpPortalException.getExceptionMsg(e));
+        }
+        
+        return resultMap;
     }
     
     @PostMapping(value = "/user/updateUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public void updateUser(@RequestBody UserVo userVo) throws Exception {
-        userService.updateUser(userVo);
+    public Map<String, Object> updateUser(@RequestBody UserVo userVo) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        try {
+            userService.updateUser(userVo);
+            
+            resultMap.put("resultCd", Result.SUCCESS.getCd());
+        } catch (Exception e) {
+            resultMap.put("resultCd", Result.ERROR.getCd());
+            resultMap.put("resultMsg", ZcpPortalException.getExceptionMsg(e));
+        }
+        
+        return resultMap;
     }
     
     @PostMapping(value = "/user/deleteUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public void deleteUser(@RequestBody UserVo userVo) throws Exception {
-        userService.deleteUser(userVo.getId());
+    public Map<String, Object> deleteUser(@RequestBody UserVo userVo) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        try {
+            userService.deleteUser(userVo.getId());
+            
+            resultMap.put("resultCd", Result.SUCCESS.getCd());
+        } catch (Exception e) {
+            resultMap.put("resultCd", Result.ERROR.getCd());
+            resultMap.put("resultMsg", ZcpPortalException.getExceptionMsg(e));
+        }
+        
+        return resultMap;
     }
     
     @PostMapping(value = "/user/resetPassword", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public void resetPassword(@RequestBody UserVo userVo) throws Exception {
-        userService.resetPassword(userVo);
+    public Map<String, Object> resetPassword(@RequestBody UserVo userVo) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        try {
+            userService.resetPassword(userVo);
+            
+            resultMap.put("resultCd", Result.SUCCESS.getCd());
+        } catch (Exception e) {
+            resultMap.put("resultCd", Result.ERROR.getCd());
+            resultMap.put("resultMsg", ZcpPortalException.getExceptionMsg(e));
+        }
+        
+        return resultMap;
     }
     
     @PostMapping(value = "/user/resetCredentials", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public void resetCredentials(@RequestBody UserVo userVo) throws Exception {
-        userService.resetCredentials(userVo);
+    public Map<String, Object> resetCredentials(@RequestBody UserVo userVo) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        try {
+            userService.resetCredentials(userVo);
+            
+            resultMap.put("resultCd", Result.SUCCESS.getCd());
+        } catch (Exception e) {
+            resultMap.put("resultCd", Result.ERROR.getCd());
+            resultMap.put("resultMsg", ZcpPortalException.getExceptionMsg(e));
+        }
+        
+        return resultMap;
     }
     
     @PostMapping(value = "/user/updateClusterRoleBinding", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public void updateClusterRoleBinding(@RequestBody UserVo userVo) throws Exception {
-        userService.updateClusterRoleBinding(userVo);
+    public Map<String, Object> updateClusterRoleBinding(@RequestBody UserVo userVo) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        try {
+            userService.updateClusterRoleBinding(userVo);
+            
+            resultMap.put("resultCd", Result.SUCCESS.getCd());
+        } catch (Exception e) {
+            resultMap.put("resultCd", Result.ERROR.getCd());
+            resultMap.put("resultMsg", ZcpPortalException.getExceptionMsg(e));
+        }
+        
+        return resultMap;
     }
     
     @PostMapping(value = "/user/roleBinding/{mode}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public void roleBinding(@PathVariable("mode") String mode, @RequestBody UserVo userVo) throws Exception {
-        if (mode.equals("create")) {
-            userService.createRoleBinding(userVo);
-        } else if (mode.equals("update")) {
-            userService.updateRoleBinding(userVo);
-        } else if (mode.equals("delete")) {
-            userService.deleteRoleBinding(userVo);
-        } 
+    public Map<String, Object> roleBinding(@PathVariable("mode") String mode, @RequestBody UserVo userVo) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        try {
+            if (mode.equals("create")) {
+                userService.createRoleBinding(userVo);
+            } else if (mode.equals("update")) {
+                userService.updateRoleBinding(userVo);
+            } else if (mode.equals("delete")) {
+                userService.deleteRoleBinding(userVo);
+            }
+            
+            resultMap.put("resultCd", Result.SUCCESS.getCd());
+        } catch (Exception e) {
+            resultMap.put("resultCd", Result.ERROR.getCd());
+            resultMap.put("resultMsg", ZcpPortalException.getExceptionMsg(e));
+        }
+        
+        return resultMap;
     }
     
     @PostMapping(value = "/user/otpPassword/{mode}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public void otpPassword(@PathVariable("mode") String mode, @RequestBody UserVo userVo) throws Exception {
-        if (mode.equals("update")) {
-            userService.updateOtpPassword(userVo.getId());
-        } else if (mode.equals("delete")) {
-            userService.deleteOtpPassword(userVo.getId());
+    public Map<String, Object> otpPassword(@PathVariable("mode") String mode, @RequestBody UserVo userVo) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        try {
+            if (mode.equals("update")) {
+                userService.updateOtpPassword(userVo.getId());
+            } else if (mode.equals("delete")) {
+                userService.deleteOtpPassword(userVo.getId());
+            }
+            
+            resultMap.put("resultCd", Result.SUCCESS.getCd());
+        } catch (Exception e) {
+            resultMap.put("resultCd", Result.ERROR.getCd());
+            resultMap.put("resultMsg", ZcpPortalException.getExceptionMsg(e));
         }
+        
+        return resultMap;
     }
 
 }

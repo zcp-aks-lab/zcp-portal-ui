@@ -143,7 +143,12 @@
                             method: 'post',
                             data: data, 
                             success: function(res) {
-                                $('#user-grid').alopexGrid('dataSet', res);
+                            	if (res.resultCd !== constants.result.SUCCESS) {
+                                    commonPopup.alert({message: res.resultMsg});
+                                    return false;
+                                }
+                            	
+                                $('#user-grid').alopexGrid('dataSet', res.resultData);
                             },
                             error: function(errObject) {
                                 //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -163,6 +168,11 @@
                                     method: 'post',
                                     data: data, 
                                     success : function(res) {
+                                    	if (res.resultCd !== constants.result.SUCCESS) {
+                                            commonPopup.alert({message: res.resultMsg});
+                                            return false;
+                                        }
+                                    	
                                         commonPopup.alert({
                                             message: '사용자가 삭제 되었습니다.',
                                             callback: function() {

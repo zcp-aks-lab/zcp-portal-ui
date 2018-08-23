@@ -29,7 +29,7 @@ public class MyService {
         
         ZcpUserResVo zcpUserResVo = iamApiService.getUser(id);
         if (!zcpUserResVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new ZcpPortalException(zcpUserResVo.getMsg());
+            throw new ZcpPortalException(zcpUserResVo.getCode(), zcpUserResVo.getMsg());
         }
         
         return zcpUserResVo.getData();

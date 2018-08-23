@@ -33,6 +33,11 @@
                                     method: 'post',
                                     data: $('#form').serializeObject(), 
                                     success : function(res) {
+                                    	if (res.resultCd !== constants.result.SUCCESS) {
+                                            commonPopup.alert({message: res.resultMsg});
+                                            return false;
+                                        }
+                                        
                                         commonPopup.alert({
                                             message: '사용자가 추가 되었습니다.',
                                             callback: function() {
