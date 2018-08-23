@@ -32,16 +32,16 @@ public class AlertController {
 		AlertCountVo alertCountVo = new AlertCountVo();
 
 		alertCountVo = alertService.getActiveCount();
-		
-		if(alertService.getActiveCount() == null) {
+
+		if (alertService.getActiveCount() == null) {
 			alertCountVo.setCount("0");
 		}
 		model.addAttribute("activeCount", alertCountVo.getCount());
 
 		ApiServerVo apiServerVo = new ApiServerVo();
 		apiServerVo = alertService.getApiServer();
-		
-		if(apiServerVo.getStatus() == null) {
+
+		if (apiServerVo.getStatus() == null) {
 			apiServerVo.setStatus("Downed");
 		}
 		model.addAttribute("apiServer", apiServerVo.getStatus());
@@ -49,8 +49,8 @@ public class AlertController {
 		NodeNotReadyVo nodeNotReadyVo = new NodeNotReadyVo();
 
 		nodeNotReadyVo = alertService.getNodeNotReady();
-		
-		if(nodeNotReadyVo.getCount() == null) {
+
+		if (nodeNotReadyVo.getCount() == null) {
 			nodeNotReadyVo.setCount("0");
 			nodeNotReadyVo.setTotalCount("0");
 		}
@@ -60,14 +60,14 @@ public class AlertController {
 		NodeDownVo nodeDownVo = new NodeDownVo();
 
 		nodeDownVo = alertService.getNodeDown();
-		
-		if(nodeDownVo.getCount() == null) {
+
+		if (nodeDownVo.getCount() == null) {
 			nodeDownVo.setCount("0");
 			nodeDownVo.setTotalCount("0");
 		}
 		model.addAttribute("nodeDownCnt", nodeDownVo.getCount());
 		model.addAttribute("nodeDownTotCnt", nodeDownVo.getTotalCount());
-		
+
 		return "content/alert/alerts/alerting";
 	}
 

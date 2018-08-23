@@ -47,7 +47,7 @@ public class AlertService {
 
 		AlertVo[] alertVo = null;
 		AlertCountVo alertCountVo = new AlertCountVo();
-		
+
 		if (statusCode == HttpStatus.OK) {
 			alertVo = response.getBody();
 			alertCountVo.setCount(alertVo.length + "");
