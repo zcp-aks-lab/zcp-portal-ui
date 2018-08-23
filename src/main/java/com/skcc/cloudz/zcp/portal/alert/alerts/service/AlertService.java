@@ -46,12 +46,14 @@ public class AlertService {
 		HttpStatus statusCode = response.getStatusCode();
 
 		AlertVo[] alertVo = null;
+		AlertCountVo alertCountVo = new AlertCountVo();
+		
 		if (statusCode == HttpStatus.OK) {
 			alertVo = response.getBody();
+			alertCountVo.setCount(alertVo.length + "");
+		} else {
+			alertCountVo.setCount(null);
 		}
-
-		AlertCountVo alertCountVo = new AlertCountVo();
-		alertCountVo.setCount(alertVo.length + "");
 
 		return alertCountVo;
 
@@ -100,6 +102,8 @@ public class AlertService {
 		ApiServerVo apiServerVo = new ApiServerVo();
 		if (statusCode == HttpStatus.OK) {
 			apiServerVo = response.getBody();
+		} else {
+			apiServerVo.setStatus(null);
 		}
 
 		return apiServerVo;
@@ -125,6 +129,8 @@ public class AlertService {
 		NodeNotReadyVo nodeNotReadyVo = new NodeNotReadyVo();
 		if (statusCode == HttpStatus.OK) {
 			nodeNotReadyVo = response.getBody();
+		} else {
+			nodeNotReadyVo.setCount(null);
 		}
 
 		return nodeNotReadyVo;
@@ -149,6 +155,8 @@ public class AlertService {
 		NodeDownVo nodeDownVo = new NodeDownVo();
 		if (statusCode == HttpStatus.OK) {
 			nodeDownVo = response.getBody();
+		} else {
+			nodeDownVo.setCount(null);
 		}
 
 		return nodeDownVo;
