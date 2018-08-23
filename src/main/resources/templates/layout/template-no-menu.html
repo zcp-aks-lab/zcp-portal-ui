@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html lang="ko" 
+    xmlns:th="http://www.thymeleaf.org" 
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" 
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <meta name="_csrf" th:content="${_csrf} ? ${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf} ? ${_csrf.headerName}"/>
+    
+    <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE">CloudZ CP</title>
+    <link rel="icon" href="images/favicon_zcp.ico" th:href="@{/images/favicon_zcp.ico}" />
+
+    <!-- common static resources-->
+    <th:block th:include="common/head/resources :: head"></th:block>
+
+    <!-- common javascript -->
+    <th:block th:include="common/head/script :: head"></th:block>
+    
+</head>
+
+<body class="login">
+    <div class="cp-wrapper">
+        <!-- header -->
+        <header class="cp-header">
+            <h1 class="logo"><img src="images/cloudzcp-logo.png" data-th-src="@{/images/cloudzcp-logo.png}" alt="CLOUD Z Container Platform" style="cursor:pointer;" onclick="location.href='/'" /></h1>
+        </header>
+        <!-- //header -->
+        
+        <!-- main-contents -->
+        <div class="login-wrap">
+            <th:block layout:fragment="content"></th:block>
+        </div>
+        <!-- //main-contents -->
+    </div>
+</body>
+
+</html>

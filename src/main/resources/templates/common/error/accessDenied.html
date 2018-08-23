@@ -1,12 +1,19 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-no-menu">
     <head>
-        <title>서비스 에러</title>
+        <title>권한 없음</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        
     </head>
     <body>
-        <p>권한이 없어서 서비스를 이용 할 수 없습니다.</p>
+        <th:block layout:fragment="content">
+           <!--login contents-->
+            <h2 class="login-title">권한 없음</h2>
+            <div class="login-box">
+                <p class="session-text__lg">접근 권한이 없어서 서비스를 이용 할 수 없습니다.</p>
+            </div>
+            <div class="btn-wrap__center"><button class="Button btn-login" onclick="history.back();">뒤로가기</button></div>
+            <!--//login contents-->
+        </th:block>
     </body>
 </html>

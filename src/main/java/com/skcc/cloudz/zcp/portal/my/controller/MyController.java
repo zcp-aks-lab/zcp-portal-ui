@@ -1,6 +1,7 @@
 package com.skcc.cloudz.zcp.portal.my.controller;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.common.component.AuthUserComponent;
+import com.skcc.cloudz.zcp.common.constants.Result;
+import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.common.util.FileUtil;
 import com.skcc.cloudz.zcp.portal.my.service.MyService;
@@ -58,22 +61,53 @@ public class MyController {
     
     @PostMapping(value = "/updateMyProfile", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public void updatedMyProfile(@RequestBody MyUserVo myUserVo) throws Exception {
-        myService.updateUser(myUserVo);
+    public Map<String, Object> updatedMyProfile(@RequestBody MyUserVo myUserVo) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         
-        authUserComponent.setFirstName(myUserVo.getFirstName());
+        try {
+            myService.updateUser(myUserVo);
+            authUserComponent.setFirstName(myUserVo.getFirstName());
+            
+            resultMap.put("resultCd", Result.SUCCESS.getCd());
+        } catch (Exception e) {
+            resultMap.put("resultCd", Result.ERROR.getCd());
+            resultMap.put("resultMsg", ZcpPortalException.getExceptionMsg(e));
+        }
+        
+        return resultMap;
     }
     
     @PostMapping(value = "/updatedPassword", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public void updatedPassword(@RequestBody MyUserVo myUserVo) throws Exception {
-        myService.updatePassword(myUserVo);
+    public Map<String, Object> updatedPassword(@RequestBody MyUserVo myUserVo) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        try {
+            myService.updatePassword(myUserVo);    
+            
+            resultMap.put("resultCd", Result.SUCCESS.getCd());
+        } catch (Exception e) {
+            resultMap.put("resultCd", Result.ERROR.getCd());
+            resultMap.put("resultMsg", ZcpPortalException.getExceptionMsg(e));
+        }
+        
+        return resultMap;
     }
     
     @GetMapping(value = "/getZcpKubeConfig", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Object> getZcpKubeConfig() throws Exception {
-        return myService.getKubeConfig();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        try {
+            resultMap.put("resultCd", Result.SUCCESS.getCd());
+            resultMap.put("resultData", myService.getKubeConfig());
+        } catch (Exception e) {
+            resultMap.put("resultCd", Result.ERROR.getCd());
+            resultMap.put("resultMsg", ZcpPortalException.getExceptionMsg(e));
+        }
+        
+        return resultMap;
     }
     
     @PostMapping(value = "/cliDownload")
@@ -92,12 +126,27 @@ public class MyController {
     
     @PostMapping(value = "/otpPassword/{mode}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
-    public void otpPassword(@PathVariable("mode") String mode) throws Exception {
-        if (mode.equals("update")) {
-            myService.updateOtpPassword();
-        } else if (mode.equals("delete")) {
-            myService.deleteOtpPassword();
+    public Map<String, Object> otpPassword(@PathVariable("mode") String mode) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        if (log.isInfoEnabled()) {
+            log.info("mode : {}", mode);
         }
+        
+        try {
+            if (mode.equals("update")) {
+                myService.updateOtpPassword();
+            } else if (mode.equals("delete")) {
+                myService.deleteOtpPassword();
+            }
+            
+            resultMap.put("resultCd", Result.SUCCESS.getCd());
+        } catch (Exception e) {
+            resultMap.put("resultCd", Result.ERROR.getCd());
+            resultMap.put("resultMsg", ZcpPortalException.getExceptionMsg(e));
+        }
+        
+        return resultMap;
     }
 
 }

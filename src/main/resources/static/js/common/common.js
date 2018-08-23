@@ -141,5 +141,11 @@ function chkPwd(str) {
 	return true;
 }
 
-
+// constants
+var constants = {
+	result: {
+		SUCCESS: '0000',
+		ERROR: '9999'
+	}
+}
 

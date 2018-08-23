@@ -30,7 +30,7 @@ public class UserService {
     public List<ZcpUserVo> getUsers(String keyword) throws Exception {
         ZcpUserListVo zcpUserListVo = iamApiService.getUsers(keyword);
         if (!zcpUserListVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new ZcpPortalException(zcpUserListVo.getMsg());
+            throw new ZcpPortalException(zcpUserListVo.getCode(), zcpUserListVo.getMsg());
         }
         
         return zcpUserListVo.getData().getItems();
@@ -39,7 +39,7 @@ public class UserService {
     public ZcpUserVo getUser(String id) throws Exception {
         ZcpUserResVo zcpUserResVo = iamApiService.getUser(id);
         if (!zcpUserResVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new ZcpPortalException(zcpUserResVo.getMsg());
+            throw new ZcpPortalException(zcpUserResVo.getCode(), zcpUserResVo.getMsg());
         }
         
         return zcpUserResVo.getData();
@@ -178,7 +178,7 @@ public class UserService {
         for (HashMap<String, Object> item : items) {
             String namespace = ((HashMap<String, Object>) item.get("metadata")).get("namespace").toString();
             if (namespace.equals(userVo.getNamespace())) {
-                throw new ZcpPortalException(namespace + "는 Namespace 권한이 등록되어있습니다. 다시 확인하세요.");    
+                throw new ZcpPortalException(namespace + "는 Namespace 권한이 등록되어있습니다.");    
             }
         }
         

@@ -27,8 +27,13 @@
                             method: 'get',
                             data: null, 
                             success: function(res) {
-                                if (!res) return false;
-                                $('#cli').val(json2yaml(res));
+                            	if (res.resultCd !== constants.result.SUCCESS) {
+                                    commonPopup.alert({message: res.resultMsg});
+                                    return false;
+                                }
+                                
+                                if (!res.resultData) return false;
+                                $('#cli').val(json2yaml(res.resultData));
                             },
                             error: function(errObject) {
                                 //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
