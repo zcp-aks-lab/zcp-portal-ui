@@ -41,17 +41,23 @@ public class AlertService {
 		HttpEntity<AlertVo[]> entity = new HttpEntity<AlertVo[]>(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<AlertVo[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, AlertVo[].class);
-
-		HttpStatus statusCode = response.getStatusCode();
-
+		
 		AlertVo[] alertVo = null;
 		AlertCountVo alertCountVo = new AlertCountVo();
+		
+		try {
+			ResponseEntity<AlertVo[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, AlertVo[].class);
+			HttpStatus statusCode = response.getStatusCode();
 
-		if (statusCode == HttpStatus.OK) {
-			alertVo = response.getBody();
-			alertCountVo.setCount(alertVo.length + "");
-		} else {
+			if (statusCode == HttpStatus.OK) {
+				alertVo = response.getBody();
+				alertCountVo.setCount(alertVo.length + "");
+
+			} else {
+				alertCountVo.setCount(null);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
 			alertCountVo.setCount(null);
 		}
 
@@ -95,14 +101,23 @@ public class AlertService {
 		HttpEntity<ApiServerVo> entity = new HttpEntity<ApiServerVo>(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<ApiServerVo> response = restTemplate.exchange(url, HttpMethod.GET, entity, ApiServerVo.class);
-
-		HttpStatus statusCode = response.getStatusCode();
-
 		ApiServerVo apiServerVo = new ApiServerVo();
-		if (statusCode == HttpStatus.OK) {
-			apiServerVo = response.getBody();
-		} else {
+		
+		try {
+			ResponseEntity<ApiServerVo> response = restTemplate.exchange(url, HttpMethod.GET, entity, ApiServerVo.class);
+			HttpStatus statusCode = response.getStatusCode();
+			
+			if (statusCode == HttpStatus.OK) {
+				apiServerVo = response.getBody();
+
+				if (apiServerVo.getCode() != null) {
+					apiServerVo.setStatus(null);
+				}
+			} else {
+				apiServerVo.setStatus(null);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
 			apiServerVo.setStatus(null);
 		}
 
@@ -121,15 +136,25 @@ public class AlertService {
 		HttpEntity<NodeNotReadyVo> entity = new HttpEntity<NodeNotReadyVo>(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<NodeNotReadyVo> response = restTemplate.exchange(url, HttpMethod.GET, entity,
-				NodeNotReadyVo.class);
-
-		HttpStatus statusCode = response.getStatusCode();
-
 		NodeNotReadyVo nodeNotReadyVo = new NodeNotReadyVo();
-		if (statusCode == HttpStatus.OK) {
-			nodeNotReadyVo = response.getBody();
-		} else {
+		
+		try {
+			ResponseEntity<NodeNotReadyVo> response = restTemplate.exchange(url, HttpMethod.GET, entity,
+					NodeNotReadyVo.class);
+
+			HttpStatus statusCode = response.getStatusCode();
+
+			if (statusCode == HttpStatus.OK) {
+				nodeNotReadyVo = response.getBody();
+
+				if (nodeNotReadyVo.getCode() != null) {
+					nodeNotReadyVo.setCount(null);
+				}
+			} else {
+				nodeNotReadyVo.setCount(null);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
 			nodeNotReadyVo.setCount(null);
 		}
 
@@ -148,21 +173,31 @@ public class AlertService {
 		HttpEntity<NodeDownVo> entity = new HttpEntity<NodeDownVo>(headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<NodeDownVo> response = restTemplate.exchange(url, HttpMethod.GET, entity, NodeDownVo.class);
-
-		HttpStatus statusCode = response.getStatusCode();
-
 		NodeDownVo nodeDownVo = new NodeDownVo();
-		if (statusCode == HttpStatus.OK) {
-			nodeDownVo = response.getBody();
-		} else {
+		
+		try {
+			ResponseEntity<NodeDownVo> response = restTemplate.exchange(url, HttpMethod.GET, entity, NodeDownVo.class);
+
+			HttpStatus statusCode = response.getStatusCode();
+
+			if (statusCode == HttpStatus.OK) {
+				nodeDownVo = response.getBody();
+
+				if (nodeDownVo.getCode() != null) {
+					nodeDownVo.setCount(null);
+				}
+			} else {
+				nodeDownVo.setCount(null);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
 			nodeDownVo.setCount(null);
 		}
 
 		return nodeDownVo;
 	}
 
-	public AlertVo[] getAlertList() {
+	public AlertVo[] getAlertList() throws Exception {
 		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/alertList").build().toString();
 		logger.info(url);
 
@@ -185,7 +220,7 @@ public class AlertService {
 		return alertVo;
 	}
 
-	public AlertHistoryVo[] getAlertHistoryList(String time) {
+	public AlertHistoryVo[] getAlertHistoryList(String time) throws Exception {
 		String url = UriComponentsBuilder.fromUriString(baseUrl).path("/alertHistory/{time}").buildAndExpand(time)
 				.toString();
 		logger.info(url);

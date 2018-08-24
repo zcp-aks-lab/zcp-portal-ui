@@ -30,10 +30,9 @@ public class AlertController {
 	@GetMapping(value = "/alerts", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String alertStat(Model model) throws Exception {
 		AlertCountVo alertCountVo = new AlertCountVo();
-
 		alertCountVo = alertService.getActiveCount();
 
-		if (alertService.getActiveCount() == null) {
+		if (alertCountVo.getCount() == null) {
 			alertCountVo.setCount("0");
 		}
 		model.addAttribute("activeCount", alertCountVo.getCount());
@@ -47,7 +46,6 @@ public class AlertController {
 		model.addAttribute("apiServer", apiServerVo.getStatus());
 
 		NodeNotReadyVo nodeNotReadyVo = new NodeNotReadyVo();
-
 		nodeNotReadyVo = alertService.getNodeNotReady();
 
 		if (nodeNotReadyVo.getCount() == null) {
@@ -58,7 +56,6 @@ public class AlertController {
 		model.addAttribute("nodeNotReadyTotCnt", nodeNotReadyVo.getTotalCount());
 
 		NodeDownVo nodeDownVo = new NodeDownVo();
-
 		nodeDownVo = alertService.getNodeDown();
 
 		if (nodeDownVo.getCount() == null) {
