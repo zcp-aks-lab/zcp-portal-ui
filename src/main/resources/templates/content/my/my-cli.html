@@ -7,6 +7,12 @@
         
         <script src="js/lib/json/json2yaml.js" data-th-src="@{/js/lib/json/json2yaml.js}"></script>
         
+        <script th:inline="javascript">
+        /*<![CDATA[*/
+        var cliDownloadUrl = /*[[${cliDownloadUrl}]]*/;
+        /*]]>*/
+        </script>
+        
         <script type="text/javascript">
             var zcpPortalApp = {
                 pageInit: function() {
@@ -54,9 +60,13 @@
                             document.body.removeChild(t);
                         });
 
-                        $('#btnDownload').on('click', function(e) {
+                        $('#btnCmdDownload').on('click', function(e) {
                         	e.preventDefault();
                             $('#form').submit();
+                        });
+                        
+                        $('#btnDownload').on('click', function(e) {
+                        	goUrl(cliDownloadUrl);
                         });
                     }
                 }
@@ -96,7 +106,7 @@
                                     <th><span class="ico-num">1</span>단계</th>
                                     <td>
                                         <span class="Padding-right-10">kubectl command line interface를 PC에 설치합니다.</span> 
-                                        <button class="Button btn bg-gray">Download</button>
+                                        <button class="Button btn bg-gray" id="btnDownload">Download</button>
                                     </td>
                                 </tr>
                                 <tr>
@@ -104,7 +114,7 @@
                                     <td>
                                         <p class="Margin-bottom-10">CLI구성을 위하여 터미널에 아래의 command를 실행합니다.</p><textarea id="cli" name="cli" class="Textarea cli-area" readonly="readonly"></textarea>
                                         <button class="btn-ico btn-copy" id="btnCopy">복사</button>
-                                        <button class="Button line-btn" data-type="button" data-classinit="true" type="button" data-converted="true" id="btnDownload">다운로드</button>
+                                        <button class="Button line-btn" data-type="button" data-classinit="true" type="button" data-converted="true" id="btnCmdDownload">다운로드</button>
                                     </td>
                                 </tr>
                             </tbody>

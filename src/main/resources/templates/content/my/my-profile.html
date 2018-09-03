@@ -144,7 +144,9 @@
                                 </tr>
                                 <tr>
                                     <th>클러스터 권한</th>
-                                    <td th:text="${zcpUser.clusterRole}">Cluster Admin</td>
+                                    <td>
+                                        <input type="text" th:name="clusterRole" th:id="clusterRole" th:value="${zcpUser.clusterRole}" class="Textinput Width-35" data-disabled="true" />
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>기본 Namespace<strong class="astertisk">*</strong></th>
