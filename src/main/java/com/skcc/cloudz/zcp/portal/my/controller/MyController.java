@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +37,9 @@ public class MyController {
     
     static final String RESOURCE_PATH = "/my";
     
+    @Value("${props.cliDownloadUrl}")
+    private String cliDownloadUrl;
+    
     @Autowired
     private MyService myService;
     
@@ -56,6 +60,7 @@ public class MyController {
     
     @GetMapping(value = "/cli", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String myCli(Model model) throws Exception {
+        model.addAttribute("cliDownloadUrl", cliDownloadUrl);
         return "content/my/my-cli";
     }
     
@@ -113,7 +118,7 @@ public class MyController {
     @PostMapping(value = "/cliDownload")
     public void cliDownload(HttpServletResponse response, @RequestParam("cli") String cli) {
         try {
-            String fileName = SecurityService.getUserId() + "_cli.txt";
+            String fileName = "kube.conf";
             File file = new File(fileName);
             
             FileUtil.fileWrite(file, cli);

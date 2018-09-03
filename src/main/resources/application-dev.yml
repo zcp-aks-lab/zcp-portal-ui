@@ -20,6 +20,7 @@ props:
   addOnService:
     filePath: C:\cloud\temp\upload\
     fileName: addOnServiceMetaData.json
+  cliDownloadUrl: https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-binary-using-curl
   
 
     
