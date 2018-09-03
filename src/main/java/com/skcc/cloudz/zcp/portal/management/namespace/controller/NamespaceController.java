@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.portal.management.namespace.service.NamespaceService;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.EnquryNamespaceVO;
 
@@ -28,6 +29,9 @@ public class NamespaceController {
 	private static final Logger log = LoggerFactory.getLogger(NamespaceController.class);
     
 	static final String RESOURCE_PATH = "/management";
+	
+	@Autowired
+    private SecurityService securityService;
 	
     @Autowired
     private NamespaceService namespaceService;
@@ -66,7 +70,9 @@ public class NamespaceController {
     
     @GetMapping(value = "/namespace/{namespace}", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String editNamespace(Model model, @PathVariable("namespace") String namespace , @ModelAttribute EnquryNamespaceVO vo) throws Exception {
+    	String role = securityService.getUserDetail().getAccessRole();
     	model.addAttribute("namespace", namespace);
+    	model.addAttribute("view", role.equals("cluster-admin") ? true : false);
     	return "content/management/namespace/namespace-detail";
     }
     

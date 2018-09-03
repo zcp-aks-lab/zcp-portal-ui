@@ -23,6 +23,7 @@
  			}
  			getClusterRole();
  			registEvent();
+			setView();
          }
 		});
 	
@@ -104,6 +105,8 @@
 				}
 			});
 			
+			
+			
 			function setGraph(obj_id, used, c){
 				used = Number(used);
 				$('#div_' +obj_id).find('div').css('width', used + 'px');
@@ -134,6 +137,33 @@
 				if(value && value.indexOf(unit) > -1) 
 					$('#select_'+id).setSelected(unit)
 			}
+			
+		}
+		
+		function setView(){
+			var isView = /*[[${view}]]*/;
+			if(isView){
+				$('#div_btnSave').hide();
+				$('#btn_addLabel').hide();
+				$('#input_label').hide();
+				convertText();
+			}
+		}
+		
+		function convertText(){
+			$.each($('#div_resource').find('input'), function(element, idx){
+				$(this).append('<span>'+$(this).val()+'</span>');
+				$(this).hide();
+			});
+			
+			$.each($('#div_resource').find('.Divselect'), function(element, idx){
+				var val = $(this).getTexts()[0];
+				$(this).append('<span>'+val+'</span>');
+				$(this).hide();
+			});
+		}
+		
+		function changeView(){
 			
 		}
 	
@@ -425,6 +455,7 @@
 			var memberList;
 			$('#div_member').show();
 			$('#div_resource').hide();
+			showSearch2();
 			ajaxCall('/management/namespace/users', {namespace : namespace}).done(function(data){
 				gridInitMember(data.items);
 			});
@@ -679,7 +710,7 @@
 				        <li data-content="#tab1" onclick="showResource()">Resource 구성</li>
 				        <li data-content="#tab2" onclick="showMember()">멤버관리</li>
 				    </ul>
-				    <!-- Resource 구성 -->
+				    <!-- Resource modify구성 -->
 				    <div id="div_resource">
 				    	<p class="intab-txt">Namespace의 Resource 구성정보를 조회 및 변경합니다.</p>
 					    <!-- intab tag-->
@@ -689,7 +720,7 @@
 					    		<div id="div_label">
 					    		</div>
             					<input class="Autocomplete add-label__input" id="input_label"  style="width:300px"/>
-            					<button class="Label add-label" onclick="addLabel()">추가</button><br/>
+            					<button class="Label add-label" onclick="addLabel()" id="btn_addLabel">추가</button><br/>
             					<span style="font-size:15px;color:red" id="span_validation"></span>
             				</div>
 				    	</div>
@@ -986,7 +1017,7 @@
 						</div>
 						<!-- button wrap-->
 						<div class="btn-wrap">
-							<div class="btn-right"><button class="Button btn bg-red"  onclick="addNamespace();">저장</button></div>
+							<div class="btn-right" id="div_btnSave"><button class="Button btn bg-red"  onclick="addNamespace();">저장</button></div>
 						</div>
 					</div>
 				    <!-- 멤버관리 -->
