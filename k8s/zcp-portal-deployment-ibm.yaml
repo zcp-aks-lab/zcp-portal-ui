@@ -30,7 +30,7 @@ spec:
                 - "management"
       containers:
       - name: zcp-portal-ui
-        image: registry.au-syd.bluemix.net/cloudzcp/zcp-portal-ui:0.9.1
+        image: registry.au-syd.bluemix.net/cloudzcp/zcp-portal-ui:0.9.3
         imagePullPolicy: Always
         ports:
         - name: cont-port
