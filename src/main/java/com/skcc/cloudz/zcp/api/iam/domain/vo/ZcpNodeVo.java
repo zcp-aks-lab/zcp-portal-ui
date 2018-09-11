@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class ZcpNodeVo {
 	private String nodeName;
+	private String nodeType;
 	private String status;
 	private String allocatableCpu;
 	private String allocatableMemory;
@@ -26,6 +27,12 @@ public class ZcpNodeVo {
     public void setNodeName(String nodeName) {
         this.nodeName = nodeName;
     }
+    public String getNodeType() {
+		return nodeType;
+	}
+    public void setNodeType(String nodeType) {
+		this.nodeType = nodeType;
+	}
     public String getStatus() {
         return status;
     }
