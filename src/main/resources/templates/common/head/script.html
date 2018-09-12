@@ -34,7 +34,7 @@ $a.request.setup({
     },
     error: function(errObject) {
     	log(JSON.stringify(errObject));
-    	commonPopup.alert({message: '처리 중 오류가 발생하였습니다.<br/>잠시 후 다시 이용해 주십시오.'});
+    	commonPopup.alert({message: '[500]시스템 관리자에게 문의하세요.'});
         /* var responseText = JSON.parse(errObject.responseText);
 
         var status = errObject.status;

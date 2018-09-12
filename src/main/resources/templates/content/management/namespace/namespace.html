@@ -13,31 +13,43 @@
 	var g_order= false;
 	var g_mode = "cardType";
 	function deleteNamespace(name){
-	    $a.popup({
-	        url: "./namespace/pop/popNamespaceDel.html",
-	        iframe: false,  // default 는 true
-	        width: 550,
-	        height: 450,
-	        title : "Namespace 삭제",
-	        data : {namespace : name},
-	        callback : function(data, obj){
-	        	if(data=='ok'){
-	        		ajaxCall('/management/namespace/delete', {namespace:name}).done(function(data){
-		    	   		//alert('삭제  되었습니다.');
-		    	   		commonPopup.alert({
-		                    message: 'Namespace가 정상적으로 삭제 처리 되었습니다.',
-		                    callback: function() {
-		                    	if(g_mode == 'cardType')
-		                    		location.reload();
-		                    	else if(g_mode == 'listType')
-		                    		getList();
-		                    }
-		                });
-	    	   		});		
-	        	}
-	        },
-	        alias: "flag1"
-	    });
+		var notDelete = false;
+		if(name == 'default'){
+			commonPopup.alert({
+                message: 'default Namespace는 삭제 할수 없습니다.',
+                callback: function() {
+                	notDelete= true;
+                }
+            });
+		}else{
+		    $a.popup({
+		        url: "./namespace/pop/popNamespaceDel.html",
+		        iframe: false,  // default 는 true
+		        width: 550,
+		        height: 450,
+		        title : "Namespace 삭제",
+		        data : {namespace : name},
+		        callback : function(data, obj){
+		        	if(data=='ok'){
+		        		ajaxCall('/management/namespace/delete', {namespace:name}).done(function(data){
+			    	   		//alert('삭제  되었습니다.');
+			    	   		commonPopup.alert({
+			                    message: 'Namespace가 정상적으로 삭제 처리 되었습니다.',
+			                    callback: function() {
+			                    	if(g_mode == 'cardType')
+			                    		location.reload();
+			                    	else if(g_mode == 'listType')
+			                    		getList();
+			                    }
+			                });
+		    	   		});		
+		        	}
+		        },
+		        alias: "flag1"
+		    });
+		}
+		
+		
 	}
 	
 	function search1(){
