@@ -548,7 +548,7 @@
 				</div>
 				<!-- dashboard panel group-->
 				<div class="panel-line__wrap dash">
-				    <h3 class="dash-title">Cluster Overview</h3>
+				    <h3 class="dash-title" th:text="${#authentication.principal.accessRole} == 'cluster-admin' ? 'Cluster Overview': |${selectedNamespace} Overview|" >Cluster Overview</h3>
 				    <div class="Panel dash-panel" id="usersChart"></div>
 				    <div class="Panel dash-panel" id="deploymentsChart"></div>
 				    <div class="Panel dash-panel" id="podsChart"></div>

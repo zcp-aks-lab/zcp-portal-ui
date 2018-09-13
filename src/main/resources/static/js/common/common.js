@@ -141,6 +141,10 @@ function chkPwd(str) {
 	return true;
 }
 
+function moveMainNamespace(namespace) {
+	location.href = '?namespace=' + namespace;
+}
+
 // constants
 var constants = {
 	result: {
