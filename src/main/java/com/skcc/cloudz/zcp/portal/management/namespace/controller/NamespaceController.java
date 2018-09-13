@@ -18,9 +18,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skcc.cloudz.zcp.common.constants.Result;
+import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.portal.management.namespace.service.NamespaceService;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.EnquryNamespaceVO;
+import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
+import com.skcc.cloudz.zcp.portal.management.user.vo.UserVo;
 
 
 @Controller
@@ -35,6 +39,9 @@ public class NamespaceController {
 	
     @Autowired
     private NamespaceService namespaceService;
+    
+    @Autowired
+    private UserService userService;
     
     @GetMapping(value = "/namespaces", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String cardNamespace(Model model, @ModelAttribute EnquryNamespaceVO vo) throws Exception {
@@ -128,6 +135,29 @@ public class NamespaceController {
     @GetMapping(value = "/namespace/create", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String goNamespacePage() throws Exception {
     	return "content/management/namespace/namespace-add";
+    }
+    
+    @PostMapping(value = "/namespace/user/createUser", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody 
+    public Map<String, Object> createUser(@RequestBody HashMap<String, Object> data) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        try {
+        	UserVo userVo = new UserVo();
+        	userVo.setId((String)data.get("id"));
+        	userVo.setUsername((String)data.get("username"));
+        	userVo.setEmail((String)data.get("email"));
+        	userVo.setFirstName((String)data.get("firstName"));
+        	userVo.setClusterRole((String)data.get("clusterRole"));
+        	userService.setUser(userVo);
+            //namespaceService.addUserInNamespace(data);            
+            resultMap.put("resultCd", Result.SUCCESS.getCd());
+        } catch (Exception e) {
+            resultMap.put("resultCd", Result.ERROR.getCd());
+            resultMap.put("resultMsg", ZcpPortalException.getExceptionMsg(e));
+        }
+        
+        return resultMap;
     }
     
 }

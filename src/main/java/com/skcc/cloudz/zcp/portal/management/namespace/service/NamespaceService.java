@@ -21,6 +21,7 @@ import com.skcc.cloudz.zcp.common.constants.ApiResult;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.common.util.NumberUtil;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.EnquryNamespaceVO;
+import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
 import com.skcc.cloudz.zcp.portal.management.user.vo.ZcpNamespace;
 import com.skcc.cloudz.zcp.portal.management.user.vo.ZcpNamespaceList;
 
@@ -34,6 +35,8 @@ public class NamespaceService {
 	
 	@Autowired
     private SecurityService securityService;
+	
+	
 	
     public Object getResourceQuota(EnquryNamespaceVO vo) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
