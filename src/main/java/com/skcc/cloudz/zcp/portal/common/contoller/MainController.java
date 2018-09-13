@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,9 @@ import com.skcc.cloudz.zcp.portal.common.service.MainService;
 public class MainController {
     
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
+    
+    @Value("${props.dashboard.baseUrl}")
+    private String dashboardBaseUrl;
     
     @Autowired
     private MainService mainService;
@@ -95,6 +99,7 @@ public class MainController {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
         resultMap.put("result", mainService.getJweToken());
+        resultMap.put("dashboardBaseUrl", dashboardBaseUrl);
         
         return resultMap;
     }
