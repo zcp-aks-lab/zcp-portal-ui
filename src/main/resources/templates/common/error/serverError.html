@@ -10,7 +10,7 @@
            <!--login contents-->
             <h2 class="login-title">서버 에러</h2>
             <div class="login-box">
-                <p class="session-text__lg" th:utext="${msg}">페이지 처리 중 오류가 발생하였습니다.<br/>잠시 후 다시 시도 하거나 관리자에게 문의하세요. </p>
+                <p class="session-text__lg" th:text="${msg}">페이지 처리 중 오류가 발생하였습니다.<br/>잠시 후 다시 시도 하거나 관리자에게 문의하세요. </p>
             </div>
             <div class="btn-wrap__center"><button class="Button btn-login" onclick="history.back();">뒤로가기</button></div>
             <!--//login contents-->

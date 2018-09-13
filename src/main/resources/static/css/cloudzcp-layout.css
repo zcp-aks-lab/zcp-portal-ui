@@ -704,8 +704,31 @@ a.blank-link {
 	position: absolute;
 	right: 16px;
 	top: 16px;
-	background: url("../images/ico-common.png") no-repeat 0 -45px;
+
 }
+/* developer add */
+.lnb-wrap nav > ul > li.self:not(:first-child):after {
+    content: '';
+    display: inline-block;
+    width: 17px;
+    height: 15px;
+    position: absolute;
+    right: 16px;
+    top: 16px;
+}
+
+.lnb-wrap nav > ul > li.blank:not(:first-child):after {
+    content: '';
+    display: inline-block;
+    width: 17px;
+    height: 15px;
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    background: url("../images/ico-common.png") no-repeat 0 -45px;
+}
+/* =========================== */
+
 .lnb-wrap nav > ul > li.expandable:after,
 .lnb-wrap nav > ul > li.expandable.expanded:after {
 	content: none;

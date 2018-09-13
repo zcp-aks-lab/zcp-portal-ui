@@ -507,11 +507,11 @@
                             success: function(res) {
                                 var result = res.result;
                                 log('jweToken : ' + result.jweToken);
-
+                                log('dashboardBaseUrl : ' + res.dashboardBaseUrl);
+                                
                                 $.removeCookie('jweToken', { expires:1, path: '/', domain: '.cloudzcp.io'});
-                                $.removeCookie('jweToken', { expires:1, path: '/', domain: 'dashboard.cloudzcp.io'});
                                 $.cookie('jweToken', result.jweToken, { expires:1, path: '/', domain: '.cloudzcp.io'});
-                                goUrl('https://dashboard.cloudzcp.io/#!/overview?namespace=' + (selectedNamespace || ''));
+                                goUrl(res.dashboardBaseUrl + '/#!/overview?namespace=' + (selectedNamespace || ''));
                             },
                             error: function(errObject) {
                                 //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -560,7 +560,7 @@
 				</div>
 				<!-- dashboard panel group-->
 				<div class="panel-line__wrap dash">
-				    <h3 class="dash-title">Cluster Overview</h3>
+				    <h3 class="dash-title" th:text="${#authentication.principal.accessRole} == 'cluster-admin' ? 'Cluster Overview': |${selectedNamespace} Overview|" >Cluster Overview</h3>
 				    <div class="Panel dash-panel" id="usersChart"></div>
 				    <div class="Panel dash-panel" id="deploymentsChart"></div>
 				    <div class="Panel dash-panel" id="podsChart"></div>
