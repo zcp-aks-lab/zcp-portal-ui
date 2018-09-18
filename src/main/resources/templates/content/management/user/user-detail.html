@@ -482,9 +482,10 @@
     <body>
         <th:block layout:fragment="content">
             <!-- location -->
-            <div class="locations-area">
+            <!-- <div class="locations-area">
                 <div class="back-list"><a href="/management/users"><span>목록으로 돌아가기</span></a></div>
-            </div>
+            </div> -->
+            <th:block th:include="common/include/namespace :: common" th:with="listUrl='/management/users'"></th:block>
             <div class="contents-box">
                 <!-- service top area-->
                 <div class="top-area">
@@ -624,7 +625,7 @@
                                                     <tr>
                                                         <th>비밀번호<strong class="astertisk">*</strong></th>
                                                         <td>
-                                                            <input type="password" th:name="password" th:id="password" class="Textinput" maxlength="20" data-keyfilter-rule="digits|english" data-keyfilter="!@#$%^*_-" data-validation-rule="{required:true, passwordSecuity:true}" data-validation-message="{required:'비밀번호를 입력해 주세요.', passwordSecuity:'알파벳, 특수문자, 숫자를 포함하여 8~20자 사이로 입력하세요.'}" />
+                                                            <input type="password" th:name="password" th:id="password" class="Textinput" maxlength="20" data-keyfilter-rule="digits|english" data-keyfilter="!@#$%^*_-" data-validation-rule="{required:true, passwordSecuity:true}" data-validation-message="{required:'비밀번호를 입력해 주세요.', passwordSecuity:'대문자 1자, 소문자 1자, 숫자 1자를 포함하여 8~20자 사이로 입력하세요.'}" />
                                                             <p class="info-text" data-for="password"></p>
                                                         </td>
                                                     </tr>

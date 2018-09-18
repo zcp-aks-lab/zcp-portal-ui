@@ -12,21 +12,25 @@
             <div class="prj-list">
                 <strong>Namespace : </strong>
                 <th:block th:if="${#authentication.principal.accessRole} == 'cluster-admin'">
-                    <button class="Dropdownbutton namespace" th:text="${selectedNamespace != null and selectedNamespace != '' ? selectedNamespace : '전체'}">전체</button>
+                    <button class="Dropdownbutton namespace" th:text="${@authUserComponent.getNamespace() != null and @authUserComponent.getNamespace() != '' ? @authUserComponent.getNamespace() : '전체'}">전체</button>
                 </th:block>
                 <th:block th:unless="${#authentication.principal.accessRole} == 'cluster-admin'">
-                    <button class="Dropdownbutton namespace" th:text="${selectedNamespace != null and selectedNamespace != '' ? selectedNamespace : '선택'}">선택</button>
+                    <button class="Dropdownbutton namespace" th:text="${@authUserComponent.getNamespace() != null and @authUserComponent.getNamespace() != '' ? @authUserComponent.getNamespace() : '선택'}">선택</button>
                 </th:block>
                 
                 <ul class="dropmenu-list">
                     <th:block th:if="${#authentication.principal.accessRole} == 'cluster-admin'">
-                        <li onclick="moveMainNamespace('');"><a href="#">전체</a></li>
+                        <li onclick="moveMainNamespace('TOTAL');"><a href="#">전체</a></li>
                     </th:block>
                     
                     <th:block th:each="namespace, iterStat : ${userNamespaces}">
                         <li th:onclick="'moveMainNamespace(\'' +  ${namespace} + '\');'"><a href="#" th:text="${namespace}"></a></li>
                     </th:block>
                 </ul>
+            </div>
+            
+            <div class="back-list" th:if="${listUrl} != null">
+                <a th:href="${listUrl}"><span>목록으로 돌아가기</span></a>
             </div>
         </div>
     </th:block>

@@ -135,10 +135,10 @@
                     init: function() {
                         $("#node-grid").removeAlopexGrid();
                         $('#node-grid').alopexGrid({
-                        	renderMapping : {
+                            renderMapping : {
                                 cpu_request_bar: {
                                     renderer : function(value, data, render, mapping) {
-                                    	var type = zcpPortalApp.grid.getProgressbarType(data.cpuRequestsPercentage);
+                                        var type = zcpPortalApp.grid.getProgressbarType(data.cpuRequestsPercentage);
                                         
                                         var html = '';
                                         html += '<div class="Float-left Margin-top-10">';
@@ -155,9 +155,9 @@
                                 },
                                 cpu_limits_bar: {
                                     renderer : function(value, data, render, mapping) {
-                                    	var type = zcpPortalApp.grid.getProgressbarType(data.cpuLimitsPercentage);
+                                        var type = zcpPortalApp.grid.getProgressbarType(data.cpuLimitsPercentage);
                                         
-                                    	var html = '';
+                                        var html = '';
                                         html += '<div class="Float-left Margin-top-10">';
                                         html += '   <div class="name-pro__wrap">';
                                         html += '       <div class="Progressbar ' + type + '" data-default="' + data.cpuLimitsPercentage + '"></div>';
@@ -172,9 +172,9 @@
                                 },
                                 memory_request_bar: {
                                     renderer : function(value, data, render, mapping) {
-                                    	var type = zcpPortalApp.grid.getProgressbarType(data.memoryRequestsPercentage);
+                                        var type = zcpPortalApp.grid.getProgressbarType(data.memoryRequestsPercentage);
                                         
-                                    	var html = '';
+                                        var html = '';
                                         html += '<div class="Float-left Margin-top-10">';
                                         html += '   <div class="name-pro__wrap">';
                                         html += '       <div class="Progressbar ' + type + '" data-default="' + data.memoryRequestsPercentage + '"></div>';
@@ -189,9 +189,9 @@
                                 },
                                 memory_limit_bar: {
                                     renderer : function(value, data, render, mapping) {
-                                    	var type = zcpPortalApp.grid.getProgressbarType(data.memoryLimitsPercentage);
+                                        var type = zcpPortalApp.grid.getProgressbarType(data.memoryLimitsPercentage);
                                         
-                                    	var html = '';
+                                        var html = '';
                                         html += '<div class="Float-left Margin-top-10">';
                                         html += '   <div class="name-pro__wrap">';
                                         html += '       <div class="Progressbar ' + type + '" data-default="' + data.memoryLimitsPercentage + '"></div>';
@@ -220,9 +220,9 @@
                                 sorting: true,
                                 resizing : true
                             },
-                            /* message: {
+                            message: {
                                 nodata: 'Nodes 데이터가 없습니다.'
-                            }, */
+                            },
                             autoColumnIndex: true,
                             enableDefaultContextMenu: false,
                             columnMapping: [
@@ -231,16 +231,10 @@
                                     title: 'Node',
                                     width: '80px',
                                     align: 'center'
-                                },
+                                }, 
                                 {
                                     key: 'nodeType',
                                     title: 'Type',
-                                    width: '80px',
-                                    align: 'center'
-                                },
-                                {
-                                    key: 'nodeRoles',
-                                    title: 'Roles',
                                     width: '80px',
                                     align: 'center'
                                 },
@@ -325,13 +319,13 @@
                     },
 
                     getProgressbarType: function(value) {
-                    	var type;
+                        var type;
                         if(Number(value) > 90) {
-                        	type = 'name-typee';
+                            type = 'name-typee';
                         } else if (Number(value) > 30) {
-                        	type = 'name-typec';
+                            type = 'name-typec';
                         } else {
-                        	type = 'name-typea';
+                            type = 'name-typea';
                         }
 
                         return type;
@@ -363,11 +357,11 @@
                         this.getUsersStatus();
                     },
                     getNodesStatus: function() {
-                    	$a.request('/main/getNodesStatus', {
+                        $a.request('/main/getNodesStatus', {
                             method: 'get',
                             data: null, 
                             success: function(res) {
-                            	var props = {
+                                var props = {
                                     title: res.title,
                                     mainTitle: res.mainStatus,
                                     mainValue: res.mainStatusPercentage,
@@ -387,7 +381,7 @@
                             method: 'get',
                             data: {'namespace': selectedNamespace}, 
                             success: function(res) {
-                            	var props = {
+                                var props = {
                                     title: res.title,
                                     mainTitle: res.mainStatus,
                                     mainValue: res.mainStatusPercentage,
@@ -407,7 +401,7 @@
                             method: 'get',
                             data: {'namespace': selectedNamespace}, 
                             success: function(res) {
-                            	var props = {
+                                var props = {
                                     title: res.title,
                                     mainTitle: res.mainStatus,
                                     mainValue: res.mainStatusPercentage,
@@ -427,7 +421,7 @@
                             method: 'get',
                             data: null, 
                             success: function(res) {
-                            	var props = {
+                                var props = {
                                     title: res.title,
                                     mainTitle: res.utilizationTitle,
                                     mainValue: res.utilizationPercentage,
@@ -456,7 +450,7 @@
                             method: 'get',
                             data: null, 
                             success: function(res) {
-                            	var props = {
+                                var props = {
                                     title: res.title,
                                     mainTitle: res.utilizationTitle,
                                     mainValue: res.utilizationPercentage,
@@ -485,7 +479,7 @@
                             method: 'get',
                             data: {'namespace': selectedNamespace}, 
                             success: function(res) {
-                            	var props = {
+                                var props = {
                                     title: res.title,
                                     mainTitle: res.mainRole,
                                     mainValue: res.mainRolePercentage,
@@ -521,7 +515,7 @@
                 },
                 event: {
                     init: function() {
-                    	$('#btnDashboard').on('click', function() {
+                        $('#btnDashboard').on('click', function() {
                             zcpPortalApp.data.getJweToken();
                         });
                     }
@@ -542,29 +536,35 @@
             
             <div class="contents-box">
                 <!-- service top area-->
-				<div class="top-area">
-				    <h2 class="title">대시보드</h2>
-				    <div class="tag-wrap">
-				        <span class="tag">Namespace의 시스템 및 리소스 사용 현황을 일괄 조회합니다.</span>
-				    </div>
-				    <div class="btn-wrap__right">
-				        <button class="Button btn btn-dash" id="btnDashboard"><span class="Icon btn-outlink" data-position="right"></span>대시보드</button>
-				    </div>
-				</div>
-				<!-- dashboard panel group-->
-				<div class="panel-line__wrap dash">
-				    <h3 class="dash-title">System Overview</h3>
-				    <div class="Panel dash-panel" id="nodesChart"></div>
-				    <div class="Panel dash-panel" id="cpuChart"></div>
-				    <div class="Panel dash-panel" id="memoryChart"></div>
-				</div>
-				<!-- dashboard panel group-->
-				<div class="panel-line__wrap dash">
-				    <h3 class="dash-title" th:text="${#authentication.principal.accessRole} == 'cluster-admin' ? 'Cluster Overview': |${selectedNamespace} Overview|" >Cluster Overview</h3>
-				    <div class="Panel dash-panel" id="usersChart"></div>
-				    <div class="Panel dash-panel" id="deploymentsChart"></div>
-				    <div class="Panel dash-panel" id="podsChart"></div>
-				</div>
+                <div class="top-area">
+                    <h2 class="title">대시보드</h2>
+                    <div class="tag-wrap">
+                        <span class="tag">Namespace의 시스템 및 리소스 사용 현황을 일괄 조회합니다.</span>
+                    </div>
+                    <div class="btn-wrap__right">
+                        <button class="Button btn btn-dash" id="btnDashboard"><span class="Icon btn-outlink" data-position="right"></span>대시보드</button>
+                    </div>
+                </div>
+                <!-- dashboard panel group-->
+                <div class="panel-line__wrap dash">
+                    <h3 class="dash-title">System Overview</h3>
+                    <div class="Panel dash-panel" id="nodesChart"></div>
+                    <div class="Panel dash-panel" id="cpuChart"></div>
+                    <div class="Panel dash-panel" id="memoryChart"></div>
+                </div>
+                <!-- dashboard panel group-->
+                <div class="panel-line__wrap dash">
+                    <th:block th:if="${#authentication.principal.accessRole} == 'cluster-admin'">
+                       <h3 class="dash-title" th:text="${selectedNamespace} == '' ? 'Namespace Overview' : |Namespace (${selectedNamespace}) Overview|" >Cluster Overview</h3>    
+                    </th:block>
+                    <th:block th:unless="${#authentication.principal.accessRole} == 'cluster-admin'">
+                       <h3 class="dash-title" th:text="|Namespace (${selectedNamespace}) Overview|" >Cluster Overview</h3> 
+                    </th:block>
+                    
+                    <div class="Panel dash-panel" id="usersChart"></div>
+                    <div class="Panel dash-panel" id="deploymentsChart"></div>
+                    <div class="Panel dash-panel" id="podsChart"></div>
+                </div>
                 
                 <div class="grid-line__wrap dash">
                     <h3 class="dash-title">Nodes 목록</h3>
