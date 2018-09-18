@@ -908,9 +908,10 @@
 		<!-- contents -->
 		<div class="contents-wrap">
 			<!-- location -->
-			<div class="locations-area">
+			<th:block th:include="common/include/namespace :: common" th:with="listUrl='/management/namespaces'"></th:block>
+			<!-- <div class="locations-area">
 				<div class="back-list"><a href="/management/namespaces"><span>목록으로 돌아가기</span></a></div>
-			</div>
+			</div> -->
 			<div class="contents-box">
 				<!-- service top area-->
 				<div class="top-area">

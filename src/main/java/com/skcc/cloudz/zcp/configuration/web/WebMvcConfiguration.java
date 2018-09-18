@@ -30,7 +30,7 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
         registry.addInterceptor(addOnServiceMetaDataInterceptor()).addPathPatterns(new String[] { "/*", "/**/*" })
                 .excludePathPatterns(new String[] { "/static/**", "/error/**" });
         registry.addInterceptor(userNamespaceInterceptor())
-                .addPathPatterns(new String[] { "/my/*", "/", "/main", "/management/**"})
+                .addPathPatterns(new String[] { "/my/*", "/", "/main", "/management/**", "/alert/**", "/guide/**"})
                 .excludePathPatterns(new String[] { "/static/**", "/error/**" });
     }
 
