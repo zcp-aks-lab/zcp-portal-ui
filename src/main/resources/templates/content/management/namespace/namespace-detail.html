@@ -10,7 +10,7 @@
 	/*<![CDATA[*/
 		
 		$.alopex.page(function() {
-         this.init = function(id, param) { 
+         this.init = function(id, param) {
         	$('.Progressbar').hide();
  			var namespace = /*[[${namespace}]]*/;
  			var status = /*[[${param.status}]]*/;
@@ -455,6 +455,7 @@
 			var memberList;
 			$('#div_member').show();
 			$('#div_resource').hide();
+			$('#div_secret').hide();
 			showSearch2();
 			ajaxCall('/management/namespace/users', {namespace : namespace}).done(function(data){
 				gridInitMember(data.items);
@@ -463,6 +464,7 @@
 		
 		function showResource(){
 			$('#div_member').hide();
+			$('#div_secret').hide();
 			$('#div_resource').show();
 		}
 		
@@ -672,12 +674,235 @@
 		}
 		
 		
+		/*****************************************
+		*****************************************/
+		var zcpSecretGrid = {
+				pageInit : function() {
+					'use strict';
+					this.grid.init();
+					//this.data.init();
+					this.event.init();
+				},
+				grid : {
+					init : function() {
+						$("#grid_secret").removeAlopexGrid();
+						$("#grid_secret")
+								.alopexGrid(
+										{
+											pager : true,
+											alwaysShowVerticalScrollBar: false,
+											alwaysShowHorizontalScrollBar: false,
+											fitTableWidth : true,
+											filteringHeader : false,
+											filter : {
+												movable : true,
+												saveFilterSize : true,
+												title : true
+											},
+											paging : {
+												perPage : 5,
+												pagerCount : 5,
+												pagerSelect : true,
+												pagerTotal : true
+											},
+											defaultSorting : {
+												sortingColumn : 'id',
+												sortingDirection : 'desc'
+											},
+											defaultColumnMapping : {
+												sorting : true
+											},
+											message : {
+												nodata : '데이타가 없습니다.'
+											},
+											enableDefaultContextMenu : false,
+											autoResize: true,
+											autoColumnIndex : true,
+											columnMapping : [
+													{
+														key : 'id',
+														title : 'id',
+														width : '100px',
+														align : 'center',
+														sorting : 'number',
+														hidden : true
+													},
+													{
+														key : 'name',
+														title : 'Secret Name',
+														width : '150px',
+														align : 'left'
+													},
+													{
+														key : 'type',
+														title : 'Secret Type',
+														width : '150px',
+														align : 'left'
+													},
+													{
+														key : 'date',
+														title : '생성 일시',
+														width : '150px',
+														align : 'left'
+													},
+													{
+														key : 'label',
+														title : 'Label',
+														width : '150px',
+														align : 'left'
+													},
+													{
+														key : 'delete',
+														title : '관리',
+														width : '100px',
+														align : 'center',
+														render : function(value, data) {
+															return '<button class="btn-ico del" onclick="zcpPortalGrid.data.deleteRule(\''
+																	+ data.id
+																	+ '\');" />';
+														}
+													} ],
+										});
+					},
+				},
+				data : {
+					init : function() {
+						//this.getList();
+					},
+					getList : function() {
+						$a.request('/alert/ruleList', {
+							method : 'get',
+							data : null,
+							success : function(res) {
+								if (res.resultCd !== '200') {
+									if (res.resultMsg)
+										alert(res.resultMsg);
+									return false;
+								}
+
+								$('#grid_secret').alopexGrid('dataSet', res.resultData);
+							},
+							error : function(errObject) {
+								alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+							}
+						})
+					},
+					deleteRule : function(id) {
+						var jsonData = {
+							id : id
+						};
+
+						alertPopup.confirm({
+							width : 400,
+							height : 250,
+							message : 'Rule을 삭제하시겠습니까?',
+							callback : function(data) {
+								if (data == 'ok') {
+									$a.request('/alert/deleteRule', {
+										method : 'post',
+										data : jsonData,
+										success : function(res) {
+											if (res.resultCd !== '200') {
+												if (res.resultMsg)
+													alert(res.resultMsg);
+												return false;
+											} else {
+												alertPopup.alert({
+													width : 400,
+													height : 250,
+													message : 'Rule이 삭제되었습니다.',
+													callback : function() {
+														location.reload();
+													}
+												});
+											}
+										},
+										error : function(errObject) {
+											alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+										}
+									})
+								} else {
+									return false;
+								}
+							}
+						});
+					}
+				}, 
+				event : {
+					init : function() {
+						$('#keyword').on(
+								'click',
+								function() {
+									var customFilter = null;
+									try {
+										customFilter = eval("("
+												+ $("#customFunction").val() + ")");
+									} catch (e) {
+									}
+									if (!customFilter || !$.isFunction(customFilter)) {
+										alert("올바르지 않은 필터함수 입니다.");
+										return;
+									}
+									$("#grid_secret").alopexGrid('setFilter',
+											'customFilter', customFilter);
+								});
+						$('#btnSearch')
+								.on(
+										'keydown',
+										function(e) {
+											if (e.keyCode === 13) {
+												var customFilter = null;
+												try {
+													customFilter = eval("("
+															+ $("#customFunction")
+																	.val() + ")");
+												} catch (e) {
+												}
+												if (!customFilter
+														|| !$.isFunction(customFilter)) {
+													alert("올바르지 않은 필터함수 입니다.");
+													return;
+												}
+												$("#grid_secret").alopexGrid('setFilter',
+														'customFilter', customFilter);
+											}
+										});
+						$('#btnSecretAdd').on(
+								'click',
+								function() {
+										secretPopup.pop({
+											url : "/management/popSecretAdd",
+											width : 590,
+											height : 590,
+											callback : function() {
+												location.reload();
+											}
+										});
+								});
+					}
+				}
+			}
+		
+		function showSecret() {
+			$('#div_secret').show();
+			
+			$('#div_member').hide();
+			$('#div_resource').hide();
+			
+			zcpSecretGrid.pageInit();
+		}
+		
 	 /*]]>*/
     </script>
 </head>
 <body>
 <div class="cp-wrapper">
 	<th:block layout:fragment="content">
+	<textarea id="customFunction" style="display: none;">
+		function(data) {
+			return data['name'].toLowerCase().indexOf($("#keyword").val().toLowerCase()) >= 0;
+		}
+	</textarea>
 	<!-- main-contents -->
 	<div class="cp-container">
 		<!-- contents -->
@@ -709,6 +934,7 @@
 				    <ul>
 				        <li data-content="#tab1" onclick="showResource()">Resource 구성</li>
 				        <li data-content="#tab2" onclick="showMember()">멤버관리</li>
+				        <li data-content="#tab3" onclick="showSecret();">Secret</li>
 				    </ul>
 				    <!-- Resource modify구성 -->
 				    <div id="div_resource">
@@ -1042,6 +1268,23 @@
 								<h3 class="form-title">멤버 추가</h3>
 								<div id="grid_user"></div>
 							</div>
+						
+				    </div>
+				    <!-- Secret -->
+				    <div id="div_secret" style="display:none;">
+				    
+				    	<p class="intab-txt">Secret 정보를 관리합니다.</p>
+						<div class="search-wrap">
+							<input class="Textinput srcinput" name="keyword" id="keyword" placeholder="검색어를 입력하세요."/><button class="Button btn-search" id="btnSearch">검색</button>
+						</div>
+						<div class="form-btn__wrap">
+							<h3 class="form-title" style="margin-bottom: 0px;">Secret 목록</h3>
+							<div class="btn-wrap__right">
+								<button class="Button btn-ico__typeb btn-addchannel" th:id="btnSecretAdd">Secret 추가</button>
+								<div class="Tooltip" data-position="left">Secret 추가</div>
+							</div>
+							<div id="grid_secret"></div>
+						</div>
 						
 				    </div>
 				</div>
