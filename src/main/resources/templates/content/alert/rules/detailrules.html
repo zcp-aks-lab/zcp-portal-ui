@@ -112,11 +112,12 @@
 		<div class="cp-container">
 			<!-- contents -->
 			<div class="contents-wrap">
-				<div class="locations-area">
+                <th:block th:include="common/include/namespace :: common" th:with="listUrl='/alert/rules'"></th:block>
+				<!-- <div class="locations-area">
 					<div class="back-list">
 						<a href="/alert/rules"><span>목록으로 돌아가기</span></a>
 					</div>
-				</div>
+				</div> -->
 				<div class="contents-box">
 					<!-- rule info area-->
 					<div class="top-area">

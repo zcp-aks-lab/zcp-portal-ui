@@ -21,6 +21,7 @@ public class AuthUserComponent implements Serializable {
     private String userId;
     private String firstName;
     private List<AddOnServiceMataVo> addOnServiceMetaVoList;
+    private String namespace;
     
     public String getUserId() {
         return userId;
@@ -40,12 +41,19 @@ public class AuthUserComponent implements Serializable {
     public void setAddOnServiceMetaVoList(List<AddOnServiceMataVo> addOnServiceMetaVoList) {
         this.addOnServiceMetaVoList = addOnServiceMetaVoList;
     }
+    public String getNamespace() {
+        return namespace;
+    }
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
     
     @PreDestroy
     public void cleanUp() throws Exception {
         this.userId = null;
         this.firstName = null;
         this.addOnServiceMetaVoList = null;
+        this.namespace = null;
     }
 
 }

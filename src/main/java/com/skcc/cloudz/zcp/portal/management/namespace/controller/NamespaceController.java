@@ -183,5 +183,11 @@ public class NamespaceController {
     public List<String> getClusterRoles() throws Exception {
         return userService.getClusterRoles("cluster");
     }
+
+    @GetMapping(value = "/popSecretAdd", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+	public String popSecretAdd(Model model) throws Exception {
+		return "content/management/namespace/pop/popSecretAdd";
+	}
+    
 }
 

@@ -13,31 +13,32 @@ import com.skcc.cloudz.zcp.configuration.web.interceptor.UserNamespaceIntercepto
 @Configuration
 public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 
-	@Bean
-	public AddOnServiceMetaDataInterceptor addOnServiceMetaDataInterceptor() {
-		AddOnServiceMetaDataInterceptor addOnServiceMetaDataInterceptor = new AddOnServiceMetaDataInterceptor();
-		return addOnServiceMetaDataInterceptor;
-	}
+    @Bean
+    public AddOnServiceMetaDataInterceptor addOnServiceMetaDataInterceptor() {
+        AddOnServiceMetaDataInterceptor addOnServiceMetaDataInterceptor = new AddOnServiceMetaDataInterceptor();
+        return addOnServiceMetaDataInterceptor;
+    }
 
-	@Bean
-	public UserNamespaceInterceptor userNamespaceInterceptor() {
-		UserNamespaceInterceptor userNamespaceInterceptor = new UserNamespaceInterceptor();
-		return userNamespaceInterceptor;
-	}
+    @Bean
+    public UserNamespaceInterceptor userNamespaceInterceptor() {
+        UserNamespaceInterceptor userNamespaceInterceptor = new UserNamespaceInterceptor();
+        return userNamespaceInterceptor;
+    }
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(addOnServiceMetaDataInterceptor()).addPathPatterns(new String[] { "/*", "/**/*" })
-				.excludePathPatterns(new String[] { "/static/**", "/error/**" });
-		registry.addInterceptor(userNamespaceInterceptor()).addPathPatterns(new String[] { "/my/*", "/", "/main" })
-				.excludePathPatterns(new String[] { "/static/**", "/error/**" });
-	}
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(addOnServiceMetaDataInterceptor()).addPathPatterns(new String[] { "/*", "/**/*" })
+                .excludePathPatterns(new String[] { "/static/**", "/error/**" });
+        registry.addInterceptor(userNamespaceInterceptor())
+                .addPathPatterns(new String[] { "/my/*", "/", "/main", "/management/**", "/alert/**", "/guide/**"})
+                .excludePathPatterns(new String[] { "/static/**", "/error/**" });
+    }
 
-	@Override
-	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/*").allowedOrigins("*").allowedMethods("GET, POST, PUT, DELETE")
-				.allowedHeaders("Content-Type").allowCredentials(false).maxAge(3600);
-	}
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/*").allowedOrigins("*").allowedMethods("GET, POST, PUT, DELETE")
+                .allowedHeaders("Content-Type").allowCredentials(false).maxAge(3600);
+    }
 
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
@@ -47,6 +48,6 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 		registry.addViewController("/management/namespace/pop/popUserCreate.html")
 		.setViewName("content/management/namespace/pop/popUserCreate");
 
-		registry.addViewController("/common/popup/popup").setViewName("common/popup/popup");
-	}
+        registry.addViewController("/common/popup/popup").setViewName("common/popup/popup");
+    }
 }

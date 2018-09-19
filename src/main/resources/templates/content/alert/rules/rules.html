@@ -18,7 +18,7 @@
 	var zcpPortalApp = {
 		pageInit : function() {
 			'use strict';
-			this.data.init();
+			//this.data.init();
 			this.event.init();
 		},
 		data : {
@@ -321,7 +321,8 @@
 		<div class="cp-container">
 			<!-- contents -->
 			<div class="contents-wrap">
-				<div class="locations-area"></div>
+				<!-- location -->
+                <th:block th:include="common/include/namespace :: common"></th:block>
 				<div class="contents-box">
 					<!-- rule info area-->
 					<div class="top-area">

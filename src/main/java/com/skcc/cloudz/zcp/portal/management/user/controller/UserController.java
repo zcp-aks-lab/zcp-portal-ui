@@ -1,7 +1,6 @@
 package com.skcc.cloudz.zcp.portal.management.user.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
 import com.skcc.cloudz.zcp.common.constants.Result;
 import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
 import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
@@ -83,7 +81,7 @@ public class UserController {
         
         try {
             userService.setUser(userVo);
-            userService.updateUser(userVo);
+            
             resultMap.put("resultCd", Result.SUCCESS.getCd());
         } catch (Exception e) {
             resultMap.put("resultCd", Result.ERROR.getCd());

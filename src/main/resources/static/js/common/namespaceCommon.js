@@ -31,3 +31,54 @@ function ajaxCall(url, data){
         //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
     });
 }
+
+
+var secretPopup = {
+		default_opts : {
+			title : '신규 Secret',
+			message : '',
+			width : 550,
+			height : 350,
+			callback : function(data) {
+				check.callback(data);
+			},
+			alias : 'popup'
+		},
+
+		pop : function(opts) {
+			this.open(opts);
+		},
+
+		open : function(opts) {
+			var _opts = $.extend({}, this.default_opts, opts);
+
+			$a.popup({
+				url : _opts.url,
+				iframe : false,
+				width : _opts.width,
+				height : _opts.height,
+				title : _opts.title,
+				data : _opts.data,
+				callback : function(data) {
+					if (data == 'ok') {
+						alertPopup.alert({
+							width : 400,
+							height : 250,
+							message : 'Secret 저장되었습니다.',
+							callback : function() {
+								_opts.callback(data);
+								location.reload();
+							}
+						});
+					} else {
+					}
+				},
+				alias : _opts.alias,
+				xButtonClickCallback : function(el) {
+					if (el.alias == _opts.alias) {
+						return true;
+					}
+				}
+			});
+		}
+	};
