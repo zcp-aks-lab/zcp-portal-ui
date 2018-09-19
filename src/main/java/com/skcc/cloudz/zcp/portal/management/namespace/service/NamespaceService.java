@@ -280,7 +280,7 @@ public class NamespaceService {
         }
     }
     
-    public List<String> getClusterRoles() throws Exception{
+    public List<String> getNamespaceRoles() throws Exception{
     	List<String> clusterRoles = new ArrayList<String>();
     	ApiResponseVo apiResponseVo = client.request(HttpMethod.GET, "/iam/rbac/clusterRoles?type=namespace", null);
     	if(!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {

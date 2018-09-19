@@ -83,7 +83,7 @@ public class UserController {
         
         try {
             userService.setUser(userVo);
-            
+            userService.updateUser(userVo);
             resultMap.put("resultCd", Result.SUCCESS.getCd());
         } catch (Exception e) {
             resultMap.put("resultCd", Result.ERROR.getCd());

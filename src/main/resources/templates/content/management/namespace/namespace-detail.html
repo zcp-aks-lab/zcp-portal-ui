@@ -163,15 +163,6 @@
 			});
 		}
 		
-		function changeView(){
-			
-		}
-	
-		$(document).ready(function(){
-			
-			
-		});
-		
 		function registEvent(){
 			$('#searchWord1').keypress(function(event){
 				if(event.which == 13){
@@ -440,7 +431,7 @@
 		function getClusterRole(){
 			if(g_clusterRole) return ;
     		var rtn=[];
-    		var defferd = ajaxCall('/management/namespace/clusterRoles',{}).done(function(data){
+    		var defferd = ajaxCall('/management/namespace/authority',{}).done(function(data){
     			$.each(data , function(idx, v){
     				rtn.push({value : v, text : v});
         		});
@@ -468,24 +459,19 @@
 		}
 		
 		function showPopAddMember(){
+			var namespace = /*[[${namespace}]]*/;
 			$a.popup({
 		        url: "./pop/popUserCreate.html",
 		        iframe: false,  // default 는 true
 		        width: 550,
-		        height: 550,
+		        height: 700,
 		        title : "멤버 추가",
-		        data : {namespace : name},
+		        data : {namespace : namespace},
 		        callback : function(data, obj){
 		        	if(data=='ok'){
-		        		ajaxCall('/management/namespace/delete', {namespace:name}).done(function(data){
-			    	   		//alert('삭제  되었습니다.');
-			    	   		commonPopup.alert({
-			                    message: '사용자가 추가되었습니다.',
-			                    callback: function() {
-			                    		parent.location.reload();
-			                    }
-			                });
-		    	   		});		
+		        				
+		        	}else if(data == 'close'){
+		        		//location.reload();
 		        	}
 		        },
 		        alias: "flag1"
@@ -524,13 +510,14 @@
 			}
 			var userName = data.username;
 			commonPopup.confirm({
-                //title: '비밀번호 재설정',
+                //title: '',
                 message: userName + '를 멤버로 추가하시겠습니까?',
                 callback: function() {
                 	var user = {
            				"username" : data.username
            				,"namespace" : namespace 
            				,"clusterRole" : data.namespacedRole
+           				//,"namespaceRole" : data.namespacedRole
              				,"id" : data.id
            			};
            			ajaxCall('/management/namespace/saveRole', user).done(function(data){

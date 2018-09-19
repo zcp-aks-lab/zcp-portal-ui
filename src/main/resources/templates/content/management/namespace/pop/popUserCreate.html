@@ -6,6 +6,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         
         <script type="text/javascript">
+        	var Self = self; 
             var zcpPortalApp = {
                 pageInit: function() {
                     'use strict';
@@ -18,27 +19,25 @@
                 },
                 data: {
                     init: function() {
-                    		/* var defferd = ajaxCall('/management/namespace/clusterRoles',{}).done(function(data){
+                    		var defferd = ajaxCall('/management/namespace/authority',{}).done(function(data){
                     			$.each(data , function(idx, v){
-                    				if(v == 'admin') return true;
                     				var option = '<option value="' + v + '">'+v+'</option>';
-                    				//$('#clusterRole').append(option);
-                    				$('#namespace').append(option);
+                    				$('#namespaceRole').append(option);
                         		});
-                    		}); */
+                    		});
                     },
                     createUser: function() {
                         if (!this.validation()) {
                             return false;
                         }
-                        
-                        var data = $.extend({}, $('#form').serializeObject(), {"id" : null});
+                        //thisWindow = self;
+                        var data = $.extend({}, $('#form').serializeObject(), {"id" : null, namespace : g_namespace});
 						console.log(data);
                         commonPopup.confirm({
                             title: '사용자 추가',
                             message: '사용자를  추가 하시겠습니까?',
                             callback: function() {
-                            	ajaxCall('/management/user/createUser', user).done(function(res) {
+                            	ajaxCall('/management/namespace/createUser', data).done(function(res) {
                                     	if (res.resultCd !== constants.result.SUCCESS) {
                                             commonPopup.alert({message: res.resultMsg});
                                             return false;
@@ -46,9 +45,12 @@
                                         commonPopup.alert({
                                             message: '사용자가 추가 되었습니다.',
                                             callback: function() {
-                                                //location.href = '/management/users';
+                                            	parent.showMember();
+                                            	$a.close();
                                             }
                                         });
+
+                                        
                                     });
                                     /* error : function(errObject) {
                                         alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -57,12 +59,67 @@
                             }
                         });
                     },
+                    validate: function() {
+                        Validator.addMethod('passwordEqual', function(element, value, param) {
+                            var newPassword = $("#password").val();
+                            
+                            if (value === newPassword) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        });
+
+                        Validator.addMethod('passwordSecuity', function(element, value, param) {
+                            var newPassword = $("#password").val();
+                            return chkPwd(newPassword);
+                        });
+                    },
+
+                    resetPassword: function() {
+                    	var passwordValid = $('#password').validate();
+                        var passwordConfirmValid = $('#passwordConfirm').validate();
+                     
+                        if (!passwordValid || !passwordConfirmValid) {
+                            return false;
+                        }
+
+                        var data = $('#pwdform').serializeObject();
+                        data.temporary =  $('#temporary').hasClass('btn-on') ? true : false;
+                        data.id = $('#id').val();
+
+                        commonPopup.confirm({
+                            title: '비밀번호 재설정',
+                            message: '비밀번호를 재설정 하시겠습니까?',
+                            callback: function() {
+                                $a.request('/management/user/resetPassword', {
+                                    method: 'post',
+                                    data: data, 
+                                    success : function(res) {
+                                    	if (res.resultCd !== constants.result.SUCCESS) {
+                                            commonPopup.alert({message: res.resultMsg});
+                                            return false;
+                                        }
+                                        
+                                    	commonPopup.alert({message: '비밀번호가 재설정 되었습니다.'});
+                                    	if ($('#temporary').hasClass('btn-on')) {
+                                    		$("#userUpdatePassword").setChecked(true);
+                                        }
+                                    },
+                                    error : function(errObject) {
+                                        //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                    }
+                                })
+                            }
+                        });
+                    },
+
                     validation: function() {
                         var usernameValid = $('#username').validate();
                         var emailValid = $('#email').validate();
                         var firstNameValid = $('#firstName').validate();
                         var clusterRoleValid = $('#clusterRole').validate();
-                        var clusterRoleValid = $('#namespace').validate();
+                        var namespace = $('#namespace').validate();
                         
                         if (!usernameValid || !emailValid || !firstNameValid || !clusterRoleValid || !namespace) {
                             return false;
@@ -80,15 +137,17 @@
                         });
 
                         $('#btnCancel').on('click', function() {
-                            location.href = '/management/users';
+                        	 $a.close('cancel'); 
+                        	 self.close();
                         });
                     }
                 }
             }
-            
+            var g_namespace='';
             $.alopex.page(function() {
                 this.init = function(id, param) { 
                     zcpPortalApp.pageInit();
+                    g_namespace=param.namespace;
                 };
             });
         </script>
@@ -125,6 +184,20 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th>비밀번호<strong class="astertisk">*</strong></th>
+                                    <td>
+                                        <input type="password" th:name="password" th:id="password" class="Textinput" maxlength="20" data-keyfilter-rule="digits|english" data-keyfilter="!@#$%^*_-" data-validation-rule="{required:true, passwordSecuity:true}" data-validation-message="{required:'비밀번호를 입력해 주세요.', passwordSecuity:'알파벳, 특수문자, 숫자를 포함하여 8~20자 사이로 입력하세요.'}" />
+                                        <p class="info-text" data-for="password"></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>비밀번호 확인<strong class="astertisk">*</strong></th>
+                                    <td>
+                                        <input type="password" th:name="passwordConfirm" th:id="passwordConfirm" class="Textinput" maxlength="20"  data-validation-rule="{required:true, passwordEqual:'testing'}"  data-validation-message="{required:'비밀번호 확인을 입력해 주세요.', passwordEqual:'두개의 비밀번호가 일치하지 않습니다.'}" />
+                                        <p class="info-text" data-for="passwordConfirm"></p>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th>이메일<strong class="astertisk">*</strong></th>
                                     <td>
                                         <input th:name="email" th:id="email" class="Textinput Width-35" maxlength="100" data-keyfilter-rule="email" data-validation-rule="{required:true, email:true}" data-validation-message="{required:'이메일을 입력해 주세요.'}" />
@@ -141,7 +214,7 @@
                                 <tr>
                                     <th>클러스터 권한<strong class="astertisk">*</strong></th>
                                     <td>
-                                        <div class="Divselect" style="width: 200px">
+                                        <div class="Divselect" style="width: 200px" id="div_clusterRole">
                                             <select name="clusterRole" id="clusterRole" data-validation-rule="{required:true}" data-validation-message="{required:'클러스터 권한을 선택해주세요.'}">
                                                 <option value="member">member</option>
                                             </select>
@@ -151,14 +224,14 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Console 권한<strong class="astertisk">*</strong></th>
+                                    <th>namespace 권한<strong class="astertisk">*</strong></th>
                                     <td>
                                         <div class="Divselect" style="width: 200px">
-                                            <select name="namespace" id="namespace" data-validation-rule="{required:true}" data-validation-message="{required:'클러스터 권한을 선택해주세요.'}">
+                                            <select name="namespaceRole" id="namespaceRole" data-validation-rule="{required:true}" data-validation-message="{required:'클러스터 권한을 선택해주세요.'}">
                                                 <option value="">선택</option>
-                                                <option value="project-admin">project-admin</option>
+                                                <!-- <option value="admin">admin</option>
                                                 <option value="deploy-manager">deploy-manager</option>
-                                                <option value="developer">developer</option>
+                                                <option value="developer">developer</option> -->
                                             </select>
                                             <span></span>
                                         </div>

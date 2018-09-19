@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
 import com.skcc.cloudz.zcp.common.constants.Result;
 import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
@@ -45,8 +46,11 @@ public class NamespaceController {
     
     @GetMapping(value = "/namespaces", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String cardNamespace(Model model, @ModelAttribute EnquryNamespaceVO vo) throws Exception {
+    	String role = securityService.getUserDetail().getAccessRole();
     	model.addAttribute("namespace", namespaceService.getResourceQuota(vo));
     	model.addAttribute("labels", namespaceService.getResourceLabel());
+    	model.addAttribute("view", role.equals("cluster-admin") ? true : false);
+    	
     	return "content/management/namespace/namespace";
     }
     
@@ -126,10 +130,10 @@ public class NamespaceController {
     	namespaceService.delLableOfNamespace(data);
     }
     
-    @PostMapping(value = "/namespace/clusterRoles", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/namespace/authority", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
     public List<String> getClusterRole() throws Exception {
-    	return namespaceService.getClusterRoles();
+    	return namespaceService.getNamespaceRoles();
     }
     
     @GetMapping(value = "/namespace/create", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
@@ -137,20 +141,34 @@ public class NamespaceController {
     	return "content/management/namespace/namespace-add";
     }
     
-    @PostMapping(value = "/namespace/user/createUser", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/namespace/createUser", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody 
     public Map<String, Object> createUser(@RequestBody HashMap<String, Object> data) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         
         try {
         	UserVo userVo = new UserVo();
-        	userVo.setId((String)data.get("id"));
+        	//userVo.setId((String)data.get("username"));
         	userVo.setUsername((String)data.get("username"));
         	userVo.setEmail((String)data.get("email"));
         	userVo.setFirstName((String)data.get("firstName"));
         	userVo.setClusterRole((String)data.get("clusterRole"));
+        	userVo.setPassword((String)data.get("password"));
+        	userVo.setTemporary(false);
+        	//1.사용자 추가
         	userService.setUser(userVo);
-            //namespaceService.addUserInNamespace(data);            
+        	
+        	//2.암호 설정
+        	List<ZcpUserVo> list_user = userService.getUsers((String)data.get("username"));
+        	userVo.setId(list_user.get(0).getId());
+        	userService.resetPassword(userVo);
+        	
+        	//3.cluster 설정
+        	userService.updateClusterRoleBinding(userVo);
+        	
+        	//namespace 권한 설정
+        	data.put("clusterRole", data.get("namespaceRole"));
+            namespaceService.addUserInNamespace(data);            
             resultMap.put("resultCd", Result.SUCCESS.getCd());
         } catch (Exception e) {
             resultMap.put("resultCd", Result.ERROR.getCd());
@@ -160,5 +178,10 @@ public class NamespaceController {
         return resultMap;
     }
     
+    @PostMapping(value = "/namespace/clusterRoles", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody 
+    public List<String> getClusterRoles() throws Exception {
+        return userService.getClusterRoles("cluster");
+    }
 }
 

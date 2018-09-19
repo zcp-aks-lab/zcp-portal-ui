@@ -12,6 +12,7 @@
 	/*<![CDATA[*/
 	var g_order= false;
 	var g_mode = "cardType";
+	var g_cluster_admin_view =  /*[[${view}]]*/;
 	function deleteNamespace(name){
 		var notDelete = false;
 		if(name == 'default'){
@@ -150,7 +151,16 @@
 			$('#div_label').find('span').eq(0).removeClass('white').addClass('Default');
 		changeRed();
 		registEvent();
+		hideAddButton();
 	});
+	
+	function hideAddButton(){
+		if (g_cluster_admin_view == false){
+			$('div_addNamespaceButton').hide();
+			$('div_addNamespaceCard').hide();
+		}
+	}
+	
 	
 	function changeRed(){
 		$.each($('.Progressbar'), function(idx, data){
@@ -379,7 +389,7 @@
                     <div class="tag-wrap">
                         <span class="tag">플랫폼의 Namespace Resource 를 관리 합니다.</span>
                     </div>
-                    <div class="btn-wrap__right">
+                    <div class="btn-wrap__right" id="div_addNamspaceButton">
 	                    <button class="Button btn-ico__typeb btn-addnamepace" onclick="location.href='/management/namespace/create'">Namespace 추가</button>
 	                    <div class="Tooltip" data-position="left">Namespace 추가</div>
 	                </div>
@@ -456,7 +466,7 @@
 		                </div>
 		                <!-- <div th:text="${namespace.errorMsg} == null ? '' : ${namespace.errorMsg} "></div> -->
 		                <!-- panel new make-->
-		                <div class="Panel namespace-panel make-box">
+		                <div class="Panel namespace-panel make-box" id="div_addNamespaceCard">
 		                	<div class="Panel-content">
 		                		<a href="/management/namespace/create" class="new-make"><span class="Icon ico-cloudz make-plus"></span>Namespace 추가</a>
 		                	</div>
