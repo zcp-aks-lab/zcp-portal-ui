@@ -11,19 +11,34 @@
 		
 		$.alopex.page(function() {
          this.init = function(id, param) {
-        	$('.Progressbar').hide();
- 			var namespace = /*[[${namespace}]]*/;
- 			var status = /*[[${param.status}]]*/;
- 			if(namespace){
- 				$('#input_namespace').val(namespace);
- 				initNamespace(namespace);
- 				$('#span_namespace').text(namespace);
- 				if('inactive' == status)
- 					$('.active').removeClass('active').addClass('inactive');
- 			}
- 			getClusterRole();
- 			registEvent();
-			setView();
+        	 $('.Progressbar').hide();
+  			var namespace = /*[[${namespace}]]*/;
+  			var status = /*[[${param.status}]]*/;
+  			if(namespace){
+  				$('#input_namespace').val(namespace);
+  				initNamespace(namespace);
+  				$('#span_namespace').text(namespace);
+  				if('inactive' == status)
+  					$('.active').removeClass('active').addClass('inactive');
+  			}
+  			getClusterRole();
+  			registEvent();
+ 			setView();
+        	 
+        	 /**********************
+        	 **********************/
+        	 $('#btnSecretAdd').on(
+  					'click',
+  					function() {
+  							secretPopup.pop({
+  								url : "/management/popSecretAdd",
+  								width : 590,
+  								height : 590,
+  								callback : function() {
+  									location.reload();
+  								}
+  							});
+  					});
          }
 		});
 	
@@ -447,6 +462,9 @@
 			$('#div_member').show();
 			$('#div_resource').hide();
 			$('#div_search2').show();
+			
+			$('#div_secret').hide();
+			
 			gridInitUser();
 
 			ajaxCall('/management/namespace/users', {namespace : namespace}).done(function(data){
@@ -682,8 +700,17 @@
 		}
 		
 		
+		
 		/*****************************************
 		*****************************************/
+		function showSecret() {
+			$('#div_resource').hide();
+			$('#div_member').hide();
+			
+			$('#div_secret').show();
+			zcpSecretGrid.pageInit();
+		}
+		
 		var zcpSecretGrid = {
 				pageInit : function() {
 					'use strict';
@@ -875,30 +902,9 @@
 														'customFilter', customFilter);
 											}
 										});
-						$('#btnSecretAdd').on(
-								'click',
-								function() {
-										secretPopup.pop({
-											url : "/management/popSecretAdd",
-											width : 590,
-											height : 590,
-											callback : function() {
-												location.reload();
-											}
-										});
-								});
 					}
 				}
 			}
-		
-		function showSecret() {
-			$('#div_secret').show();
-			
-			$('#div_member').hide();
-			$('#div_resource').hide();
-			
-			zcpSecretGrid.pageInit();
-		}
 		
 	 /*]]>*/
     </script>
