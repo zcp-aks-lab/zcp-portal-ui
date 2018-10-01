@@ -8,7 +8,7 @@ public class ZcpPortalException extends Exception {
 
     private static final long serialVersionUID = 212128515021762929L;
     
-    final static String ERROR_MESSAGE = "처리 중 오류가 발생하였습니다.<br/>잠시 후 다시 이용해 주십시오.";
+    final static String DEFAULT_ERROR_MESSAGE = "시스템 관리자에게 문의하세요.";
     
     private String errCd;
     private String errMsg;
@@ -66,12 +66,16 @@ public class ZcpPortalException extends Exception {
             ZcpPortalException zcpPortalException = (ZcpPortalException) e;
             
             errCd = !StringUtils.isEmpty(zcpPortalException.getErrCd()) ? " [".concat(zcpPortalException.getErrCd()) + "]" : "";
-            errMsg = !StringUtils.isEmpty(zcpPortalException.getErrMsg()) ? zcpPortalException.getErrMsg() : ERROR_MESSAGE;    
+            //errMsg = !StringUtils.isEmpty(zcpPortalException.getErrMsg()) ? zcpPortalException.getErrMsg() : ERROR_MESSAGE;
+            
+            errMsg = DEFAULT_ERROR_MESSAGE;
         } else {
-            errMsg = e.getMessage();
+            //errMsg = e.getMessage();
+            errCd = "[500]";
+            errMsg = DEFAULT_ERROR_MESSAGE;
         }
         
-        return errMsg.concat(errCd);
+        return errCd.concat(errMsg);
     }
     
 }

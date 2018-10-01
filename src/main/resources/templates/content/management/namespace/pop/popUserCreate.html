@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-default">
-    <head>
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" >
+<head>
         <title>사용자 등록</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         
         <script type="text/javascript">
+        	var Self = self; 
             var zcpPortalApp = {
                 pageInit: function() {
                     'use strict';
@@ -18,32 +19,92 @@
                 },
                 data: {
                     init: function() {
-                        // init
+                    		var defferd = ajaxCall('/management/namespace/authority',{}).done(function(data){
+                    			$.each(data , function(idx, v){
+                    				var option = '<option value="' + v + '">'+v+'</option>';
+                    				$('#namespaceRole').append(option);
+                        		});
+                    		});
                     },
                     createUser: function() {
                         if (!this.validation()) {
                             return false;
                         }
-
+                        //thisWindow = self;
+                        var data = $.extend({}, $('#form').serializeObject(), {"id" : null, namespace : g_namespace});
+						console.log(data);
                         commonPopup.confirm({
                             title: '사용자 추가',
                             message: '사용자를  추가 하시겠습니까?',
                             callback: function() {
-                            	$a.request('/management/user/createUser', {
+                            	ajaxCall('/management/namespace/createUser', data).done(function(res) {
+                                    	if (res.resultCd !== constants.result.SUCCESS) {
+                                            commonPopup.alert({message: res.resultMsg});
+                                            return false;
+                                        }
+                                        commonPopup.alert({
+                                            message: '사용자가 추가 되었습니다.',
+                                            callback: function() {
+                                            	parent.showMember();
+                                            	$a.close();
+                                            }
+                                        });
+
+                                        
+                                    });
+                                    /* error : function(errObject) {
+                                        alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                        console.log(errObject);
+                                    } */
+                            }
+                        });
+                    },
+                    validate: function() {
+                        Validator.addMethod('passwordEqual', function(element, value, param) {
+                            var newPassword = $("#password").val();
+                            
+                            if (value === newPassword) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        });
+
+                        Validator.addMethod('passwordSecuity', function(element, value, param) {
+                            var newPassword = $("#password").val();
+                            return chkPwd(newPassword);
+                        });
+                    },
+
+                    resetPassword: function() {
+                    	var passwordValid = $('#password').validate();
+                        var passwordConfirmValid = $('#passwordConfirm').validate();
+                     
+                        if (!passwordValid || !passwordConfirmValid) {
+                            return false;
+                        }
+
+                        var data = $('#pwdform').serializeObject();
+                        data.temporary =  $('#temporary').hasClass('btn-on') ? true : false;
+                        data.id = $('#id').val();
+
+                        commonPopup.confirm({
+                            title: '비밀번호 재설정',
+                            message: '비밀번호를 재설정 하시겠습니까?',
+                            callback: function() {
+                                $a.request('/management/user/resetPassword', {
                                     method: 'post',
-                                    data: $('#form').serializeObject(), 
+                                    data: data, 
                                     success : function(res) {
                                     	if (res.resultCd !== constants.result.SUCCESS) {
                                             commonPopup.alert({message: res.resultMsg});
                                             return false;
                                         }
                                         
-                                        commonPopup.alert({
-                                            message: '사용자가 추가 되었습니다.',
-                                            callback: function() {
-                                                location.href = '/management/users';
-                                            }
-                                        });
+                                    	commonPopup.alert({message: '비밀번호가 재설정 되었습니다.'});
+                                    	if ($('#temporary').hasClass('btn-on')) {
+                                    		$("#userUpdatePassword").setChecked(true);
+                                        }
                                     },
                                     error : function(errObject) {
                                         //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -52,13 +113,15 @@
                             }
                         });
                     },
+
                     validation: function() {
                         var usernameValid = $('#username').validate();
                         var emailValid = $('#email').validate();
                         var firstNameValid = $('#firstName').validate();
                         var clusterRoleValid = $('#clusterRole').validate();
+                        var namespace = $('#namespace').validate();
                         
-                        if (!usernameValid || !emailValid || !firstNameValid || !clusterRoleValid) {
+                        if (!usernameValid || !emailValid || !firstNameValid || !clusterRoleValid || !namespace) {
                             return false;
                         } else {
                             return true;
@@ -74,35 +137,35 @@
                         });
 
                         $('#btnCancel').on('click', function() {
-                            location.href = '/management/users';
+                        	 $a.close('cancel'); 
+                        	 self.close();
                         });
                     }
                 }
             }
-            
+            var g_namespace='';
             $.alopex.page(function() {
                 this.init = function(id, param) { 
                     zcpPortalApp.pageInit();
+                    g_namespace=param.namespace;
                 };
             });
         </script>
         
     </head>
     <body>
-        <th:block layout:fragment="content">
+        <!-- <th:block layout:fragment="content"> -->
             <!-- location 
                 : 같은 dropdown을 사용하지만 usermenu와는 다르게 전체가 없어질수도 있어서 마지막에 class lastborder 를 추가했습니다. 
             -->
             <!-- <div class="locations-area"></div> -->
-            <th:block th:include="common/include/namespace :: common"></th:block>
-            
-            <div class="contents-box">
+            <div class="contents-box" style="min-height:450px">
                 <!-- service top area-->
                 <div class="top-area">
                     <h2 class="title">사용자 추가</h2>
-                    <div class="tag-wrap">
+                    <!-- <div class="tag-wrap">
                         <span class="tag">ZCP 서비스의 신규 사용자를 생성합니다.</span>
-                    </div>
+                    </div> -->
                 </div>
                 <!-- add user-->
                 <form th:id="form" onsubmit="return false;">
@@ -118,6 +181,20 @@
                                     <td>
                                         <input th:name="username" th:id="username" class="Textinput Width-35" maxlength="50" data-keyfilter="-_." data-keyfilter-rule="digits|english" data-validation-rule="{required:true, numalpha:true}" data-validation-message="{required:'아이디를 입력해 주세요.'}" />
                                         <p class="info-text" data-for="username"></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>비밀번호<strong class="astertisk">*</strong></th>
+                                    <td>
+                                        <input type="password" th:name="password" th:id="password" class="Textinput" maxlength="20" data-keyfilter-rule="digits|english" data-keyfilter="!@#$%^*_-" data-validation-rule="{required:true, passwordSecuity:true}" data-validation-message="{required:'비밀번호를 입력해 주세요.', passwordSecuity:'알파벳, 특수문자, 숫자를 포함하여 8~20자 사이로 입력하세요.'}" />
+                                        <p class="info-text" data-for="password"></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>비밀번호 확인<strong class="astertisk">*</strong></th>
+                                    <td>
+                                        <input type="password" th:name="passwordConfirm" th:id="passwordConfirm" class="Textinput" maxlength="20"  data-validation-rule="{required:true, passwordEqual:'testing'}"  data-validation-message="{required:'비밀번호 확인을 입력해 주세요.', passwordEqual:'두개의 비밀번호가 일치하지 않습니다.'}" />
+                                        <p class="info-text" data-for="passwordConfirm"></p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -137,10 +214,24 @@
                                 <tr>
                                     <th>클러스터 권한<strong class="astertisk">*</strong></th>
                                     <td>
+                                        <div class="Divselect" style="width: 200px" id="div_clusterRole">
+                                            <select name="clusterRole" id="clusterRole" data-validation-rule="{required:true}" data-validation-message="{required:'클러스터 권한을 선택해주세요.'}">
+                                                <option value="member">member</option>
+                                            </select>
+                                            <span></span>
+                                        </div>
+                                        <p class="info-text" data-for="clusterRole"></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>namespace 권한<strong class="astertisk">*</strong></th>
+                                    <td>
                                         <div class="Divselect" style="width: 200px">
-                                            <select th:name="clusterRole" th:id="clusterRole" data-validation-rule="{required:true}" data-validation-message="{required:'클러스터 권한을 선택해주세요.'}">
+                                            <select name="namespaceRole" id="namespaceRole" data-validation-rule="{required:true}" data-validation-message="{required:'클러스터 권한을 선택해주세요.'}">
                                                 <option value="">선택</option>
-                                                <option th:each="clusterRole : ${clusterRoles}" th:value="${clusterRole}" th:text="${clusterRole}"></option>
+                                                <!-- <option value="admin">admin</option>
+                                                <option value="deploy-manager">deploy-manager</option>
+                                                <option value="developer">developer</option> -->
                                             </select>
                                             <span></span>
                                         </div>
@@ -179,6 +270,6 @@
                 </form>
                 -->
             </div>
-        </th:block>
+        <!-- </th:block> -->
     </body>
 </html>

@@ -40,4 +40,14 @@ logging:
   config: classpath:config/logback-spring.xml
   file : local
   path : data/logs
+
+
+zuul:
+  routes:
+#    iam-swagger:
+#      path: /iam-api/**          # http://console/iam-api/swagger-ui.html
+#      url: ${props.iam.baseUrl}
+    iam-api:
+      path: /iam/**
+      url: ${props.iam.baseUrl}/iam
   
