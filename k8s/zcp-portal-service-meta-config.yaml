@@ -177,18 +177,18 @@ data:
           },
           {
             "id": "document",
-            "name": "문서",
+            "name": "사용자 가이드",
             "order": 2,
-            "url": "/guide/document",
-            "target": "self",
+            "url": "https://support.cloudz.co.kr",
+            "target": "blank",
             "enable": true
           },
           {
             "id": "qna",
             "name": "문의 및 지원",
             "order": 3,
-            "url": "/guide/qna",
-            "target": "self",
+            "url": "https://support.cloudz.co.kr",
+            "target": "blank",
             "enable": true
           },
           {
@@ -197,7 +197,7 @@ data:
             "order": 4,
             "url": "/guide/terms",
             "target": "self",
-            "enable": true
+            "enable": false
           }
         ],
         "accessRoles": [
