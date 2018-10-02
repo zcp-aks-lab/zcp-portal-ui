@@ -55,7 +55,7 @@
 	                <ul>
                         <li><a href="javascript:void(0);"><img src="images/ico-lnbname.png" data-th-src="@{/images/ico-lnbname.png}" class="icon-img" onclick="location.href='/'" /><span class="lnb-name" onclick="location.href='/'">ZCP</span></a></li>
                         
-                        <th:block th:each="parent, iterStat : ${addOnServiceMataData}">
+                        <th:block th:each="parent, iterStat : ${addOnServiceMetaList}">
 	                        <li th:classappend="|${parent.url == activePathInfo.firstPath ? 'selected':''} ${parent.target}|">
 	                            <a th:href="${parent.url} != '' ? ${parent.url} : '#'" th:target="|_${parent.target}|" th:text="${parent.name}">DevOps</a>
 	                            

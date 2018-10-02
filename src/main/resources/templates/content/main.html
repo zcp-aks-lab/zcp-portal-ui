@@ -561,10 +561,10 @@
                 </div>
                 <!-- dashboard panel group-->
                 <div class="panel-line__wrap dash">
-                    <th:block th:if="${#authentication.principal.accessRole} == 'cluster-admin'">
+                    <th:block th:if="${#authentication.principal.clusterRole} == 'cluster-admin'">
                        <h3 class="dash-title" th:text="${selectedNamespace} == '' ? 'Namespace Overview' : |Namespace (${selectedNamespace}) Overview|" >Cluster Overview</h3>    
                     </th:block>
-                    <th:block th:unless="${#authentication.principal.accessRole} == 'cluster-admin'">
+                    <th:block th:unless="${#authentication.principal.clusterRole} == 'cluster-admin'">
                        <h3 class="dash-title" th:text="|Namespace (${selectedNamespace}) Overview|" >Cluster Overview</h3> 
                     </th:block>
                     

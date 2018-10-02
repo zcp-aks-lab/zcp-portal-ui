@@ -24,8 +24,8 @@ public class UserNamespaceInterceptor extends HandlerInterceptorAdapter {
             return;
         }
         
-        String accessRole = SecurityService.getUserDetail().getAccessRole();
-        if (!StringUtils.isEmpty(accessRole)) {
+        String clusterRole = SecurityService.getUserDetail().getClusterRole();
+        if (!StringUtils.isEmpty(clusterRole)) {
             ZcpUserVo zcpUserVo = userService.getUser(SecurityService.getUserId());
             
             modelAndView.addObject("userNamespaces", zcpUserVo.getNamespaces());

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpNodeVo;
 import com.skcc.cloudz.zcp.common.component.AuthUserComponent;
-import com.skcc.cloudz.zcp.common.constants.AccessRole;
+import com.skcc.cloudz.zcp.common.constants.ClusterRole;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.portal.common.service.MainService;
 
@@ -40,28 +40,23 @@ public class MainController {
     
     @GetMapping(value = {"/main", "/"}, consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String main(@RequestParam(required = false, value = "namespace") String namespace, Model model) throws Exception {
-        String accessRole = SecurityService.getUserDetail().getAccessRole();
-        if (accessRole == null) {
+        String clusterRole = SecurityService.getUserDetail().getClusterRole();
+        if (clusterRole == null) {
             return "redirect:/guide/initialize";
         } 
         
         if (log.isInfoEnabled()) {
-            log.info("request namespace : {}, session namespace : {}", this.getSelectedNamespace(namespace), authUserComponent.getNamespace());    
+            log.info("request namespace : {}, getSelectedNamespace : {}, session namespace : {}", namespace, this.getSelectedNamespace(namespace), authUserComponent.getNamespace());    
         }
         
-        if (accessRole.equals(AccessRole.CLUSTER_ADMIN.getName())) {
-            String selectedNamespace = this.getSelectedNamespace(namespace);
-            
-            model.addAttribute("selectedNamespace", selectedNamespace);
-            
-            authUserComponent.setNamespace(selectedNamespace);
-        } else {
+        String selectedNamespace = this.getSelectedNamespace(namespace);
+        if (!clusterRole.equals(ClusterRole.CLUSTER_ADMIN.getName())) {
             String defaultNamespace = SecurityService.getUserDetail().getDefaultNamespace();
-            String selectedNamespace = StringUtils.isEmpty(namespace) ? defaultNamespace : namespace;
-            model.addAttribute("selectedNamespace", selectedNamespace);
-            
-            authUserComponent.setNamespace(selectedNamespace);
+            selectedNamespace = StringUtils.isEmpty(selectedNamespace) ? defaultNamespace : selectedNamespace;
         }
+        
+        model.addAttribute("selectedNamespace", selectedNamespace);
+        authUserComponent.setNamespace(selectedNamespace);
         
         return "content/main";
     }

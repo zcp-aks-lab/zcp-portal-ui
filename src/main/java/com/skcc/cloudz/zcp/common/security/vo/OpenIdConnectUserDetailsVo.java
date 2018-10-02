@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
-import com.skcc.cloudz.zcp.common.constants.AccessRole;
 import com.skcc.cloudz.zcp.common.domain.vo.CommonVo;
 
 public class OpenIdConnectUserDetailsVo extends CommonVo implements UserDetails {
@@ -22,7 +21,7 @@ public class OpenIdConnectUserDetailsVo extends CommonVo implements UserDetails 
     private String username;
     private String email;
     private String firstName;
-    private String accessRole;
+    private String clusterRole;
     private List<String> namespaces;
     private String defaultNamespace;
     private int usedNamespace;
@@ -41,7 +40,7 @@ public class OpenIdConnectUserDetailsVo extends CommonVo implements UserDetails 
             this.namespaces = zcpUserVo.getNamespaces();
             this.defaultNamespace = zcpUserVo.getDefaultNamespace();
             this.usedNamespace = zcpUserVo.getUsedNamespace();
-            this.accessRole = !StringUtils.isEmpty(zcpUserVo.getClusterRole()) ? zcpUserVo.getClusterRole() : AccessRole.NONE.getName();
+            this.clusterRole = !StringUtils.isEmpty(zcpUserVo.getClusterRole()) ? zcpUserVo.getClusterRole() : "";
         }
     }
     
@@ -104,12 +103,12 @@ public class OpenIdConnectUserDetailsVo extends CommonVo implements UserDetails 
         this.firstName = firstName;
     }
 
-    public String getAccessRole() {
-        return accessRole;
+    public String getClusterRole() {
+        return clusterRole;
     }
 
-    public void setAccessRole(String accessRole) {
-        this.accessRole = accessRole;
+    public void setClusterRole(String clusterRole) {
+        this.clusterRole = clusterRole;
     }
 
     public List<String> getNamespaces() {

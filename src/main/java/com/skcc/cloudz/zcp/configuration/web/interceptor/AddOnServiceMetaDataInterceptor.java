@@ -25,11 +25,15 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
+import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.common.component.AuthUserComponent;
-import com.skcc.cloudz.zcp.common.constants.AccessRole;
+import com.skcc.cloudz.zcp.common.constants.ApiResult;
+import com.skcc.cloudz.zcp.common.constants.ClusterRole;
 import com.skcc.cloudz.zcp.common.constants.ZcpEnviroment;
 import com.skcc.cloudz.zcp.common.domain.vo.AddOnServiceMataSubVo;
 import com.skcc.cloudz.zcp.common.domain.vo.AddOnServiceMataVo;
+import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.common.util.CommonUtil;
 
@@ -50,6 +54,9 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
     private SecurityService securityService;
     
     @Autowired
+    private IamApiService iamApiService;
+    
+    @Autowired
     private AuthUserComponent authUserComponent;
     
     @Override
@@ -63,32 +70,66 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
             log.info("===> requestURI : {}", requestURI);    
         }
         
-        List<AddOnServiceMataVo> resultList = new ArrayList<AddOnServiceMataVo>();
-        if (authUserComponent.getAddOnServiceMetaVoList() == null) {
-            resultList = this.getAddOnServiceMetaData();
-            
-            authUserComponent.setUserId(securityService.getUserDetails().getUserId());
-            authUserComponent.setFirstName(securityService.getUserDetails().getFirstName());
-            authUserComponent.setAddOnServiceMetaVoList(resultList);
-        } else {
-            resultList = authUserComponent.getAddOnServiceMetaVoList();
-        }
+        authUserComponent.setUserId(securityService.getUserDetails().getUserId());
+        authUserComponent.setFirstName(securityService.getUserDetails().getFirstName());
         
-        log.info("===> getAddOnServiceActivePathInfo : {}", this.getAddOnServiceActivePathInfo(requestURI));
-        
-        modelAndView.addObject("addOnServiceMataData", resultList);
         modelAndView.addObject("activePathInfo", this.getAddOnServiceActivePathInfo(requestURI));
+        modelAndView.addObject("addOnServiceMetaList", this.getAddOnServiceMetaData());
+        
     }
     
     public List<AddOnServiceMataVo> getAddOnServiceMetaData () {
         List<AddOnServiceMataVo> AddOnServiceMataVoList = new ArrayList<AddOnServiceMataVo>();
-        InputStream inputStream = null;
-        ObjectMapper mapper = new ObjectMapper();
         
         try {
-            String userAccessRole = securityService.getUserDetails().getAccessRole();
-            log.info("===> userAccessRole : {}", userAccessRole);
+            String roleType = this.getUserRoleType();
             
+            if (authUserComponent.getAddOnServiceMetaData(roleType) == null) {
+                List<AddOnServiceMataVo> addOnServiceMataList = this.getAddOnServiceMetaDataFileLoad();
+                
+                for (AddOnServiceMataVo addOnServiceMataVo : addOnServiceMataList) {
+                    List<String> roles = roleType.equals(ClusterRole.CLUSTER_ADMIN.getName()) ? addOnServiceMataVo.getRole().getClusterRoles() : addOnServiceMataVo.getRole().getNamespaceRoles();
+                    
+                    for (String role : roles) {
+                        if (roleType.equals(role) && addOnServiceMataVo.isEnable()) {
+                            AddOnServiceMataVoList.add(this.getAddOnServiceMetaDataSub(addOnServiceMataVo));        
+                        }
+                    }
+                }
+                
+                authUserComponent.putAddOnServiceMetaData(roleType, AddOnServiceMataVoList);
+            } else {
+                AddOnServiceMataVoList = (List<AddOnServiceMataVo>) authUserComponent.getAddOnServiceMetaData(roleType);
+            }
+            
+            Collections.sort(AddOnServiceMataVoList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return AddOnServiceMataVoList;
+    }
+    
+    public String getUserRoleType() throws ZcpPortalException {
+        String type = StringUtils.EMPTY;
+        
+        String clusterRole = securityService.getUserDetails().getClusterRole();
+        log.info("===> clusterRole : {}", clusterRole);
+        
+        if (clusterRole.equals(ClusterRole.CLUSTER_ADMIN.getName())) {
+            type = ClusterRole.CLUSTER_ADMIN.getName();
+        } else if (clusterRole.equals(ClusterRole.MEMBER.getName())) {
+            type = this.getNamespaceRole();
+        }
+        
+        return type;
+    }
+    
+    public List<AddOnServiceMataVo> getAddOnServiceMetaDataFileLoad() {
+        List<AddOnServiceMataVo> addOnServiceMataList = null;
+        InputStream inputStream = null;
+        
+        try {
             String profile = CommonUtil.getInstance().getProfile(environment);
             log.info("===> profile : {}", profile);
             
@@ -99,26 +140,42 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
                 inputStream = new FileInputStream(file);
             }
             
-            List<AddOnServiceMataVo> addOnServiceMataList = mapper.readValue(inputStream, new TypeReference<List<AddOnServiceMataVo>>(){});
-             
-            for (AddOnServiceMataVo addOnServiceMataVo : addOnServiceMataList) {
-                for (AccessRole accessRole : addOnServiceMataVo.getAccessRoles()) {
-                    if (userAccessRole.equals(accessRole.getName()) && addOnServiceMataVo.isEnable()) {
-                        AddOnServiceMataVoList.add(this.getAddOnServiceMetaDataSub(addOnServiceMataVo));        
-                    }
-                }
-            }
-            
-            Collections.sort(AddOnServiceMataVoList);
+            addOnServiceMataList = new ObjectMapper().readValue(inputStream, new TypeReference<List<AddOnServiceMataVo>>(){});
         } catch (IOException e) {
             e.printStackTrace();
-            log.error("getAddOnServiceMetaData IOException : {}", e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("getAddOnServiceMetaData Exception : {}", e);
         }
         
-        return AddOnServiceMataVoList;
+        return addOnServiceMataList;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public String getNamespaceRole() throws ZcpPortalException {
+        String id = securityService.getUserDetails().getUserId();
+        String namespace = authUserComponent.getNamespace();
+        
+        ApiResponseVo apiResponseVo = iamApiService.getNamespaceRoleBinding(namespace, id);
+        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new ZcpPortalException(apiResponseVo);
+        }
+        
+        String namespaceRole = ((HashMap<String, Object>) apiResponseVo.getData().get("roleRef")).get("name").toString();
+        log.info("===> namespaceRole : {}", namespaceRole);
+        
+        return getChangeNamespace(namespaceRole);
+    }
+    
+    public String getChangeNamespace(String namespace) {
+        String ret = StringUtils.EMPTY;
+        
+        if (namespace.equals("edit")) {
+            ret = "deploy-manager";
+        } else if (namespace.equals("view")) {
+            ret = "developer";
+        } else {
+            ret = "admin";
+        }
+        
+        return ret;
     }
     
     public AddOnServiceMataVo getAddOnServiceMetaDataSub(AddOnServiceMataVo addOnServiceMataVo) {
@@ -126,6 +183,7 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
         
         List<AddOnServiceMataSubVo> addOnServiceMataSubVoList = new ArrayList<AddOnServiceMataSubVo>();
         for (AddOnServiceMataSubVo addOnServiceMataSubVo : addOnServiceMataVo.getSub()) {
+            
             if (addOnServiceMataSubVo.isEnable()) {
                 addOnServiceMataSubVoList.add(addOnServiceMataSubVo);
             }
@@ -158,14 +216,5 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
         
         return resultMap;
     }
-    
-    @Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws Exception {
-    	Object o1 = request.getAttribute("data");
-    	Object o2 = request.getAttribute("namespace");
-    	
-		return true;
-	}
 
 }

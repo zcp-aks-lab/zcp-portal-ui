@@ -2,18 +2,12 @@ package com.skcc.cloudz.zcp.common.constants;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum AccessRole {
-    CLUSTER_ADMIN("cluster-admin"),
-    ADMIN("admin"),
-    EDITOR("editor"),
-    VIEW("view"),
-    MEMBER("member"),
-    NONE("none")
-    ;
+public enum ClusterRole {
+    CLUSTER_ADMIN("cluster-admin"), MEMBER("member");
     
     private String name;
     
-    private AccessRole(String name) {
+    private ClusterRole(String name) {
         this.name = name;
     }
 
@@ -21,5 +15,4 @@ public enum AccessRole {
     public String getName() {
         return name;
     }
-
 }
