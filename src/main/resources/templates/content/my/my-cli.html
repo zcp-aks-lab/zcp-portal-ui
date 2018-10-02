@@ -112,9 +112,16 @@
                                 <tr>
                                     <th class="Valign-top"><span class="ico-num">2</span>단계</th>
                                     <td>
-                                        <p class="Margin-bottom-10">CLI구성을 위하여 터미널에 아래의 command를 실행합니다.</p><textarea id="cli" name="cli" class="Textarea cli-area" readonly="readonly"></textarea>
-                                        <button class="btn-ico btn-copy" id="btnCopy">복사</button>
-                                        <button class="Button line-btn" data-type="button" data-classinit="true" type="button" data-converted="true" id="btnCmdDownload">다운로드</button>
+                                        <p class="Margin-bottom-10">CLI구성을 위하여 터미널에 아래의 command를 실행합니다.</p>
+                                        <div class="input-group">
+	                                        <textarea id="cli" name="cli" class="Textarea cli-area" readonly="readonly"></textarea>
+	                                        <div class="btn-group-inner">
+		                                        <button class="btn-ico btn-download" data-type="button" data-classinit="true" type="button" data-converted="true" id="btnCmdDownload">다운로드</button>
+			                                    <button class="btn-ico btn-copy" id="btnCopy">복사</button>
+			                                    
+			                                    <div class="Tooltip" data-open-trigger="click" data-position="bottom">Copied</div>
+	                                        </div >
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
