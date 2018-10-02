@@ -133,12 +133,14 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
             String profile = CommonUtil.getInstance().getProfile(environment);
             log.info("===> profile : {}", profile);
             
-            if (profile.equals(ZcpEnviroment.LOCAL.getName()) ||  profile.equals(ZcpEnviroment.DEV.getName())) {
+            inputStream = AddOnServiceMetaDataInterceptor.class.getClassLoader().getResourceAsStream("addOnServiceMetaData.json");
+            
+            /*if (profile.equals(ZcpEnviroment.LOCAL.getName()) ||  profile.equals(ZcpEnviroment.DEV.getName())) {
                 inputStream = AddOnServiceMetaDataInterceptor.class.getClassLoader().getResourceAsStream("addOnServiceMetaData.json");
             } else {
                 File file = new File(addOnServiceFilePath + addOnServiceFileName);
                 inputStream = new FileInputStream(file);
-            }
+            }*/
             
             addOnServiceMataList = new ObjectMapper().readValue(inputStream, new TypeReference<List<AddOnServiceMataVo>>(){});
         } catch (IOException e) {
