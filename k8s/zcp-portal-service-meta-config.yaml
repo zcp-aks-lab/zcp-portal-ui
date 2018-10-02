@@ -12,10 +12,15 @@ data:
         "order": 1,
         "url": "https://grafana.cloudzcp.io/login/generic_oauth",
         "target": "blank",
-        "accessRoles": [
-          "cluster-admin",
-          "admin"
-        ],
+        "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": [
+            "admin",
+            "deploy-manager"
+          ]
+        },
         "enable": true
       },
       {
@@ -24,10 +29,15 @@ data:
         "order": 2,
         "url": "https://kibana.cloudzcp.io",
         "target": "blank",
-        "accessRoles": [
-          "cluster-admin",
-          "admin"
-        ],
+        "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": [
+            "admin",
+            "deploy-manager"
+          ]
+        },
         "enable": true
       },
       {
@@ -60,12 +70,16 @@ data:
             "url": "/alert/rules",
             "target": "self",
             "enable": true
-          }      
+          }
         ],
-        "accessRoles": [
-          "cluster-admin",
-          "admin"
-        ],
+        "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": [
+            "admin"
+          ]
+        },
         "enable": true
       },
       {
@@ -92,11 +106,16 @@ data:
             "enable": true
           }
         ],
-        "accessRoles": [
-          "cluster-admin",
-          "admin",
-          "member"
-        ],
+        "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": [
+            "admin",
+            "deploy-manager",
+            "developer"
+          ]
+        },
         "enable": true
       },
       {
@@ -105,11 +124,16 @@ data:
         "order": 5,
         "url": "https://registry.cloudzcp.io",
         "target": "blank",
-        "accessRoles": [
-          "cluster-admin",
-          "admin",
-          "member"
-        ],
+        "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": [
+            "admin",
+            "deploy-manager",
+            "developer"
+          ]
+        },
         "enable": true
       },
       {
@@ -118,46 +142,62 @@ data:
         "order": 6,
         "url": "https://catalog.cloudzcp.io",
         "target": "blank",
-        "accessRoles": [
-          "cluster-admin",
-          "admin",
-          "member"
-        ],
-        "enable": true
-      },
-      {
-        "id": "zdb",
-        "name": "ZDB",
-        "order": 7,
-        "url": "https://zdb.cloudzcp.io",
-        "target": "blank",
-        "accessRoles": [
-          "cluster-admin",
-          "admin"
-        ],
+        "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": [
+            "admin"
+          ]
+        },
         "enable": true
       },
       {
         "id": "namespace",
         "name": "네임스페이스",
-        "order": 8,
+        "order": 7,
         "url": "/management/namespaces",
         "target": "self",
-        "accessRoles": [
-          "cluster-admin",
-          "admin"
-        ],
+        "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": [
+            "admin"
+          ]
+        },
         "enable": true
       },
       {
         "id": "user",
         "name": "사용자",
-        "order": 9,
+        "order": 8,
         "url": "/management/users",
         "target": "self",
-        "accessRoles": [
-          "cluster-admin"
-        ],
+         "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": []
+        },
+        "enable": true
+      },
+      {
+        "id": "zdb",
+        "name": "ZDB",
+        "order": 9,
+        "url": "https://zdb.cloudzcp.io",
+        "target": "blank",
+        "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": [
+            "admin",
+            "deploy-manager",
+            "developer"
+          ]
+        },
         "enable": true
       },
       {
@@ -200,12 +240,17 @@ data:
             "enable": false
           }
         ],
-        "accessRoles": [
-          "cluster-admin",
-          "admin",
-          "member",
-          "none"
-        ],
+        "role": {
+          "clusterRoles": [
+            "cluster-admin",
+            "member"
+          ],
+          "namespaceRoles": [
+            "admin",
+            "deploy-manager",
+            "developer"
+          ]
+        },
         "enable": true
       }
     ]
