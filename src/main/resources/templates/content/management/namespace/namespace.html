@@ -156,8 +156,8 @@
 	
 	function hideAddButton(){
 		if (g_cluster_admin_view == false){
-			$('div_addNamespaceButton').hide();
-			$('div_addNamespaceCard').hide();
+			$('#div_addNamespaceButton').hide();
+			$('#div_addNamespaceCard').hide();
 		}
 	}
 	
@@ -388,7 +388,7 @@
                     <div class="tag-wrap">
                         <span class="tag">플랫폼의 Namespace Resource 를 관리 합니다.</span>
                     </div>
-                    <div class="btn-wrap__right" id="div_addNamspaceButton">
+                    <div class="btn-wrap__right" id="div_addNamespaceButton">
 	                    <button class="Button btn-ico__typeb btn-addnamepace" onclick="location.href='/management/namespace/create'">Namespace 추가</button>
 	                    <div class="Tooltip" data-position="left">Namespace 추가</div>
 	                </div>

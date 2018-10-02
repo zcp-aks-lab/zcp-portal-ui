@@ -156,8 +156,8 @@
 		}
 		
 		function setView(){
-			var isView = /*[[${view}]]*/;
-			if(isView){
+			var isAuth = /*[[${view}]]*/;
+			if(!isAuth){
 				$('#div_btnSave').hide();
 				$('#btn_addLabel').hide();
 				$('#input_label').hide();
@@ -484,8 +484,8 @@
 		        url: "./pop/popUserCreate.html",
 		        iframe: false,  // default 는 true
 		        width: 550,
-		        height: 700,
-		        title : "멤버 추가",
+		        height: 600,
+		        title : "멤버 생성",
 		        data : {namespace : namespace},
 		        callback : function(data, obj){
 		        	if(data=='ok'){
