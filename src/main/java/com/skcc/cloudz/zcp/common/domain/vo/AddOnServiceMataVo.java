@@ -2,8 +2,6 @@ package com.skcc.cloudz.zcp.common.domain.vo;
 
 import java.util.List;
 
-import com.skcc.cloudz.zcp.common.constants.AccessRole;
-
 public class AddOnServiceMataVo implements Comparable<AddOnServiceMataVo> {
     private String id;
     private String name;
@@ -11,7 +9,7 @@ public class AddOnServiceMataVo implements Comparable<AddOnServiceMataVo> {
     private String url;
     private String target;
     private List<AddOnServiceMataSubVo> sub;
-    private List<AccessRole> accessRoles;
+    private Role role;
     private boolean enable;
     
     public AddOnServiceMataVo() {}
@@ -63,13 +61,13 @@ public class AddOnServiceMataVo implements Comparable<AddOnServiceMataVo> {
     public void setSub(List<AddOnServiceMataSubVo> sub) {
         this.sub = sub;
     }
-    
-    public List<AccessRole> getAccessRoles() {
-        return accessRoles;
+
+    public Role getRole() {
+        return role;
     }
 
-    public void setAccessRoles(List<AccessRole> accessRoles) {
-        this.accessRoles = accessRoles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public boolean isEnable() {
@@ -89,6 +87,24 @@ public class AddOnServiceMataVo implements Comparable<AddOnServiceMataVo> {
         }
         
         return 0;
+    }
+    
+    public static class Role {
+        private List<String> clusterRoles;
+        private List<String> namespaceRoles;
+        
+        public List<String> getClusterRoles() {
+            return clusterRoles;
+        }
+        public void setClusterRoles(List<String> clusterRoles) {
+            this.clusterRoles = clusterRoles;
+        }
+        public List<String> getNamespaceRoles() {
+            return namespaceRoles;
+        }
+        public void setNamespaceRoles(List<String> namespaceRoles) {
+            this.namespaceRoles = namespaceRoles;
+        }
     }
     
 }

@@ -37,6 +37,8 @@ public interface IamApiService {
     
     ApiResponseVo getRoleBindings(String id);
     
+    ApiResponseVo getNamespaceRoleBinding(String namespace, String id);
+    
     ApiResponseVo getNamespaces();
     
     ApiResponseVo createRoleBinding(String namespace, HashMap<String, Object> reqMap);

@@ -11,15 +11,15 @@
         <div class="locations-area">
             <div class="prj-list">
                 <strong>Namespace : </strong>
-                <th:block th:if="${#authentication.principal.accessRole} == 'cluster-admin'">
+                <th:block th:if="${#authentication.principal.clusterRole} == 'cluster-admin'">
                     <button class="Dropdownbutton namespace" th:text="${@authUserComponent.getNamespace() != null and @authUserComponent.getNamespace() != '' ? @authUserComponent.getNamespace() : '전체'}">전체</button>
                 </th:block>
-                <th:block th:unless="${#authentication.principal.accessRole} == 'cluster-admin'">
+                <th:block th:unless="${#authentication.principal.clusterRole} == 'cluster-admin'">
                     <button class="Dropdownbutton namespace" th:text="${@authUserComponent.getNamespace() != null and @authUserComponent.getNamespace() != '' ? @authUserComponent.getNamespace() : '선택'}">선택</button>
                 </th:block>
                 
                 <ul class="dropmenu-list">
-                    <th:block th:if="${#authentication.principal.accessRole} == 'cluster-admin'">
+                    <th:block th:if="${#authentication.principal.clusterRole} == 'cluster-admin'">
                         <li onclick="moveMainNamespace('TOTAL');"><a href="#">전체</a></li>
                     </th:block>
                     

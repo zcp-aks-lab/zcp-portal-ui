@@ -1,6 +1,7 @@
 package com.skcc.cloudz.zcp.common.component;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.PreDestroy;
@@ -18,42 +19,66 @@ public class AuthUserComponent implements Serializable {
 
     private static final long serialVersionUID = -3331519522204041061L;
     
+    public AuthUserComponent() {}
+    
     private String userId;
     private String firstName;
-    private List<AddOnServiceMataVo> addOnServiceMetaVoList;
     private String namespace;
+    private HashMap<String, Object> addOnServiceMetaData;
     
     public String getUserId() {
         return userId;
     }
+    
     public void setUserId(String userId) {
         this.userId = userId;
     }
+    
     public String getFirstName() {
         return firstName;
     }
+    
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    public List<AddOnServiceMataVo> getAddOnServiceMetaVoList() {
-        return addOnServiceMetaVoList;
-    }
-    public void setAddOnServiceMetaVoList(List<AddOnServiceMataVo> addOnServiceMetaVoList) {
-        this.addOnServiceMetaVoList = addOnServiceMetaVoList;
-    }
+    
     public String getNamespace() {
         return namespace;
     }
+    
     public void setNamespace(String namespace) {
         this.namespace = namespace;
+    }
+    
+    public HashMap<String, Object> getAddOnServiceMetaData() {
+        return addOnServiceMetaData;
+    }
+    
+    public void setAddOnServiceMetaData(HashMap<String, Object> addOnServiceMetaData) {
+        this.addOnServiceMetaData = addOnServiceMetaData;
+    }
+    
+    public void putAddOnServiceMetaData(String key, Object value) {
+        if (null == this.addOnServiceMetaData) {
+          this.addOnServiceMetaData = new HashMap<>();
+        }
+
+        this.addOnServiceMetaData.put(key, value);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<AddOnServiceMataVo> getAddOnServiceMetaData(String key) {
+        if (null == this.addOnServiceMetaData) return null;
+        
+        return (List<AddOnServiceMataVo>) this.addOnServiceMetaData.get(key);
     }
     
     @PreDestroy
     public void cleanUp() throws Exception {
         this.userId = null;
         this.firstName = null;
-        this.addOnServiceMetaVoList = null;
         this.namespace = null;
+        this.addOnServiceMetaData = null;
     }
 
 }

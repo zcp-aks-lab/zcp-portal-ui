@@ -46,10 +46,10 @@ public class NamespaceController {
     
     @GetMapping(value = "/namespaces", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String cardNamespace(Model model, @ModelAttribute EnquryNamespaceVO vo) throws Exception {
-    	String role = securityService.getUserDetail().getAccessRole();
+    	String clusterRole = securityService.getUserDetail().getClusterRole();
     	model.addAttribute("namespace", namespaceService.getResourceQuota(vo));
     	model.addAttribute("labels", namespaceService.getResourceLabel());
-    	model.addAttribute("view", role.equals("cluster-admin") ? true : false);
+    	model.addAttribute("view", clusterRole.equals("cluster-admin") ? true : false);
     	
     	return "content/management/namespace/namespace";
     }
@@ -81,9 +81,9 @@ public class NamespaceController {
     
     @GetMapping(value = "/namespace/{namespace}", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String editNamespace(Model model, @PathVariable("namespace") String namespace , @ModelAttribute EnquryNamespaceVO vo) throws Exception {
-    	String role = securityService.getUserDetail().getAccessRole();
+        String clusterRole = securityService.getUserDetail().getClusterRole();
     	model.addAttribute("namespace", namespace);
-    	model.addAttribute("view", role.equals("cluster-admin") ? true : false);
+    	model.addAttribute("view", clusterRole.equals("cluster-admin") ? true : false);
     	return "content/management/namespace/namespace-detail";
     }
     
