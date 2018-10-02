@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" layout:decorator="layout/template-default">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	layout:decorator="layout/template-default">
 <head>
-	<title>CloudZ CP</title>
-	<meta charset="UTF-8"/>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-	<script src="/js/common/namespaceCommon.js" data-th-src="@{/js/common/namespaceCommon.js}"></script>
-	<script th:inline="javascript" type="text/javascript">
+<title>CloudZ CP</title>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<script src="/js/common/namespaceCommon.js"
+	data-th-src="@{/js/common/namespaceCommon.js}"></script>
+<script th:inline="javascript" type="text/javascript">
 	/*<![CDATA[*/
 		
 		$.alopex.page(function() {
@@ -25,20 +29,22 @@
   			registEvent();
  			setView();
         	 
-        	 /**********************
-        	 **********************/
-        	 $('#btnSecretAdd').on(
-  					'click',
-  					function() {
-  							secretPopup.pop({
-  								url : "/management/popSecretAdd",
-  								width : 590,
-  								height : 590,
-  								callback : function() {
-  									location.reload();
-  								}
-  							});
-  					});
+ 			/**********************
+	       	 SECRETS
+	       	 **********************/
+       	 	$('#btnSecretAdd').on(
+ 					'click',
+ 					function() {
+ 							secretPopup.pop({
+ 								url : "/management/popSecretAdd",
+ 								data : {"namespace" : namespace},
+ 								width : 590,
+ 								height : 590,
+ 								callback : function() {
+ 									location.reload();
+ 								}
+ 							});
+ 					});
          }
 		});
 	
@@ -701,13 +707,15 @@
 		
 		
 		
-		/*****************************************
-		*****************************************/
+		/*************************
+		SECRETS
+		**************************/
 		function showSecret() {
 			$('#div_resource').hide();
 			$('#div_member').hide();
 			
 			$('#div_secret').show();
+			
 			zcpSecretGrid.pageInit();
 		}
 		
@@ -715,7 +723,7 @@
 				pageInit : function() {
 					'use strict';
 					this.grid.init();
-					//this.data.init();
+					this.data.init();
 					this.event.init();
 				},
 				grid : {
@@ -741,7 +749,7 @@
 												pagerTotal : true
 											},
 											defaultSorting : {
-												sortingColumn : 'id',
+												sortingColumn : 'date',
 												sortingDirection : 'desc'
 											},
 											defaultColumnMapping : {
@@ -755,57 +763,43 @@
 											autoColumnIndex : true,
 											columnMapping : [
 													{
-														key : 'id',
-														title : 'id',
-														width : '100px',
-														align : 'center',
-														sorting : 'number',
-														hidden : true
-													},
-													{
 														key : 'name',
 														title : 'Secret Name',
-														width : '150px',
+														width : '200px',
 														align : 'left'
 													},
 													{
 														key : 'type',
 														title : 'Secret Type',
-														width : '150px',
+														width : '200px',
 														align : 'left'
 													},
 													{
 														key : 'date',
 														title : '생성 일시',
 														width : '150px',
-														align : 'left'
+														align : 'center'
 													},
 													{
 														key : 'label',
 														title : 'Label',
-														width : '150px',
+														width : '200px',
 														align : 'left'
-													},
-													{
-														key : 'delete',
-														title : '관리',
-														width : '100px',
-														align : 'center',
-														render : function(value, data) {
-															return '<button class="btn-ico del" onclick="zcpPortalGrid.data.deleteRule(\''
-																	+ data.id
-																	+ '\');" />';
-														}
-													} ],
+													}
+												],
 										});
 					},
 				},
 				data : {
 					init : function() {
-						//this.getList();
+						this.getList();
 					},
 					getList : function() {
-						$a.request('/alert/ruleList', {
+						var namespace = /*[[${namespace}]]*/;
+						var jsonData = {
+								namespace : namespace
+							};
+						$a.request('/management/getSecrets/'+namespace, {
 							method : 'get',
 							data : null,
 							success : function(res) {
@@ -821,46 +815,6 @@
 								alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
 							}
 						})
-					},
-					deleteRule : function(id) {
-						var jsonData = {
-							id : id
-						};
-
-						alertPopup.confirm({
-							width : 400,
-							height : 250,
-							message : 'Rule을 삭제하시겠습니까?',
-							callback : function(data) {
-								if (data == 'ok') {
-									$a.request('/alert/deleteRule', {
-										method : 'post',
-										data : jsonData,
-										success : function(res) {
-											if (res.resultCd !== '200') {
-												if (res.resultMsg)
-													alert(res.resultMsg);
-												return false;
-											} else {
-												alertPopup.alert({
-													width : 400,
-													height : 250,
-													message : 'Rule이 삭제되었습니다.',
-													callback : function() {
-														location.reload();
-													}
-												});
-											}
-										},
-										error : function(errObject) {
-											alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
-										}
-									})
-								} else {
-									return false;
-								}
-							}
-						});
 					}
 				}, 
 				event : {
@@ -910,406 +864,459 @@
     </script>
 </head>
 <body>
-<div class="cp-wrapper">
-	<th:block layout:fragment="content">
-	<textarea id="customFunction" style="display: none;">
+	<div class="cp-wrapper">
+		<th:block layout:fragment="content">
+			<textarea id="customFunction" style="display: none;">
 		function(data) {
 			return data['name'].toLowerCase().indexOf($("#keyword").val().toLowerCase()) >= 0;
 		}
 	</textarea>
-	<!-- main-contents -->
-	<div class="cp-container">
-		<!-- contents -->
-		<div class="contents-wrap">
-			<!-- location -->
-			<th:block th:include="common/include/namespace :: common" th:with="listUrl='/management/namespaces'"></th:block>
-			<!-- <div class="locations-area">
+			<!-- main-contents -->
+			<div class="cp-container">
+				<!-- contents -->
+				<div class="contents-wrap">
+					<!-- location -->
+					<th:block th:include="common/include/namespace :: common"
+						th:with="listUrl='/management/namespaces'"></th:block>
+					<!-- <div class="locations-area">
 				<div class="back-list"><a href="/management/namespaces"><span>목록으로 돌아가기</span></a></div>
 			</div> -->
-			<div class="contents-box">
-				<!-- service top area-->
-				<div class="top-area">
-                    <dl class="service-info">
-            			<dt><span id="span_namespace"></span>
-            				<span class="state active"></span>
-            				<p class="Tooltip" data-position="right">Active</p>
-            			</dt>
-            			<dd class="service-user">
-            				<strong>생성일시</strong> : <span>2018-06-01 00:33:55</span>
-            			</dd>
-            		</dl>
-            		<div class="btn-wrap__right">
-	                    <button class="Button btn-ico__typeb btn-godash" onclick='goMain()'>Dashoboard 보기</button>
-	                    <div class="Tooltip" data-position="left">대시보드 화면으로 이동</div>
-	                    <!-- <button class="Button btn-ico__typeb btn-adduser" onclick='goUser()'></button> -->
-	                </div>
-				</div>
-				<!-- tab wrap -->
-				<div class="Tabs Fixed" data-tab-width="180px">
-				    <ul>
-				        <li data-content="#tab1" onclick="showResource()">Resource 구성</li>
-				        <li data-content="#tab2" onclick="showMember()">멤버관리</li>
-				        <li data-content="#tab3" onclick="showSecret();">Secret</li>
-				    </ul>
-				    <!-- Resource modify구성 -->
-				    <div id="div_resource">
-				    	<p class="intab-txt">Namespace의 Resource 구성정보를 조회 및 변경합니다.</p>
-					    <!-- intab tag-->
-				    	<div class="intab-tag__wrap">
-				    		<h3 class="form-title">라벨</h3>
-				    		<div class="tag-wrap">
-					    		<div id="div_label">
-					    		</div>
-            					<input class="Autocomplete add-label__input" id="input_label"  style="width:300px"/>
-            					<button class="Label add-label" onclick="addLabel()" id="btn_addLabel">추가</button><br/>
-            					<span style="font-size:15px;color:red" id="span_validation"></span>
-            				</div>
-				    	</div>
-					    <!-- namespace name detail data-->
-						<div class="lay-item__box">
-							<!-- left table-->
-							<div class="lay-item__left">
-								<h3 class="form-title">Resource Quotas</h3>
-								<form>
-									<fieldset>
-										<table class="Table Form-type tbl-name">
-											<colgroup>
-												<col style="width: 180px;"/>
-												<col/>
-											</colgroup>
-											<tbody>
-												<tr>
-													<th>CPU Requests</th>
-													<td>
-														<div class="tbl-group__wrap">
-															<div class="left"><input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_cpu_requests"/></div>
-															<div class="left">
-																<div class="Divselect" id="select_cpu_requests" style="width:90px;min-width:90px">
-																    <select >
-																        <option value="Core">Core</option>
-												        				<option value="MilliCore">MilliCore</option>
-																    </select>
-																    <span></span>
-																</div>
-															</div>
-															<div class="name-pro_position">
-																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="0" id="div_cpu_requests"></div>
-																</div>
-																<span class="name-pro__num" id="span_cpu_requests"></span>
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<th>CPU Limits</th>
-													<td>
-														<div class="tbl-group__wrap">
-															<div class="left">
-																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_cpu_limits"/>
-																<div class="Divselect"  id="select_cpu_limits" style="width:90px;min-width:90px">
-																    <select>
-																        <option value="Core">Core</option>
-												        				<option value="MilliCore">MilliCore</option>
-																    </select>
-																    <span></span>
-																</div>
-															</div>
-															<div class="name-pro_position">
-																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="0" id="div_cpu_limits"></div>
-																</div>
-																<span class="name-pro__num" id="span_cpu_limits"></span>
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<th>Memory Requests</th>
-													<td>
-														<div class="tbl-group__wrap">
-															<div class="left">
-																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_memory_requests"/>
-																<div class="Divselect" id="select_memory_requests" style="width:90px;min-width:90px">
-																    <select >
-																        <option value="Gi">Gi</option>
-												        				<option value="Mi">Mi</option>
-																    </select>
-																    <span></span>
-																</div>
-															</div>
-															<div class="name-pro_position">
-																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="0" id="div_memory_requests"></div>
-																</div>
-																<span class="name-pro__num" id="span_memory_requests"></span>
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<th>Memory Limits</th>
-													<td>
-														<div class="tbl-group__wrap">
-															<div class="left">
-																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_memory_limits"/>
-																<div class="Divselect"  id="select_memory_limits" style="width:90px;min-width:90px">
-																    <select>
-																        <option value="Gi">Gi</option>
-												        				<option value="Mi">Mi</option>
-																    </select>
-																    <span></span>
-																</div>
-															</div>
-															<div class="name-pro_position">
-																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="0" id="div_memory_limits"></div>
-																</div>
-																<span class="name-pro__num" id="span_memory_limits"></span>
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<th>Pods</th>
-													<td>
-														<div class="tbl-group__wrap">
-															<div class="left">
-																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_pods"/><span class="num-txt">개</span>
-															</div>
-															<div class="name-pro_position">
-																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="0" id="div_pods"></div>
-																</div>
-																<span class="name-pro__num" id="span_pods"></span>
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<th>Services</th>
-													<td>
-														<div class="tbl-group__wrap">
-															<div class="left">
-																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput"  id="input_services"/><span class="num-txt">개</span>
-															</div>
-															<div class="name-pro_position">
-																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="0" id="div_services"></div>
-																</div>
-																<span class="name-pro__num" id="span_services"></span>
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<th>Secrets</th>
-													<td>
-														<div class="tbl-group__wrap">
-															<div class="left">
-																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_secrets"/><span class="num-txt">개</span>
-															</div>
-															<div class="name-pro_position">
-																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="0" id="div_secrets"></div>
-																</div>
-																<span class="name-pro__num" id="span_secrets"></span>
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<th>Config Maps</th>
-													<td>
-														<div class="tbl-group__wrap">
-															<div class="left">
-																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_config_maps"/><span class="num-txt">개</span>
-															</div>
-															<div class="name-pro_position">
-																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="0" id="div_config_maps"></div>
-																</div>
-																<span class="name-pro__num" id="span_config_maps"></span>
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<th>Persistent Volumne<br/>Claims</th>
-													<td>
-														<div class="tbl-group__wrap">
-															<div class="left">
-																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_persistent_volumne"/><span class="num-txt">개</span>
-															</div>
-															<div class="name-pro_position">
-																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="0" id="div_persistent_volumne"></div>
-																</div>
-																<span class="name-pro__num" id="span_persistent_volumne"></span>
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<th>Services Load<br/>Balancers</th>
-													<td>
-														<div class="tbl-group__wrap">
-															<div class="left">
-																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput"  id="input_load_balancers"/><span class="num-txt">개</span>
-															</div>
-															<div class="name-pro_position">
-																<div class="name-pro__wrap">
-																	<div class="Progressbar name-typea" data-default="0" id="div_load_balancers"></div>
-																</div>
-																<span class="name-pro__num" id="span_load_balancers"></span>
-															</div>
-														</div>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</fieldset>
-								</form>
-							</div>
-							<!--right table-->
-							<div class="lay-item__right">
-								<h3 class="form-title">Pod Default Limit Range</h3>
-								<form>
-									<fieldset>
-										<table class="Table Form-type tbl-name">
-											<colgroup>
-												<col style="width: 180px;"/>
-												<col/>
-											</colgroup>
-											<tbody>
-												<tr>
-													<th>CPU Requests</th>
-													<td>
-														<div class="tbl-group__wrap">
-															<div class="left">
-																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_pod_cpu_requests"/>
-																<div class="Divselect" id="select_pod_cpu_requests" style="width:90px;min-width:90px">
-																    <select >
-																        <option value="Core">Core</option>
-												        				<option value="MilliCore">MilliCore</option>
-																    </select>
-																    <span></span>
-																</div>
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<th>CPU Limits</th>
-													<td>
-														<div class="tbl-group__wrap">
-															<div class="left">
-																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_pod_cpu_limits"/>
-																<div class="Divselect"  id="select_pod_cpu_limits" style="width:90px;min-width:90px">
-																    <select>
-																        <option value="Core">Core</option>
-												        				<option value="MilliCore">MilliCore</option>
-																    </select>
-																    <span></span>
-																</div>
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<th>Memory Requests</th>
-													<td>
-														<div class="tbl-group__wrap">
-															<div class="left">
-																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_pod_memory_requests"/>
-																<div class="Divselect"  id="select_pod_memory_requests" style="width:90px;min-width:90px">
-																    <select>
-																        <option value="Gi">Gi</option>
-												        				<option value="Mi">Mi</option>
-																    </select>
-																    <span></span>
-																</div>
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<th class="Valign-top" style="height: 420px;">Memory Limits</th>
-													<td class="Valign-top">
-														<div class="tbl-group__wrap">
-															<div class="left">
-																<input data-keyfilter-rule="digits" maxLength="4" class="Textinput" id="input_pod_memory_limits"/>
-																<div class="Divselect"  id="select_pod_memory_limits" style="width:90px;min-width:90px">
-																   <select>
-																        <option value="Gi">Gi</option>
-												        				<option value="Mi">Mi</option>
-																    </select>
-																    <span></span>
-																</div>
-															</div>
-														</div>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</fieldset>
-								</form>
+					<div class="contents-box">
+						<!-- service top area-->
+						<div class="top-area">
+							<dl class="service-info">
+								<dt>
+									<span id="span_namespace"></span> <span class="state active"></span>
+									<p class="Tooltip" data-position="right">Active</p>
+								</dt>
+								<dd class="service-user">
+									<strong>생성일시</strong> : <span>2018-06-01 00:33:55</span>
+								</dd>
+							</dl>
+							<div class="btn-wrap__right">
+								<button class="Button btn-ico__typeb btn-godash"
+									onclick='goMain()'>Dashoboard 보기</button>
+								<div class="Tooltip" data-position="left">대시보드 화면으로 이동</div>
+								<!-- <button class="Button btn-ico__typeb btn-adduser" onclick='goUser()'></button> -->
 							</div>
 						</div>
-						<!-- button wrap-->
-						<div class="btn-wrap">
-							<div class="btn-right" id="div_btnSave"><button class="Button btn bg-red"  onclick="addNamespace();">저장</button></div>
-						</div>
-					</div>
-				    <!-- 멤버관리 -->
-				    <div id="div_member" style="display:none">
-				    	<p class="intab-txt">Namespace 멤버 권한 정보를 관리합니다.</p>
-			    		<!-- search-wrap-->
-						<div class="search-wrap">
-							<input class="Textinput srcinput" id="searchWord1" placeholder="검색어를 입력하세요."/><button class="Button btn-search" onclick="search1()">검색</button>
-						</div>
-						<h3 class="form-title">멤버</h3>
-		            	<div id="grid_member"></div>
-		            	
-		            	
-							<div class="btn-wrap">
-								<div class="btn-left"><button class="Button btn" onclick="showPopAddMember()">멤버생성</button></div>
-								<div class="btn-right" id="div_search2" style="display:none" >
-									<input class="Textinput srcinput" id="searchWord2"  placeholder="검색어를 입력하세요."/><button class="Button btn-search" onclick="search2()">검색</button>
+						<!-- tab wrap -->
+						<div class="Tabs Fixed" data-tab-width="180px">
+							<ul>
+								<li data-content="#tab1" onclick="showResource()">Resource
+									구성</li>
+								<li data-content="#tab2" onclick="showMember()">멤버관리</li>
+								<li data-content="#tab3" onclick="showSecret();">Secret</li>
+							</ul>
+							<!-- Resource modify구성 -->
+							<div id="div_resource">
+								<p class="intab-txt">Namespace의 Resource 구성정보를 조회 및 변경합니다.</p>
+								<!-- intab tag-->
+								<div class="intab-tag__wrap">
+									<h3 class="form-title">라벨</h3>
+									<div class="tag-wrap">
+										<div id="div_label"></div>
+										<input class="Autocomplete add-label__input" id="input_label"
+											style="width: 300px" />
+										<button class="Label add-label" onclick="addLabel()"
+											id="btn_addLabel">추가</button>
+										<br /> <span style="font-size: 15px; color: red"
+											id="span_validation"></span>
+									</div>
+								</div>
+								<!-- namespace name detail data-->
+								<div class="lay-item__box">
+									<!-- left table-->
+									<div class="lay-item__left">
+										<h3 class="form-title">Resource Quotas</h3>
+										<form>
+											<fieldset>
+												<table class="Table Form-type tbl-name">
+													<colgroup>
+														<col style="width: 180px;" />
+														<col />
+													</colgroup>
+													<tbody>
+														<tr>
+															<th>CPU Requests</th>
+															<td>
+																<div class="tbl-group__wrap">
+																	<div class="left">
+																		<input data-keyfilter-rule="digits" maxLength="4"
+																			class="Textinput" id="input_cpu_requests" />
+																	</div>
+																	<div class="left">
+																		<div class="Divselect" id="select_cpu_requests"
+																			style="width: 90px; min-width: 90px">
+																			<select>
+																				<option value="Core">Core</option>
+																				<option value="MilliCore">MilliCore</option>
+																			</select> <span></span>
+																		</div>
+																	</div>
+																	<div class="name-pro_position">
+																		<div class="name-pro__wrap">
+																			<div class="Progressbar name-typea" data-default="0"
+																				id="div_cpu_requests"></div>
+																		</div>
+																		<span class="name-pro__num" id="span_cpu_requests"></span>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<th>CPU Limits</th>
+															<td>
+																<div class="tbl-group__wrap">
+																	<div class="left">
+																		<input data-keyfilter-rule="digits" maxLength="4"
+																			class="Textinput" id="input_cpu_limits" />
+																		<div class="Divselect" id="select_cpu_limits"
+																			style="width: 90px; min-width: 90px">
+																			<select>
+																				<option value="Core">Core</option>
+																				<option value="MilliCore">MilliCore</option>
+																			</select> <span></span>
+																		</div>
+																	</div>
+																	<div class="name-pro_position">
+																		<div class="name-pro__wrap">
+																			<div class="Progressbar name-typea" data-default="0"
+																				id="div_cpu_limits"></div>
+																		</div>
+																		<span class="name-pro__num" id="span_cpu_limits"></span>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<th>Memory Requests</th>
+															<td>
+																<div class="tbl-group__wrap">
+																	<div class="left">
+																		<input data-keyfilter-rule="digits" maxLength="4"
+																			class="Textinput" id="input_memory_requests" />
+																		<div class="Divselect" id="select_memory_requests"
+																			style="width: 90px; min-width: 90px">
+																			<select>
+																				<option value="Gi">Gi</option>
+																				<option value="Mi">Mi</option>
+																			</select> <span></span>
+																		</div>
+																	</div>
+																	<div class="name-pro_position">
+																		<div class="name-pro__wrap">
+																			<div class="Progressbar name-typea" data-default="0"
+																				id="div_memory_requests"></div>
+																		</div>
+																		<span class="name-pro__num" id="span_memory_requests"></span>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<th>Memory Limits</th>
+															<td>
+																<div class="tbl-group__wrap">
+																	<div class="left">
+																		<input data-keyfilter-rule="digits" maxLength="4"
+																			class="Textinput" id="input_memory_limits" />
+																		<div class="Divselect" id="select_memory_limits"
+																			style="width: 90px; min-width: 90px">
+																			<select>
+																				<option value="Gi">Gi</option>
+																				<option value="Mi">Mi</option>
+																			</select> <span></span>
+																		</div>
+																	</div>
+																	<div class="name-pro_position">
+																		<div class="name-pro__wrap">
+																			<div class="Progressbar name-typea" data-default="0"
+																				id="div_memory_limits"></div>
+																		</div>
+																		<span class="name-pro__num" id="span_memory_limits"></span>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<th>Pods</th>
+															<td>
+																<div class="tbl-group__wrap">
+																	<div class="left">
+																		<input data-keyfilter-rule="digits" maxLength="4"
+																			class="Textinput" id="input_pods" /><span
+																			class="num-txt">개</span>
+																	</div>
+																	<div class="name-pro_position">
+																		<div class="name-pro__wrap">
+																			<div class="Progressbar name-typea" data-default="0"
+																				id="div_pods"></div>
+																		</div>
+																		<span class="name-pro__num" id="span_pods"></span>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<th>Services</th>
+															<td>
+																<div class="tbl-group__wrap">
+																	<div class="left">
+																		<input data-keyfilter-rule="digits" maxLength="4"
+																			class="Textinput" id="input_services" /><span
+																			class="num-txt">개</span>
+																	</div>
+																	<div class="name-pro_position">
+																		<div class="name-pro__wrap">
+																			<div class="Progressbar name-typea" data-default="0"
+																				id="div_services"></div>
+																		</div>
+																		<span class="name-pro__num" id="span_services"></span>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<th>Secrets</th>
+															<td>
+																<div class="tbl-group__wrap">
+																	<div class="left">
+																		<input data-keyfilter-rule="digits" maxLength="4"
+																			class="Textinput" id="input_secrets" /><span
+																			class="num-txt">개</span>
+																	</div>
+																	<div class="name-pro_position">
+																		<div class="name-pro__wrap">
+																			<div class="Progressbar name-typea" data-default="0"
+																				id="div_secrets"></div>
+																		</div>
+																		<span class="name-pro__num" id="span_secrets"></span>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<th>Config Maps</th>
+															<td>
+																<div class="tbl-group__wrap">
+																	<div class="left">
+																		<input data-keyfilter-rule="digits" maxLength="4"
+																			class="Textinput" id="input_config_maps" /><span
+																			class="num-txt">개</span>
+																	</div>
+																	<div class="name-pro_position">
+																		<div class="name-pro__wrap">
+																			<div class="Progressbar name-typea" data-default="0"
+																				id="div_config_maps"></div>
+																		</div>
+																		<span class="name-pro__num" id="span_config_maps"></span>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<th>Persistent Volumne<br />Claims
+															</th>
+															<td>
+																<div class="tbl-group__wrap">
+																	<div class="left">
+																		<input data-keyfilter-rule="digits" maxLength="4"
+																			class="Textinput" id="input_persistent_volumne" /><span
+																			class="num-txt">개</span>
+																	</div>
+																	<div class="name-pro_position">
+																		<div class="name-pro__wrap">
+																			<div class="Progressbar name-typea" data-default="0"
+																				id="div_persistent_volumne"></div>
+																		</div>
+																		<span class="name-pro__num"
+																			id="span_persistent_volumne"></span>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<th>Services Load<br />Balancers
+															</th>
+															<td>
+																<div class="tbl-group__wrap">
+																	<div class="left">
+																		<input data-keyfilter-rule="digits" maxLength="4"
+																			class="Textinput" id="input_load_balancers" /><span
+																			class="num-txt">개</span>
+																	</div>
+																	<div class="name-pro_position">
+																		<div class="name-pro__wrap">
+																			<div class="Progressbar name-typea" data-default="0"
+																				id="div_load_balancers"></div>
+																		</div>
+																		<span class="name-pro__num" id="span_load_balancers"></span>
+																	</div>
+																</div>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</fieldset>
+										</form>
+									</div>
+									<!--right table-->
+									<div class="lay-item__right">
+										<h3 class="form-title">Pod Default Limit Range</h3>
+										<form>
+											<fieldset>
+												<table class="Table Form-type tbl-name">
+													<colgroup>
+														<col style="width: 180px;" />
+														<col />
+													</colgroup>
+													<tbody>
+														<tr>
+															<th>CPU Requests</th>
+															<td>
+																<div class="tbl-group__wrap">
+																	<div class="left">
+																		<input data-keyfilter-rule="digits" maxLength="4"
+																			class="Textinput" id="input_pod_cpu_requests" />
+																		<div class="Divselect" id="select_pod_cpu_requests"
+																			style="width: 90px; min-width: 90px">
+																			<select>
+																				<option value="Core">Core</option>
+																				<option value="MilliCore">MilliCore</option>
+																			</select> <span></span>
+																		</div>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<th>CPU Limits</th>
+															<td>
+																<div class="tbl-group__wrap">
+																	<div class="left">
+																		<input data-keyfilter-rule="digits" maxLength="4"
+																			class="Textinput" id="input_pod_cpu_limits" />
+																		<div class="Divselect" id="select_pod_cpu_limits"
+																			style="width: 90px; min-width: 90px">
+																			<select>
+																				<option value="Core">Core</option>
+																				<option value="MilliCore">MilliCore</option>
+																			</select> <span></span>
+																		</div>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<th>Memory Requests</th>
+															<td>
+																<div class="tbl-group__wrap">
+																	<div class="left">
+																		<input data-keyfilter-rule="digits" maxLength="4"
+																			class="Textinput" id="input_pod_memory_requests" />
+																		<div class="Divselect" id="select_pod_memory_requests"
+																			style="width: 90px; min-width: 90px">
+																			<select>
+																				<option value="Gi">Gi</option>
+																				<option value="Mi">Mi</option>
+																			</select> <span></span>
+																		</div>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<th class="Valign-top" style="height: 420px;">Memory
+																Limits</th>
+															<td class="Valign-top">
+																<div class="tbl-group__wrap">
+																	<div class="left">
+																		<input data-keyfilter-rule="digits" maxLength="4"
+																			class="Textinput" id="input_pod_memory_limits" />
+																		<div class="Divselect" id="select_pod_memory_limits"
+																			style="width: 90px; min-width: 90px">
+																			<select>
+																				<option value="Gi">Gi</option>
+																				<option value="Mi">Mi</option>
+																			</select> <span></span>
+																		</div>
+																	</div>
+																</div>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</fieldset>
+										</form>
+									</div>
+								</div>
+								<!-- button wrap-->
+								<div class="btn-wrap">
+									<div class="btn-right" id="div_btnSave">
+										<button class="Button btn bg-red" onclick="addNamespace();">저장</button>
+									</div>
 								</div>
 							</div>
-							<br/>
-							<div id="div_grid_user" style="display:none">
-								<h3 class="form-title">멤버 추가</h3>
-								<div id="grid_user"></div>
+							<!-- 멤버관리 -->
+							<div id="div_member" style="display: none">
+								<p class="intab-txt">Namespace 멤버 권한 정보를 관리합니다.</p>
+								<!-- search-wrap-->
+								<div class="search-wrap">
+									<input class="Textinput srcinput" id="searchWord1"
+										placeholder="검색어를 입력하세요." />
+									<button class="Button btn-search" onclick="search1()">검색</button>
+								</div>
+								<h3 class="form-title">멤버</h3>
+								<div id="grid_member"></div>
+
+
+								<div class="btn-wrap">
+									<div class="btn-left">
+										<button class="Button btn" onclick="showPopAddMember()">멤버생성</button>
+									</div>
+									<div class="btn-right" id="div_search2" style="display: none">
+										<input class="Textinput srcinput" id="searchWord2"
+											placeholder="검색어를 입력하세요." />
+										<button class="Button btn-search" onclick="search2()">검색</button>
+									</div>
+								</div>
+								<br />
+								<div id="div_grid_user" style="display: none">
+									<h3 class="form-title">멤버 추가</h3>
+									<div id="grid_user"></div>
+								</div>
+
 							</div>
-						
-				    </div>
-				    <!-- Secret -->
-				    <div id="div_secret" style="display:none;">
-				    
-				    	<p class="intab-txt">Secret 정보를 관리합니다.</p>
-						<div class="search-wrap">
-							<input class="Textinput srcinput" name="keyword" id="keyword" placeholder="검색어를 입력하세요."/><button class="Button btn-search" id="btnSearch">검색</button>
-						</div>
-						<div class="form-btn__wrap">
-							<h3 class="form-title" style="margin-bottom: 0px;">Secret 목록</h3>
-							<div class="btn-wrap__right">
-								<button class="Button btn-ico__typeb btn-addchannel" th:id="btnSecretAdd">Secret 추가</button>
-								<div class="Tooltip" data-position="left">Secret 추가</div>
+							<!-- Secret -->
+							<div id="div_secret" style="display: none;">
+
+								<p class="intab-txt">Secret 정보를 관리합니다.</p>
+								<div class="search-wrap">
+									<input class="Textinput srcinput" name="keyword" id="keyword"
+										placeholder="검색어를 입력하세요." />
+									<button class="Button btn-search" id="btnSearch">검색</button>
+								</div>
+								<div class="form-btn__wrap">
+									<h3 class="form-title" style="margin-bottom: 0px;">Secret
+										목록</h3>
+									<div class="btn-wrap__right">
+										<button class="Button btn-ico__typeb btn-addchannel"
+											th:id="btnSecretAdd">Secret 추가</button>
+										<div class="Tooltip" data-position="left">Secret 추가</div>
+									</div>
+									<div id="grid_secret"></div>
+								</div>
+
 							</div>
-							<div id="grid_secret"></div>
 						</div>
-						
-				    </div>
+					</div>
 				</div>
+				<!-- //contents -->
 			</div>
-		</div>
-		<!-- //contents -->
+			<!-- //main-contents -->
+		</th:block>
 	</div>
-	<!-- //main-contents -->
-	</th:block>
-</div>
 </body>
 </html>
 

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
+import com.skcc.cloudz.zcp.common.constants.ApiResult;
 import com.skcc.cloudz.zcp.common.constants.Result;
 import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
@@ -187,6 +188,63 @@ public class NamespaceController {
     @GetMapping(value = "/popSecretAdd", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String popSecretAdd(Model model) throws Exception {
 		return "content/management/namespace/pop/popSecretAdd";
+	}
+    
+    @GetMapping(value = "/getSecrets/{namespace}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String, Object> getSecrets(@PathVariable("namespace") String namespace) throws Exception {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+
+		try {
+			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
+			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
+			resultMap.put("resultData", namespaceService.getSecrets(namespace));
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			resultMap.put("resultCd", ApiResult.FAIL.getCode());
+			resultMap.put("resultMsg", e.getMessage());
+		}
+
+		return resultMap;
+	}
+	
+	@PostMapping(value = "/createDockerSecret", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String, Object> createDockerSecret(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		try {
+			System.out.println(params);
+			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
+			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
+//			resultMap.put("resultData", namespaceService.createDockerSecret(params));
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			resultMap.put("resultCd", ApiResult.FAIL.getCode());
+			resultMap.put("resultMsg", e.getMessage());
+		}
+
+		return resultMap;
+	}
+	
+	@PostMapping(value = "/createTlsSecret", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String, Object> createTlsSecret(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		try {
+			System.out.println(params);
+			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
+			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
+//			resultMap.put("resultData", namespaceService.createDockerSecret(params));
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			resultMap.put("resultCd", ApiResult.FAIL.getCode());
+			resultMap.put("resultMsg", e.getMessage());
+		}
+
+		return resultMap;
 	}
     
 }

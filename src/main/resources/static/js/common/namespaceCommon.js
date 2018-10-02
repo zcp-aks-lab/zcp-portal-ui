@@ -64,7 +64,7 @@ var secretPopup = {
 						alertPopup.alert({
 							width : 400,
 							height : 250,
-							message : 'Secret 저장되었습니다.',
+							message : 'Secret이 저장되었습니다.',
 							callback : function() {
 								_opts.callback(data);
 								location.reload();
