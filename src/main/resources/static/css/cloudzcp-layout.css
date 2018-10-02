@@ -2207,3 +2207,13 @@ a.grid:link    { text-decoration:none; color:blue }
 a.grid:visited { text-decoration:underline; color:#800080 }
 a.grid:hover   { text-decoration:underline; }
 a.grid:active  { text-decoration:underline; }
+
+/*
+ * download button and inner button group
+ */
+.input-group { position: relative; }
+.input-group textarea { overflow: auto; resize: none; padding: 15px; }
+.input-group .btn-group-inner { position: absolute; right: 25px; top: 0; margin-top: 10px; }
+
+.btn-ico.btn-download { top: 4px; height: 24px; background: transparent url(../images/icon_input_download.png) no-repeat 0 5px; }
+.btn-ico.btn-download:hover { background: transparent url(../images/icon_input_download.png) no-repeat -25px 5px; } 
