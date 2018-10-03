@@ -1,18 +1,23 @@
 package com.skcc.cloudz.zcp.portal.management.namespace.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,7 +25,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +41,7 @@ import com.skcc.cloudz.zcp.common.util.NumberUtil;
 import com.skcc.cloudz.zcp.portal.alert.channels.vo.ChannelDtlVo;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.DockerSecretVo;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.EnquryNamespaceVO;
+import com.skcc.cloudz.zcp.portal.management.namespace.vo.SecretTlsVO;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.SecretVo;
 import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
 import com.skcc.cloudz.zcp.portal.management.user.vo.ZcpNamespace;
@@ -41,9 +51,9 @@ import com.skcc.cloudz.zcp.portal.management.user.vo.ZcpNamespaceList;
 public class NamespaceService {
 
 	private final Logger logger = (Logger) LoggerFactory.getLogger(NamespaceService.class);
-	
+
 	@Value("${props.iam.baseUrl}")
-    private String iamBaseUrl;
+	private String iamBaseUrl;
 
 	@Autowired
 	private IamRestClient client;
@@ -373,10 +383,10 @@ public class NamespaceService {
 
 		return resultList;
 	}
-	
+
 	public DockerSecretVo createDockerSecret(Map<String, Object> params) {
-		String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path("/iam/namespace/{namespace}/secret/new/docker").buildAndExpand(params.get("pNamespace"))
-				.toString();
+		String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path("/iam/namespace/{namespace}/secret/new/docker")
+				.buildAndExpand(params.get("pNamespace")).toString();
 
 		DockerSecretVo dockerSecretParam = new DockerSecretVo();
 
@@ -384,14 +394,14 @@ public class NamespaceService {
 		dockerSecretParam.setName(params.get("pSecret_name").toString());
 		dockerSecretParam.setPassword(params.get("pDocker_password").toString());
 		dockerSecretParam.setServer(params.get("pDocker_server").toString());
-		
-		if("dr".equals(params.get("pDivision").toString()))  {
-			dockerSecretParam.setType("kubernetes.io/dockerconfigjson");	
+
+		if ("dr".equals(params.get("pDivision").toString())) {
+			dockerSecretParam.setType("kubernetes.io/dockerconfigjson");
 		} else {
 			dockerSecretParam.setType("kubernetes.io/tls");
 		}
 		dockerSecretParam.setUsername(params.get("pDocker_username").toString());
-		
+
 		HttpHeaders headers = new HttpHeaders();
 
 		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
@@ -400,7 +410,8 @@ public class NamespaceService {
 		HttpEntity<DockerSecretVo> entity = new HttpEntity<DockerSecretVo>(dockerSecretParam, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<DockerSecretVo> response = restTemplate.exchange(url, HttpMethod.PUT, entity, DockerSecretVo.class);
+		ResponseEntity<DockerSecretVo> response = restTemplate.exchange(url, HttpMethod.PUT, entity,
+				DockerSecretVo.class);
 
 		HttpStatus statusCode = response.getStatusCode();
 
@@ -410,6 +421,83 @@ public class NamespaceService {
 		}
 
 		return dockerSecretVo;
+	}
+
+	@SuppressWarnings("null")
+	public SecretTlsVO createTlsSecret(HttpServletRequest request) throws Exception {
+		String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path("/iam/namespace/{namespace}/secret/new/tls")
+				.buildAndExpand(request.getParameter("pNamespace")).toString();
+
+		System.out.println(request.getParameter("pNamespace"));
+		System.out.println(request.getParameter("pSecret_name"));
+
+		SecretTlsVO secretTlsParam = new SecretTlsVO();
+
+		secretTlsParam.setName(request.getParameter("pSecret_name"));
+
+		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
+		Iterator<String> iterator = multipartHttpServletRequest.getFileNames();
+		MultipartFile[] multipartFile = null;
+		
+		int count = 0;
+		while (iterator.hasNext()) {
+			multipartFile[count] = multipartHttpServletRequest.getFile(iterator.next());
+			count++;
+			// if (multipartFile.isEmpty() == false) {
+			// System.out.println("------------- file start -------------");
+			// System.out.println("name : " + multipartFile.getName());
+			// System.out.println("filename : " + multipartFile.getOriginalFilename());
+			// System.out.println("size : " + multipartFile.getSize());
+			// System.out.println("size : " + multipartFile.getBytes());
+			// System.out.println("-------------- file end --------------\n");
+			//
+			// }
+		}
+
+		System.out.println(multipartFile[0].getOriginalFilename());
+		System.out.println(multipartFile[1].getOriginalFilename());
+
+		ByteArrayResource crt = new ByteArrayResource(multipartFile[0].getBytes()) {
+			@Override
+			public String getFilename() {
+				return multipartFile[0].getOriginalFilename();
+			}
+		};
+
+		ByteArrayResource key = new ByteArrayResource(multipartFile[1].getBytes()) {
+			@Override
+			public String getFilename() {
+				return multipartFile[1].getOriginalFilename();
+			}
+		};
+
+		LinkedMultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
+
+		bodyMap.add("name", request.getParameter("pSecret_name"));
+		bodyMap.add("type", "kubernetes.io/tls");
+		bodyMap.add("crt", crt);
+		bodyMap.add("key", key);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+		HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<SecretTlsVO> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
+				SecretTlsVO.class);
+
+		HttpStatus statusCode = response.getStatusCode();
+
+		System.out.println("response status: " + response.getStatusCode());
+		System.out.println("response body: " + response.getBody());
+
+		SecretTlsVO secretTlsVO = null;
+		if (statusCode == HttpStatus.OK) {
+			secretTlsVO = response.getBody();
+		}
+
+		return secretTlsVO;
 	}
 
 }
