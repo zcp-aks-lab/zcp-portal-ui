@@ -11,7 +11,7 @@
       ],
       "namespaceRoles": [
         "admin",
-        "deploy-manager"
+        "cicd-manager"
       ]
     },
     "enable": true
@@ -28,7 +28,7 @@
       ],
       "namespaceRoles": [
         "admin",
-        "deploy-manager",
+        "cicd-manager",
         "developer"
       ]
     },
@@ -106,7 +106,7 @@
       ],
       "namespaceRoles": [
         "admin",
-        "deploy-manager",
+        "cicd-manager",
         "developer"
       ]
     },
@@ -124,7 +124,7 @@
       ],
       "namespaceRoles": [
         "admin",
-        "deploy-manager",
+        "cicd-manager",
         "developer"
       ]
     },
@@ -188,7 +188,7 @@
       ],
       "namespaceRoles": [
         "admin",
-        "deploy-manager",
+        "cicd-manager",
         "developer"
       ]
     },
@@ -241,7 +241,7 @@
       ],
       "namespaceRoles": [
         "admin",
-        "deploy-manager",
+        "cicd-manager",
         "developer"
       ]
     },
