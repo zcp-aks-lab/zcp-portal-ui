@@ -39,10 +39,10 @@ import com.skcc.cloudz.zcp.common.constants.ApiResult;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.common.util.NumberUtil;
 import com.skcc.cloudz.zcp.portal.alert.channels.vo.ChannelDtlVo;
-import com.skcc.cloudz.zcp.portal.management.namespace.vo.DockerSecretVo;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.EnquryNamespaceVO;
+import com.skcc.cloudz.zcp.portal.management.namespace.vo.SecretDockerVO;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.SecretTlsVO;
-import com.skcc.cloudz.zcp.portal.management.namespace.vo.SecretVo;
+import com.skcc.cloudz.zcp.portal.management.namespace.vo.SecretVO;
 import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
 import com.skcc.cloudz.zcp.portal.management.user.vo.ZcpNamespace;
 import com.skcc.cloudz.zcp.portal.management.user.vo.ZcpNamespaceList;
@@ -325,7 +325,7 @@ public class NamespaceService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<SecretVo> getSecrets(String namespace) throws Exception {
+	public List<SecretVO> getSecrets(String namespace) throws Exception {
 		ApiResponseVo response = client.request(HttpMethod.GET, "/iam/namespace/" + namespace + "/secrets", null);
 
 		if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
@@ -335,25 +335,25 @@ public class NamespaceService {
 		Map<String, Object> data = response.getData();
 		List<HashMap<String, Object>> items = (List<HashMap<String, Object>>) data.get("items");
 
-		List<SecretVo> resultList = new ArrayList<SecretVo>();
+		List<SecretVO> resultList = new ArrayList<SecretVO>();
 
 		for (HashMap<String, Object> item : items) {
-			SecretVo secretVo = new SecretVo();
+			SecretVO secretVO = new SecretVO();
 
-			secretVo.setName(((HashMap<String, Object>) item.get("metadata")).get("name").toString());
+			secretVO.setName(((HashMap<String, Object>) item.get("metadata")).get("name").toString());
 
 			if ("kubernetes.io/dockerconfigjson".equals(item.get("type"))) {
-				secretVo.setType("Docker Registry");
+				secretVO.setType("Docker Registry");
 			} else if ("kubernetes.io/tls".equals(item.get("type"))) {
-				secretVo.setType("TLS");
+				secretVO.setType("TLS");
 			} else {
-				secretVo.setType("");
+				secretVO.setType("");
 			}
 
 			if (((HashMap<String, Object>) item.get("metadata")).get("labels") != null) {
-				secretVo.setLabel(((HashMap<String, Object>) item.get("metadata")).get("labels").toString());
+				secretVO.setLabel(((HashMap<String, Object>) item.get("metadata")).get("labels").toString());
 			} else {
-				secretVo.setLabel("");
+				secretVO.setLabel("");
 			}
 			String date = ((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata"))
 					.get("creationTimestamp")).get("year")
@@ -377,48 +377,48 @@ public class NamespaceService {
 					+ String.format("%02d", ((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata"))
 							.get("creationTimestamp")).get("secondOfMinute"));
 
-			secretVo.setDate(date);
-			resultList.add(secretVo);
+			secretVO.setDate(date);
+			resultList.add(secretVO);
 		}
 
 		return resultList;
 	}
 
-	public DockerSecretVo createDockerSecret(Map<String, Object> params) {
+	public SecretDockerVO createDockerSecret(Map<String, Object> params) {
 		String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path("/iam/namespace/{namespace}/secret/new/docker")
 				.buildAndExpand(params.get("pNamespace")).toString();
 
-		DockerSecretVo dockerSecretParam = new DockerSecretVo();
+		SecretDockerVO secretDockerParam = new SecretDockerVO();
 
-		dockerSecretParam.setEmail(params.get("pDocker_email").toString());
-		dockerSecretParam.setName(params.get("pSecret_name").toString());
-		dockerSecretParam.setPassword(params.get("pDocker_password").toString());
-		dockerSecretParam.setServer(params.get("pDocker_server").toString());
-		dockerSecretParam.setType("kubernetes.io/dockerconfigjson");
-		dockerSecretParam.setUsername(params.get("pDocker_username").toString());
+		secretDockerParam.setEmail(params.get("pDocker_email").toString());
+		secretDockerParam.setName(params.get("pSecret_name").toString());
+		secretDockerParam.setPassword(params.get("pDocker_password").toString());
+		secretDockerParam.setServer(params.get("pDocker_server").toString());
+		secretDockerParam.setType("kubernetes.io/dockerconfigjson");
+		secretDockerParam.setUsername(params.get("pDocker_username").toString());
 
 		HttpHeaders headers = new HttpHeaders();
 
 		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		HttpEntity<DockerSecretVo> entity = new HttpEntity<DockerSecretVo>(dockerSecretParam, headers);
+		HttpEntity<SecretDockerVO> entity = new HttpEntity<SecretDockerVO>(secretDockerParam, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<DockerSecretVo> response = restTemplate.exchange(url, HttpMethod.POST, entity,
-				DockerSecretVo.class);
+		ResponseEntity<SecretDockerVO> response = restTemplate.exchange(url, HttpMethod.POST, entity,
+				SecretDockerVO.class);
 
 		HttpStatus statusCode = response.getStatusCode();
 
-		DockerSecretVo dockerSecretVo = null;
+		SecretDockerVO secretDockerVO = null;
 		if (statusCode == HttpStatus.OK) {
-			dockerSecretVo = response.getBody();
+			secretDockerVO = response.getBody();
 		}
 
-		return dockerSecretVo;
+		return secretDockerVO;
 	}
 
-	public SecretTlsVO createTlsSecret(HttpServletRequest request) throws Exception {
+	public String createTlsSecret(HttpServletRequest request) throws Exception {
 		String param = "?name=" + request.getParameter("pSecret_name") + "&type=kubernetes.io/tls";
 
 		String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
@@ -476,14 +476,14 @@ public class NamespaceService {
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
 				String.class);
 
-//		HttpStatus statusCode = response.getStatusCode();
+		HttpStatus statusCode = response.getStatusCode();
 
-//		SecretTlsVO secretTlsVO = null;
-//		if (statusCode == HttpStatus.OK) {
-//			secretTlsVO = response.getBody();
-//		}
+		String resultSecretTls = "";
+		if (statusCode == HttpStatus.OK) {
+			resultSecretTls = response.getBody();
+		}
 
-		return null;
+		return resultSecretTls;
 	}
 
 }
