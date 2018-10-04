@@ -733,8 +733,6 @@
 								.alopexGrid(
 										{
 											pager : true,
-											alwaysShowVerticalScrollBar: false,
-											alwaysShowHorizontalScrollBar: false,
 											fitTableWidth : true,
 											filteringHeader : false,
 											filter : {
@@ -753,13 +751,13 @@
 												sortingDirection : 'desc'
 											},
 											defaultColumnMapping : {
-												sorting : true
+												sorting : true,
+												resizing : true
 											},
 											message : {
 												nodata : '데이타가 없습니다.'
 											},
 											enableDefaultContextMenu : false,
-											autoResize: true,
 											autoColumnIndex : true,
 											columnMapping : [
 													{
@@ -819,7 +817,7 @@
 				}, 
 				event : {
 					init : function() {
-						$('#keyword').on(
+						$('#btnSearch').on(
 								'click',
 								function() {
 									var customFilter = null;
@@ -835,7 +833,7 @@
 									$("#grid_secret").alopexGrid('setFilter',
 											'customFilter', customFilter);
 								});
-						$('#btnSearch')
+						$('#keyword')
 								.on(
 										'keydown',
 										function(e) {
@@ -856,6 +854,7 @@
 														'customFilter', customFilter);
 											}
 										});
+						
 					}
 				}
 			}
@@ -867,10 +866,10 @@
 	<div class="cp-wrapper">
 		<th:block layout:fragment="content">
 			<textarea id="customFunction" style="display: none;">
-		function(data) {
-			return data['name'].toLowerCase().indexOf($("#keyword").val().toLowerCase()) >= 0;
-		}
-	</textarea>
+				function(data) {
+					return data['name'].toLowerCase().indexOf($("#keyword").val().toLowerCase()) >= 0;
+				}
+			</textarea>
 			<!-- main-contents -->
 			<div class="cp-container">
 				<!-- contents -->
