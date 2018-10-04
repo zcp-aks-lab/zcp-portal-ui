@@ -27,7 +27,7 @@
   			}
   			getClusterRole();
   			registEvent();
- 			setView();
+//  			setView();
         	 
  			/**********************
 	       	 SECRETS
@@ -107,9 +107,12 @@
 					setGraph('load_balancers', data.usage.servicesLoadbalancersUsage, quota.servicesLoadbalancers);
 				}
 				
+				setView();
 			});
 			url = "/management/namespace/labels";
 			ajaxCall(url, {"namespace" : namespace}).done(function(data){
+				var isClusterAdmin = /*[[${view}]]*/;
+				
 				if(data.items){
 					var html='';
 					$.each(data.items, function(idx, data){
@@ -120,7 +123,7 @@
 				}
 				function makeHtmlLabel(name){
 					var html = '<span class="Label Default" >'+name+'</span>';
-					if(!(name.indexOf('cloudzcp.io/zcp-system=') > -1))
+					if(isClusterAdmin && !(name.indexOf('cloudzcp.io/zcp-system=') > -1))
 						html +='<button class="btn-ico label-del" onclick="delLabel(\''+name+'\')">삭제</button>';
 					return html;
 				}
@@ -162,26 +165,13 @@
 		}
 		
 		function setView(){
-			var isAuth = /*[[${view}]]*/;
-			if(!isAuth){
+			var isClusterAdmin = /*[[${view}]]*/;
+			if(!isClusterAdmin){
 				$('#div_btnSave').hide();
 				$('#btn_addLabel').hide();
 				$('#input_label').hide();
-				convertText();
+				$('#div_resource').find('input, .Divselect').setEnabled(false);
 			}
-		}
-		
-		function convertText(){
-			$.each($('#div_resource').find('input'), function(element, idx){
-				$(this).append('<span>'+$(this).val()+'</span>');
-				$(this).hide();
-			});
-			
-			$.each($('#div_resource').find('.Divselect'), function(element, idx){
-				var val = $(this).getTexts()[0];
-				$(this).append('<span>'+val+'</span>');
-				$(this).hide();
-			});
 		}
 		
 		function registEvent(){
