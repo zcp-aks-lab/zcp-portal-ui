@@ -176,7 +176,7 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
         String ret = StringUtils.EMPTY;
         
         if (namespace.equals("edit")) {
-            ret = "deploy-manager";
+            ret = "cicd-manager";
         } else if (namespace.equals("view")) {
             ret = "developer";
         } else if (namespace.equals("admin")) {
