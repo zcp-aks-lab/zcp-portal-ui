@@ -203,7 +203,7 @@
     "sub": [
       {
         "id": "initialize",
-        "name": "시작하기",
+        "name": "Cloud Z CP 소개",
         "order": 1,
         "url": "/guide/initialize",
         "target": "self",
@@ -213,7 +213,7 @@
         "id": "document",
         "name": "사용자 가이드",
         "order": 2,
-        "url": "https://support.cloudz.co.kr",
+        "url": "https://support.cloudz.co.kr/support/solutions",
         "target": "blank",
         "enable": true
       },
@@ -221,7 +221,7 @@
         "id": "qna",
         "name": "문의 및 지원",
         "order": 3,
-        "url": "https://support.cloudz.co.kr",
+        "url": "https://support.cloudz.co.kr/support/tickets/new",
         "target": "blank",
         "enable": true
       },
