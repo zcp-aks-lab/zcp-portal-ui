@@ -362,7 +362,7 @@
 	    	//user
 	    	function initData(data){
 	    		$.each(data, function(idx, row){
-	    			row.namespacedRole = 'view';
+	    			row.namespacedRole = g_clusterRole && g_clusterRole[g_clusterRole.length-1].value || 'developer';
 	    		});
 	    		return data;
 	    	}
@@ -1115,7 +1115,7 @@
 															</td>
 														</tr>
 														<tr>
-															<th>Persistent Volumne<br />Claims
+															<th>Persistent Volume<br />Claims
 															</th>
 															<td>
 																<div class="tbl-group__wrap">
