@@ -60,7 +60,7 @@ public class MainController {
         model.addAttribute("selectedNamespace", selectedNamespace);
         authUserComponent.setNamespace(selectedNamespace);
         
-        if (StringUtils.isEmpty(selectedNamespace)) {
+        if (!clusterRole.equals(ClusterRole.CLUSTER_ADMIN.getName()) && StringUtils.isEmpty(selectedNamespace)) {
             return "redirect:/guide/initialize";
         }
         
