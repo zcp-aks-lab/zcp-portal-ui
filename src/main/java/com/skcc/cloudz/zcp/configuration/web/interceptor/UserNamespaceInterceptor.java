@@ -29,7 +29,6 @@ public class UserNamespaceInterceptor extends HandlerInterceptorAdapter {
             ZcpUserVo zcpUserVo = userService.getUser(SecurityService.getUserId());
             
             modelAndView.addObject("userNamespaces", zcpUserVo.getNamespaces());
-            modelAndView.addObject("userDefaultNamespace", zcpUserVo.getDefaultNamespace());    
         }
     }
 

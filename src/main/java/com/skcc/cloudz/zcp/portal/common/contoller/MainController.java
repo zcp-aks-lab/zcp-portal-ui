@@ -55,8 +55,14 @@ public class MainController {
             selectedNamespace = StringUtils.isEmpty(selectedNamespace) ? defaultNamespace : selectedNamespace;
         }
         
+        log.info(" ======================== > selectedNamespace : {}", selectedNamespace);
+        
         model.addAttribute("selectedNamespace", selectedNamespace);
         authUserComponent.setNamespace(selectedNamespace);
+        
+        if (StringUtils.isEmpty(selectedNamespace)) {
+            return "redirect:/guide/initialize";
+        }
         
         return "content/main";
     }

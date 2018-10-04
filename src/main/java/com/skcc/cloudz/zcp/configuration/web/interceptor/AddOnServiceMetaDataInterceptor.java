@@ -75,7 +75,6 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
         
         modelAndView.addObject("activePathInfo", this.getAddOnServiceActivePathInfo(requestURI));
         modelAndView.addObject("addOnServiceMetaList", this.getAddOnServiceMetaData());
-        
     }
     
     public List<AddOnServiceMataVo> getAddOnServiceMetaData () {
@@ -83,26 +82,31 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
         
         try {
             String roleType = this.getUserRoleType();
+            log.info("===> roleType : {}", roleType);
             
             if (authUserComponent.getAddOnServiceMetaData(roleType) == null) {
                 List<AddOnServiceMataVo> addOnServiceMataList = this.getAddOnServiceMetaDataFileLoad();
                 
-                for (AddOnServiceMataVo addOnServiceMataVo : addOnServiceMataList) {
-                    List<String> roles = roleType.equals(ClusterRole.CLUSTER_ADMIN.getName()) ? addOnServiceMataVo.getRole().getClusterRoles() : addOnServiceMataVo.getRole().getNamespaceRoles();
+                for (AddOnServiceMataVo a : addOnServiceMataList) {
+                    List<String> roles = null;
+                    if (roleType.equals(ClusterRole.CLUSTER_ADMIN.getName()) || roleType.equals(ClusterRole.MEMBER.getName())) {
+                        roles = a.getRole().getClusterRoles();
+                    } else {
+                        roles = a.getRole().getNamespaceRoles();
+                    }
                     
                     for (String role : roles) {
-                        if (roleType.equals(role) && addOnServiceMataVo.isEnable()) {
-                            AddOnServiceMataVoList.add(this.getAddOnServiceMetaDataSub(addOnServiceMataVo));        
+                        if (roleType.equals(role) && a.isEnable()) {
+                            AddOnServiceMataVoList.add(this.getAddOnServiceMetaDataSub(a));        
                         }
                     }
                 }
+                Collections.sort(AddOnServiceMataVoList);
                 
                 authUserComponent.putAddOnServiceMetaData(roleType, AddOnServiceMataVoList);
             } else {
                 AddOnServiceMataVoList = (List<AddOnServiceMataVo>) authUserComponent.getAddOnServiceMetaData(roleType);
             }
-            
-            Collections.sort(AddOnServiceMataVoList);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -119,7 +123,12 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
         if (clusterRole.equals(ClusterRole.CLUSTER_ADMIN.getName())) {
             type = ClusterRole.CLUSTER_ADMIN.getName();
         } else if (clusterRole.equals(ClusterRole.MEMBER.getName())) {
-            type = this.getNamespaceRole();
+            String namespace = authUserComponent.getNamespace();
+            if (StringUtils.isEmpty(namespace)) {
+                type = ClusterRole.MEMBER.getName();
+            } else {
+                type = this.getNamespaceRole();    
+            }
         }
         
         return type;
@@ -131,10 +140,6 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
         
         try {
             String profile = CommonUtil.getInstance().getProfile(environment);
-            log.info("===> profile : {}", profile);
-            
-            inputStream = AddOnServiceMetaDataInterceptor.class.getClassLoader().getResourceAsStream("addOnServiceMetaData.json");
-            
             if (profile.equals(ZcpEnviroment.LOCAL.getName()) ||  profile.equals(ZcpEnviroment.DEV.getName())) {
                 inputStream = AddOnServiceMetaDataInterceptor.class.getClassLoader().getResourceAsStream("addOnServiceMetaData.json");
             } else {
@@ -154,6 +159,7 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
     public String getNamespaceRole() throws ZcpPortalException {
         String id = securityService.getUserDetails().getUserId();
         String namespace = authUserComponent.getNamespace();
+        log.info("namespace : {}", namespace);
         
         ApiResponseVo apiResponseVo = iamApiService.getNamespaceRoleBinding(namespace, id);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
@@ -173,8 +179,10 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
             ret = "deploy-manager";
         } else if (namespace.equals("view")) {
             ret = "developer";
-        } else {
+        } else if (namespace.equals("admin")) {
             ret = "admin";
+        } else {
+            ret = namespace;
         }
         
         return ret;
