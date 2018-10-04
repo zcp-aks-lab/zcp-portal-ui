@@ -394,12 +394,7 @@ public class NamespaceService {
 		dockerSecretParam.setName(params.get("pSecret_name").toString());
 		dockerSecretParam.setPassword(params.get("pDocker_password").toString());
 		dockerSecretParam.setServer(params.get("pDocker_server").toString());
-
-		if ("dr".equals(params.get("pDivision").toString())) {
-			dockerSecretParam.setType("kubernetes.io/dockerconfigjson");
-		} else {
-			dockerSecretParam.setType("kubernetes.io/tls");
-		}
+		dockerSecretParam.setType("kubernetes.io/dockerconfigjson");
 		dockerSecretParam.setUsername(params.get("pDocker_username").toString());
 
 		HttpHeaders headers = new HttpHeaders();
@@ -410,7 +405,7 @@ public class NamespaceService {
 		HttpEntity<DockerSecretVo> entity = new HttpEntity<DockerSecretVo>(dockerSecretParam, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<DockerSecretVo> response = restTemplate.exchange(url, HttpMethod.PUT, entity,
+		ResponseEntity<DockerSecretVo> response = restTemplate.exchange(url, HttpMethod.POST, entity,
 				DockerSecretVo.class);
 
 		HttpStatus statusCode = response.getStatusCode();
@@ -423,58 +418,52 @@ public class NamespaceService {
 		return dockerSecretVo;
 	}
 
-	@SuppressWarnings("null")
 	public SecretTlsVO createTlsSecret(HttpServletRequest request) throws Exception {
-		String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path("/iam/namespace/{namespace}/secret/new/tls")
-				.buildAndExpand(request.getParameter("pNamespace")).toString();
+		String param = "?name=" + request.getParameter("pSecret_name") + "&type=kubernetes.io/tls";
 
-		System.out.println(request.getParameter("pNamespace"));
-		System.out.println(request.getParameter("pSecret_name"));
+		String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+				.path("/iam/namespace/{namespace}/secret/new/tls" + param)
+				.buildAndExpand(request.getParameter("pNamespace")).toString();
 
 		SecretTlsVO secretTlsParam = new SecretTlsVO();
 
-		secretTlsParam.setName(request.getParameter("pSecret_name"));
-
 		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
 		Iterator<String> iterator = multipartHttpServletRequest.getFileNames();
-		MultipartFile[] multipartFile = null;
-		
+		MultipartFile multipartFile = null;
+
 		int count = 0;
 		while (iterator.hasNext()) {
-			multipartFile[count] = multipartHttpServletRequest.getFile(iterator.next());
+			multipartFile = multipartHttpServletRequest.getFile(iterator.next());
+
+			if (multipartFile.isEmpty() == false) {
+				if (count == 0) {
+					secretTlsParam.setCrt(multipartFile.getBytes());
+					secretTlsParam.setCrtFileName(multipartFile.getOriginalFilename());
+
+				} else {
+					secretTlsParam.setKey(multipartFile.getBytes());
+					secretTlsParam.setKeyFileName(multipartFile.getOriginalFilename());
+				}
+			}
 			count++;
-			// if (multipartFile.isEmpty() == false) {
-			// System.out.println("------------- file start -------------");
-			// System.out.println("name : " + multipartFile.getName());
-			// System.out.println("filename : " + multipartFile.getOriginalFilename());
-			// System.out.println("size : " + multipartFile.getSize());
-			// System.out.println("size : " + multipartFile.getBytes());
-			// System.out.println("-------------- file end --------------\n");
-			//
-			// }
 		}
 
-		System.out.println(multipartFile[0].getOriginalFilename());
-		System.out.println(multipartFile[1].getOriginalFilename());
-
-		ByteArrayResource crt = new ByteArrayResource(multipartFile[0].getBytes()) {
+		ByteArrayResource crt = new ByteArrayResource(secretTlsParam.getCrt()) {
 			@Override
 			public String getFilename() {
-				return multipartFile[0].getOriginalFilename();
+				return secretTlsParam.getCrtFileName();
 			}
 		};
 
-		ByteArrayResource key = new ByteArrayResource(multipartFile[1].getBytes()) {
+		ByteArrayResource key = new ByteArrayResource(secretTlsParam.getKey()) {
 			@Override
 			public String getFilename() {
-				return multipartFile[1].getOriginalFilename();
+				return secretTlsParam.getKeyFileName();
 			}
 		};
 
 		LinkedMultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
 
-		bodyMap.add("name", request.getParameter("pSecret_name"));
-		bodyMap.add("type", "kubernetes.io/tls");
 		bodyMap.add("crt", crt);
 		bodyMap.add("key", key);
 
@@ -484,20 +473,17 @@ public class NamespaceService {
 		HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<SecretTlsVO> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
-				SecretTlsVO.class);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
+				String.class);
 
-		HttpStatus statusCode = response.getStatusCode();
+//		HttpStatus statusCode = response.getStatusCode();
 
-		System.out.println("response status: " + response.getStatusCode());
-		System.out.println("response body: " + response.getBody());
+//		SecretTlsVO secretTlsVO = null;
+//		if (statusCode == HttpStatus.OK) {
+//			secretTlsVO = response.getBody();
+//		}
 
-		SecretTlsVO secretTlsVO = null;
-		if (statusCode == HttpStatus.OK) {
-			secretTlsVO = response.getBody();
-		}
-
-		return secretTlsVO;
+		return null;
 	}
 
 }

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -222,7 +223,6 @@ public class NamespaceController {
 	public Map<String, Object> createDockerSecret(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
-			System.out.println(params);
 			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
 			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
 			resultMap.put("resultData", namespaceService.createDockerSecret(params));
@@ -243,7 +243,7 @@ public class NamespaceController {
 		try {
 			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
 			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
-//			resultMap.put("resultData", namespaceService.createTlsSecret(request));
+			resultMap.put("resultData", namespaceService.createTlsSecret(request));
 		} catch (Exception e) {
 			e.printStackTrace();
 
