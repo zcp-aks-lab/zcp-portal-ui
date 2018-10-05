@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpNodeVo;
+import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
 import com.skcc.cloudz.zcp.common.component.AuthUserComponent;
 import com.skcc.cloudz.zcp.common.constants.ClusterRole;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.portal.common.service.MainService;
+import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
 
 @Controller
 public class MainController {
@@ -38,31 +40,41 @@ public class MainController {
     @Autowired
     private AuthUserComponent authUserComponent;
     
+    @Autowired
+    private UserService userService;
+    
     @GetMapping(value = {"/main", "/"}, consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String main(@RequestParam(required = false, value = "namespace") String namespace, Model model) throws Exception {
         String clusterRole = SecurityService.getUserDetail().getClusterRole();
-        if (clusterRole == null) {
-            return "redirect:/guide/initialize";
-        } 
+        if (clusterRole == null) return "redirect:/guide/initialize";
         
         if (log.isInfoEnabled()) {
             log.info("request namespace : {}, getSelectedNamespace : {}, session namespace : {}", namespace, this.getSelectedNamespace(namespace), authUserComponent.getNamespace());    
         }
         
         String selectedNamespace = this.getSelectedNamespace(namespace);
-        if (!clusterRole.equals(ClusterRole.CLUSTER_ADMIN.getName())) {
+        if (clusterRole.equals(ClusterRole.MEMBER.getName())) {
             String defaultNamespace = SecurityService.getUserDetail().getDefaultNamespace();
             selectedNamespace = StringUtils.isEmpty(selectedNamespace) ? defaultNamespace : selectedNamespace;
+            
+            if (StringUtils.isEmpty(selectedNamespace)) {
+                ZcpUserVo zcpUserVo = userService.getUser(SecurityService.getUserId());
+                
+                if (zcpUserVo != null && !zcpUserVo.getNamespaces().isEmpty()) {
+                    String firstNamespace = StringUtils.EMPTY;
+                    for (String ns : zcpUserVo.getNamespaces()) {
+                        firstNamespace = ns; break;
+                    }
+                    
+                    selectedNamespace = firstNamespace;
+                } else {
+                    return "redirect:/guide/initialize";
+                }
+            }
         }
-        
-        log.info(" ======================== > selectedNamespace : {}", selectedNamespace);
         
         model.addAttribute("selectedNamespace", selectedNamespace);
         authUserComponent.setNamespace(selectedNamespace);
-        
-        if (!clusterRole.equals(ClusterRole.CLUSTER_ADMIN.getName()) && StringUtils.isEmpty(selectedNamespace)) {
-            return "redirect:/guide/initialize";
-        }
         
         return "content/main";
     }

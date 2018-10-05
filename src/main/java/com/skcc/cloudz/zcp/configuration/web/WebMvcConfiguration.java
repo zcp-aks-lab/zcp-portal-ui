@@ -27,11 +27,12 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(addOnServiceMetaDataInterceptor()).addPathPatterns(new String[] { "/*", "/**/*" })
-                .excludePathPatterns(new String[] { "/static/**", "/error/**" });
+        registry.addInterceptor(addOnServiceMetaDataInterceptor())
+            .addPathPatterns(new String[] { "/*", "/**/*" })
+            .excludePathPatterns(new String[] { "/static/**", "/error/**", "/common/**" });
         registry.addInterceptor(userNamespaceInterceptor())
-                .addPathPatterns(new String[] { "/my/*", "/", "/main", "/management/**", "/alert/**", "/guide/**"})
-                .excludePathPatterns(new String[] { "/static/**", "/error/**" });
+            .addPathPatterns(new String[] { "/my/*", "/", "/main", "/management/**", "/alert/**", "/guide/**" })
+            .excludePathPatterns(new String[] { "/static/**", "/error/**", "/common/**" });
     }
 
     @Override
@@ -40,13 +41,13 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
                 .allowedHeaders("Content-Type").allowCredentials(false).maxAge(3600);
     }
 
-	@Override
-	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addViewController("/management/namespace/pop/popNamespaceDel.html")
-				.setViewName("content/management/namespace/pop/popNamespaceDel");
-		
-		registry.addViewController("/management/namespace/pop/popUserCreate.html")
-		.setViewName("content/management/namespace/pop/popUserCreate");
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/management/namespace/pop/popNamespaceDel.html")
+                .setViewName("content/management/namespace/pop/popNamespaceDel");
+
+        registry.addViewController("/management/namespace/pop/popUserCreate.html")
+                .setViewName("content/management/namespace/pop/popUserCreate");
 
         registry.addViewController("/common/popup/popup").setViewName("common/popup/popup");
     }

@@ -164,12 +164,13 @@ public class UserService {
         return namespaces;
     }
     
+    @SuppressWarnings("unchecked")
     public void createRoleBinding(UserVo userVo) throws Exception  {
         HashMap<String, Object> reqMap = new HashMap<String, Object>();
         reqMap.put("clusterRole", userVo.getClusterRole());
         reqMap.put("username", userVo.getUsername());
         
-        /*ApiResponseVo res = iamApiService.getRoleBindings(userVo.getId());
+        ApiResponseVo res = iamApiService.getRoleBindings(userVo.getId());
         
         Map<String, Object> data = res.getData();
         List<HashMap<String, Object>> items = (List<HashMap<String, Object>>) data.get("items");
@@ -179,7 +180,7 @@ public class UserService {
             if (namespace.equals(userVo.getNamespace())) {
                 throw new ZcpPortalException(namespace + "는 Namespace 권한이 등록되어있습니다.");    
             }
-        }*/
+        }
         
         ApiResponseVo apiResponseVo = iamApiService.createRoleBinding(userVo.getNamespace(), reqMap);
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
@@ -221,6 +222,19 @@ public class UserService {
         if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
             throw new ZcpPortalException(apiResponseVo);
         }
+    }
+    
+    @SuppressWarnings("unchecked")
+    public String getNamespaceRole(String namespace, String id) throws Exception {
+        ApiResponseVo apiResponseVo = iamApiService.getNamespaceRoleBinding(namespace, id);
+        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new ZcpPortalException(apiResponseVo);
+        }
+        
+        String namespaceRole = ((HashMap<String, Object>) apiResponseVo.getData().get("roleRef")).get("name").toString();
+        if (log.isInfoEnabled()) log.info(" ====> namespaceRole : {}", namespaceRole);
+        
+        return namespaceRole;
     }
 
 }

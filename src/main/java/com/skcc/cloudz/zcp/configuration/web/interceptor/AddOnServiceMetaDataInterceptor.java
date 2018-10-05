@@ -25,17 +25,14 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
-import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
 import com.skcc.cloudz.zcp.common.component.AuthUserComponent;
-import com.skcc.cloudz.zcp.common.constants.ApiResult;
 import com.skcc.cloudz.zcp.common.constants.ClusterRole;
 import com.skcc.cloudz.zcp.common.constants.ZcpEnviroment;
 import com.skcc.cloudz.zcp.common.domain.vo.AddOnServiceMataSubVo;
 import com.skcc.cloudz.zcp.common.domain.vo.AddOnServiceMataVo;
-import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.common.util.CommonUtil;
+import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
 
 public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
     
@@ -54,10 +51,10 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
     private SecurityService securityService;
     
     @Autowired
-    private IamApiService iamApiService;
+    private AuthUserComponent authUserComponent;
     
     @Autowired
-    private AuthUserComponent authUserComponent;
+    private UserService userService;
     
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
@@ -114,7 +111,7 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
         return AddOnServiceMataVoList;
     }
     
-    public String getUserRoleType() throws ZcpPortalException {
+    public String getUserRoleType() throws Exception {
         String type = StringUtils.EMPTY;
         
         String clusterRole = securityService.getUserDetails().getClusterRole();
@@ -124,10 +121,12 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
             type = ClusterRole.CLUSTER_ADMIN.getName();
         } else if (clusterRole.equals(ClusterRole.MEMBER.getName())) {
             String namespace = authUserComponent.getNamespace();
+            String id = securityService.getUserDetails().getUserId();
+            
             if (StringUtils.isEmpty(namespace)) {
                 type = ClusterRole.MEMBER.getName();
             } else {
-                type = this.getNamespaceRole();    
+                type = userService.getNamespaceRole(namespace, id);
             }
         }
         
@@ -153,39 +152,6 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
         }
         
         return addOnServiceMataList;
-    }
-    
-    @SuppressWarnings("unchecked")
-    public String getNamespaceRole() throws ZcpPortalException {
-        String id = securityService.getUserDetails().getUserId();
-        String namespace = authUserComponent.getNamespace();
-        log.info("namespace : {}", namespace);
-        
-        ApiResponseVo apiResponseVo = iamApiService.getNamespaceRoleBinding(namespace, id);
-        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
-            throw new ZcpPortalException(apiResponseVo);
-        }
-        
-        String namespaceRole = ((HashMap<String, Object>) apiResponseVo.getData().get("roleRef")).get("name").toString();
-        log.info("===> namespaceRole : {}", namespaceRole);
-        
-        return getChangeNamespace(namespaceRole);
-    }
-    
-    public String getChangeNamespace(String namespace) {
-        String ret = StringUtils.EMPTY;
-        
-        if (namespace.equals("edit")) {
-            ret = "cicd-manager";
-        } else if (namespace.equals("view")) {
-            ret = "developer";
-        } else if (namespace.equals("admin")) {
-            ret = "admin";
-        } else {
-            ret = namespace;
-        }
-        
-        return ret;
     }
     
     public AddOnServiceMataVo getAddOnServiceMetaDataSub(AddOnServiceMataVo addOnServiceMataVo) {
