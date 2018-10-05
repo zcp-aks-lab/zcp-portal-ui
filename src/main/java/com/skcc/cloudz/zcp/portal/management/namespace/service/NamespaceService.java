@@ -1,6 +1,5 @@
 package com.skcc.cloudz.zcp.portal.management.namespace.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,7 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -38,12 +37,12 @@ import com.skcc.cloudz.zcp.api.iam.service.impl.IamRestClient;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.common.util.NumberUtil;
-import com.skcc.cloudz.zcp.portal.alert.channels.vo.ChannelDtlVo;
+import com.skcc.cloudz.zcp.portal.alert.rules.vo.RuleVo;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.EnquryNamespaceVO;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.SecretDockerVO;
+import com.skcc.cloudz.zcp.portal.management.namespace.vo.SecretDtlVO;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.SecretTlsVO;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.SecretVO;
-import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
 import com.skcc.cloudz.zcp.portal.management.user.vo.ZcpNamespace;
 import com.skcc.cloudz.zcp.portal.management.user.vo.ZcpNamespaceList;
 
@@ -473,8 +472,7 @@ public class NamespaceService {
 		HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
-				String.class);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
 
 		HttpStatus statusCode = response.getStatusCode();
 
@@ -484,6 +482,98 @@ public class NamespaceService {
 		}
 
 		return resultSecretTls;
+	}
+
+	@SuppressWarnings("unchecked")
+	public SecretDtlVO getSecretDtl(String namespace, String secret) throws Exception {
+		String param = "?namespace=" + namespace + "&secret=" + secret;
+
+		String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+				.path("/iam/namespace/{namespace}/secret/{secret}" + param).buildAndExpand(namespace, secret)
+				.toString();
+
+		ApiResponseVo response = new ApiResponseVo();
+
+		try {
+			HttpEntity<String> requestEntity = null;
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+
+			requestEntity = new HttpEntity<String>(headers);
+
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<ApiResponseVo> entity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,
+					ApiResponseVo.class);
+
+			if (entity != null && entity.getStatusCode() == HttpStatus.OK) {
+				response.setCode(entity.getBody().getCode());
+				response.setMsg(entity.getBody().getMsg());
+				response.setData(entity.getBody().getData());
+			}
+		} catch (RestClientException e) {
+			e.printStackTrace();
+		}
+
+		if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
+			throw new Exception(response.getMsg());
+		}
+
+		Map<String, Object> data = response.getData();
+
+		SecretDtlVO secretDtlVO = new SecretDtlVO();
+		secretDtlVO.setType(data.get("type").toString());
+
+		if ("kubernetes.io/dockerconfigjson".equals(data.get("type"))) {
+			secretDtlVO.setServer(((HashMap<String, Object>) data.get("stringData")).get("server").toString());
+			secretDtlVO.setUsername(((HashMap<String, Object>) data.get("stringData")).get("username").toString());
+			secretDtlVO.setPassword(((HashMap<String, Object>) data.get("stringData")).get("password").toString());
+			secretDtlVO.setEmail(((HashMap<String, Object>) data.get("stringData")).get("email").toString());
+
+		} else if ("kubernetes.io/tls".equals(data.get("type"))) {
+			String removeStr = "/iam/namespace/" + namespace + "/secret/" + secret + "/data/";
+			
+			secretDtlVO.setCrtFile(((HashMap<String, Object>) data.get("stringData")).get("tls.crt").toString()
+					.replaceAll(removeStr, ""));
+			secretDtlVO.setKeyFile(((HashMap<String, Object>) data.get("stringData")).get("tls.key").toString()
+					.replaceAll(removeStr, ""));
+
+			String fileDir = UriComponentsBuilder.fromUriString(iamBaseUrl)
+					.path("/iam/namespace/{namespace}/secret/{secret}/data/").buildAndExpand(namespace, secret)
+					.toString();
+			
+			secretDtlVO.setCrtPath(fileDir + secretDtlVO.getCrtFile());
+			secretDtlVO.setKeyPath(fileDir + secretDtlVO.getKeyFile());
+		}
+
+		return secretDtlVO;
+	}
+	
+	public SecretVO deleteSecret(String namespace, String secret) throws Exception {
+		String param = "?namespace=" + namespace + "&secret=" + secret;
+
+		String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
+				.path("/iam/namespace/{namespace}/secret/{secret}" + param).buildAndExpand(namespace, secret)
+				.toString();
+
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<SecretVO> entity = new HttpEntity<SecretVO>(headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<SecretVO> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, SecretVO.class);
+
+		HttpStatus statusCode = response.getStatusCode();
+
+		SecretVO secretVO = null;
+		if (statusCode == HttpStatus.OK) {
+			secretVO = response.getBody();
+		}
+
+		return secretVO;
 	}
 
 }

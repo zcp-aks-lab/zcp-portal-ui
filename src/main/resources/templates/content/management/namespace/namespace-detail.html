@@ -37,9 +37,10 @@
  					function() {
  							secretPopup.pop({
  								url : "/management/popSecretAdd",
+ 								title : "Secret 추가",
  								data : {"namespace" : namespace},
  								width : 590,
- 								height : 590,
+ 								height : 580,
  								callback : function() {
  									location.reload();
  								}
@@ -754,7 +755,16 @@
 														key : 'name',
 														title : 'Secret Name',
 														width : '200px',
-														align : 'left'
+														align : 'left',
+														render : function(value, data) {
+															return '<a href="javascript:zcpSecretGrid.data.detailSecret(\''
+																	+ data.name
+																	+ '\', \''
+																	+ data.type
+																	+ '\');" style="font-size:15px; ">'
+																	+ data.name
+																	+ '</a>';
+														}
 													},
 													{
 														key : 'type',
@@ -773,6 +783,17 @@
 														title : 'Label',
 														width : '200px',
 														align : 'left'
+													},
+													{
+														key : 'delete',
+														title : '관리',
+														width : '100px',
+														align : 'center',
+														render : function(value, data) {
+															return '<button class="btn-ico del" onclick="zcpSecretGrid.data.deleteSecret(\''
+																	+ data.name
+																	+ '\');" />';
+														}
 													}
 												],
 										});
@@ -803,6 +824,72 @@
 								alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
 							}
 						})
+					},
+					detailSecret : function(name, type) {
+						var namespace = /*[[${namespace}]]*/;
+						var jsonData = {
+								namespace : namespace,
+								name : name,
+								type : type
+							};
+						
+						var widthVal = "";
+						var heightVal = "";
+						
+						if(type == "Docker Registry") {
+							widthVal = "590";
+							heightVal = "550";
+							
+						} else if(type == "TLS") {
+							widthVal = "590";
+							heightVal = "440";
+						}
+						secretPopup.pop({
+							url : "/management/popSecretDtl/" + namespace + "/" + name,
+							title : "Secret 정보",
+							data : jsonData,
+							width : widthVal,
+							height : heightVal
+						});
+					},
+					deleteSecret : function(name) {
+						var namespace = /*[[${namespace}]]*/;
+						var jsonData = {
+							namespace : namespace,
+							name : name
+						};
+						secretDelPop.confirm({
+							width : 450,
+							height : 300,
+							data : jsonData,
+							name : name,
+							callback : function(data) {
+								if (data == 'ok') {
+									$a.request('/management/deleteSecret/' + namespace + '/' + name, {
+										method : 'post',
+										data : jsonData,
+										success : function(res) {
+											if (res.resultCd !== '200') {
+												return false;
+											} else {
+												alertPopup.alert({
+													width : 400,
+													height : 250,
+													message : 'Secret이 삭제되었습니다.',
+													callback : function() {
+														location.reload();
+													}
+												});
+											}
+										},
+										error : function(errObject) {
+										}
+									})
+								} else {
+									return false;
+								}
+							}
+						});
 					}
 				}, 
 				event : {

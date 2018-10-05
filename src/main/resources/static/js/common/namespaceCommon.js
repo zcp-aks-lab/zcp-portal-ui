@@ -48,6 +48,10 @@ var secretPopup = {
 		pop : function(opts) {
 			this.open(opts);
 		},
+		
+		confirm : function(opts) {
+			this.open(opts, 'confirm');
+		},
 
 		open : function(opts) {
 			var _opts = $.extend({}, this.default_opts, opts);
@@ -76,6 +80,52 @@ var secretPopup = {
 				alias : _opts.alias,
 				xButtonClickCallback : function(el) {
 					if (el.alias == _opts.alias) {
+						return true;
+					}
+				}
+			});
+		}
+	};
+
+var secretDelPop = {
+		default_opts : {
+			title : 'Secret 삭제',
+			width : 400,
+			height : 300,
+			callback : function(data) {
+				check.callback(data);
+			},
+			alias : 'popup'
+		},
+
+		alert : function(opts) {
+			this.open(opts, 'alert');
+		},
+
+		confirm : function(opts) {
+			this.open(opts, 'confirm');
+		},
+
+		open : function(opts, type) {
+			var _opts = $.extend({}, this.default_opts, opts);
+
+			$a.popup({
+				url : "/management/popSecretDel",
+				iframe : false,
+				width : _opts.width,
+				height : _opts.height,
+				title : _opts.title,
+				data : {
+					message : _opts.message,
+					name : _opts.name,
+					type : type
+				},
+				callback : function(data) {
+					_opts.callback(data);
+				},
+				alias : _opts.alias,
+				xButtonClickCallback : function(el) {
+					if (el.alias === _opts.alias) {
 						return true;
 					}
 				}

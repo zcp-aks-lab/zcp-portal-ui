@@ -33,8 +33,11 @@ import com.skcc.cloudz.zcp.common.constants.ApiResult;
 import com.skcc.cloudz.zcp.common.constants.Result;
 import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
+import com.skcc.cloudz.zcp.portal.alert.rules.vo.RuleVo;
 import com.skcc.cloudz.zcp.portal.management.namespace.service.NamespaceService;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.EnquryNamespaceVO;
+import com.skcc.cloudz.zcp.portal.management.namespace.vo.SecretDockerVO;
+import com.skcc.cloudz.zcp.portal.management.namespace.vo.SecretDtlVO;
 import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
 import com.skcc.cloudz.zcp.portal.management.user.vo.UserVo;
 
@@ -244,6 +247,55 @@ public class NamespaceController {
 			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
 			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
 			resultMap.put("resultData", namespaceService.createTlsSecret(request));
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			resultMap.put("resultCd", ApiResult.FAIL.getCode());
+			resultMap.put("resultMsg", e.getMessage());
+		}
+
+		return resultMap;
+	}
+
+	@GetMapping(value = "/popSecretDtl/{namespace}/{name}", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+	public String popSecretDtl(Model model, @PathVariable("namespace") String namespace,
+			@PathVariable("name") String name) throws Exception {
+		SecretDtlVO secretDtl = namespaceService.getSecretDtl(namespace, name);
+		if (secretDtl != null) {
+
+			if ("kubernetes.io/dockerconfigjson".equals(secretDtl.getType())) {
+				model.addAttribute("server", secretDtl.getServer());
+				model.addAttribute("username", secretDtl.getUsername());
+				model.addAttribute("password", secretDtl.getPassword());
+				model.addAttribute("email", secretDtl.getEmail());
+
+			} else if ("kubernetes.io/tls".equals(secretDtl.getType())) {
+				model.addAttribute("crtPath", secretDtl.getCrtPath());
+				model.addAttribute("keyPath", secretDtl.getKeyPath());
+				model.addAttribute("crtFile", secretDtl.getCrtFile());
+				model.addAttribute("keyFile", secretDtl.getKeyFile());
+			}
+		}
+
+		return "content/management/namespace/pop/popSecretDtl";
+	}
+	
+	@GetMapping(value = "/popSecretDel", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+	public String popSecretDel(Model model) throws Exception {
+		return "content/management/namespace/pop/popSecretDel";
+	}
+
+	@PostMapping(value = "/deleteSecret/{namespace}/{name}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String, Object> deleteSecret(@PathVariable("namespace") String namespace,
+			@PathVariable("name") String name) throws Exception {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+
+		try {
+			namespaceService.deleteSecret(namespace, name);
+
+			resultMap.put("resultCd", ApiResult.SUCCESS.getCode());
+			resultMap.put("resultMsg", ApiResult.SUCCESS.getName());
 		} catch (Exception e) {
 			e.printStackTrace();
 
