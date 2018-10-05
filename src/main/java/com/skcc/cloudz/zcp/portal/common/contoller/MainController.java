@@ -60,7 +60,7 @@ public class MainController {
             if (StringUtils.isEmpty(selectedNamespace)) {
                 ZcpUserVo zcpUserVo = userService.getUser(SecurityService.getUserId());
                 
-                if (zcpUserVo != null && !zcpUserVo.getNamespaces().isEmpty()) {
+                if (zcpUserVo != null && zcpUserVo.getNamespaces() != null && !zcpUserVo.getNamespaces().isEmpty()) {
                     String firstNamespace = StringUtils.EMPTY;
                     for (String ns : zcpUserVo.getNamespaces()) {
                         firstNamespace = ns; break;
