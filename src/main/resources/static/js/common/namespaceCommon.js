@@ -71,7 +71,6 @@ var secretPopup = {
 							message : 'Secret이 저장되었습니다.',
 							callback : function() {
 								_opts.callback(data);
-								location.reload();
 							}
 						});
 					} else {

@@ -42,7 +42,7 @@
  								width : 590,
  								height : 580,
  								callback : function() {
- 									location.reload();
+ 									zcpSecretGrid.pageInit();
  								}
  							});
  					});
@@ -704,7 +704,6 @@
 		function showSecret() {
 			$('#div_resource').hide();
 			$('#div_member').hide();
-			
 			$('#div_secret').show();
 			
 			zcpSecretGrid.pageInit();
@@ -877,7 +876,7 @@
 													height : 250,
 													message : 'Secret이 삭제되었습니다.',
 													callback : function() {
-														location.reload();
+														zcpSecretGrid.pageInit();
 													}
 												});
 											}
