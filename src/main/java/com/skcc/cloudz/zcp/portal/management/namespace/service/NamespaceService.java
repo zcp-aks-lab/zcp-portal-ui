@@ -538,7 +538,7 @@ public class NamespaceService {
 			secretDtlVO.setKeyFile(((HashMap<String, Object>) data.get("stringData")).get("tls.key").toString()
 					.replaceAll(removeStr, ""));
 
-			String fileDir = UriComponentsBuilder.fromUriString(iamBaseUrl)
+			String fileDir = UriComponentsBuilder.fromUriString("https://console.cloudzcp.io")
 					.path("/iam/namespace/{namespace}/secret/{secret}/data/").buildAndExpand(namespace, secret)
 					.toString();
 			
