@@ -40,7 +40,7 @@
  								title : "Secret 추가",
  								data : {"namespace" : namespace},
  								width : 590,
- 								height : 580,
+ 								height : 625,
  								callback : function() {
  									zcpSecretGrid.pageInit();
  								}
@@ -837,11 +837,11 @@
 						
 						if(type == "Docker Registry") {
 							widthVal = "590";
-							heightVal = "550";
+							heightVal = "585";
 							
 						} else if(type == "TLS") {
 							widthVal = "590";
-							heightVal = "440";
+							heightVal = "480";
 						}
 						secretPopup.pop({
 							url : "/management/popSecretDtl/" + namespace + "/" + name,

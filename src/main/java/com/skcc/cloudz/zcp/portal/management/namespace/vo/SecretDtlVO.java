@@ -11,6 +11,7 @@ public class SecretDtlVO {
 	private String keyFile;
 	private String keyPath;
 	private String type;
+	private String label;
 	
 	public String getServer() {
 		return server;
@@ -65,6 +66,12 @@ public class SecretDtlVO {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public String getLabel() {
+		return label;
+	}
+	public void setLabel(String label) {
+		this.label = label;
 	}
 	
 }

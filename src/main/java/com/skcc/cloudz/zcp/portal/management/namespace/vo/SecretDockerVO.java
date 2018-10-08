@@ -8,6 +8,7 @@ public class SecretDockerVO {
 	private String server;
 	private String type;
 	private String username;
+	private String description;
 	
 	public String getEmail() {
 		return email;
@@ -45,5 +46,11 @@ public class SecretDockerVO {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
 }

@@ -265,11 +265,13 @@ public class NamespaceController {
 
 			if ("kubernetes.io/dockerconfigjson".equals(secretDtl.getType())) {
 				model.addAttribute("server", secretDtl.getServer());
+				model.addAttribute("label", secretDtl.getLabel());
 				model.addAttribute("username", secretDtl.getUsername());
 				model.addAttribute("password", secretDtl.getPassword());
 				model.addAttribute("email", secretDtl.getEmail());
 
 			} else if ("kubernetes.io/tls".equals(secretDtl.getType())) {
+				model.addAttribute("label", secretDtl.getLabel());
 				model.addAttribute("crtPath", secretDtl.getCrtPath());
 				model.addAttribute("keyPath", secretDtl.getKeyPath());
 				model.addAttribute("crtFile", secretDtl.getCrtFile());
@@ -279,7 +281,7 @@ public class NamespaceController {
 
 		return "content/management/namespace/pop/popSecretDtl";
 	}
-	
+
 	@GetMapping(value = "/popSecretDel", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
 	public String popSecretDel(Model model) throws Exception {
 		return "content/management/namespace/pop/popSecretDel";

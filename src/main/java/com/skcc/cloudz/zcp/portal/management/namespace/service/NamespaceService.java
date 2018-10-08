@@ -37,7 +37,6 @@ import com.skcc.cloudz.zcp.api.iam.service.impl.IamRestClient;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.common.util.NumberUtil;
-import com.skcc.cloudz.zcp.portal.alert.rules.vo.RuleVo;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.EnquryNamespaceVO;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.SecretDockerVO;
 import com.skcc.cloudz.zcp.portal.management.namespace.vo.SecretDtlVO;
@@ -349,11 +348,14 @@ public class NamespaceService {
 				secretVO.setType("");
 			}
 
-			if (((HashMap<String, Object>) item.get("metadata")).get("labels") != null) {
-				secretVO.setLabel(((HashMap<String, Object>) item.get("metadata")).get("labels").toString());
+			if ((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata")).get("annotations") != null) {
+				secretVO.setLabel(
+						((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata")).get("annotations"))
+								.get("cloudzcp.io/description").toString());
 			} else {
 				secretVO.setLabel("");
 			}
+
 			String date = ((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata"))
 					.get("creationTimestamp")).get("year")
 					+ "/"
@@ -383,7 +385,7 @@ public class NamespaceService {
 		return resultList;
 	}
 
-	public SecretDockerVO createDockerSecret(Map<String, Object> params) {
+	public Map<String, Object> createDockerSecret(Map<String, Object> params) throws Exception {
 		String url = UriComponentsBuilder.fromUriString(iamBaseUrl).path("/iam/namespace/{namespace}/secret/new/docker")
 				.buildAndExpand(params.get("pNamespace")).toString();
 
@@ -395,30 +397,45 @@ public class NamespaceService {
 		secretDockerParam.setServer(params.get("pDocker_server").toString());
 		secretDockerParam.setType("kubernetes.io/dockerconfigjson");
 		secretDockerParam.setUsername(params.get("pDocker_username").toString());
+		secretDockerParam.setDescription(params.get("pLabel").toString());
 
-		HttpHeaders headers = new HttpHeaders();
+		ApiResponseVo response = new ApiResponseVo();
+		Map<String, Object> resultData = null;
 
-		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
-		headers.setContentType(MediaType.APPLICATION_JSON);
+		try {
+			HttpEntity<SecretDockerVO> requestEntity = null;
 
-		HttpEntity<SecretDockerVO> entity = new HttpEntity<SecretDockerVO>(secretDockerParam, headers);
+			HttpHeaders headers = new HttpHeaders();
 
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<SecretDockerVO> response = restTemplate.exchange(url, HttpMethod.POST, entity,
-				SecretDockerVO.class);
+			headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+			headers.setContentType(MediaType.APPLICATION_JSON);
 
-		HttpStatus statusCode = response.getStatusCode();
+			requestEntity = new HttpEntity<SecretDockerVO>(secretDockerParam, headers);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<ApiResponseVo> entity = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
+					ApiResponseVo.class);
 
-		SecretDockerVO secretDockerVO = null;
-		if (statusCode == HttpStatus.OK) {
-			secretDockerVO = response.getBody();
+			if (entity != null && entity.getStatusCode() == HttpStatus.OK) {
+				response.setCode(entity.getBody().getCode());
+				response.setMsg(entity.getBody().getMsg());
+
+				response.setData(entity.getBody().getData());
+				resultData = response.getData();
+			}
+		} catch (RestClientException e) {
+			e.printStackTrace();
 		}
 
-		return secretDockerVO;
+		if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
+			throw new Exception(response.getMsg());
+		}
+
+		return resultData;
 	}
 
-	public String createTlsSecret(HttpServletRequest request) throws Exception {
-		String param = "?name=" + request.getParameter("pSecret_name") + "&type=kubernetes.io/tls";
+	public Map<String, Object> createTlsSecret(HttpServletRequest request) throws Exception {
+		String param = "?name=" + request.getParameter("pSecret_name") + "&type=kubernetes.io/tls" + "&description="
+				+ request.getParameter("pLabel");
 
 		String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
 				.path("/iam/namespace/{namespace}/secret/new/tls" + param)
@@ -466,22 +483,36 @@ public class NamespaceService {
 		bodyMap.add("crt", crt);
 		bodyMap.add("key", key);
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+		ApiResponseVo response = new ApiResponseVo();
+		Map<String, Object> resultData = null;
+		
+		try {
+			HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = null;
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+			
+			requestEntity = new HttpEntity<>(bodyMap, headers);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<ApiResponseVo> entity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, ApiResponseVo.class);
+			
+			if (entity != null && entity.getStatusCode() == HttpStatus.OK) {
+				response.setCode(entity.getBody().getCode());
+				response.setMsg(entity.getBody().getMsg());
 
-		HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
-
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
-
-		HttpStatus statusCode = response.getStatusCode();
-
-		String resultSecretTls = "";
-		if (statusCode == HttpStatus.OK) {
-			resultSecretTls = response.getBody();
+				response.setData(entity.getBody().getData());
+				resultData = response.getData();
+			}
+			
+		} catch (RestClientException e) {
+			e.printStackTrace();
 		}
 
-		return resultSecretTls;
+		if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
+			throw new Exception(response.getMsg());
+		}
+		
+		return resultData;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -526,54 +557,88 @@ public class NamespaceService {
 
 		if ("kubernetes.io/dockerconfigjson".equals(data.get("type"))) {
 			secretDtlVO.setServer(((HashMap<String, Object>) data.get("stringData")).get("server").toString());
+			if ((HashMap<String, Object>) ((HashMap<String, Object>) data.get("metadata")).get("annotations") != null) {
+				secretDtlVO.setLabel(
+						((HashMap<String, Object>) ((HashMap<String, Object>) data.get("metadata")).get("annotations"))
+								.get("cloudzcp.io/description").toString());
+			} else {
+				secretDtlVO.setLabel("");
+			}
 			secretDtlVO.setUsername(((HashMap<String, Object>) data.get("stringData")).get("username").toString());
 			secretDtlVO.setPassword(((HashMap<String, Object>) data.get("stringData")).get("password").toString());
-			secretDtlVO.setEmail(((HashMap<String, Object>) data.get("stringData")).get("email").toString());
+
+			if (((HashMap<String, Object>) data.get("stringData")).get("email") != null) {
+				secretDtlVO.setEmail(((HashMap<String, Object>) data.get("stringData")).get("email").toString());
+			} else {
+				secretDtlVO.setEmail("");
+			}
 
 		} else if ("kubernetes.io/tls".equals(data.get("type"))) {
 			String removeStr = "/iam/namespace/" + namespace + "/secret/" + secret + "/data/";
-			
+
 			secretDtlVO.setCrtFile(((HashMap<String, Object>) data.get("stringData")).get("tls.crt").toString()
 					.replaceAll(removeStr, ""));
 			secretDtlVO.setKeyFile(((HashMap<String, Object>) data.get("stringData")).get("tls.key").toString()
 					.replaceAll(removeStr, ""));
+			if ((HashMap<String, Object>) ((HashMap<String, Object>) data.get("metadata")).get("annotations") != null) {
+				secretDtlVO.setLabel(
+						((HashMap<String, Object>) ((HashMap<String, Object>) data.get("metadata")).get("annotations"))
+								.get("cloudzcp.io/description").toString());
+			} else {
+				secretDtlVO.setLabel("");
+			}
 
 			String fileDir = UriComponentsBuilder.fromUriString("https://console.cloudzcp.io")
 					.path("/iam/namespace/{namespace}/secret/{secret}/data/").buildAndExpand(namespace, secret)
 					.toString();
-			
+
 			secretDtlVO.setCrtPath(fileDir + secretDtlVO.getCrtFile());
 			secretDtlVO.setKeyPath(fileDir + secretDtlVO.getKeyFile());
 		}
 
 		return secretDtlVO;
 	}
-	
-	public SecretVO deleteSecret(String namespace, String secret) throws Exception {
+
+	public Map<String, Object> deleteSecret(String namespace, String secret) throws Exception {
 		String param = "?namespace=" + namespace + "&secret=" + secret;
 
 		String url = UriComponentsBuilder.fromUriString(iamBaseUrl)
 				.path("/iam/namespace/{namespace}/secret/{secret}" + param).buildAndExpand(namespace, secret)
 				.toString();
 
-		HttpHeaders headers = new HttpHeaders();
+		ApiResponseVo response = new ApiResponseVo();
+		Map<String, Object> resultData = null;
+		
+		try {
+			HttpEntity<String> requestEntity = null;
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+			headers.setContentType(MediaType.APPLICATION_JSON);
 
-		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
-		headers.setContentType(MediaType.APPLICATION_JSON);
+			requestEntity = new HttpEntity<String>(headers);
 
-		HttpEntity<SecretVO> entity = new HttpEntity<SecretVO>(headers);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<ApiResponseVo> entity = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity,
+					ApiResponseVo.class);
+			
+			if (entity != null && entity.getStatusCode() == HttpStatus.OK) {
+				response.setCode(entity.getBody().getCode());
+				response.setMsg(entity.getBody().getMsg());
 
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<SecretVO> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, SecretVO.class);
-
-		HttpStatus statusCode = response.getStatusCode();
-
-		SecretVO secretVO = null;
-		if (statusCode == HttpStatus.OK) {
-			secretVO = response.getBody();
+				response.setData(entity.getBody().getData());
+				resultData = response.getData();
+			}
+			
+		} catch (RestClientException e) {
+			e.printStackTrace();
 		}
 
-		return secretVO;
+		if (!response.getCode().equals(ApiResult.SUCCESS.getCode())) {
+			throw new Exception(response.getMsg());
+		}
+		
+		return resultData;
 	}
 
 }
