@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skcc.cloudz.zcp.common.constants.Result;
+import com.skcc.cloudz.zcp.common.domain.vo.CommonVo;
 import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
 import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
 import com.skcc.cloudz.zcp.portal.management.user.vo.UserVo;
@@ -34,14 +36,16 @@ public class UserController {
     private UserService userService;
     
     @GetMapping(value = "/users", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
-    public String userList(Model model) throws Exception {
+    public String userList(@ModelAttribute CommonVo commonVo) throws Exception {
         return "content/management/user/user-list";
     }
     
     @GetMapping(value = "/user/{id}", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
-    public String createPage(@PathVariable("id") String id, Model model) throws Exception {
-        if (log.isDebugEnabled()) {
-            log.debug("id : {}", id);
+    public String createPage(@PathVariable("id") String id, @ModelAttribute CommonVo commonVo, Model model) throws Exception {
+        if (log.isInfoEnabled()) {
+            log.info("id : {}", id);
+            log.info("current : {}", commonVo.getCurrent());
+            log.info("keyword : {}", commonVo.getKeyword());
         }
         
         model.addAttribute("clusterRoles", userService.getClusterRoles(CLUSTER_ROLES_TYPE_CLUSTER));
@@ -49,8 +53,8 @@ public class UserController {
         if (id.equals("create")) {
             return "content/management/user/user-create";    
         } else {
-            model.addAttribute("namespaceRoles", userService.getClusterRoles(CLUSTER_ROLES_TYPE_NAMESPACE));
             model.addAttribute("zcpUser", userService.getUser(id));
+            model.addAttribute("namespaceRoles", userService.getClusterRoles(CLUSTER_ROLES_TYPE_NAMESPACE));
             model.addAttribute("roleBindings", userService.getRoleBindings(id));
             model.addAttribute("namespaces", userService.getNamespaces());
             

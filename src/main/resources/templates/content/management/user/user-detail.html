@@ -393,7 +393,6 @@
                 },
                 event: {
                     init: function() {
-                    	//$('#detailTab').setTabIndex(2);
                     	$a.keyfilter.addKeyUpRegexpRule("email", "a-zA-Z0-9@._-");
                         
                         $('#btnUserUpdate').on('click', function() {
@@ -482,10 +481,8 @@
     <body>
         <th:block layout:fragment="content">
             <!-- location -->
-            <!-- <div class="locations-area">
-                <div class="back-list"><a href="/management/users"><span>목록으로 돌아가기</span></a></div>
-            </div> -->
-            <th:block th:include="common/include/namespace :: common" th:with="listUrl='/management/users'"></th:block>
+            <th:block th:include="common/include/namespace :: common" th:with="listUrl='/management/users', keyword=${commonVo.keyword}, current=${commonVo.current}"></th:block>
+            
             <div class="contents-box">
                 <!-- service top area-->
                 <div class="top-area">
@@ -517,7 +514,10 @@
                         <form th:id="infoform" onsubmit="return false;">
                             <input type="hidden" th:name="username" th:id="username" th:value="${zcpUser.username}" />
                             <input type="hidden" th:name="id" th:id="id" th:value="${zcpUser.id}" />
-                        
+                            
+                            <!-- <input type="text" th:name="keyword" th:id="keyword" th:value="${commonVo.keyword}" />
+                            <input type="text" th:name="current" th:id="current" th:value="${commonVo.current}" /> -->
+                                                        
                             <fieldset>
                                 <table class="Table Form-type topline">
                                     <colgroup>

@@ -30,7 +30,12 @@
             </div>
             
             <div class="back-list" th:if="${listUrl} != null">
-                <a th:href="${listUrl}"><span>목록으로 돌아가기</span></a>
+                <th:block th:if="${current} != null">
+                    <a th:href="@{${listUrl}(keyword=${keyword}, current=${current})}"><span>목록으로 돌아가기</span></a>
+                </th:block>
+                <th:block th:if="${current} == null">
+                    <a th:href="${listUrl}"><span>목록으로 돌아가기</span></a>
+                </th:block>
             </div>
         </div>
     </th:block>

@@ -5,6 +5,12 @@
         <title>사용자 목록</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         
+        <script th:inline="javascript">
+        /*<![CDATA[*/
+        var current = /*[[${commonVo.current}]]*/;
+        /*]]>*/
+        </script>
+        
         <script type="text/javascript">
             var zcpPortalApp = {
                 pageInit: function() {
@@ -123,18 +129,18 @@
                         });
                 	},
                 	
-                	search: function() {
+                	search: function(pageNo) {
                 		var keyword = $('#keyword').val();
                         
-                		zcpPortalApp.data.getUsers(keyword);
+                		zcpPortalApp.data.getUsers(pageNo, keyword);
                     }
                 },
                 
                 data: {
                     init: function() {
-                        this.getUsers();
+                        zcpPortalApp.grid.search(current);
                     },
-                    getUsers: function(keyword) {
+                    getUsers: function(pageNo, keyword) {
                     	var data = {
                     		keyword: keyword || ''	
                     	}
@@ -149,6 +155,7 @@
                                 }
                             	
                                 $('#user-grid').alopexGrid('dataSet', res.resultData);
+                                $('#user-grid').alopexGrid('pageSet', pageNo);
                             },
                             error: function(errObject) {
                                 //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -176,7 +183,9 @@
                                         commonPopup.alert({
                                             message: '사용자가 삭제 되었습니다.',
                                             callback: function() {
-                                                location.reload();
+                                                //location.reload();
+                                                var pageNo = $('#user-grid').alopexGrid('pageInfo').current;
+                                            	zcpPortalApp.grid.search(pageNo);
                                             }
                                         });
                                     },
@@ -188,7 +197,15 @@
                         });
                     },
                     userDetail: function(id) {
-                    	location.href = '/management/user/' + id;
+                    	/*<![CDATA[*/
+                    	var pageInfo = $('#user-grid').alopexGrid('pageInfo');
+                    	var keyword = $('#keyword').val();
+                    	
+                    	var pars = '?keyword=' + keyword;
+                    	pars += '&current=' + pageInfo.current;
+                    	
+                    	location.href = '/management/user/' + id + pars;
+                    	/*]]>*/
                     }
                 },
                 event: {
@@ -237,7 +254,7 @@
                 </div>
                 <!-- search-wrap-->
                 <div class="search-wrap">
-                    <input type="text" name="keyword" id="keyword" class="Textinput srcinput" placeholder="검색어를 입력하세요." /><button class="Button btn-search" id="btnSearch">검색</button>
+                    <input type="text" name="keyword" id="keyword" class="Textinput srcinput" th:value="${commonVo.keyword}" placeholder="검색어를 입력하세요." /><button class="Button btn-search" id="btnSearch">검색</button>
                 </div>
                 <div class="grid-line__wrap">
                     <div id="user-grid"></div>
