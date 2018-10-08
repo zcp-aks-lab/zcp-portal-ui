@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skcc.cloudz.zcp.common.component.AuthUserComponent;
 import com.skcc.cloudz.zcp.common.constants.Result;
 import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
-import com.skcc.cloudz.zcp.common.security.service.SecurityService;
 import com.skcc.cloudz.zcp.common.util.FileUtil;
 import com.skcc.cloudz.zcp.portal.my.service.MyService;
 import com.skcc.cloudz.zcp.portal.my.vo.MyUserVo;
@@ -36,9 +34,6 @@ public class MyController {
     private static final Logger log = LoggerFactory.getLogger(MyController.class);
     
     static final String RESOURCE_PATH = "/my";
-    
-    @Value("${props.cliDownloadUrl}")
-    private String cliDownloadUrl;
     
     @Autowired
     private MyService myService;
@@ -60,7 +55,6 @@ public class MyController {
     
     @GetMapping(value = "/cli", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String myCli(Model model) throws Exception {
-        model.addAttribute("cliDownloadUrl", cliDownloadUrl);
         return "content/my/my-cli";
     }
     

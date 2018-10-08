@@ -9,7 +9,7 @@
         
         <script th:inline="javascript">
         /*<![CDATA[*/
-        var cliDownloadUrl = /*[[${cliDownloadUrl}]]*/;
+        var cliDownloadUrl = /*[[${@environment.getProperty('props.cliDownloadUrl')}]]*/;
         /*]]>*/
         </script>
         
