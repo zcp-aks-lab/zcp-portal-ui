@@ -13,6 +13,7 @@
         <script th:inline="javascript">
         /*<![CDATA[*/
         var selectedNamespace = /*[[${selectedNamespace}]]*/;
+        var dashboardBaseUrl = /*[[${@environment.getProperty('props.dashboard.baseUrl')}]]*/;
         /*]]>*/
         </script>
         
@@ -21,7 +22,7 @@
                 pageInit: function() {
                     'use strict';
                     
-                    // data init
+                    // grid init
                     this.grid.init();
                     
                     // data init
@@ -324,7 +325,6 @@
                             ],
                         });
                     },
-
                     getProgressbarType: function(value) {
                         var type;
                         if(Number(value) > 90) {
@@ -348,7 +348,12 @@
                             method: 'get',
                             data: null, 
                             success: function(res) {
-                                $('#node-grid').alopexGrid('dataSet', res);
+                            	if (res.resultCd !== constants.result.SUCCESS) {
+                                    commonPopup.alert({message: res.resultMsg});
+                                    return false;
+                                }
+                                
+                                $('#node-grid').alopexGrid('dataSet', res.resultData);
                             },
                             error: function(errObject) {
                                 //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
@@ -357,23 +362,29 @@
                     },
                     getChartsData: function() {
                         this.getNodesStatus();
-                        this.getDeploymentsStatus();
-                        this.getPodsStatus();
                         this.getCpuStatus();
                         this.getMemoryStatus();
                         this.getUsersStatus();
+                        this.getDeploymentsStatus();
+                        this.getPodsStatus();
                     },
                     getNodesStatus: function() {
                         $a.request('/main/getNodesStatus', {
                             method: 'get',
                             data: null, 
                             success: function(res) {
+                            	if (res.resultCd !== constants.result.SUCCESS) {
+                                    commonPopup.alert({message: res.resultMsg});
+                                    return false;
+                                }
+                                var resultData = res.resultData;
+                                
                                 var props = {
-                                    title: res.title,
-                                    mainTitle: res.mainStatus,
-                                    mainValue: res.mainStatusPercentage,
-                                    totalCount: res.totalCount,
-                                    dataProvider: res.statuses,
+                                    title: resultData.title,
+                                    mainTitle: resultData.mainStatus,
+                                    mainValue: resultData.mainStatusPercentage,
+                                    totalCount: resultData.totalCount,
+                                    dataProvider: resultData.statuses,
                                     valueField: 'count',
                                     titleField: 'status'
                                 }
@@ -382,18 +393,23 @@
                             error: function(errObject) {}
                         }) 
                     }, 
-
                     getDeploymentsStatus: function() {
                         $a.request('/main/getDeploymentsStatus', {
                             method: 'get',
                             data: {'namespace': selectedNamespace}, 
                             success: function(res) {
+                            	if (res.resultCd !== constants.result.SUCCESS) {
+                                    commonPopup.alert({message: res.resultMsg});
+                                    return false;
+                                }
+                                var resultData = res.resultData;
+                                
                                 var props = {
-                                    title: res.title,
-                                    mainTitle: res.mainStatus,
-                                    mainValue: res.mainStatusPercentage,
-                                    totalCount: res.totalCount,
-                                    dataProvider: res.statuses,
+                                    title: resultData.title,
+                                    mainTitle: resultData.mainStatus,
+                                    mainValue: resultData.mainStatusPercentage,
+                                    totalCount: resultData.totalCount,
+                                    dataProvider: resultData.statuses,
                                     valueField: 'count',
                                     titleField: 'status'
                                 }
@@ -402,18 +418,23 @@
                             error: function(errObject) {}
                         }) 
                     }, 
-
                     getPodsStatus: function() {
                         $a.request('/main/getPodsStatus', {
                             method: 'get',
                             data: {'namespace': selectedNamespace}, 
                             success: function(res) {
+                            	if (res.resultCd !== constants.result.SUCCESS) {
+                                    commonPopup.alert({message: res.resultMsg});
+                                    return false;
+                                }
+                                var resultData = res.resultData;
+                                
                                 var props = {
-                                    title: res.title,
-                                    mainTitle: res.mainStatus,
-                                    mainValue: res.mainStatusPercentage,
-                                    totalCount: res.totalCount,
-                                    dataProvider: res.statuses,
+                                    title: resultData.title,
+                                    mainTitle: resultData.mainStatus,
+                                    mainValue: resultData.mainStatusPercentage,
+                                    totalCount: resultData.totalCount,
+                                    dataProvider: resultData.statuses,
                                     valueField: 'count',
                                     titleField: 'status'
                                 }
@@ -422,25 +443,30 @@
                             error: function(errObject) {}
                         }) 
                     }, 
-
                     getCpuStatus: function() {
                         $a.request('/main/getCpuStatus', {
                             method: 'get',
                             data: null, 
                             success: function(res) {
+                            	if (res.resultCd !== constants.result.SUCCESS) {
+                                    commonPopup.alert({message: res.resultMsg});
+                                    return false;
+                                }
+                                var resultData = res.resultData;
+                                
                                 var props = {
-                                    title: res.title,
-                                    mainTitle: res.utilizationTitle,
-                                    mainValue: res.utilizationPercentage,
-                                    totalCount: res.total,
+                                    title: resultData.title,
+                                    mainTitle: resultData.utilizationTitle,
+                                    mainValue: resultData.utilizationPercentage,
+                                    totalCount: resultData.total,
                                     dataProvider: [
                                         {
                                             title:  'available',
-                                            value:  res.available
+                                            value:  resultData.available
                                         },
                                         {
                                             title:  'utilization',
-                                            value:  res.utilization
+                                            value:  resultData.utilization
                                         }
                                     ],
                                     valueField: 'value',
@@ -451,25 +477,30 @@
                             error: function(errObject) {}
                         }) 
                     }, 
-
                     getMemoryStatus: function() {
                         $a.request('/main/getMemoryStatus', {
                             method: 'get',
                             data: null, 
                             success: function(res) {
+                            	if (res.resultCd !== constants.result.SUCCESS) {
+                                    commonPopup.alert({message: res.resultMsg});
+                                    return false;
+                                }
+                                var resultData = res.resultData;
+                                
                                 var props = {
-                                    title: res.title,
-                                    mainTitle: res.utilizationTitle,
-                                    mainValue: res.utilizationPercentage,
-                                    totalCount: res.total,
+                                    title: resultData.title,
+                                    mainTitle: resultData.utilizationTitle,
+                                    mainValue: resultData.utilizationPercentage,
+                                    totalCount: resultData.total,
                                     dataProvider: [
                                         {
                                             title:  'available',
-                                            value:  res.available
+                                            value:  resultData.available
                                         },
                                         {
                                             title:  'utilization',
-                                            value:  res.utilization
+                                            value:  resultData.utilization
                                         }
                                     ],
                                     valueField: 'value',
@@ -480,18 +511,23 @@
                             error: function(errObject) {}
                         }) 
                     }, 
-
                     getUsersStatus: function() {
                         $a.request('/main/getUsersStatus', {
                             method: 'get',
                             data: {'namespace': selectedNamespace}, 
                             success: function(res) {
+                            	if (res.resultCd !== constants.result.SUCCESS) {
+                                    commonPopup.alert({message: res.resultMsg});
+                                    return false;
+                                }
+                                var resultData = res.resultData;
+                                
                                 var props = {
-                                    title: res.title,
-                                    mainTitle: res.mainRole,
-                                    mainValue: res.mainRolePercentage,
-                                    totalCount: res.totalCount,
-                                    dataProvider: res.roles,
+                                    title: resultData.title,
+                                    mainTitle: resultData.mainRole,
+                                    mainValue: resultData.mainRolePercentage,
+                                    totalCount: resultData.totalCount,
+                                    dataProvider: resultData.roles,
                                     valueField: 'count',
                                     titleField: 'role'
                                 }
@@ -500,19 +536,23 @@
                             error: function(errObject) {}
                         }) 
                     }, 
-                    
                     getJweToken: function() {
                         $a.request('/main/getJweToken', {
                             method: 'get',
                             data: null, 
                             success: function(res) {
-                                var result = res.result;
-                                log('jweToken : ' + result.jweToken);
-                                log('dashboardBaseUrl : ' + res.dashboardBaseUrl);
+                            	if (res.resultCd !== constants.result.SUCCESS) {
+                                    commonPopup.alert({message: res.resultMsg});
+                                    return false;
+                                }
+                                var resultData = res.resultData;
+                                
+                                log('jweToken : ' + resultData.jweToken);
+                                log('dashboardBaseUrl : ' + dashboardBaseUrl);
                                 
                                 $.removeCookie('jweToken', { expires:1, path: '/', domain: '.cloudzcp.io'});
-                                $.cookie('jweToken', result.jweToken, { expires:1, path: '/', domain: '.cloudzcp.io'});
-                                goUrl(res.dashboardBaseUrl + '/#!/overview?namespace=' + (selectedNamespace || ''));
+                                $.cookie('jweToken', resultData.jweToken, { expires:1, path: '/', domain: '.cloudzcp.io'});
+                                goUrl(dashboardBaseUrl + '/#!/overview?namespace=' + (selectedNamespace || ''));
                             },
                             error: function(errObject) {
                                 //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
