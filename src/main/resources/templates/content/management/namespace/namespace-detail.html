@@ -133,29 +133,27 @@
 			
 			
 			function setGraph(obj_id, used, c){
-				used = Number(used);
-				$('#div_' +obj_id).find('div').css('width', used + 'px');
-				var div = used % 1;
-				if(!c && c!=0){
-					$('#div_' +obj_id).hide();
-					$('#span_' +obj_id).hide();
-					return ;
-				}else{
-					$('#div_' +obj_id).show();
-					$('#span_' +obj_id).show();
-				}
-				console.log('color represention')					
-				if(div < 1 && div > 0) 
-					used = Number(used).toFixed(2);
+				var func = (c || c==0) ? 'hide' : 'show';
+				var $bar = $('#div_' +obj_id)[func]();
+				var $label = $('#span_'+ obj_id)[func]();
 				
-				$('#span_'+ obj_id).text(used + '%');
-				if(Number(used) >= 90){
-					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typee');
-				}
-				else if(Number(used) > 31 && Number(used) < 90) 
-					$('#div_' +obj_id).removeClass('name-typea').addClass('name-typec');
-				//else if(Number(used) > 30) 
-					//$('#div_' +obj_id).removeClass('name-typea').addClass('name-typec');
+				if(func === 'hide')
+					return;
+				
+				var used = Number(used);
+				used = (used == parseInt(used) ? used : used.toFixed(2));
+				
+				var color = 'name-typea';
+				if(30 < used && used < 90) 
+					color = 'name-typee';
+				else if(90 <= used)
+					color = 'name-typec';
+
+				$bar.setValue(used);
+				$bar.removeClass('name-typea').addClass(color);
+				$label.text(used + '%');
+				
+				return;
 			}
 			
 			function selected(id, value, unit){
