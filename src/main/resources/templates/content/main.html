@@ -550,8 +550,8 @@
                                 log('jweToken : ' + resultData.jweToken);
                                 log('dashboardBaseUrl : ' + dashboardBaseUrl);
                                 
-                                $.removeCookie('jweToken', { expires:1, path: '/', domain: '.cloudzcp.io'});
-                                $.cookie('jweToken', resultData.jweToken, { expires:1, path: '/', domain: '.cloudzcp.io'});
+                                $.removeCookie('jweToken', { expires:1, path: '/', domain: dashboardBaseUrl});
+                                $.cookie('jweToken', resultData.jweToken, { expires:1, path: '/', domain: dashboardBaseUrl});
                                 goUrl(dashboardBaseUrl + '/#!/overview?namespace=' + (selectedNamespace || ''));
                             },
                             error: function(errObject) {
