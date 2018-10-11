@@ -30,7 +30,7 @@ spec:
                 - "management"
       containers:
       - name: zcp-portal-ui
-        image: cloudzcp/zcp-portal-ui:latest
+        image: cloudzcp/zcp-portal-ui:1.0.0
         imagePullPolicy: Always
         ports:
         - name: cont-port
