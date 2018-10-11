@@ -547,11 +547,16 @@
                                 }
                                 var resultData = res.resultData;
                                 
+                                
                                 log('jweToken : ' + resultData.jweToken);
                                 log('dashboardBaseUrl : ' + dashboardBaseUrl);
                                 
-                                $.removeCookie('jweToken', { expires:1, path: '/', domain: dashboardBaseUrl});
-                                $.cookie('jweToken', resultData.jweToken, { expires:1, path: '/', domain: dashboardBaseUrl});
+                                var baseUrl = new URL(dashboardBaseUrl).hostname;
+                                baseUrl = baseUrl.substring(baseUrl.split('.')[0].length)
+                                log('baseUrl : ' + baseUrl);
+                                
+                                $.removeCookie('jweToken', { expires:1, path: '/', domain: baseUrl});
+                                $.cookie('jweToken', resultData.jweToken, { expires:1, path: '/', domain: baseUrl});
                                 goUrl(dashboardBaseUrl + '/#!/overview?namespace=' + (selectedNamespace || ''));
                             },
                             error: function(errObject) {
