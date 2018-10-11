@@ -25,6 +25,7 @@
                     				$('#namespaceRole').append(option);
                         		});
                     		});
+                    		this.validate();
                     },
                     createUser: function() {
                         if (!this.validation()) {
@@ -120,8 +121,10 @@
                         var firstNameValid = $('#firstName').validate();
                         var clusterRoleValid = $('#clusterRole').validate();
                         var namespace = $('#namespaceRole').validate();
+                        var passwordValid = $('#password').validate();
+                        var passwordConfirmValid = $('#passwordConfirm').validate();
                         
-                        if (!usernameValid || !emailValid || !firstNameValid || !clusterRoleValid || !namespace) {
+                        if (!usernameValid || !emailValid || !firstNameValid || !clusterRoleValid || !namespace || !passwordValid || !passwordConfirmValid) {
                             return false;
                         } else {
                             return true;
