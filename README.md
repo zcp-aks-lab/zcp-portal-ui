@@ -17,7 +17,7 @@ $ git clone https://github.com/cnpst/zcp-portal-ui.git
 k8s configuration 파일 디렉토리로 이동한다.
 
 ```
-$ cd zcp-iam/k8s/site
+$ cd zcp-iam/k8s
 ```
 
 ### :one: Secret을 수정한 후 생성 한다.
