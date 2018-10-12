@@ -157,7 +157,8 @@
         "cluster-admin"
       ],
       "namespaceRoles": [
-        "admin"
+        "admin",
+        "cicd-manager"
       ]
     },
     "enable": true
