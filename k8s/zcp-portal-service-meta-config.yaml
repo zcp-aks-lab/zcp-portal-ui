@@ -10,7 +10,7 @@ data:
         "id": "monitoring",
         "name": "모니터링",
         "order": 1,
-        "url": "https://grafana.cloudzcp.io/login/generic_oauth",
+        "url": "https://monitoring.cloudzcp.io/login/generic_oauth",
         "target": "blank",
         "role": {
           "clusterRoles": [
@@ -27,7 +27,7 @@ data:
         "id": "logging",
         "name": "로깅",
         "order": 2,
-        "url": "https://kibana.cloudzcp.io",
+        "url": "https://logging.cloudzcp.io",
         "target": "blank",
         "role": {
           "clusterRoles": [
@@ -163,7 +163,8 @@ data:
             "cluster-admin"
           ],
           "namespaceRoles": [
-            "admin"
+            "admin",
+            "cicd-manager"
           ]
         },
         "enable": true
