@@ -10,6 +10,7 @@ import com.skcc.cloudz.zcp.api.iam.domain.vo.ApiResponseVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserResVo;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
 import com.skcc.cloudz.zcp.api.iam.service.IamApiService;
+import com.skcc.cloudz.zcp.common.component.AuthUserComponent;
 import com.skcc.cloudz.zcp.common.constants.ApiResult;
 import com.skcc.cloudz.zcp.common.exception.ZcpPortalException;
 import com.skcc.cloudz.zcp.common.security.service.SecurityService;
@@ -23,6 +24,9 @@ public class MyService {
     
     @Autowired
     private SecurityService securityService;
+    
+    @Autowired
+    private AuthUserComponent authUserComponent;
     
     public ZcpUserVo getMyUser() throws Exception {
         String id = securityService.getUserDetails().getUserId();
@@ -83,7 +87,7 @@ public class MyService {
     
     public Map<String, Object> getKubeConfig() throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        String namespace = securityService.getUserDetails().getDefaultNamespace();
+        String namespace = authUserComponent.getNamespace();
         String id = securityService.getUserDetails().getUserId();
         
         ApiResponseVo apiResponseVo = iamApiService.kubeconfig(id, namespace);
