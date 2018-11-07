@@ -1,0 +1,5 @@
+harbor-1.5.0
+
+https://github.com/goharbor/harbor/blob/master/docs/configure_swagger.md
+
+http://editor.swagger.io/
