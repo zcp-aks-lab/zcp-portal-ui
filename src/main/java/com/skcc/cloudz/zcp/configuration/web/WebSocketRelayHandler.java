@@ -31,8 +31,11 @@ public class WebSocketRelayHandler extends AbstractRelayHandler {
     };
 
     protected WebSocketSession createSession(WebSocketSession in) throws Exception {
+        System.out.println(in.getAttributes());
+        System.out.println(in.getUri());
+
         // create connection
-        URI uri = new URI(relayUrl);
+        URI uri = new URI(relayUrl + "?" + in.getUri().getQuery());
         WebSocketSession out = client.doHandshake(this, headers, uri).get();
         return out;
     }
