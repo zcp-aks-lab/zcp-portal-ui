@@ -18,7 +18,7 @@ public class DummyConsoleController {
     static final String RESOURCE_PATH = "/api";
     static final Pattern pattern = Pattern.compile("/");
     
-    @GetMapping(value = {"/cluster/**", "/pod/**"})
+    @GetMapping(value = {"/cluster/**"})
     public String dummy(HttpServletRequest req) throws Exception {
         ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentRequest();
         String path = builder.build().getPath();
@@ -28,5 +28,10 @@ public class DummyConsoleController {
         System.out.println("redirect = " + redirect);
 
         return "redirect:/dummy/" + redirect;
+    }
+
+    @GetMapping(value = {"/pod/list"})
+    public String redirect(HttpServletRequest req) throws Exception {
+        return "redirect:/iam/rbac/cloudzcp-admin/namespace/zcp-system/Pod";
     }
 }
