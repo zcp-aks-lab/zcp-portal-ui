@@ -25,7 +25,7 @@ public class WebSocketRelayHandler extends AbstractRelayHandler {
 			List<WebSocketExtension> extensions, Map<String, Object> attributes){
             
             attributes = Maps.newHashMap();
-            attributes.put(DIRECTION, DIRECTION_OUT);
+            attributes.put(DIRECTION.val(), DIRECTION_OUT);
             return super.doHandshakeInternal(webSocketHandler, headers, uri, protocols, extensions, attributes);
         }
     };
