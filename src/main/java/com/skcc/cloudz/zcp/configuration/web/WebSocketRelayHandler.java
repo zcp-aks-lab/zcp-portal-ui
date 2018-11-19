@@ -16,7 +16,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
 public class WebSocketRelayHandler extends AbstractRelayHandler {
-    private String relayUrl = "ws://localhost:8182/iam/shell";
+    private String relayUrl = "ws://localhost:8182/iam/exec";
 
     private WebSocketHttpHeaders headers;
     private StandardWebSocketClient client = new StandardWebSocketClient(){
