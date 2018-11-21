@@ -1,6 +1,7 @@
 package com.skcc.cloudz.zcp.configuration.web;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,8 @@ import com.google.common.collect.Maps;
 import com.skcc.cloudz.zcp.configuration.web.WebSocketConfig.AbstractRelayHandler;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.socket.WebSocketExtension;
 import org.springframework.web.socket.WebSocketHandler;
@@ -34,8 +37,11 @@ public class WebSocketRelayHandler extends AbstractRelayHandler {
         System.out.println(in.getAttributes());
         System.out.println(in.getUri());
 
+        SecurityContext ctx = (SecurityContext) in.getAttributes().get("SPRING_SECURITY_CONTEXT");
+        Principal user = ctx.getAuthentication();
+
         // create connection
-        URI uri = new URI(relayUrl + "?" + in.getUri().getQuery());
+        URI uri = new URI(relayUrl + "?" + in.getUri().getQuery() + "&username=" + user.getName());
         WebSocketSession out = client.doHandshake(this, headers, uri).get();
         return out;
     }
