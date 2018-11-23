@@ -19,7 +19,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
 public class WebSocketRelayHandler extends AbstractRelayHandler {
-    private String relayUrl = "ws://localhost:8182/iam/exec";
+    private String relayUrl = "ws://localhost:8182";
 
     private WebSocketHttpHeaders headers;
     private StandardWebSocketClient client = new StandardWebSocketClient(){
@@ -41,7 +41,8 @@ public class WebSocketRelayHandler extends AbstractRelayHandler {
         Principal user = ctx.getAuthentication();
 
         // create connection
-        URI uri = new URI(relayUrl + "?" + in.getUri().getQuery() + "&username=" + user.getName());
+        String path = in.getUri().getPath().replace("api", "iam");
+        URI uri = new URI(relayUrl + path + "?" + in.getUri().getQuery() + "&username=" + user.getName());
         WebSocketSession out = client.doHandshake(this, headers, uri).get();
         return out;
     }

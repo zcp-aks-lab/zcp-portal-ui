@@ -29,7 +29,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 	@Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         HandshakeInterceptor interceptors = new HttpSessionHandshakeInterceptor();
-		registry.addHandler(handler(), "/api/shell")
+		registry.addHandler(handler(), "/api/exec", "/api/wsh")
                 .addInterceptors(interceptors);
 	}
 
