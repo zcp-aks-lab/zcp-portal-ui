@@ -1,0 +1,110 @@
+
+## API 사용법
+https://docs.gitea.io/en-us/api-usage/
+
+## Gitea API
+https://try.gitea.io/api/swagger#
+
+## Gitea API 테스트
+
+#API를 통해 발행 된 토큰 정보 가져오기
+
+Request
+curl --request GET --url https://id:password@try.gitea.io/api/v1/users/id/tokens
+
+Response
+[{"id":300,"name":"kbtapjm","sha1":"7825e260dee887656a817c2368a9c23ccd496b29"}]
+
+==> 아이디와 비밀번호가 있어야만 가져올수 있음(그런데 비밀번호는 어디서?)
+
+#Token 생성 API
+
+=> Basic Auth 인증 전 테스트시에는 토큰 생성 실패
+curl -X POST \
+  https://try.gitea.io/api/v1/users/kbtapjm/tokens \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \
+  -d '{
+  "name": "zcp"
+}'
+
+=> Basic Auth 인증 후 테스트시에는 토큰 생성 성공
+curl -X POST \
+  https://try.gitea.io/api/v1/users/kbtapjm/tokens \
+  -H 'authorization: Basic a2J0YXBqbUBnbWFpbC5jb206am1wYXJrNzEwMA==' \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \
+  -d '{
+  "name": "zcp"
+}'
+
+Response
+{"id":305,"name":"zcp","sha1":"3a72e27f443b96278ec1d957e81ef9c0016724d2"}
+
+HTTP authentication
+https://developer.mozilla.org/ko/docs/Web/HTTP/Authentication
+
+아이디:패스워드 == > base64 encode
+
+
+#사용자의 token 목록
+curl -X GET \
+  https://try.gitea.io/api/v1/users/kbtapjm/tokens \
+  -H 'authorization: Basic a2J0YXBqbUBnbWFpbC5jb206am1wYXJrNzEwMA==' \
+  -H 'cache-control: no-cache' \
+  
+ Response
+ [
+  {
+    "id": 306,
+    "name": "zcp",
+    "sha1": "83bdcfbfac95c004d24ef5bfcc1f5c336b6a4e5a"
+  },
+  {
+    "id": 300,
+    "name": "kbtapjm",
+    "sha1": "7825e260dee887656a817c2368a9c23ccd496b29"
+  }
+]
+
+
+#사용자 정보 API 
+-- token 사용
+curl -X GET \
+  https://try.gitea.io/api/v1/user \
+  -H 'cache-control: no-cache' \
+  -H "Authorization: token 7825e260dee887656a817c2368a9c23ccd496b29" \
+  
+-- basic auth token 사용
+curl -X GET \
+  https://try.gitea.io/api/v1/user \
+  -H 'authorization: Basic a2J0YXBqbUBnbWFpbC5jb206am1wYXJrNzEwMA==' \
+  -H 'cache-control: no-cache' \
+
+Response
+{
+  "id": 8968,
+  "login": "kbtapjm",
+  "full_name": "",
+  "email": "kbtapjm@gmail.com",
+  "avatar_url": "https://try.gitea.io/avatars/f654a8db57974dd646ae8fa55de899b2",
+  "language": "ko-KR",
+  "username": "kbtapjm"
+}
+ 
+
+#레파지토리 등록 API
+curl -X POST \
+  https://try.gitea.io/api/v1/user/repos \
+  -H 'authorization: Basic a2J0YXBqbUBnbWFpbC5jb206am1wYXJrNzEwMA==' \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \
+  -d '{
+ "name": "test-repo"
+}'
+
+  
+===> token 관련 API는 basic auth 인증을 통한 사용, 나머지 api는 token을 사용하여 api 호출
+
+
+
