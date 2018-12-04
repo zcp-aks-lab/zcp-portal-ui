@@ -2,9 +2,10 @@ stage:
 - build
 
 build:
-- ls -al
-- git clone https://github.com/yanghoon/console
-- ls -al
+- maven:
+  - ls -al
+  - git clone https://github.com/yanghoon/console
+  - ls -al
 
 agent:
   profile: [maven, docker, kubectl]
