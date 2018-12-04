@@ -10,7 +10,7 @@ checkout:
 build:
 - node:
   - npm install -g yarn
-  - cd console && yarn build
+  - cd console && yarn install && yarn build
 
 agent:
   profile: [maven, docker, kubectl]
