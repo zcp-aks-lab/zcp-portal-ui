@@ -14,7 +14,7 @@ build:
 - maven:
   - mvn install
 - docker:
-  - cd docker && docker build
+  - cd docker && docker build -t cloudzcp/zcp-portal-ui:1.1.0-alpha
 
 agent:
   profile: [maven, docker, kubectl]
