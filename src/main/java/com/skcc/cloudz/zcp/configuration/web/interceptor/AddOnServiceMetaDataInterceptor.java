@@ -68,7 +68,7 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
         }
         
         authUserComponent.setUserId(securityService.getUserDetails().getUserId());
-        authUserComponent.setFirstName(securityService.getUserDetails().getFirstName());
+        authUserComponent.setFirstName(StringUtils.isEmpty(authUserComponent.getFirstName()) ? securityService.getUserDetails().getFirstName() : authUserComponent.getFirstName());
         
         modelAndView.addObject("activePathInfo", this.getAddOnServiceActivePathInfo(requestURI));
         modelAndView.addObject("addOnServiceMetaList", this.getAddOnServiceMetaData());

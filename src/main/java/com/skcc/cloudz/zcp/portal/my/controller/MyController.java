@@ -6,8 +6,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -30,8 +28,6 @@ import com.skcc.cloudz.zcp.portal.my.vo.MyUserVo;
 @Controller
 @RequestMapping(value = MyController.RESOURCE_PATH)
 public class MyController {
-    
-    private static final Logger log = LoggerFactory.getLogger(MyController.class);
     
     static final String RESOURCE_PATH = "/my";
     
@@ -127,10 +123,6 @@ public class MyController {
     @ResponseBody 
     public Map<String, Object> otpPassword(@PathVariable("mode") String mode) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        
-        if (log.isInfoEnabled()) {
-            log.info("mode : {}", mode);
-        }
         
         try {
             if (mode.equals("update")) {

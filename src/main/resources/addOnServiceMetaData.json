@@ -56,10 +56,10 @@
     "enable": true
   },
   {
-    "id": "cluster", "name": "Cluster 관리", "order": 31, "url": "/cluster", "target": "",
+    "id": "cluster", "name": "Cluster 관리", "order": 31, "url": "/management", "target": "",
     "sub": [
       { "id": "namespace", "name": "네임스페이스", "order": 1, "url": "/management/namespaces", "target": "self", "enable": true },
-	  { "id": "user", "name": "사용자", "order": 2, "url": "/management/users", "target": "", "enable": true }
+	  { "id": "user", "name": "사용자", "order": 2, "url": "/management/users", "target": "self", "enable": true }
 	],
     "role": {
       "clusterRoles": [ "cluster-admin" ],
