@@ -2,7 +2,8 @@ stage:
 - build
 
 build:
-- "git url: 'https://github.com/yanghoon/console'"
+- git clone https://github.com/yanghoon/console
+- ls -al
 - maven: mvn --version
 - node: node -v
 - docker: docker version
