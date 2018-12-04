@@ -16,9 +16,9 @@ build:
 - docker:
   - cd docker && docker build . -t $image
   - docker images | grep cloudzcp
-  - docker.push:
-      imageName: $image
-      credentialsId: dockerhub
+- docker.push:
+    imageName: $image
+    credentialsId: dockerhub
 
 env:
   image: cloudzcp/zcp-portal-ui:1.1.-alpha
