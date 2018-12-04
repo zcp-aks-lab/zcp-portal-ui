@@ -5,12 +5,16 @@ stage:
 checkout:
 - node:
   - apk add git
-  - git clone https://github.com/yanghoon/console && ls -al
+  - git clone https://github.com/yanghoon/console
 
 build:
 - node:
   - npm install -g yarn
   - cd console && yarn install && yarn build
+- maven:
+  - maven install
+- docker:
+  - cd docker && docker build
 
 agent:
   profile: [maven, docker, kubectl]
