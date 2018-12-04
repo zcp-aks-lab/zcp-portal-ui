@@ -1,0 +1,16 @@
+stage:
+- build
+
+build:
+- maven: mvn --version
+- node: node -v
+- docker: docker version
+- kubectl: kubectl version
+
+agent:
+  profile: [maven, docker, kubectl]
+  containers:
+  - name: node
+    image: node:8
+    ttyEnabled: true
+    command: cat
