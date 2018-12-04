@@ -1,16 +1,22 @@
 stage:
+- checkout
 - build
 
+checkout:
+- node:
+  - apk add git
+  - git clone https://github.com/yanghoon/console && ls -al
+
 build:
-- maven:
-  - ls -al
-  - git clone https://github.com/yanghoon/console
-  - ls -al
+- node:
+  - cd console
+  - npm install -g yarn
+  - yarn build
 
 agent:
   profile: [maven, docker, kubectl]
   containers:
   - name: node
-    image: node:8
+    image: node:8-alpine   # https://hub.docker.com/r/library/node/
     ttyEnabled: true
     command: cat
