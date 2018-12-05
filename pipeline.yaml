@@ -12,7 +12,7 @@ build:
   - npm install -g yarn
   - cd console && yarn install && yarn build
 - maven:
-  - mvn install
+  - mvn clean install -Dmaven.repo.local=/root/.m2/${JOB_NAME}
 - docker:
   - cd docker && docker build . -t $image
   - docker images | grep cloudzcp
@@ -30,3 +30,5 @@ agent:
     image: node:8-alpine   # https://hub.docker.com/r/library/node/
     ttyEnabled: true
     command: cat
+  volumes:
+  - pvc:zcp-jenkins-mvn-repo: /root/.m2
