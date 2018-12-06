@@ -1,13 +1,14 @@
 stage:
-- checkout
-- build
+- Checkout
+- Build
+- Deploy
 
-checkout:
+Checkout:
 - node:
   - apk add git
-  - git clone https://github.com/yanghoon/console
+  - git clone -b develop https://github.com/yanghoon/console
 
-build:
+Build:
 - node:
   - npm install -g yarn
   - cd console && yarn install && yarn build
@@ -20,8 +21,15 @@ build:
     imageName: $image
     credentialsId: dockerhub
 
+Deploy:
+- kubectl:
+  - cd $yaml && bash template.sh
+  - kubectl apply -f $yaml/*.yaml
+  - kubectl scale deploy zcp-iam --replicas 1
+
 env:
   image: cloudzcp/zcp-portal-ui:1.1.0-alpha
+  yaml: k8s/template
 
 agent:
   profile: [maven, docker, kubectl]

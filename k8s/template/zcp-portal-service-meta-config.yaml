@@ -1,0 +1,257 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zcp-portal-service-meta-config
+  namespace: console
+data:
+  addOnServiceMetaData.json: |
+    [
+      {
+        "id": "monitoring",
+        "name": "모니터링",
+        "order": 1,
+        "url": "https://monitoring.cloudzcp.io/login/generic_oauth",
+        "target": "blank",
+        "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": [
+            "admin",
+            "deploy-manager"
+          ]
+        },
+        "enable": true
+      },
+      {
+        "id": "logging",
+        "name": "로깅",
+        "order": 2,
+        "url": "https://logging.cloudzcp.io",
+        "target": "blank",
+        "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": [
+            "admin",
+            "deploy-manager"
+          ]
+        },
+        "enable": true
+      },
+      {
+        "id": "alert",
+        "name": "알림",
+        "order": 3,
+        "url": "/alert",
+        "target": "self",
+        "sub": [
+          {
+            "id": "alerting",
+            "name": "Alerting",
+            "order": 1,
+            "url": "/alert/alerts",
+            "target": "self",
+            "enable": true
+          },
+          {
+            "id": "channel",
+            "name": "Channel",
+            "order": 2,
+            "url": "/alert/channels",
+            "target": "self",
+            "enable": true
+          },
+          {
+            "id": "rules",
+            "name": "Rules",
+            "order": 3,
+            "url": "/alert/rules",
+            "target": "self",
+            "enable": true
+          }
+        ],
+        "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": [
+            "admin"
+          ]
+        },
+        "enable": true
+      },
+      {
+        "id": "devops",
+        "name": "DevOps",
+        "order": 4,
+        "url": "/devops",
+        "target": "",
+        "sub": [
+          {
+            "id": "jenkins",
+            "name": "빌드 및 배포",
+            "order": 1,
+            "url": "https://jenkins.cloudzcp.io",
+            "target": "blank",
+            "enable": true
+          },
+          {
+            "id": "repository",
+            "name": "소스 저장소",
+            "order": 2,
+            "url": "https://git.cloudzcp.io/user/oauth2/keycloak",
+            "target": "blank",
+            "enable": true
+          }
+        ],
+        "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": [
+            "admin",
+            "deploy-manager",
+            "developer"
+          ]
+        },
+        "enable": true
+      },
+      {
+        "id": "registry",
+        "name": "Image Registry",
+        "order": 5,
+        "url": "https://registry.cloudzcp.io",
+        "target": "blank",
+        "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": [
+            "admin",
+            "deploy-manager",
+            "developer"
+          ]
+        },
+        "enable": true
+      },
+      {
+        "id": "catalog",
+        "name": "Catalog",
+        "order": 6,
+        "url": "https://catalog.cloudzcp.io",
+        "target": "blank",
+        "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": [
+            "admin"
+          ]
+        },
+        "enable": true
+      },
+      {
+        "id": "namespace",
+        "name": "네임스페이스",
+        "order": 7,
+        "url": "/management/namespaces",
+        "target": "self",
+        "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": [
+            "admin",
+            "cicd-manager"
+          ]
+        },
+        "enable": true
+      },
+      {
+        "id": "user",
+        "name": "사용자",
+        "order": 8,
+        "url": "/management/users",
+        "target": "self",
+         "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": []
+        },
+        "enable": true
+      },
+      {
+        "id": "zdb",
+        "name": "ZDB",
+        "order": 9,
+        "url": "https://zdb.cloudzcp.io",
+        "target": "blank",
+        "role": {
+          "clusterRoles": [
+            "cluster-admin"
+          ],
+          "namespaceRoles": [
+            "admin",
+            "deploy-manager",
+            "developer"
+          ]
+        },
+        "enable": true
+      },
+      {
+        "id": "guide",
+        "name": "안내 및 도움말",
+        "order": 10,
+        "url": "/guide",
+        "target": "",
+        "sub": [
+          {
+            "id": "initialize",
+            "name": "시작하기",
+            "order": 1,
+            "url": "/guide/initialize",
+            "target": "self",
+            "enable": true
+          },
+          {
+            "id": "document",
+            "name": "사용자 가이드",
+            "order": 2,
+            "url": "https://support.cloudz.co.kr",
+            "target": "blank",
+            "enable": true
+          },
+          {
+            "id": "qna",
+            "name": "문의 및 지원",
+            "order": 3,
+            "url": "https://support.cloudz.co.kr",
+            "target": "blank",
+            "enable": true
+          },
+          {
+            "id": "terms",
+            "name": "약관",
+            "order": 4,
+            "url": "/guide/terms",
+            "target": "self",
+            "enable": false
+          }
+        ],
+        "role": {
+          "clusterRoles": [
+            "cluster-admin",
+            "member"
+          ],
+          "namespaceRoles": [
+            "admin",
+            "deploy-manager",
+            "developer"
+          ]
+        },
+        "enable": true
+      }
+    ]
