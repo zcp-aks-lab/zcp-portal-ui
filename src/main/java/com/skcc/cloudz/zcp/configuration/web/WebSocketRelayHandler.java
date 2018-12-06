@@ -8,9 +8,9 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 import com.skcc.cloudz.zcp.configuration.web.WebSocketConfig.AbstractRelayHandler;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.socket.WebSocketExtension;
 import org.springframework.web.socket.WebSocketHandler;
@@ -19,6 +19,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
 public class WebSocketRelayHandler extends AbstractRelayHandler {
+    @Value("#{'${props.iam.baseUrl}'.replaceFirst('http', 'ws')}")
     private String relayUrl = "ws://localhost:8182";
 
     private WebSocketHttpHeaders headers;
