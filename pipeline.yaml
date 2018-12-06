@@ -24,7 +24,7 @@ Build:
 Deploy:
 - kubectl:
   - apk add bash && cd $yaml && bash template.sh
-  - kubectl apply -f $yaml/*.yaml
+  - kubectl apply -R -f $yaml/.tmp
   - kubectl scale deploy zcp-portal-ui --replicas 1
 
 env:
