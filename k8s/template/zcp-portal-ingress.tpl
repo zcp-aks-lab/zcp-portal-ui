@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   annotations:
     ${private_alb_enable}ingress.bluemix.net/ALB-ID: ${private_alb}
-    ingress.bluemix.net/redirect-to-https: "True"
+    ingress.bluemix.net/redirect-to-https: 'True'
   name: zcp-portal-ui-ingress
   namespace: ${namespace}
 spec:
