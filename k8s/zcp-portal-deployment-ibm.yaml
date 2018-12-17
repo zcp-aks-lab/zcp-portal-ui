@@ -10,9 +10,10 @@ spec:
       labels:
         component: zcp-portal-ui
         # https://www.weave.works/docs/cloud/latest/tasks/monitor/configuration-k8s/
-        prometheus.io/scrape: 'true'
+      annotations:
         prometheus.io/path: /prometheus
-        prometheus.io/port: 8181
+        prometheus.io/port: '8181'
+        prometheus.io/scrape: 'true'
     spec:
       tolerations:
       - key: "management"
