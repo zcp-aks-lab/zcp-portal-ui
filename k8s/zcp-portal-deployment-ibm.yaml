@@ -44,6 +44,8 @@ spec:
         - configMapRef:
             name: zcp-portal-ui-config
         env:
+          - name: server.tomcat.protocol-header
+            value: x-forwarded-proto
           - name: CLIENT_SECRET
             valueFrom:
               secretKeyRef:
