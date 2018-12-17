@@ -34,8 +34,13 @@ spring:
       force: true # force the configured encoding
 
 security:
+  ignored: health,prometheus
   basic:
     enabled: false
+
+endpoints:
+  prometheus:
+    sensitive: false
 
 logging:
   level:
