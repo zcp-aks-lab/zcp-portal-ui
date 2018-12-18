@@ -4,15 +4,14 @@
     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" 
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
-<head>
-
+<head th:with="label=${ @environment.getProperty('console.application.label') }">
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
     <meta name="_csrf" th:content="${_csrf} ? ${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf} ? ${_csrf.headerName}"/>
     
-    <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE">CloudZ CP</title>
+    <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE" th:text="'CloudZ CP' + (${label} ? | (${label})| : '')">CloudZ CP</title>
     <link rel="icon" href="images/favicon_zcp.ico" th:href="@{/images/favicon_zcp.ico}" />
 
     <!-- common static resources-->
@@ -53,7 +52,14 @@
 	        <div class="lnb-wrap">
 	            <nav>
 	                <ul>
-                        <li><a href="javascript:void(0);"><img src="images/ico-lnbname.png" data-th-src="@{/images/ico-lnbname.png}" class="icon-img" onclick="location.href='/'" /><span class="lnb-name" onclick="location.href='/'">ZCP</span></a></li>
+                        <li>
+							<a href="javascript:void(0);">
+								<img src="images/ico-lnbname.png" data-th-src="@{/images/ico-lnbname.png}" class="icon-img" onclick="location.href='/'" />
+								<span class="lnb-name" onclick="location.href='/'"
+										th:text="${ @environment.getProperty('console.application.product') }?: 'ZCP'"></span>
+								<span class="lnb-label" th:text="${ @environment.getProperty('console.application.label') }"></span>
+							</a>
+						</li>
                         
                         <th:block th:each="parent, iterStat : ${addOnServiceMetaList}">
 	                        <li th:classappend="|${parent.url == activePathInfo.firstPath ? 'selected':''} ${parent.target}|">

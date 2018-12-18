@@ -2217,3 +2217,35 @@ a.grid:active  { text-decoration:underline; }
 
 .btn-ico.btn-download { top: 4px; height: 24px; background: transparent url(../images/icon_input_download.png) no-repeat 0 5px; }
 .btn-ico.btn-download:hover { background: transparent url(../images/icon_input_download.png) no-repeat -25px 5px; } 
+
+/*
+ * Subtitle
+ */
+.badge {
+	/* from FaaS */
+	border-radius: 8px;
+	display: inline-block;
+    height: 18px;
+    padding: 0 7px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 16px;
+}
+.badge-lnb {
+	background: #A93193;
+	letter-spacing: -0.5px;
+	margin-left: 10px;
+	padding-right: 9px;
+
+    font-size: 11px;
+    line-height: 17px;
+    font-weight: 650;
+}
+.lnb-label {
+	font-size: 0.9rem;
+	letter-spacing: -0.1px;
+    /* top: 2px; */
+    left: 10px;
+    position: relative;
+}
