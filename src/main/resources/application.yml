@@ -45,6 +45,11 @@ endpoints:
 management:
   port: 9000
 
+console:
+  application:
+    product: ZCP
+    label: local
+
 logging:
   level:
     root: INFO 
