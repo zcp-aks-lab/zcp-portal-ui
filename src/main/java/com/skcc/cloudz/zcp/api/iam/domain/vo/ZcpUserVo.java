@@ -23,6 +23,7 @@ public class ZcpUserVo {
     private int usedNamespace;
     private List<String> requiredActions;
     private String namespacedRole;
+    private Boolean zdbAdmin;
     
     public ZcpUserVo() {
         super();
@@ -155,4 +156,13 @@ public class ZcpUserVo {
     public void setNamespacedRole(String namespacedRole) {
         this.namespacedRole = namespacedRole;
     }
+
+    public Boolean getZdbAdmin() {
+        return zdbAdmin;
+    }
+
+    public void setZdbAdmin(Boolean zdbAdmin) {
+        this.zdbAdmin = zdbAdmin;
+    }
+    
 }

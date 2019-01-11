@@ -389,6 +389,54 @@
                                 })
                             }
                         });
+                    },
+
+                    updateZdbAdmin: function() {
+                        if ($('#btnZdbAdmin').hasClass('btn-on')) {
+                            $('#btnZdbAdmin').removeClass('btn-on').addClass('btn-off');
+                            $('#btnZdbAdmin').text('OFF');
+                        } else {
+                            $('#btnZdbAdmin').removeClass('btn-off').addClass('btn-on');
+                            $('#btnZdbAdmin').text('ON');
+                        }
+
+                        var targetZdbAdmin = $('#btnZdbAdmin').hasClass('btn-on') ? false : true;
+                        var data = {
+                            key: 'zdb-admin',    
+                            value: targetZdbAdmin
+                        };
+
+                        commonPopup.confirm({
+                            title: 'ZDB 어드민 권한 설정',
+                            message: targetZdbAdmin ? 'ZDB 어드민 권한을 설정 하시겠습니까?' : 'ZDB 어드민 권한을 해제 하시겠습니까?',
+                            callback: function() {
+                                $a.request('/management/user/' + $('#id').val() + '/attribute', {
+                                    method: 'post',
+                                    data: data, 
+                                    success: function(res) {
+                                        if (res.resultCd !== constants.result.SUCCESS) {
+                                            commonPopup.alert({message: res.resultMsg});
+                                            return false;
+                                        }
+                                      
+                                        if (targetZdbAdmin) {
+                                            $('#btnZdbAdmin').removeClass('btn-off').addClass('btn-on');
+                                            $('#btnZdbAdmin').text('ON');
+                                            
+                                            commonPopup.alert({message: 'ZDB 어드민 권한이 설정 되었습니다.'});
+                                        } else {
+                                            $('#btnZdbAdmin').removeClass('btn-on').addClass('btn-off');
+                                            $('#btnZdbAdmin').text('OFF');
+                                            
+                                            commonPopup.alert({message: 'ZDB 어드민 권한이 해제 되었습니다.'});
+                                        }
+                                    },
+                                    error : function(errObject) {
+                                        //alert('처리 중 오류가 발생하였습니다. 잠시 후 다시 시도하세요.');
+                                    }
+                                })
+                            }
+                        });
                     }
                 },
                 event: {
@@ -431,6 +479,10 @@
                         $('#btnTotp').on('click', function() {
                             zcpPortalApp.data.optPassword();
                         });
+
+                        $('#btnZdbAdmin').on('click', function() {
+                            zcpPortalApp.data.updateZdbAdmin();
+                      });
                     },
 
                     addNamespaceRole: function() {
@@ -514,9 +566,6 @@
                         <form th:id="infoform" onsubmit="return false;">
                             <input type="hidden" th:name="username" th:id="username" th:value="${zcpUser.username}" />
                             <input type="hidden" th:name="id" th:id="id" th:value="${zcpUser.id}" />
-                            
-                            <!-- <input type="text" th:name="keyword" th:id="keyword" th:value="${commonVo.keyword}" />
-                            <input type="text" th:name="current" th:id="current" th:value="${commonVo.current}" /> -->
                                                         
                             <fieldset>
                                 <table class="Table Form-type topline">
@@ -772,6 +821,32 @@
                                     <div class="btn-wrap">
                                         <div class="btn-right"><button class="Button btn bg-red" id="btnClusterRoleBinding">확인</button></div>
                                     </div>
+                                </div>
+                            </li>
+                            <li th:if="${@environment.getProperty('props.zdb.enabled') == 'true'}">
+                                <a>ZDB 권한</a>
+                                <div class="accor-contents__wrap">
+                                    <form th:id="zdbform" onsubmit="return false;">
+                                        <fieldset>
+                                            <table class="Table Form-type">
+                                                <colgroup>
+                                                    <col style="width: 200px;" />
+                                                    <col />
+                                                </colgroup>
+                                                <tbody>
+                                                    <tr>
+                                                        <th>ZDB 어드민</th>
+                                                        <td>
+                                                            <div class="onoff-wrap" th:switch="${zcpUser.zdbAdmin}">
+			                                                    <button th:case="true" class="Button btn-on" id="btnZdbAdmin">ON</button>
+			                                                    <button th:case="false" class="Button btn-off" id="btnZdbAdmin">OFF</button>
+			                                                </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </fieldset>
+                                    </form>
                                 </div>
                             </li>
                             <li>

@@ -236,5 +236,16 @@ public class UserService {
         
         return namespaceRole;
     }
+    
+    public void updateAttributes(String id, String key, String value) throws Exception {
+        HashMap<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("key", key);
+        reqMap.put("value", value);
+        
+        ApiResponseVo apiResponseVo = iamApiService.updateUserAttribute(id, reqMap);
+        if (!apiResponseVo.getCode().equals(ApiResult.SUCCESS.getCode())) {
+            throw new ZcpPortalException(apiResponseVo);
+        }
+    }
 
 }

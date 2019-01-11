@@ -11,7 +11,7 @@ props:
       userAuthorizationUri: https://pou-dev-iam.cloudzcp.io/auth/realms/zcp/protocol/openid-connect/auth
       redirectUri: ${HOME_URL:http://localhost:8181}/login
   iam:
-    baseUrl: https://pou-dev-internal-iam.cloudzcp.io
+    baseUrl: http://localhost:8282
   alertmanager:
     baseUrl: http://localhost:8080
   dashboard:
@@ -20,6 +20,8 @@ props:
     filePath: C:\cloud\temp\upload\
     fileName: addOnServiceMetaData.json
   cliDownloadUrl: https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-binary-using-curl
+  zdb:
+    enabled: true
   
 
     

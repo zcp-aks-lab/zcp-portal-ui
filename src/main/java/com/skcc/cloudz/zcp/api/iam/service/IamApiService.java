@@ -62,5 +62,7 @@ public interface IamApiService {
     ApiResponseVo getClusterStatus(String type);
     
     ApiResponseVo getUsersStatus(String namespace);
+    
+    ApiResponseVo updateUserAttribute(String id, HashMap<String, Object> reqMap);
 
 }

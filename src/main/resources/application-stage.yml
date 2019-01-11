@@ -20,3 +20,5 @@ props:
     filePath: /home/zcp/
     fileName: addOnServiceMetaData.json
   cliDownloadUrl: https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-binary-using-curl
+  zdb:
+    enabled: true

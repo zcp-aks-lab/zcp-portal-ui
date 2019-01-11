@@ -223,5 +223,22 @@ public class UserController {
         
         return resultMap;
     }
+    
+    @PostMapping(value = "/user/{id}/attribute", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody 
+    public Map<String, Object> updateAttribute(@PathVariable("id") String id, @RequestBody UserVo.Attribute attributeVo) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        
+        try {
+            userService.updateAttributes(id, attributeVo.getKey(), attributeVo.getValue());
+            
+            resultMap.put("resultCd", Result.SUCCESS.getCd());
+        } catch (Exception e) {
+            resultMap.put("resultCd", Result.ERROR.getCd());
+            resultMap.put("resultMsg", ZcpPortalException.getExceptionMsg(e));
+        }
+        
+        return resultMap;
+    }
 
 }
