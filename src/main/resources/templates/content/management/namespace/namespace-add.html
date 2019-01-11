@@ -10,6 +10,8 @@
 	<script src="/js/common/namespaceCommon.js" data-th-src="@{/js/common/namespaceCommon.js}"></script>
 	<script th:inline="javascript" type="text/javascript">
 	/*<![CDATA[*/
+        var zdbEnabled = /*[[${@environment.getProperty('props.zdb.enabled')}]]*/;
+	
 		function addNamespace(){
 			//if(!validate()) return ;
 			var namespace = validate();
@@ -44,6 +46,11 @@
 						,memoryLimitsUnit : $('#select_pod_memory_limits option:selected').val()
 					}
 				};
+
+		    if (zdbEnabled) {
+		        data.zdbAdmin = $('#btnZdbAdmin').hasClass('btn-on') ? true : false;
+			}
+			
 			commonPopup.confirm({
                 //title: '비밀번호 재설정',
                 message: 'Namespace 를 추가하시겠습니까?',
@@ -119,6 +126,14 @@
 										<p class="info-text">알파벳으로 시작하여 알파벳과 숫자,'-'를 이용하여 3~30자리로 입력하세요.</p>
 									</td>
 								</tr>
+								<tr th:if="${@environment.getProperty('props.zdb.enabled') == 'true'}">
+                                    <th>ZDB 어드민 권한</th>
+                                    <td>
+                                        <div class="onoff-wrap" >
+                                            <button class="Button btn-on" id="btnZdbAdmin">ON</button>
+                                        </div>
+                                    </td>
+                                </tr>
 							</tbody>
 						</table>
 					</fieldset>
