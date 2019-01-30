@@ -13,6 +13,6 @@ data:
   IAM_BASE_URI: http://zcp-iam:80
   ALERT_BASE_URI: http://zcp-alertmanager:80
   DASHBOARD_BASE_URI: https://dashboard.cloudzcp.io
-  ZDB_ENABLED: true
+  ZDB_ENABLED: 'true'
   console.application.product:   # eg. ZCP
   console.application.label:     # eg. pou-dev
