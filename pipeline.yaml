@@ -6,7 +6,8 @@ stage:
 Checkout:
 - node:
   - apk add git
-  - git clone -b develop https://github.com/yanghoon/console
+  - git clone https://github.com/yanghoon/danpod-webpack-custom console
+  # - git clone -b develop https://github.com/yanghoon/console
 
 Build:
 - node:
