@@ -2,6 +2,7 @@ package com.skcc.cloudz.zcp.portal.console.controller;
 
 import java.security.Principal;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -85,7 +87,7 @@ public class DummyConsoleController {
         return "redirect:" + url;
     }
 
-    @GetMapping(value = { "/resource/{kind}/{name}" })
+    @RequestMapping(value = { "/resource/{kind}/{name}" }, method = {RequestMethod.GET, RequestMethod.PUT})
     public String redirectResource(Principal principal, @PathVariable String kind, @PathVariable String name,
             @RequestParam MultiValueMap<String, String> params)
             throws Exception {
@@ -133,6 +135,7 @@ public class DummyConsoleController {
     public void reloadMenus(){
         meta.clear();
         List<AddOnServiceMataVo> raw = metaService.getAddOnServiceMetaDataFileLoad();
+        Collections.sort(raw);
         for(AddOnServiceMataVo m : raw) {
             Role roles = m.getRole();
             for (String cluster : roles.getClusterRoles()) {
