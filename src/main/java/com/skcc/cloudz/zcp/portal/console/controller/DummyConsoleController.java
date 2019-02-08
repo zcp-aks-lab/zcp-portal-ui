@@ -105,6 +105,24 @@ public class DummyConsoleController {
         return "redirect:" + url;
     }
 
+    @RequestMapping(value = { "/logs" }, method = {RequestMethod.GET})
+    public String redirectLogs(Principal principal,
+            @RequestParam MultiValueMap<String, String> params)
+            throws Exception {
+        Map<String, String> vars = Maps.newHashMap();
+        vars.put("username", principal.getName());
+        vars.put("ns", params.getFirst("ns"));
+        vars.put("kind", params.getFirst("kind"));
+        vars.put("name", params.getFirst("name"));
+
+        String url = UriComponentsBuilder.fromPath(redirect + "/{name}/logs")
+                            .queryParams(params)
+                            .buildAndExpand(vars)
+                            .toString();
+
+        return "redirect:" + url;
+    }
+
     @ResponseBody
     @GetMapping(value = "/profile")
     public ZcpUserVo profile() throws Exception {

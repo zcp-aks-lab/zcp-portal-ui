@@ -183,7 +183,7 @@
         "id": "deployment",
         "name": "Deployment",
         "order": 1,
-        "url": "",
+        "url": "/resources/workloads/deploy",
         "target": "self",
         "enable": true
       },
@@ -191,7 +191,7 @@
         "id": "statefulset",
         "name": "StatefulSet",
         "order": 2,
-        "url": "",
+        "url": "/resources/workloads/sts",
         "target": "self",
         "enable": true
       },
@@ -199,7 +199,7 @@
         "id": "cronjob",
         "name": "CronJob",
         "order": 3,
-        "url": "",
+        "url": "/resources/workloads/cronjob",
         "target": "self",
         "enable": true
       },
@@ -207,7 +207,7 @@
         "id": "job",
         "name": "Job",
         "order": 4,
-        "url": "",
+        "url": "/resources/workloads/job",
         "target": "self",
         "enable": true
       },
@@ -215,7 +215,7 @@
         "id": "pod",
         "name": "Pod",
         "order": 5,
-        "url": "",
+        "url": "/resources/workloads/pod",
         "target": "self",
         "enable": true
       }
