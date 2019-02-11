@@ -17,6 +17,7 @@ import com.skcc.cloudz.zcp.common.constants.ClusterRole;
 import com.skcc.cloudz.zcp.common.domain.vo.AddOnServiceMataVo;
 import com.skcc.cloudz.zcp.common.domain.vo.AddOnServiceMataVo.Role;
 import com.skcc.cloudz.zcp.common.security.vo.OpenIdConnectUserDetailsVo;
+import com.skcc.cloudz.zcp.configuration.properties.ConsoleProperties;
 import com.skcc.cloudz.zcp.configuration.web.interceptor.AddOnServiceMetaDataInterceptor;
 import com.skcc.cloudz.zcp.portal.management.user.service.UserService;
 import com.skcc.cloudz.zcp.portal.my.service.MyService;
@@ -46,6 +47,9 @@ public class DummyConsoleController {
     private String redirect = "/iam/rbac/{username}/namespace/{ns}/{kind}";
     private Multimap<String, AddOnServiceMataVo> meta = ArrayListMultimap.create();
 
+    @Autowired
+    private ConsoleProperties props;
+    
     @Autowired
     private MyService myService;
 
@@ -105,7 +109,7 @@ public class DummyConsoleController {
         return "redirect:" + url;
     }
 
-    @RequestMapping(value = { "/logs" }, method = {RequestMethod.GET})
+    @RequestMapping(value = { "/log" }, method = {RequestMethod.GET})
     public String redirectLogs(Principal principal,
             @RequestParam MultiValueMap<String, String> params)
             throws Exception {
@@ -127,6 +131,12 @@ public class DummyConsoleController {
     @GetMapping(value = "/profile")
     public ZcpUserVo profile() throws Exception {
         return myService.getMyUser();
+    }
+
+    @ResponseBody
+    @GetMapping("/config")
+    public Object config(){
+        return props;
     }
 
     @ResponseBody
