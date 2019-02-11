@@ -380,7 +380,8 @@ $a.page(function() {
     ];
     // 초기화 함수
     this.init = function(id, param) {
-        gridInit();
+		gridInit();
+		setNamespaceFromCookie();
     };
     function gridInit(){
     	// 그리드 공통 설정 
@@ -572,8 +573,23 @@ $a.page(function() {
     			height : 730
     		});
     		$("#gr3").alopexGrid( "viewUpdate" );
-    	});
-    	
+		});
+		
     };
    
+	function setNamespaceFromCookie(){
+		try {
+			var config = Cookies.getJSON('config') || {};
+			if (!config.ns) { return; }
+
+			if (window.selectedNamespace === undefined) {
+				$('.locations-area button.namespace').text(config.ns);
+			} else if(location.pathname ==='/' && window.selectedNamespace !== config.ns) {
+				location.href = '/?namespace=' + config.ns;
+			}
+		} catch (e) {
+			console.log('Fail to set current namespace.', e)
+		}
+	}
+    	
 });

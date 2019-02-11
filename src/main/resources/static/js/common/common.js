@@ -143,6 +143,15 @@ function chkPwd(str) {
 }
 
 function moveMainNamespace(namespace) {
+	try {
+		// store changed namespace into cookie
+		var config = Cookies.getJSON('config') || {};
+		config.ns = namespace === 'TOTAL' ? '' : namespace;
+		Cookies.set('config', config);
+	} catch (e) {
+		console.log('Fail to sotre namespace.', e)
+	}
+
 	location.href = '/?namespace=' + namespace;
 }
 
