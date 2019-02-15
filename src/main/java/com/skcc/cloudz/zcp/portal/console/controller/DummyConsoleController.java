@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;
@@ -33,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /*
@@ -44,7 +42,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class DummyConsoleController {
     static final String RESOURCE_PATH = "/api";
 
-    private String redirect = "/iam/rbac/{username}/namespace/{ns}/{kind}";
+    private String redirect = "/iam/resource/{kind}";
     private Multimap<String, AddOnServiceMataVo> meta = ArrayListMultimap.create();
 
     @Autowired
@@ -59,47 +57,36 @@ public class DummyConsoleController {
     @Autowired
     private AddOnServiceMetaDataInterceptor metaService;
 
-    @GetMapping(value = { "/cluster/**", "cluster/list" })
-    public String dummy(HttpServletRequest req) throws Exception {
-        ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentRequest();
-        String path = builder.build().getPath();
-        String redirect = path.substring("/api/".length()).replace('/', '.') + ".json";
-
-        System.out.println("path     = " + path);
-        System.out.println("redirect = " + redirect);
-
-        return "redirect:/dummy/" + redirect;
-    }
-
-    @GetMapping(value = { "/cluster/{cs}/namespace/list" })
-    public String namespaceList(Principal principal, @RequestParam Map<String, String> params) throws Exception {
-        params.put("username", principal.getName());
-
-        String url = UriComponentsBuilder.fromPath("/iam/rbac/{username}/namespace").buildAndExpand(params).toString();
-
-        return "redirect:" + url;
-    }
-
-    @GetMapping(value = { "/{kind}/list" })
-    public String redirect(Principal principal, @PathVariable String kind, @RequestParam Map<String, String> params)
+    @GetMapping(value = { "/resource/{kind}" })
+    public String redirect(Principal principal, @PathVariable String kind,
+            @RequestParam MultiValueMap<String, String> params)
             throws Exception {
-        params.put("username", principal.getName());
-        params.put("kind", kind);
+        String username = principal.getName();
+        params.add("username", username);
 
-        String url = UriComponentsBuilder.fromPath(redirect).buildAndExpand(params).toString();
+        Map<String, String> vars = Maps.newHashMap();
+        vars.put("username", username);
+        vars.put("kind", kind);
+
+        String url = UriComponentsBuilder.fromPath(redirect)
+                        .queryParams(params)
+                        .buildAndExpand(vars)
+                        .toString();
 
         return "redirect:" + url;
     }
 
-    @RequestMapping(value = { "/resource/{kind}/{name}" }, method = {RequestMethod.GET, RequestMethod.PUT})
+    @RequestMapping(value = { "/resource/{kind}/{name:.+}" }, method = {RequestMethod.GET, RequestMethod.PUT})
     public String redirectResource(Principal principal, @PathVariable String kind, @PathVariable String name,
             @RequestParam MultiValueMap<String, String> params)
             throws Exception {
+        String username = principal.getName();
+        params.add("username", username);
+
         Map<String, String> vars = Maps.newHashMap();
-        vars.put("username", principal.getName());
+        vars.put("username", username);
         vars.put("kind", kind);
         vars.put("name", name);
-        vars.put("ns", params.getFirst("ns"));
 
         String url = UriComponentsBuilder.fromPath(redirect + "/" + name)
                             .queryParams(params)
@@ -113,6 +100,9 @@ public class DummyConsoleController {
     public String redirectLogs(Principal principal,
             @RequestParam MultiValueMap<String, String> params)
             throws Exception {
+        String username = principal.getName();
+        params.add("username", username);
+
         Map<String, String> vars = Maps.newHashMap();
         vars.put("username", principal.getName());
         vars.put("ns", params.getFirst("ns"));

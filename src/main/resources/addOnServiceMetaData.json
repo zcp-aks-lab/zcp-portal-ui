@@ -174,7 +174,7 @@
   {
     "id": "app",
     "name": "App",
-    "url": "/app",
+    "url": "/resources/workloads",
     "target": "",
     "order": 21,
     "enable": true,
@@ -233,7 +233,7 @@
   {
     "id": "network",
     "name": "Network",
-    "url": "/network",
+    "url": "/resources/networks",
     "target": "",
     "order": 22,
     "enable": true,
@@ -242,7 +242,7 @@
         "id": "service",
         "name": "Service",
         "order": 1,
-        "url": "",
+        "url": "/resources/networks/svc",
         "target": "self",
         "enable": true
       },
@@ -250,7 +250,7 @@
         "id": "ingress",
         "name": "Ingress",
         "order": 2,
-        "url": "",
+        "url": "/resources/networks/ing",
         "target": "self",
         "enable": true
       },
@@ -258,7 +258,7 @@
         "id": "network-policy",
         "name": "NetworkPolicy",
         "order": 3,
-        "url": "",
+        "url": "/resources/networks/netpol",
         "target": "self",
         "enable": true
       }
@@ -276,7 +276,7 @@
   {
     "id": "resource",
     "name": "Resource",
-    "url": "/resource",
+    "url": "/resources/data",
     "target": "",
     "order": 23,
     "enable": true,
@@ -285,7 +285,7 @@
         "id": "configmap",
         "name": "ConfigMap",
         "order": 1,
-        "url": "",
+        "url": "/resources/data/cm",
         "target": "self",
         "enable": true
       },
@@ -293,7 +293,7 @@
         "id": "secret",
         "name": "Secret",
         "order": 2,
-        "url": "",
+        "url": "/resources/data/secret",
         "target": "self",
         "enable": true
       },
@@ -319,7 +319,7 @@
   {
     "id": "storage",
     "name": "Storage",
-    "url": "/resource",
+    "url": "/volumes",
     "target": "",
     "order": 24,
     "enable": true,
@@ -328,7 +328,7 @@
         "id": "pvc",
         "name": "PVC",
         "order": 1,
-        "url": "",
+        "url": "/volumes/pvc",
         "target": "self",
         "enable": true
       }

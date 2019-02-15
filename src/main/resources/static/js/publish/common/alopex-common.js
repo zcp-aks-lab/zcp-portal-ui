@@ -582,6 +582,11 @@ $a.page(function() {
 			var config = Cookies.getJSON('config') || {};
 			if (!config.ns) { return; }
 
+			function text() { return $(this).text() }
+			var selector = '.prj-list .dropmenu-list a'
+			var ns = $(selector).map(text).get() || [];
+			if (ns.indexOf(config.ns) == -1) { return; }
+
 			if (window.selectedNamespace === undefined) {
 				$('.locations-area button.namespace').text(config.ns);
 			} else if(location.pathname ==='/' && window.selectedNamespace !== config.ns) {
