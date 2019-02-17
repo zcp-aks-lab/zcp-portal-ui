@@ -319,7 +319,7 @@
   {
     "id": "storage",
     "name": "Storage",
-    "url": "/volumes",
+    "url": "/resources/volumes",
     "target": "",
     "order": 24,
     "enable": true,
@@ -328,7 +328,7 @@
         "id": "pvc",
         "name": "PVC",
         "order": 1,
-        "url": "/volumes/pvc",
+        "url": "/resources/volumes/pvc",
         "target": "self",
         "enable": true
       }
