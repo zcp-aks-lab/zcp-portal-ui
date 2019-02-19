@@ -12,6 +12,26 @@ public class ErrorController {
     static final String RESOURCE_PATH = "/error";
     
     /**
+     * 401 unauthorized
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/unauthorized", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+    public String unauthorized() throws Exception {
+        return "redirect:/login";
+    }
+    
+    /**
+     * 403 access denied
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/accessDenied", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
+    public String accessDenied() throws Exception {
+        return "common/error/accessDenied";
+    }
+    
+    /**
      * 404 not found
      * @return
      * @throws Exception
@@ -19,16 +39,6 @@ public class ErrorController {
     @GetMapping(value = "/notFound", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
     public String notFound() throws Exception {
         return "common/error/notFound";
-    }
-    
-    /**
-     * 401 access denied
-     * @return
-     * @throws Exception
-     */
-    @GetMapping(value = "/accessDenied", consumes = MediaType.ALL_VALUE, produces = MediaType.TEXT_HTML_VALUE)
-    public String accessDenied() throws Exception {
-        return "common/error/accessDenied";
     }
 
 }

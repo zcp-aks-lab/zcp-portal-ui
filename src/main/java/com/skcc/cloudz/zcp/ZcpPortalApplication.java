@@ -64,6 +64,7 @@ public class ZcpPortalApplication extends SpringBootServletInitializer implement
                 container.setCompression(compression);
                 
                 container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/error/notFound"));
+                container.addErrorPages(new ErrorPage(HttpStatus.UNAUTHORIZED, "/error/unauthorized"));
             }
         };
     }
