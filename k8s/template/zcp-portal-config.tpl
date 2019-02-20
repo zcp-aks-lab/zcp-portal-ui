@@ -15,3 +15,4 @@ data:
   ZDB_ENABLED: 'true'
   console.application.product: ${config_product:-''}   # eg. ZCP
   console.application.label: ${config_label:-''}       # eg. pou-dev
+  server.tomcat.protocol-header: x-forwarded-proto
