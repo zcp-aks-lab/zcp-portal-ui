@@ -1,0 +1,5 @@
+node {
+  sh 'wget https://raw.githubusercontent.com/cnpst/zcp-snippet/master/jenkins/slack/slack.groovy'
+  def client = load 'slack.groovy'
+  client.send()
+}
