@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: zcp-portal-service-meta-config
-  namespace: zcp-system
+  namespace: ##namespace##
 data:
   addOnServiceMetaData.json: |
     [
@@ -10,7 +10,7 @@ data:
         "id": "monitoring",
         "name": "모니터링",
         "order": 10,
-        "url": "https://monitoring.cloudzcp.io/login/generic_oauth",
+        "url": "https://##domain_prefix##monitoring.cloudzcp.io/login/generic_oauth",
         "target": "blank",
         "role": {
           "clusterRoles": [
@@ -27,7 +27,7 @@ data:
         "id": "logging",
         "name": "로깅",
         "order": 11,
-        "url": "https://logging.cloudzcp.io",
+        "url": "https://##domain_prefix##logging.cloudzcp.io",
         "target": "blank",
         "role": {
           "clusterRoles": [
@@ -93,7 +93,7 @@ data:
             "id": "jenkins",
             "name": "빌드 및 배포",
             "order": 1,
-            "url": "https://devops.cloudzcp.io",
+            "url": "https://##domain_prefix##devops.cloudzcp.io",
             "target": "blank",
             "enable": true
           },
@@ -101,7 +101,7 @@ data:
             "id": "repository",
             "name": "소스 저장소",
             "order": 2,
-            "url": "https://git.cloudzcp.io/user/oauth2/keycloak",
+            "url": "https://##domain_prefix##git.cloudzcp.io/user/oauth2/keycloak",
             "target": "blank",
             "enable": true
           },
@@ -109,7 +109,7 @@ data:
             "id": "registry",
             "name": "Image Registry",
             "order": 5,
-            "url": "https://registry.cloudzcp.io",
+            "url": "https://##domain_prefix##registry.cloudzcp.io",
             "target": "blank",
             "enable": true
           },
@@ -138,7 +138,7 @@ data:
         "id": "catalog",
         "name": "Catalog",
         "order": 30,
-        "url": "https://catalog.cloudzcp.io",
+        "url": "https://##domain_prefix##catalog.cloudzcp.io",
         "target": "blank",
         "role": {
           "clusterRoles": [
@@ -360,7 +360,7 @@ data:
         "id": "zdb",
         "name": "ZDB",
         "order": 32,
-        "url": "https://zdb.cloudzcp.io",
+        "url": "https://##domain_prefix##zdb.cloudzcp.io",
         "target": "blank",
         "role": {
           "clusterRoles": [
