@@ -579,17 +579,27 @@ $a.page(function() {
    
 	function setNamespaceFromCookie(){
 		try {
+			// Find selected namespace
+			// - from Query String
+			var query_ns = /namespace=([^&=]+)/.exec(location.search) || [];
+			if (query_ns[1]) { return; }
+
+			// - from Cookie
 			var config = Cookies.getJSON('config') || {};
 			if (!config.ns) { return; }
 
+			// Validataion : invisible namesapce (no premission)
 			function text() { return $(this).text() }
 			var selector = '.prj-list .dropmenu-list a'
 			var ns = $(selector).map(text).get() || [];
 			if (ns.indexOf(config.ns) == -1) { return; }
 
+			// Set namesapce form Cookie
 			if (window.selectedNamespace === undefined) {
+				// only client (label)
 				$('.locations-area button.namespace').text(config.ns);
 			} else if(location.pathname ==='/' && window.selectedNamespace !== config.ns) {
+				// to server
 				location.href = '/?namespace=' + config.ns;
 			}
 		} catch (e) {
