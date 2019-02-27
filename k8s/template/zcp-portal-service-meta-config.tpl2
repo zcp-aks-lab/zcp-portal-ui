@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: zcp-portal-service-meta-config
   namespace: ##namespace##
+  labels:
+    component: zcp-portal-ui
 data:
   addOnServiceMetaData.json: |
     [

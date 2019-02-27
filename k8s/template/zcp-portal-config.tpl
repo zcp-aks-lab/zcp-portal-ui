@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: zcp-portal-ui-config
   namespace: ${namespace}
+  labels:
+    component: zcp-portal-ui
 data:
   SPRING_ACTIVE_PROFILE: stage
   CLIENT_ID: account

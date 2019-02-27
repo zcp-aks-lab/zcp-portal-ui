@@ -4,6 +4,8 @@ metadata:
   annotations:
     ${private_alb_enable}ingress.bluemix.net/ALB-ID: ${private_alb}
     ingress.bluemix.net/redirect-to-https: 'True'
+  labels:
+    component: zcp-portal-ui
   name: zcp-portal-ui-ingress
   namespace: ${namespace}
 spec:

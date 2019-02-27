@@ -70,7 +70,7 @@ kind: Service
 metadata:
   name: zcp-portal-ui
   labels:
-    name: zcp-portal-ui
+    component: zcp-portal-ui
   namespace: ${namespace}
 spec:
   type: ClusterIP
