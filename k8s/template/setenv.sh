@@ -1,12 +1,12 @@
 out_dir=.tmp
 
-domain_prefix=pou-dev-
+domain_prefix=pog-dev-
 domain_iam=${domain_prefix}iam.cloudzcp.io
-domain_console=console.cloudzcp.io
+domain_console=${domain_prefix}console.cloudzcp.io
 
-namespace=console
-image=cloudzcp/zcp-portal-ui:1.1.0-alpha
-replicas=0
+namespace=zcp-system
+image=registry.au-syd.bluemix.net/cloudzcp/zcp-iam:1.1.0
+replicas=1
 
 config_product=ZCP    #eg. 'ZCP :)'
 config_label=pou-dev  #eg. 'pou-dev'
