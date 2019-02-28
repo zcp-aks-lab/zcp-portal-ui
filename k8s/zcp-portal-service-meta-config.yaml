@@ -172,7 +172,8 @@ data:
             "name": "사용자",
             "order": 2,
             "url": "/management/users",
-            "target": "self"
+            "target": "self",
+            "enable": true
           }
         ],
         "role": {
