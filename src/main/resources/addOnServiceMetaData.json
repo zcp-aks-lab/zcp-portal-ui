@@ -1,7 +1,7 @@
 [
   {
     "id": "monitoring",
-    "name": "모니터링",
+    "name": "Monitoring",
     "order": 10,
     "url": "https://grafana.cloudzcp.io/login/generic_oauth",
     "target": "blank",
@@ -18,7 +18,7 @@
   },
   {
     "id": "logging",
-    "name": "로깅",
+    "name": "Logging",
     "order": 11,
     "url": "https://kibana.cloudzcp.io",
     "target": "blank",
@@ -36,7 +36,7 @@
   },
   {
     "id": "alert",
-    "name": "알림",
+    "name": "Notifications",
     "order": 12,
     "url": "/alert",
     "target": "self",
@@ -85,7 +85,7 @@
     "sub": [
       {
         "id": "jenkins",
-        "name": "빌드 및 배포",
+        "name": "Pipeline",
         "order": 1,
         "url": "https://jenkins.cloudzcp.io",
         "target": "blank",
@@ -93,7 +93,7 @@
       },
       {
         "id": "repository",
-        "name": "소스 저장소",
+        "name": "Code",
         "order": 2,
         "url": "https://git.cloudzcp.io/user/oauth2/keycloak",
         "target": "blank",
@@ -146,14 +146,14 @@
   },
   {
     "id": "cluster",
-    "name": "Cluster 관리",
+    "name": "Administration",
     "order": 31,
     "url": "/management",
     "target": "",
     "sub": [
       {
         "id": "namespace",
-        "name": "네임스페이스",
+        "name": "Namespaces",
         "order": 1,
         "url": "/management/namespaces",
         "target": "self",
@@ -161,7 +161,7 @@
       },
       {
         "id": "user",
-        "name": "사용자",
+        "name": "Users",
         "order": 2,
         "url": "/management/users",
         "target": "self",
@@ -371,14 +371,14 @@
   },
   {
     "id": "guide",
-    "name": "안내 및 도움말",
+    "name": "Support",
     "order": 33,
     "url": "/guide",
     "target": "",
     "sub": [
       {
         "id": "initialize",
-        "name": "Cloud Z CP 소개",
+        "name": "Overview",
         "order": 1,
         "url": "/guide/initialize",
         "target": "self",
@@ -386,7 +386,7 @@
       },
       {
         "id": "document",
-        "name": "사용자 가이드",
+        "name": "Guide",
         "order": 2,
         "url": "https://support.cloudz.co.kr/support/solutions",
         "target": "blank",
@@ -394,7 +394,7 @@
       },
       {
         "id": "qna",
-        "name": "문의 및 지원",
+        "name": "Q&A",
         "order": 3,
         "url": "https://support.cloudz.co.kr/support/tickets/new",
         "target": "blank",
@@ -402,7 +402,7 @@
       },
       {
         "id": "terms",
-        "name": "약관",
+        "name": "Terms",
         "order": 4,
         "url": "/guide/terms",
         "target": "self",

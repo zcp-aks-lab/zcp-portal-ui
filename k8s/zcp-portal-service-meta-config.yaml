@@ -10,7 +10,7 @@ data:
     [
       {
         "id": "monitoring",
-        "name": "모니터링",
+        "name": "Monitoring",
         "order": 10,
         "url": "https://monitoring.cloudzcp.io/login/generic_oauth",
         "target": "blank",
@@ -27,7 +27,7 @@ data:
       },
       {
         "id": "logging",
-        "name": "로깅",
+        "name": "Logging",
         "order": 11,
         "url": "https://logging.cloudzcp.io",
         "target": "blank",
@@ -44,7 +44,7 @@ data:
       },
       {
         "id": "alert",
-        "name": "알림",
+        "name": "Notifications",
         "order": 12,
         "url": "/alert",
         "target": "self",
@@ -169,7 +169,7 @@ data:
           },
           {
             "id": "user",
-            "name": "사용자",
+            "name": "Users",
             "order": 2,
             "url": "/management/users",
             "target": "self",
@@ -379,14 +379,14 @@ data:
       },
       {
         "id": "guide",
-        "name": "안내 및 도움말",
+        "name": "Support",
         "order": 33,
         "url": "/guide",
         "target": "",
         "sub": [
           {
             "id": "initialize",
-            "name": "시작하기",
+            "name": "Overview",
             "order": 1,
             "url": "/guide/initialize",
             "target": "self",
@@ -394,7 +394,7 @@ data:
           },
           {
             "id": "document",
-            "name": "사용자 가이드",
+            "name": "Guide",
             "order": 2,
             "url": "https://support.cloudz.co.kr",
             "target": "blank",
@@ -402,7 +402,7 @@ data:
           },
           {
             "id": "qna",
-            "name": "문의 및 지원",
+            "name": "Q&A",
             "order": 3,
             "url": "https://support.cloudz.co.kr",
             "target": "blank",
@@ -410,7 +410,7 @@ data:
           },
           {
             "id": "terms",
-            "name": "약관",
+            "name": "Terms",
             "order": 4,
             "url": "/guide/terms",
             "target": "self",
