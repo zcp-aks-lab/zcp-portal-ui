@@ -26,12 +26,11 @@ Deploy:
 - kubectl:
   - apk add bash && cd $yaml && bash -x template.sh
   - kubectl apply -R -f $yaml/.tmp
-  - kubectl scale deploy zcp-portal-ui --replicas 1 -n $ns
+  - kubectl scale deploy zcp-portal-ui --replicas 1 -n $namespace
 
 env:
   image: cloudzcp/zcp-portal-ui:1.1.0-alpha
   yaml: k8s/template
-  ns: console
 
 agent:
   profile: [maven, docker, kubectl]
