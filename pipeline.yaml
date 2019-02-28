@@ -42,3 +42,4 @@ agent:
     command: cat
   volumes:
   - pvc:zcp-jenkins-mvn-repo: /root/.m2
+  serviceAccount: zcp-system-admin
