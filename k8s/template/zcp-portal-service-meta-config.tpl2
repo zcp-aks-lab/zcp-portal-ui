@@ -122,7 +122,7 @@ data:
             "url": "/index.html#/wsh",
             "target": "self",
             "enable": true
-          },
+          }
         ],
         "role": {
           "clusterRoles": [
@@ -172,9 +172,9 @@ data:
             "name": "사용자",
             "order": 2,
             "url": "/management/users",
-            "target": "self",
+            "target": "self"
           }
-        ]
+        ],
         "role": {
           "clusterRoles": [
             "cluster-admin"
@@ -357,7 +357,7 @@ data:
             "cicd-manager"
           ]
         }
-      }
+      },
       {
         "id": "zdb",
         "name": "ZDB",

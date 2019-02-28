@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: zcp-portal-service-meta-config
   namespace: zcp-system
+  labels:
+    component: zcp-portal-ui
 data:
   addOnServiceMetaData.json: |
     [
@@ -120,7 +122,7 @@ data:
             "url": "/index.html#/wsh",
             "target": "self",
             "enable": true
-          },
+          }
         ],
         "role": {
           "clusterRoles": [
@@ -170,9 +172,9 @@ data:
             "name": "사용자",
             "order": 2,
             "url": "/management/users",
-            "target": "self",
+            "target": "self"
           }
-        ]
+        ],
         "role": {
           "clusterRoles": [
             "cluster-admin"
@@ -355,7 +357,7 @@ data:
             "cicd-manager"
           ]
         }
-      }
+      },
       {
         "id": "zdb",
         "name": "ZDB",
