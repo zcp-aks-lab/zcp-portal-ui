@@ -2,17 +2,20 @@
 
 zcp-portal-ui는 Cloud Z CP 의 Console front-end server 로, zcp-iam, zcp-alertmanager 등의 back-end API server 와 연동을 한다.
 
-zcp-portal-ui 을 설치하기 이전에 k8s cluster 가 설치되어 있어야 하고, cluster role 권한으로 `kubectl` 을 수행 할 수 있는 환경을 갖추어야 한다.
+zcp-portal-ui 을 설치하기 이전에 k8s cluster 가 설치되어 있어야 하고, cluster-admin role 권한으로 `kubectl` 을 수행 할 수 있는 환경을 갖추어야 한다.
 
 zcp-iam, zcp-alertmanager, zcp-alertmanager-store 가 미리 설치되어 있어야 한다.
 
 ## Clone Project
+
 Clone this project into the desktop
+
 ```
 $ git clone https://github.com/cnpst/zcp-portal-ui.git
 ```
 
 ## Generate YAML (Kubernetes Resources)
+
 설치 환경에 맞게 `setenv.sh` 파일을 수정한 후, `template.sh` 파일을 실행한다.
 
 각 정보를 확인하는 자세한 방법은 Appendix 를 참고한다.
@@ -20,7 +23,7 @@ $ git clone https://github.com/cnpst/zcp-portal-ui.git
 ```
 $ cd zcp-portal-ui/k8s/template
 
-$ cat setenv.sh 
+$ cat setenv.sh
 out_dir=.tmp
 
 domain_prefix=pog-dev-
@@ -42,6 +45,7 @@ private_alb_enable='#'  # $([ -z "$private_alb" ] && echo '#' || echo '' )
 `template.sh` 파일은 템플릿 파일(`.tpl`/`.tpl2`)을 변환하여 YAML 파일을 생성한다.
 
 `.tmp` 는 `setenv.sh` 파일의 `out_dir` 값과 동일하다.
+
 ```
 $ bash template.sh
 
@@ -50,6 +54,7 @@ $ ls -l .tmp
 ```
 
 ## Create Kubernetes Resource
+
 템플릿을 통해 생성된 YAML 파일을 아래의 명령으로 실행한다.
 
 ```
@@ -64,7 +69,9 @@ DNS 라우팅이 설정되어 있으면 브라우져에서 ingress 에 설정한
 ex) https://console.cloudzcp.io
 
 ## Appendix
+
 ### KeyCloak 의 client secret 값 확인방법
+
 KeyCloak > zcp realm > clients > account > credentials 탭으로 이동하여 secret 정보를 복사 한 후 base64로 incoding 한다.
 
 ```
