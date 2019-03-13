@@ -4,6 +4,7 @@ metadata:
   annotations:
     ${private_alb_enable}ingress.bluemix.net/ALB-ID: ${private_alb}
     ingress.bluemix.net/redirect-to-https: 'True'
+    ingress.bluemix.net/proxy-read-timeout: "serviceName=zcp-portal-ui timeout=30m"
   labels:
     component: zcp-portal-ui
   name: zcp-portal-ui-ingress

@@ -1,13 +1,18 @@
-FROM java:8
-ENV SPRING_ACTIVE_PROFILE stage
+FROM openjdk:8-alpine
+
 ADD dist/zcp-portal-ui-0.0.1-SNAPSHOT.war app.war
 VOLUME /tmp
 VOLUME /target
+
 #RUN apt-get update && \
 #    apt-get install -y net-tools
-RUN bash -c 'touch /app.war'
+RUN touch /app.war
 #CMD echo 'test'
 #EXPOSE 8081
+
+ENV SPRING_ACTIVE_PROFILE stage
+ENV JAVA_OPTS -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=2
+
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Dspring.profiles.active=${SPRING_ACTIVE_PROFILE}","-jar","/app.war"]
 
 #docker run -d --rm --name skb-account-service \
