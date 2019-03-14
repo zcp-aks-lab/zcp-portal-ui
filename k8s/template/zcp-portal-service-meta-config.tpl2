@@ -242,7 +242,8 @@ data:
           ],
           "namespaceRoles": [
             "admin",
-            "cicd-manager"
+            "cicd-manager",
+            "developer"
           ]
         }
       },
@@ -285,7 +286,8 @@ data:
           ],
           "namespaceRoles": [
             "admin",
-            "cicd-manager"
+            "cicd-manager",
+            "developer"
           ]
         }
       },
@@ -328,7 +330,8 @@ data:
           ],
           "namespaceRoles": [
             "admin",
-            "cicd-manager"
+            "cicd-manager",
+            "developer"
           ]
         }
       },
@@ -355,7 +358,8 @@ data:
           ],
           "namespaceRoles": [
             "admin",
-            "cicd-manager"
+            "cicd-manager",
+            "developer"
           ]
         }
       },
@@ -396,7 +400,7 @@ data:
             "id": "document",
             "name": "Guide",
             "order": 2,
-            "url": "https://support.cloudz.co.kr",
+            "url": "https://support.cloudz.co.kr/support/solutions",
             "target": "blank",
             "enable": true
           },
@@ -404,7 +408,7 @@ data:
             "id": "qna",
             "name": "Q&A",
             "order": 3,
-            "url": "https://support.cloudz.co.kr",
+            "url": "https://support.cloudz.co.kr/support/tickets/new",
             "target": "blank",
             "enable": true
           },

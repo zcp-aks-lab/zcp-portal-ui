@@ -6,13 +6,8 @@
     "url": "https://grafana.cloudzcp.io/login/generic_oauth",
     "target": "blank",
     "role": {
-      "clusterRoles": [
-        "cluster-admin"
-      ],
-      "namespaceRoles": [
-        "admin",
-        "cicd-manager"
-      ]
+      "clusterRoles": ["cluster-admin"],
+      "namespaceRoles": ["admin", "cicd-manager"]
     },
     "enable": true
   },
@@ -23,14 +18,8 @@
     "url": "https://kibana.cloudzcp.io",
     "target": "blank",
     "role": {
-      "clusterRoles": [
-        "cluster-admin"
-      ],
-      "namespaceRoles": [
-        "admin",
-        "cicd-manager",
-        "developer"
-      ]
+      "clusterRoles": ["cluster-admin"],
+      "namespaceRoles": ["admin", "cicd-manager", "developer"]
     },
     "enable": true
   },
@@ -67,12 +56,8 @@
       }
     ],
     "role": {
-      "clusterRoles": [
-        "cluster-admin"
-      ],
-      "namespaceRoles": [
-        "admin"
-      ]
+      "clusterRoles": ["cluster-admin"],
+      "namespaceRoles": ["admin"]
     },
     "enable": true
   },
@@ -117,14 +102,8 @@
       }
     ],
     "role": {
-      "clusterRoles": [
-        "cluster-admin"
-      ],
-      "namespaceRoles": [
-        "admin",
-        "cicd-manager",
-        "developer"
-      ]
+      "clusterRoles": ["cluster-admin"],
+      "namespaceRoles": ["admin", "cicd-manager", "developer"]
     },
     "enable": true
   },
@@ -135,12 +114,8 @@
     "url": "https://catalog.cloudzcp.io",
     "target": "blank",
     "role": {
-      "clusterRoles": [
-        "cluster-admin"
-      ],
-      "namespaceRoles": [
-        "admin"
-      ]
+      "clusterRoles": ["cluster-admin"],
+      "namespaceRoles": ["admin"]
     },
     "enable": true
   },
@@ -169,13 +144,8 @@
       }
     ],
     "role": {
-      "clusterRoles": [
-        "cluster-admin"
-      ],
-      "namespaceRoles": [
-        "admin",
-        "cicd-manager"
-      ]
+      "clusterRoles": ["cluster-admin"],
+      "namespaceRoles": ["admin", "cicd-manager"]
     },
     "enable": true
   },
@@ -229,13 +199,8 @@
       }
     ],
     "role": {
-      "clusterRoles": [
-        "cluster-admin"
-      ],
-      "namespaceRoles": [
-        "admin",
-        "cicd-manager"
-      ]
+      "clusterRoles": ["cluster-admin"],
+      "namespaceRoles": ["admin", "cicd-manager", "developer"]
     }
   },
   {
@@ -272,13 +237,8 @@
       }
     ],
     "role": {
-      "clusterRoles": [
-        "cluster-admin"
-      ],
-      "namespaceRoles": [
-        "admin",
-        "cicd-manager"
-      ]
+      "clusterRoles": ["cluster-admin"],
+      "namespaceRoles": ["admin", "cicd-manager", "developer"]
     }
   },
   {
@@ -315,13 +275,8 @@
       }
     ],
     "role": {
-      "clusterRoles": [
-        "cluster-admin"
-      ],
-      "namespaceRoles": [
-        "admin",
-        "cicd-manager"
-      ]
+      "clusterRoles": ["cluster-admin"],
+      "namespaceRoles": ["admin", "cicd-manager", "developer"]
     }
   },
   {
@@ -342,13 +297,8 @@
       }
     ],
     "role": {
-      "clusterRoles": [
-        "cluster-admin"
-      ],
-      "namespaceRoles": [
-        "admin",
-        "cicd-manager"
-      ]
+      "clusterRoles": ["cluster-admin"],
+      "namespaceRoles": ["admin", "cicd-manager", "developer"]
     }
   },
   {
@@ -358,14 +308,8 @@
     "url": "https://zdb.cloudzcp.io",
     "target": "blank",
     "role": {
-      "clusterRoles": [
-        "cluster-admin"
-      ],
-      "namespaceRoles": [
-        "admin",
-        "cicd-manager",
-        "developer"
-      ]
+      "clusterRoles": ["cluster-admin"],
+      "namespaceRoles": ["admin", "cicd-manager", "developer"]
     },
     "enable": true
   },
@@ -410,15 +354,8 @@
       }
     ],
     "role": {
-      "clusterRoles": [
-        "cluster-admin",
-        "member"
-      ],
-      "namespaceRoles": [
-        "admin",
-        "cicd-manager",
-        "developer"
-      ]
+      "clusterRoles": ["cluster-admin", "member"],
+      "namespaceRoles": ["admin", "cicd-manager", "developer"]
     },
     "enable": true
   }
