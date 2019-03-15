@@ -15,7 +15,7 @@ ENV JAVA_ARGS '-Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=
 ENV JAVA_OPTS '-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=2'
 ENV JAVA_DEBUG ''
 
-ENTRYPOINT ["/bin/sh", "-c", "java ${JAVA_ARGS} ${JAVA_OPTS} ${JAVA_DEBUG} -jar /app.jar"]
+ENTRYPOINT ["/bin/sh", "-c", "java ${JAVA_ARGS} ${JAVA_OPTS} ${JAVA_DEBUG} -jar /app.war"]
 
 #docker run -d --rm --name skb-account-service \
 #           -p 8081:8081 \
