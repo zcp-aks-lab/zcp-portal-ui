@@ -50,7 +50,13 @@ private_alb_enable='#'  # $([ -z "$private_alb" ] && echo '#' || echo '' )
 $ bash template.sh
 
 $ ls -l .tmp
-...
+-rw-r--r--  1 hoon  staff    458  3 15 12:06 setenv.sh
+-rw-r--r--  1 hoon  staff    313  3 15 12:06 varlables.log
+-rw-r--r--  1 hoon  staff    751  3 15 12:39 zcp-portal-config.yaml
+-rw-r--r--  1 hoon  staff   2126  3 15 12:06 zcp-portal-deployment.yaml
+-rw-r--r--  1 hoon  staff    606  3 15 12:06 zcp-portal-ingress.yaml
+-rw-r--r--  1 hoon  staff    212  3 15 12:06 zcp-portal-secret.yaml
+-rw-r--r--  1 hoon  staff  10401  3 15 12:06 zcp-portal-service-meta-config.yaml
 ```
 
 ## Create Kubernetes Resource
@@ -59,6 +65,12 @@ $ ls -l .tmp
 
 ```
 $ kubectl create -f .tmp
+configmap/zcp-portal-ui-config created
+deployment.apps/zcp-portal-ui created
+service/zcp-portal-ui created
+ingress.extensions/zcp-portal-ui-ingress created
+secret/zcp-portal-ui-secret created
+configmap/zcp-portal-service-meta-config created
 
 ## check to create
 $ kubectl get deploy,po,cm,secret,svc,ing -n zcp-system -l component=zcp-portal-ui
@@ -70,9 +82,10 @@ ex) https://console.cloudzcp.io
 
 ## Appendix
 
-### KeyCloak 의 client secret 값 확인방법
+### ~~KeyCloak 의 client secret 값 확인방법~~
+> setenv.sh 에서 자동으로 설정되도록 변경됨
 
-KeyCloak > zcp realm > clients > account > credentials 탭으로 이동하여 secret 정보를 복사 한 후 base64로 incoding 한다.
+KeyCloak > zcp realm > clients > account > credentials 탭으로 이동하여 secret 정보를 복사 한 후 base64로 encoding 한다.
 
 ```
 $ echo -n "secret of account client" | base64
@@ -82,4 +95,4 @@ $ echo -n "secret of account client" | base64
 
 ### ingress 설정 내, ALB-ID 및 도메인/인증서(TLS) 설정
 
-Private Only로 클러스터가 구성된 경우 (Private ALB만 있는 경우), 아래 주석처리 되어있는 `ingress.bluemix.net/ALB-ID: xxxxxx` 이 부분을 반드시 enable 해주어야 한다.
+Private Only로 클러스터가 구성된 경우 (Private ALB만 있는 경우), `setenv.sh`를 `private_alb_enable=''` 와 같이 설정한다.
