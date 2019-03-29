@@ -124,7 +124,7 @@
 				}
 				function makeHtmlLabel(name){
 					var html = '<span class="Label Default" >'+name+'</span>';
-					if(isClusterAdmin && !(name.indexOf('cloudzcp.io/zcp-system=') > -1) && !(name.indexOf('cloudzcp.io/zdb-system=') > -1))
+					if(isClusterAdmin && !(name.indexOf('cloudzcp.io/zcp-system=') > -1) && !(name.indexOf('cloudzdb.io/zdb-system=') > -1))
 						html +='<button class="btn-ico label-del" onclick="delLabel(\''+name+'\')">삭제</button>';
 					return html;
 				}
