@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -336,47 +337,50 @@ public class NamespaceService {
 		List<SecretVO> resultList = new ArrayList<SecretVO>();
 
 		for (HashMap<String, Object> item : items) {
+			final HashMap<String, Object> meta = (HashMap<String, Object>) item.get("metadata");
+			final HashMap<String, Object> annotations = (HashMap<String, Object>) meta.get("annotations");
+			final long creationTimestamp = (Long) meta.get("creationTimestamp");
+
 			SecretVO secretVO = new SecretVO();
+			secretVO.setName(meta.get("name").toString());
 
-			secretVO.setName(((HashMap<String, Object>) item.get("metadata")).get("name").toString());
-
-			if ("kubernetes.io/dockerconfigjson".equals(item.get("type"))) {
+			Object type = item.get("type");
+			if ("kubernetes.io/dockerconfigjson".equals(type)) {
 				secretVO.setType("Docker Registry");
-			} else if ("kubernetes.io/tls".equals(item.get("type"))) {
+			} else if ("kubernetes.io/tls".equals(type)) {
 				secretVO.setType("TLS");
 			} else {
 				secretVO.setType("");
 			}
 
-			if ((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata")).get("annotations") != null) {
-				secretVO.setLabel(
-						((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata")).get("annotations"))
-								.get("cloudzcp.io/description").toString());
+			if (annotations.get("annotations") != null) {
+				secretVO.setLabel(annotations.get("cloudzcp.io/description").toString());
 			} else {
 				secretVO.setLabel("");
 			}
 
-			String date = ((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata"))
-					.get("creationTimestamp")).get("year")
-					+ "/"
-					+ String.format("%02d",
-							((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata"))
-									.get("creationTimestamp")).get("monthOfYear"))
-					+ "/"
-					+ String.format("%02d",
-							((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata"))
-									.get("creationTimestamp")).get("dayOfMonth"))
-					+ " "
-					+ String.format("%02d",
-							((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata"))
-									.get("creationTimestamp")).get("hourOfDay"))
-					+ ":"
-					+ String.format("%02d",
-							((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata"))
-									.get("creationTimestamp")).get("minuteOfHour"))
-					+ ":"
-					+ String.format("%02d", ((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata"))
-							.get("creationTimestamp")).get("secondOfMinute"));
+			String date = DateFormatUtils.format(creationTimestamp, "yyyy-MM-dd HH:mm:ss");
+			// String date = ((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata"))
+			// 		.get("creationTimestamp")).get("year")
+			// 		+ "/"
+			// 		+ String.format("%02d",
+			// 				((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata"))
+			// 						.get("creationTimestamp")).get("monthOfYear"))
+			// 		+ "/"
+			// 		+ String.format("%02d",
+			// 				((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata"))
+			// 						.get("creationTimestamp")).get("dayOfMonth"))
+			// 		+ " "
+			// 		+ String.format("%02d",
+			// 				((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata"))
+			// 						.get("creationTimestamp")).get("hourOfDay"))
+			// 		+ ":"
+			// 		+ String.format("%02d",
+			// 				((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata"))
+			// 						.get("creationTimestamp")).get("minuteOfHour"))
+			// 		+ ":"
+			// 		+ String.format("%02d", ((HashMap<String, Object>) ((HashMap<String, Object>) item.get("metadata"))
+			// 				.get("creationTimestamp")).get("secondOfMinute"));
 
 			secretVO.setDate(date);
 			resultList.add(secretVO);
