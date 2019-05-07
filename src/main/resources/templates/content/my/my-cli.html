@@ -112,7 +112,7 @@
                                 <tr>
                                     <th class="Valign-top"><span class="ico-num">2</span>단계</th>
                                     <td>
-                                        <p class="Margin-bottom-10">CLI구성을 위하여 터미널에 아래의 command를 실행합니다.</p>
+                                        <p class="Margin-bottom-10">CLI구성을 위하여 아래의 내용을 다운 받아 저장합니다. </p>
                                         <div class="input-group">
 	                                        <textarea id="cli" name="cli" class="Textarea cli-area" readonly="readonly"></textarea>
 	                                        <div class="btn-group-inner">
@@ -122,6 +122,13 @@
 			                                    <div class="Tooltip" data-open-trigger="click" data-position="bottom">Copied</div>
 	                                        </div >
                                         </div>
+                                    </td>
+                                </tr>
+				<tr>
+                                    <th><span class="ico-num">3</span>단계</th>
+                                    <td>
+                                    	<p class="Margin-bottom-10">다운 받은 파일을 KUBECONFIG 환경변수로 지정합니다.</p>
+                                    	<span class="tag">(EX) $ set KUBECONFIG = {다운경로}/{파일명.conf} </span>
                                     </td>
                                 </tr>
                             </tbody>
