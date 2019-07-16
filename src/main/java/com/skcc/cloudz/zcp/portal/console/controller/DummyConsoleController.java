@@ -155,6 +155,9 @@ public class DummyConsoleController {
         List<AddOnServiceMataVo> raw = metaService.getAddOnServiceMetaDataFileLoad();
         Collections.sort(raw);
         for(AddOnServiceMataVo m : raw) {
+            if(!m.isEnable())
+                continue;
+
             Role roles = m.getRole();
             for (String cluster : roles.getClusterRoles()) {
                 meta.put(cluster, m);
