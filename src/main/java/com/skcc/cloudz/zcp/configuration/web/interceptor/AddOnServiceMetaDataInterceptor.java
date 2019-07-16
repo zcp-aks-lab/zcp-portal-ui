@@ -126,7 +126,11 @@ public class AddOnServiceMetaDataInterceptor extends HandlerInterceptorAdapter {
             if (StringUtils.isEmpty(namespace)) {
                 type = ClusterRole.MEMBER.getName();
             } else {
-                type = userService.getNamespaceRole(namespace, id);
+                try {
+                    type = userService.getNamespaceRole(namespace, id);
+                } catch(Exception e){
+                    type = ClusterRole.MEMBER.getName();
+                }
             }
         }
         

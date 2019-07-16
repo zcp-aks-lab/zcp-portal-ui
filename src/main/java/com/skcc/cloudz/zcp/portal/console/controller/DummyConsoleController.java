@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -13,6 +14,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.skcc.cloudz.zcp.api.iam.domain.vo.ZcpUserVo;
 import com.skcc.cloudz.zcp.common.constants.ClusterRole;
+import com.skcc.cloudz.zcp.common.domain.vo.AddOnServiceMataSubVo;
 import com.skcc.cloudz.zcp.common.domain.vo.AddOnServiceMataVo;
 import com.skcc.cloudz.zcp.common.domain.vo.AddOnServiceMataVo.Role;
 import com.skcc.cloudz.zcp.common.security.vo.OpenIdConnectUserDetailsVo;
@@ -135,17 +137,19 @@ public class DummyConsoleController {
         Collection<AddOnServiceMataVo> menu = null;
         OpenIdConnectUserDetailsVo user = (OpenIdConnectUserDetailsVo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        String role = user.getClusterRole();
-        if(isSupserUser(role)){
-            menu = meta.get(role);
-        } else {
-            String id = user.getUserId();
-            role = userService.getNamespaceRole(namespace, id);
-            menu = meta.get(role);
-        }
+        try {
+            String role = user.getClusterRole();
+            if(isSupserUser(role)){
+                menu = meta.get(role);
+            } else {
+                String id = user.getUserId();
+                role = userService.getNamespaceRole(namespace, id);
+                menu = meta.get(role);
+            }
+        } catch(Exception e) {}
 
         // validation
-        return menu == null ? meta.get(ClusterRole.MEMBER.toString()) : menu;
+        return menu == null ? meta.get(ClusterRole.MEMBER.getName()) : menu;
     }
 
     @PostConstruct
@@ -155,8 +159,7 @@ public class DummyConsoleController {
         List<AddOnServiceMataVo> raw = metaService.getAddOnServiceMetaDataFileLoad();
         Collections.sort(raw);
         for(AddOnServiceMataVo m : raw) {
-            if(!m.isEnable())
-                continue;
+            if(!m.isEnable()) continue;
 
             Role roles = m.getRole();
             for (String cluster : roles.getClusterRoles()) {
@@ -166,6 +169,14 @@ public class DummyConsoleController {
             for (String namespace : roles.getNamespaceRoles()) {
                 meta.put(namespace, m);
             }
+
+            List<AddOnServiceMataSubVo> sub = m.getSub();
+            if(sub == null) continue;
+            sub = sub.stream()
+                .filter(s -> s.isEnable())
+                .sorted()
+                .collect(Collectors.toList());
+            m.setSub(sub);
         }
     }
 
