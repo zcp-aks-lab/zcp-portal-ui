@@ -28,7 +28,7 @@ Deploy:
   - kubectl scale deploy zcp-portal-ui --replicas 1 -n $namespace
 
 env:
-  image: cloudzcp/zcp-portal-ui:1.2.0-alpha
+  image: cloudzcp/zcp-portal-ui:1.2.1-alpha
   yaml: k8s/template
 
 agent:
