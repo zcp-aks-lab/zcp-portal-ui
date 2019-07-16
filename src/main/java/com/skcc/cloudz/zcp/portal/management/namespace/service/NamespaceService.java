@@ -353,7 +353,7 @@ public class NamespaceService {
 				secretVO.setType("");
 			}
 
-			if (annotations.get("annotations") != null) {
+			if (annotations != null && annotations.get("annotations") != null) {
 				secretVO.setLabel(annotations.get("cloudzcp.io/description").toString());
 			} else {
 				secretVO.setLabel("");
