@@ -23,10 +23,10 @@ $ git clone https://github.com/cnpst/zcp-portal-ui.git
 ```
 $ cd zcp-portal-ui/k8s/template
 
-$ cat setenv.sh
+$ vi setenv.sh
 out_dir=.tmp
 
-domain_prefix=pog-dev-
+domain_prefix=pog-dev-   #CHANGE
 domain_iam=${domain_prefix}iam.cloudzcp.io
 domain_console=${domain_prefix}console.cloudzcp.io
 
@@ -35,16 +35,18 @@ image=registry.au-syd.bluemix.net/cloudzcp/zcp-iam:1.1.0
 replicas=1
 
 config_product=ZCP    #eg. 'ZCP :)'
-config_label=pou-dev  #eg. 'pou-dev'
+config_label=pou-dev  #eg. 'pou-dev'  #CHANGE
 
 private_alb=$(kubectl get deploy -n kube-system | grep private | cut -f1 -d' ' | head -n 1)
-private_alb_enable='#'  # $([ -z "$private_alb" ] && echo '#' || echo '' )
+private_alb_enable='#'  # $([ -z "$private_alb" ] && echo '#' || echo '' )  #CHANGE
 ...
 ```
 
 `template.sh` 파일은 템플릿 파일(`.tpl`/`.tpl2`)을 변환하여 YAML 파일을 생성한다.
 
 `.tmp` 는 `setenv.sh` 파일의 `out_dir` 값과 동일하다.
+
+아래 내용을 참고하여 template.sh를 실행하여 YAML파일을 생성하고, 올바르게 생성되었는지 확인한다.
 
 ```
 $ bash template.sh
