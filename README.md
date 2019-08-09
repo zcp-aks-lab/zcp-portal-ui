@@ -31,7 +31,7 @@ domain_iam=${domain_prefix}iam.cloudzcp.io
 domain_console=${domain_prefix}console.cloudzcp.io
 
 namespace=zcp-system
-image=registry.au-syd.bluemix.net/cloudzcp/zcp-iam:1.1.0
+image=registry.au-syd.bluemix.net/cloudzcp/zcp-iam:1.2.0
 replicas=1
 
 config_product=ZCP    #eg. 'ZCP :)'
