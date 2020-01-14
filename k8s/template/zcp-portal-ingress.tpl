@@ -5,6 +5,8 @@ metadata:
     ${private_alb_enable}ingress.bluemix.net/ALB-ID: ${private_alb}
     ingress.bluemix.net/redirect-to-https: 'True'
     ingress.bluemix.net/proxy-read-timeout: "serviceName=zcp-portal-ui timeout=30m"
+    kubernetes.io/ingress.class: private-nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
   labels:
     component: zcp-portal-ui
   name: zcp-portal-ui-ingress
